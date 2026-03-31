@@ -7,22 +7,25 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/vmo_gab
-            git pull origin main
-            source venv/bin/activate
-            pip install -r requirements.txt --quiet
-            sudo systemctl restart vmo_gab
-            echo "Deploy concluido com sucesso!"
+      - name: Setup Python
+        run: |
+          python3 -m venv /opt/vmo_gab/venv || true
+          /opt/vmo_gab/venv/bin/pip install -r requirements.txt --quiet
+
+      - name: Copy app files
+        run: |
+          mkdir -p /opt/vmo_gab
+          cp -r app/ requirements.txt /opt/vmo_gab/
+
+      - name: Restart service
+        run: |
+          systemctl restart vmo_gab 2>/dev/null || \
+          pkill -f "uvicorn app.main:app" 2>/dev/null; \
+          cd /opt/vmo_gab && nohup /opt/vmo_gab/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+          echo "Deploy concluido com sucesso!"
