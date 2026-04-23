@@ -2,6 +2,11 @@ name: Sync files from VPS
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sync-from-vps.yml'
 
 jobs:
   sync:
@@ -23,5 +28,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add frontend/
-          git diff --cached --quiet || git commit -m "sync: import site files from VPS /root/www/vmo"
+          git diff --cached --quiet || git commit -m "sync: import site files from VPS /root/www/vmo [skip ci]"
           git push origin main
