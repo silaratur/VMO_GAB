@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Ingest&atilde;o de Contexto</title>
+<style>
+:root {
+  --bg: #070b14; --bg2: #0d1220; --bg3: #111827; --border: #1e2d45;
+  --cyan: #00d4ff; --green: #00ff88; --yellow: #ffd700; --red: #ff3b5c;
+  --orange: #ff8c00; --text: #c8d8e8; --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55; --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 0.75rem; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; transition: all 0.2s; letter-spacing: 1px; }
+.back-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.page-title { font-size: 0.9rem; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; text-shadow: var(--glow-cyan); }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+/* UPLOAD ZONE */
+.upload-section { margin-bottom: 24px; }
+.upload-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 10px; }
+.drop-zone {
+  border: 2px dashed var(--border); border-radius: 12px;
+  padding: 40px 24px; text-align: center;
+  transition: all 0.3s; cursor: pointer;
+  background: var(--bg2); position: relative;
+}
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--cyan); background: rgba(0,212,255,0.04); box-shadow: 0 0 20px rgba(0,212,255,0.08); }
+.drop-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.drop-title { font-size: 1rem; color: #ddd; margin-bottom: 6px; }
+.drop-sub { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 16px; }
+.file-types { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.ftype { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 3px 10px; font-size: 0.62rem; color: var(--text-dim); }
+.ftype.excel { color: #00c48c; border-color: rgba(0,196,140,0.3); }
+.ftype.word { color: #4da6ff; border-color: rgba(77,166,255,0.3); }
+.ftype.ppt { color: var(--orange); border-color: rgba(255,140,0,0.3); }
+.ftype.email { color: var(--yellow); border-color: rgba(255,215,0,0.3); }
+.ftype.mpp { color: var(--cyan); border-color: rgba(0,212,255,0.3); }
+#fileInput { display: none; }
+.browse-btn {
+  margin-top: 14px; display: inline-block;
+  background: rgba(0,212,255,0.1); border: 1px solid var(--cyan);
+  color: var(--cyan); padding: 8px 24px; border-radius: 6px;
+  font-family: 'Courier New', monospace; font-size: 0.75rem;
+  cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
+}
+.browse-btn:hover { background: rgba(0,212,255,0.18); text-shadow: var(--glow-cyan); }
+
+/* QUEUE */
+.queue-section { margin-bottom: 24px; }
+.queue-list { display: flex; flex-direction: column; gap: 8px; }
+.queue-item {
+  display: grid; grid-template-columns: 36px 1fr auto auto;
+  align-items: center; gap: 12px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px;
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+.queue-item.processing { border-color: var(--cyan); }
+.queue-item.done { border-color: var(--green); }
+.queue-item.error { border-color: var(--red); }
+.file-icon { font-size: 1.4rem; text-align: center; }
+.file-info .file-name { font-size: 0.8rem; color: #ddd; font-weight: 600; }
+.file-info .file-size { font-size: 0.6rem; color: var(--text-dim); margin-top: 2px; }
+.file-status { font-size: 0.65rem; text-align: right; }
+.file-status.processing { color: var(--cyan); }
+.file-status.done { color: var(--green); }
+.file-status.error { color: var(--red); }
+.file-status.waiting { color: var(--text-dim); }
+.progress-mini { width: 80px; }
+.progress-bar { background: #1a2535; border-radius: 99px; height: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--cyan), var(--green)); transition: width 0.5s; }
+.spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* RESULTS */
+.results-section { }
+.results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 768px) { .results-grid { grid-template-columns: 1fr; } }
+
+.result-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  animation: slideIn 0.4s ease;
+}
+.result-card.critico { border-left: 4px solid var(--red); }
+.result-card.atencao { border-left: 4px solid var(--yellow); }
+.result-card.saudavel { border-left: 4px solid var(--green); }
+.result-card.indefinido { border-left: 4px solid var(--text-dim); }
+
+.rc-header { padding: 14px 18px 10px; border-bottom: 1px solid var(--border); }
+.rc-filename { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.rc-project { font-size: 0.9rem; font-weight: 700; color: #e0eaf5; }
+.rc-type { font-size: 0.58rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--text-dim); }
+.rc-status-badge { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 99px; border: 1px solid; font-weight: 700; margin-top: 6px; }
+.rc-status-badge.critico { color: var(--red); border-color: var(--red); background: rgba(255,59,92,0.1); }
+.rc-status-badge.atencao { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
+.rc-status-badge.saudavel { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.1); }
+.rc-status-badge.indefinido { color: var(--text-dim); border-color: var(--text-dim); background: transparent; }
+
+.rc-body { padding: 14px 18px; }
+.rc-section { margin-bottom: 14px; }
+.rc-section-title { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; }
+.rc-summary { font-size: 0.75rem; color: var(--text); line-height: 1.6; }
+
+.rc-list { display: flex; flex-direction: column; gap: 4px; }
+.rc-list-item { font-size: 0.7rem; color: var(--text); padding: 4px 8px; background: var(--bg3); border-radius: 4px; line-height: 1.5; }
+.rc-list-item .sev-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: middle; flex-shrink: 0; }
+.sev-dot.critico { background: var(--red); }
+.sev-dot.alto { background: var(--orange); }
+.sev-dot.medio { background: var(--yellow); }
+.sev-dot.baixo { background: var(--green); }
+
+.rc-actions { display: flex; flex-direction: column; gap: 4px; }
+.rc-action-item { font-size: 0.68rem; padding: 5px 8px; background: var(--bg3); border-radius: 4px; display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: start; }
+.ac-resp { color: var(--cyan); font-size: 0.6rem; white-space: nowrap; }
+.ac-text { color: var(--text); line-height: 1.4; }
+.ac-prazo { color: var(--text-dim); font-size: 0.6rem; white-space: nowrap; }
+
+.rc-marcos { display: flex; flex-direction: column; gap: 4px; }
+.marco-item { display: flex; gap: 10px; font-size: 0.7rem; padding: 4px 8px; background: var(--bg3); border-radius: 4px; align-items: center; }
+.marco-date { color: var(--cyan); white-space: nowrap; min-width: 80px; }
+.marco-desc { color: var(--text); }
+
+.rc-insights { display: flex; flex-direction: column; gap: 4px; }
+.insight-item { font-size: 0.7rem; color: var(--yellow); padding: 4px 8px; background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.15); border-radius: 4px; line-height: 1.5; }
+.insight-item::before { content: '💡 '; }
+
+.rc-alerts { display: flex; flex-direction: column; gap: 4px; }
+.alert-badge { font-size: 0.7rem; padding: 5px 8px; border-radius: 4px; border-left: 3px solid; line-height: 1.5; }
+.alert-badge.critical { background: rgba(255,59,92,0.08); border-color: var(--red); color: var(--text); }
+.alert-badge.warning { background: rgba(255,215,0,0.06); border-color: var(--yellow); color: var(--text); }
+.alert-badge.info { background: rgba(0,212,255,0.06); border-color: var(--cyan); color: var(--text); }
+.alert-badge.ok { background: rgba(0,255,136,0.06); border-color: var(--green); color: var(--text); }
+
+.progress-bar-labeled { margin-bottom: 4px; }
+.pbl-header { display: flex; justify-content: space-between; font-size: 0.62rem; color: var(--text-dim); margin-bottom: 3px; }
+.pbl-bar { background: #1a2535; border-radius: 99px; height: 6px; overflow: hidden; }
+.pbl-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--cyan), var(--green)); transition: width 0.8s; }
+
+.orcamento-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; }
+.orc-val { font-size: 1.1rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); }
+.orc-ctx { font-size: 0.65rem; color: var(--text-dim); margin-top: 2px; }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+.empty-state .empty-icon { font-size: 2rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.75rem; }
+
+.section-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.section-count { background: var(--bg3); border: 1px solid var(--border); border-radius: 99px; padding: 1px 8px; font-size: 0.6rem; }
+
+.footer { text-align: center; padding: 12px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 24px; }
+
+/* LOADING OVERLAY */
+.processing-banner { display: none; background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; padding: 12px 18px; margin-bottom: 16px; font-size: 0.75rem; color: var(--cyan); display: flex; align-items: center; gap: 12px; }
+.processing-banner.visible { display: flex; }
+.processing-banner.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">VMO<span>GAB</span></div>
+    <div class="subtitle">DTI &middot; Grupo &Aacute;guia Branca &middot; Value &amp; Automation Office</div>
+  </div>
+  <div class="page-title">&#9672; Ingest&atilde;o de Contexto</div>
+  <a href="/vmo/" class="back-btn">&larr; Voltar ao Mission Control</a>
+</div>
+
+<div class="container">
+
+  <!-- UPLOAD ZONE -->
+  <div class="upload-section">
+    <div class="upload-label">&#9672; Enviar Arquivos para An&aacute;lise</div>
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-icon">&#128196;</div>
+      <div class="drop-title">Arraste arquivos aqui ou clique para selecionar</div>
+      <div class="drop-sub">Claude analisa o conte&uacute;do e extrai contexto VMO automaticamente</div>
+      <div class="file-types">
+        <span class="ftype excel">&#128202; Excel (.xlsx)</span>
+        <span class="ftype word">&#128196; Word (.docx)</span>
+        <span class="ftype ppt">&#128190; PowerPoint (.pptx)</span>
+        <span class="ftype email">&#128140; E-mail (.eml)</span>
+        <span class="ftype mpp">&#128197; MS Project (.mpp)</span>
+      </div>
+      <button class="browse-btn" onclick="document.getElementById('fileInput').click()">&#128194; SELECIONAR ARQUIVOS</button>
+    </div>
+    <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.docx,.doc,.pptx,.ppt,.eml,.msg,.mpp">
+  </div>
+
+  <!-- PROCESSING BANNER -->
+  <div class="processing-banner hidden" id="processingBanner">
+    <div class="spinner"></div>
+    <span id="processingText">Analisando arquivo com Claude...</span>
+  </div>
+
+  <!-- QUEUE -->
+  <div class="queue-section" id="queueSection" style="display:none">
+    <div class="section-title">&#9672; Fila de Processamento <span class="section-count" id="queueCount">0</span></div>
+    <div class="queue-list" id="queueList"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="resultsSection">
+    <div class="section-title">&#9672; Contexto Extra&iacute;do <span class="section-count" id="resultsCount">0</span></div>
+    <div id="resultsContent">
+      <div class="empty-state">
+        <div class="empty-icon">&#128270;</div>
+        <p>Nenhum arquivo processado ainda.<br>Fa&ccedil;a upload de um arquivo para come&ccedil;ar.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB &middot; Ingest&atilde;o de Contexto &middot; DTI Grupo &Aacute;guia Branca &middot; Powered by Claude AI</div>
+
+<script>
+const API_URL = '/vmo-api/upload';
+let results = [];
+let queueItems = {};
+
+// FILE TYPE ICONS
+function getIcon(filename) {
+  const ext = filename.split('.').pop().toLowerCase();
+  const icons = { xlsx: '📊', xls: '📊', docx: '📄', doc: '📄', pptx: '📑', ppt: '📑', eml: '📧', msg: '📧', mpp: '📅' };
+  return icons[ext] || '📁';
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+
+// DRAG & DROP
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  processFiles(e.dataTransfer.files);
+});
+dropZone.addEventListener('click', (e) => {
+  if (e.target.classList.contains('browse-btn') || e.target.tagName === 'BUTTON') return;
+  document.getElementById('fileInput').click();
+});
+document.getElementById('fileInput').addEventListener('change', e => processFiles(e.target.files));
+
+function processFiles(files) {
+  [...files].forEach(file => uploadFile(file));
+}
+
+function addToQueue(file, id) {
+  const section = document.getElementById('queueSection');
+  section.style.display = 'block';
+  const list = document.getElementById('queueList');
+  const item = document.createElement('div');
+  item.className = 'queue-item processing';
+  item.id = 'qi-' + id;
+  item.innerHTML = `
+    <div class="file-icon">${getIcon(file.name)}</div>
+    <div class="file-info">
+      <div class="file-name">${file.name}</div>
+      <div class="file-size">${formatBytes(file.size)}</div>
+    </div>
+    <div class="progress-mini">
+      <div class="progress-bar"><div class="progress-fill" id="prog-${id}" style="width:10%"></div></div>
+    </div>
+    <div class="file-status processing" id="st-${id}">
+      <div class="spinner"></div>
+    </div>
+  `;
+  list.appendChild(item);
+  document.getElementById('queueCount').textContent = list.children.length;
+}
+
+function updateQueue(id, status, msg) {
+  const item = document.getElementById('qi-' + id);
+  if (!item) return;
+  item.className = 'queue-item ' + status;
+  const stEl = document.getElementById('st-' + id);
+  const progEl = document.getElementById('prog-' + id);
+  if (status === 'done') {
+    stEl.innerHTML = '<span style="color:var(--green)">✓ Pronto</span>';
+    if (progEl) progEl.style.width = '100%';
+  } else if (status === 'error') {
+    stEl.innerHTML = `<span style="color:var(--red)">✗ Erro</span>`;
+    if (progEl) { progEl.style.background = 'var(--red)'; progEl.style.width = '100%'; }
+  }
+}
+
+async function uploadFile(file) {
+  const id = Date.now() + Math.random().toString(36).slice(2);
+  addToQueue(file, id);
+
+  // Animate progress
+  let pct = 10;
+  const prog = document.getElementById('prog-' + id);
+  const progInterval = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 8, 85);
+    if (prog) prog.style.width = pct + '%';
+  }, 600);
+
+  const banner = document.getElementById('processingBanner');
+  const bannerText = document.getElementById('processingText');
+  banner.classList.remove('hidden');
+  banner.classList.add('visible');
+  bannerText.textContent = `Analisando "${file.name}" com Claude...`;
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const resp = await fetch(API_URL, { method: 'POST', body: formData });
+    const data = await resp.json();
+
+    clearInterval(progInterval);
+
+    if (!resp.ok || data.error) {
+      updateQueue(id, 'error', data.error || 'Erro desconhecido');
+      addErrorResult(file.name, data.error || 'Erro desconhecido');
+    } else {
+      updateQueue(id, 'done');
+      results.push({ id, file: file.name, data });
+      renderResult(id, file.name, data);
+    }
+  } catch (err) {
+    clearInterval(progInterval);
+    updateQueue(id, 'error', err.message);
+    addErrorResult(file.name, err.message);
+  }
+
+  banner.classList.add('hidden');
+  banner.classList.remove('visible');
+}
+
+function addErrorResult(filename, msg) {
+  const container = document.getElementById('resultsContent');
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+
+  const grid = getOrCreateGrid();
+  const card = document.createElement('div');
+  card.className = 'result-card indefinido';
+  card.innerHTML = `
+    <div class="rc-header">
+      <div class="rc-filename">${getIcon(filename)} ${filename}</div>
+      <div class="rc-project" style="color:var(--red)">Erro no Processamento</div>
+    </div>
+    <div class="rc-body">
+      <div class="rc-section">
+        <div class="rc-summary" style="color:var(--red)">${msg}</div>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+  updateResultsCount();
+}
+
+function getOrCreateGrid() {
+  const container = document.getElementById('resultsContent');
+  let grid = container.querySelector('.results-grid');
+  if (!grid) {
+    grid = document.createElement('div');
+    grid.className = 'results-grid';
+    container.appendChild(grid);
+  }
+  return grid;
+}
+
+function renderResult(id, filename, d) {
+  const container = document.getElementById('resultsContent');
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+
+  const grid = getOrCreateGrid();
+  const statusClass = (d.status || 'indefinido').toLowerCase().replace('ã','a').replace('ç','c');
+  const statusMap = { saudavel: 'SAUD&Aacute;VEL', atencao: 'ATEN&Ccedil;&Atilde;O', critico: 'CR&Iacute;TICO', indefinido: 'INDEFINIDO' };
+  const statusLabel = statusMap[statusClass] || d.status || 'INDEFINIDO';
+
+  let html = `
+    <div class="rc-header">
+      <div class="rc-filename">
+        ${getIcon(filename)} ${filename}
+        <span class="rc-type">${d.tipo_arquivo || 'arquivo'}</span>
+        ${d.data_referencia ? `<span class="rc-type">${d.data_referencia}</span>` : ''}
+      </div>
+      <div class="rc-project">${d.projeto || 'Projeto n&atilde;o identificado'}</div>
+      <span class="rc-status-badge ${statusClass}">${statusLabel}</span>
+    </div>
+    <div class="rc-body">
+  `;
+
+  if (d.resumo) {
+    html += `<div class="rc-section"><div class="rc-section-title">Resumo Executivo</div><div class="rc-summary">${d.resumo}</div></div>`;
+  }
+
+  if (d.progresso_estimado !== null && d.progresso_estimado !== undefined) {
+    const pct = Math.round(d.progresso_estimado);
+    html += `<div class="rc-section"><div class="rc-section-title">Progresso</div>
+      <div class="progress-bar-labeled">
+        <div class="pbl-header"><span>Conclus&atilde;o estimada</span><span>${pct}%</span></div>
+        <div class="pbl-bar"><div class="pbl-fill" style="width:${pct}%"></div></div>
+      </div></div>`;
+  }
+
+  if (d.orcamento && d.orcamento.valor) {
+    const val = typeof d.orcamento.valor === 'number' ? d.orcamento.valor.toLocaleString('pt-BR', {style:'currency',currency:'BRL'}) : d.orcamento.valor;
+    html += `<div class="rc-section"><div class="rc-section-title">Or&ccedil;amento</div>
+      <div class="orcamento-box"><div class="orc-val">${val}</div><div class="orc-ctx">${d.orcamento.contexto || ''}</div></div></div>`;
+  }
+
+  if (d.alertas && d.alertas.length) {
+    html += `<div class="rc-section"><div class="rc-section-title">Alertas (${d.alertas.length})</div><div class="rc-alerts">`;
+    d.alertas.forEach(a => {
+      html += `<div class="alert-badge ${a.tipo || 'info'}">${a.mensagem}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (d.riscos && d.riscos.length) {
+    html += `<div class="rc-section"><div class="rc-section-title">Riscos (${d.riscos.length})</div><div class="rc-list">`;
+    d.riscos.forEach(r => {
+      html += `<div class="rc-list-item"><span class="sev-dot ${r.severidade}"></span>${r.descricao}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (d.acoes && d.acoes.length) {
+    html += `<div class="rc-section"><div class="rc-section-title">A&ccedil;&otilde;es (${d.acoes.length})</div><div class="rc-actions">`;
+    d.acoes.forEach(a => {
+      html += `<div class="rc-action-item">
+        <span class="ac-resp">${a.responsavel || '—'}</span>
+        <span class="ac-text">${a.acao}</span>
+        <span class="ac-prazo">${a.prazo || ''}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (d.marcos && d.marcos.length) {
+    html += `<div class="rc-section"><div class="rc-section-title">Marcos (${d.marcos.length})</div><div class="rc-marcos">`;
+    d.marcos.forEach(m => {
+      html += `<div class="marco-item"><span class="marco-date">${m.data || '—'}</span><span class="marco-desc">${m.descricao}</span></div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (d.insights && d.insights.length) {
+    html += `<div class="rc-section"><div class="rc-section-title">Insights</div><div class="rc-insights">`;
+    d.insights.forEach(i => { html += `<div class="insight-item">${i}</div>`; });
+    html += `</div></div>`;
+  }
+
+  html += `
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.58rem;color:var(--text-dim)">
+      ${d.chars_extracted ? `${d.chars_extracted.toLocaleString()} caracteres extra&iacute;dos &nbsp;&middot;&nbsp;` : ''}
+      Analisado por Claude AI &middot; ${new Date().toLocaleString('pt-BR')}
+    </div>
+  `;
+
+  html += `</div>`;
+
+  const card = document.createElement('div');
+  card.className = `result-card ${statusClass}`;
+  card.id = 'result-' + id;
+  card.innerHTML = html;
+  grid.appendChild(card);
+  updateResultsCount();
+}
+
+function updateResultsCount() {
+  const grid = document.querySelector('.results-grid');
+  document.getElementById('resultsCount').textContent = grid ? grid.children.length : 0;
+}
+</script>
+</body>
+</html>

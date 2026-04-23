@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Central de Alertas</title>
+<style>
+:root {
+  --bg: #070b14; --bg2: #0d1220; --bg3: #111827; --border: #1e2d45;
+  --cyan: #00d4ff; --green: #00ff88; --yellow: #ffd700; --red: #ff3b5c;
+  --orange: #ff8c00; --text: #c8d8e8; --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55; --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 0.75rem; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; transition: all 0.2s; letter-spacing: 1px; }
+.back-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.page-title { font-size: 0.9rem; color: var(--red); letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 12px #ff3b5c55; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px 16px; }
+.summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.summary-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.summary-card:hover, .summary-card.active { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.summary-card.active-red { border-color: var(--red); background: rgba(255,59,92,0.05); }
+.summary-card.active-yellow { border-color: var(--yellow); background: rgba(255,215,0,0.05); }
+.summary-card.active-cyan { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.summary-card.active-green { border-color: var(--green); background: rgba(0,255,136,0.05); }
+.summary-val { font-size: 2rem; font-weight: 700; }
+.summary-val.red { color: var(--red); }
+.summary-val.yellow { color: var(--yellow); }
+.summary-val.green { color: var(--green); }
+.summary-val.cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.summary-val.all { color: #e0eaf5; }
+.summary-lbl { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+.filter-hint { font-size: 0.58rem; color: var(--text-dim); margin-top: 3px; }
+.filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.filter-btn { padding: 5px 14px; border: 1px solid var(--border); border-radius: 99px; font-size: 0.65rem; font-family: 'Courier New', monospace; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--text-dim); letter-spacing: 1px; }
+.filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.filter-btn.active { background: rgba(0,212,255,0.1); border-color: var(--cyan); color: var(--cyan); }
+.filter-btn.f-critical { border-color: rgba(255,59,92,0.4); color: var(--red); }
+.filter-btn.f-critical.active { background: rgba(255,59,92,0.1); }
+.filter-btn.f-warning { border-color: rgba(255,215,0,0.4); color: var(--yellow); }
+.filter-btn.f-warning.active { background: rgba(255,215,0,0.1); }
+.filter-btn.f-info { border-color: rgba(0,212,255,0.4); color: var(--cyan); }
+.filter-btn.f-info.active { background: rgba(0,212,255,0.1); }
+.filter-btn.f-ok { border-color: rgba(0,255,136,0.4); color: var(--green); }
+.filter-btn.f-ok.active { background: rgba(0,255,136,0.1); }
+.alerts-count { font-size: 0.65rem; color: var(--text-dim); margin-left: auto; }
+.alert-list { display: flex; flex-direction: column; gap: 10px; }
+.alert-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all 0.2s; animation: slideIn 0.3s ease; }
+.alert-card:hover { border-color: var(--cyan); }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.alert-card.critical { border-left: 4px solid var(--red); }
+.alert-card.warning { border-left: 4px solid var(--yellow); }
+.alert-card.info { border-left: 4px solid var(--cyan); }
+.alert-card.ok { border-left: 4px solid var(--green); }
+.alert-card.hidden { display: none; }
+.alert-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; }
+.alert-icon-large { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+.alert-main { flex: 1; }
+.alert-title { font-size: 0.85rem; font-weight: 700; color: #e0eaf5; margin-bottom: 3px; }
+.alert-subtitle { font-size: 0.7rem; color: var(--text); line-height: 1.5; }
+.alert-right { text-align: right; flex-shrink: 0; }
+.alert-time-badge { font-size: 0.6rem; color: var(--text-dim); background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; margin-bottom: 6px; display: inline-block; }
+.sev-badge { font-size: 0.6rem; padding: 3px 10px; border-radius: 99px; border: 1px solid; font-weight: 700; display: block; text-align: center; }
+.sev-badge.critical { color: var(--red); border-color: var(--red); background: rgba(255,59,92,0.1); }
+.sev-badge.warning { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
+.sev-badge.info { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
+.sev-badge.ok { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.1); }
+.alert-actions { padding: 0 18px 14px; display: flex; flex-direction: column; gap: 5px; }
+.action-label { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 4px; }
+.action-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.7rem; color: var(--text); line-height: 1.5; padding: 5px 8px; background: var(--bg3); border-radius: 5px; }
+.action-item .check { color: var(--green); font-size: 0.75rem; flex-shrink: 0; margin-top: 1px; }
+.action-item .urgent { color: var(--red); font-size: 0.75rem; flex-shrink: 0; margin-top: 1px; }
+.action-item .info-icon { color: var(--cyan); font-size: 0.75rem; flex-shrink: 0; margin-top: 1px; }
+.responsible-tag { font-size: 0.62rem; color: var(--cyan); margin-top: 3px; }
+.source-tag { font-size: 0.58rem; color: var(--text-dim); background: #111827; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+.footer { text-align: center; padding: 12px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 16px; }
+.mtag { display: inline-block; font-size: 0.55rem; background: #0a1428; border: 1px solid #1e2d45; border-radius: 3px; padding: 1px 5px; color: var(--text-dim); margin-left: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">VMO<span>GAB</span></div>
+    <div class="subtitle">DTI &middot; Grupo &Aacute;guia Branca &middot; Value &amp; Automation Office</div>
+  </div>
+  <div class="page-title">&#9672; Central de Alertas</div>
+  <a href="/vmo/" class="back-btn">&larr; Voltar ao Mission Control</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-row">
+    <div class="summary-card" onclick="filterAlerts('all')" id="btn-all">
+      <div class="summary-val all">13</div>
+      <div class="summary-lbl">Total de Alertas</div>
+      <div class="filter-hint">Clique para ver todos</div>
+    </div>
+    <div class="summary-card" onclick="filterAlerts('critical')" id="btn-critical">
+      <div class="summary-val red">3</div>
+      <div class="summary-lbl">Cr&iacute;ticos</div>
+      <div class="filter-hint">A&ccedil;&atilde;o imediata</div>
+    </div>
+    <div class="summary-card" onclick="filterAlerts('warning')" id="btn-warning">
+      <div class="summary-val yellow">7</div>
+      <div class="summary-lbl">Aten&ccedil;&atilde;o</div>
+      <div class="filter-hint">Monitoramento ativo</div>
+    </div>
+    <div class="summary-card" onclick="filterAlerts('info')" id="btn-info">
+      <div class="summary-val cyan">2</div>
+      <div class="summary-lbl">Informativos</div>
+      <div class="filter-hint">Para conhecimento</div>
+    </div>
+    <div class="summary-card" onclick="filterAlerts('ok')" id="btn-ok">
+      <div class="summary-val green">1</div>
+      <div class="summary-lbl">Positivos</div>
+      <div class="filter-hint">Boas not&iacute;cias</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <span style="font-size:0.65rem;color:var(--text-dim)">FILTRAR POR:</span>
+    <button class="filter-btn active" onclick="filterAlerts('all')" id="fbtn-all">TODOS (13)</button>
+    <button class="filter-btn f-critical" onclick="filterAlerts('critical')" id="fbtn-critical">CR&Iacute;TICO (3)</button>
+    <button class="filter-btn f-warning" onclick="filterAlerts('warning')" id="fbtn-warning">ATEN&Ccedil;&Atilde;O (7)</button>
+    <button class="filter-btn f-info" onclick="filterAlerts('info')" id="fbtn-info">INFO (2)</button>
+    <button class="filter-btn f-ok" onclick="filterAlerts('ok')" id="fbtn-ok">OK (1)</button>
+    <span class="alerts-count" id="alert-count">Mostrando 13 alertas</span>
+  </div>
+
+  <div class="alert-list" id="alertList">
+
+    <!-- C1 -->
+    <div class="alert-card critical" data-sev="critical">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#128308;</div>
+        <div class="alert-main">
+          <div class="alert-title">Total Bus &mdash; PARALISADO: aguardando estudo de conectividade <span class="mtag">Gov. PMO Radar</span></div>
+          <div class="alert-subtitle">Projeto interrompido aguardando estudo de conectividade. Vitor deve validar conclus&atilde;o com Infraestrutura at&eacute; 10/04. Gate com Gladston em 10/abr n&atilde;o pode ser comprometido.</div>
+          <div class="responsible-tag">Resp: Vitor Coimbra &middot; PM &nbsp;|&nbsp; Deadline: 10/04/2026</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge critical">CR&Iacute;TICO</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> URGENTE: Cobrar estudo de conectividade com Infraestrutura &mdash; prazo 10/04</div>
+        <div class="action-item"><span class="urgent">!</span> Garantir gate com Gladston em 10/abr com plano de conectividade definido</div>
+        <div class="action-item"><span class="check">&rarr;</span> Mapear impacto da paralisa&ccedil;&atilde;o no cronograma e nas 700 ag&ecirc;ncias</div>
+        <div class="action-item"><span class="check">&rarr;</span> Comunicar patrocinador sobre status e estimativa de retomada</div>
+      </div>
+    </div>
+
+    <!-- C2 -->
+    <div class="alert-card critical" data-sev="critical">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#128308;</div>
+        <div class="alert-main">
+          <div class="alert-title">4Tax (Fortex) &mdash; Pend&ecirc;ncias t&eacute;cnicas cr&iacute;ticas: Mara e Jefferson sem resposta <span class="mtag">Status Report</span></div>
+          <div class="alert-subtitle">Pend&ecirc;ncias t&eacute;cnicas urgentes sem retorno de Mara e Jefferson. Risco de atraso formal confirmado. Sandro e Viviane acompanhando. SEIDOR prepara cronograma &uacute;nico &mdash; impacto a ser analisado.</div>
+          <div class="responsible-tag">Resp: Viviane Caliari + Sandro Siqueira &nbsp;|&nbsp; Cobrar: Mara e Jefferson</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge critical">CR&Iacute;TICO</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> HOJE: Mara e Jefferson devem responder pend&ecirc;ncias &mdash; Viviane coordena</div>
+        <div class="action-item"><span class="urgent">!</span> Se sem resposta at&eacute; fim do dia: escalar para gest&atilde;o da &aacute;rea t&eacute;cnica</div>
+        <div class="action-item"><span class="check">&rarr;</span> Avaliar maior envolvimento da &aacute;rea de neg&oacute;cio para destravar pend&ecirc;ncias</div>
+        <div class="action-item"><span class="check">&rarr;</span> Participar da reuni&atilde;o de apresenta&ccedil;&atilde;o do cronograma &uacute;nico SEIDOR</div>
+      </div>
+    </div>
+
+    <!-- C3 -->
+    <div class="alert-card critical" data-sev="critical">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#128308;</div>
+        <div class="alert-main">
+          <div class="alert-title">Certificado Digital &mdash; Gildo sem resposta executiva sobre auditoria <span class="mtag">Status Report</span></div>
+          <div class="alert-subtitle">Marcelo deve exigir resposta de Gildo sobre auditoria e certifica&ccedil;&otilde;es digitais. Pend&ecirc;ncia bloqueia decis&otilde;es sobre escopo. Urg&ecirc;ncia confirmada pela lideran&ccedil;a na reuni&atilde;o.</div>
+          <div class="responsible-tag">Resp: Marcelo Silveira &middot; Coordenador &nbsp;|&nbsp; Cobrar: Gildo</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge critical">CR&Iacute;TICO</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> URGENTE: Marcelo contatar Gildo diretamente &mdash; resposta executiva exigida</div>
+        <div class="action-item"><span class="urgent">!</span> Se sem retorno em 48h: escalar para diretor</div>
+        <div class="action-item"><span class="check">&rarr;</span> Agendar reuni&atilde;o t&eacute;cnica com Diego e Marcos para detalhes do Ruum Lite</div>
+        <div class="action-item"><span class="check">&rarr;</span> Verificar posicionamento de Gildo sobre uso do Ruum Lite no Com&eacute;rcio</div>
+      </div>
+    </div>
+
+    <!-- W1 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">LG &mdash; Desvio 1% na migra&ccedil;&atilde;o gera cobran&ccedil;a extra inesperada <span class="mtag">Gov. PMO Radar</span></div>
+          <div class="alert-subtitle">Desvio de 1% na migra&ccedil;&atilde;o do projeto LG resulta em custos adicionais por cobran&ccedil;a inesperada da consultoria. Sandro negociando e avaliando alternativas internas para redu&ccedil;&atilde;o de custos.</div>
+          <div class="responsible-tag">Resp: Sandro Siqueira &middot; Supervisor &nbsp;|&nbsp; PM: Vitor Coimbra</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">ATEN&Ccedil;&Atilde;O</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Sandro: formalizar negocia&ccedil;&atilde;o com LG sobre cobran&ccedil;a extra</div>
+        <div class="action-item"><span class="check">&rarr;</span> Avaliar alternativas internas para redu&ccedil;&atilde;o de custo adicional</div>
+        <div class="action-item"><span class="check">&rarr;</span> Quantificar impacto financeiro e incluir no pr&oacute;ximo status report</div>
+        <div class="action-item"><span class="check">&rarr;</span> PGP venceu em 31/03 &mdash; verificar status de aprova&ccedil;&atilde;o urgentemente</div>
+      </div>
+    </div>
+
+    <!-- W2 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Onboarding Digital &mdash; Documenta&ccedil;&atilde;o t&eacute;cnica de Wanderlei n&atilde;o entregue <span class="mtag">Gov. PMO Radar</span></div>
+          <div class="alert-subtitle">Consultoria (Wanderlei) n&atilde;o entregou documenta&ccedil;&atilde;o t&eacute;cnica e funcional. Testes crossboarding e demissional em organiza&ccedil;&atilde;o. Testes integrados planejados para 06-10/abr em risco.</div>
+          <div class="responsible-tag">Resp: Vitor Coimbra &middot; PM &nbsp;|&nbsp; Cobrar: Wanderlei</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">ATEN&Ccedil;&Atilde;O</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Cobrar e escalar doc. t&eacute;cnica/funcional de Wanderlei &mdash; daily agendada</div>
+        <div class="action-item"><span class="check">&rarr;</span> Finalizar lista de participantes do teste demissional e enviar agendas</div>
+        <div class="action-item"><span class="check">&rarr;</span> Exigir plano de teste crossboarding/demissional na daily com HRST</div>
+        <div class="action-item"><span class="check">&rarr;</span> Prazo limite: receber doc. at&eacute; 03/abr para revisar antes dos testes</div>
+      </div>
+    </div>
+
+    <!-- W3 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Support Package SEIDOR &mdash; Proposta taxa 1601 pendente da Adejo <span class="mtag">Gov. PMO Radar</span></div>
+          <div class="alert-subtitle">Consultoria Adejo (C&iacute;ntia/Priscila) n&atilde;o enviou proposta da taxa 1601. Ana Luisa e Viviane escalando. Pend&ecirc;ncia bloqueia avan&ccedil;o do Support Package. Controla do Futuro tamb&eacute;m com atrasos.</div>
+          <div class="responsible-tag">Resp: Ana Luisa Curcio + Viviane Caliari &nbsp;|&nbsp; Cobrar: Adejo/C&iacute;ntia/Priscila</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">ATEN&Ccedil;&Atilde;O</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Cobrar Adejo formalmente com prazo definido &mdash; Ana Luisa l&iacute;der</div>
+        <div class="action-item"><span class="check">&rarr;</span> Viviane: verificar contatos alternativos na Adejo para escalada</div>
+        <div class="action-item"><span class="check">&rarr;</span> Alinhar com Marcelo sobre prioridades e estrat&eacute;gias do Support Package</div>
+        <div class="action-item"><span class="check">&rarr;</span> Escalar atrasos da Controladora do Futuro com fornecedores internos</div>
+      </div>
+    </div>
+
+    <!-- W4 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Certificado Digital &mdash; Reuni&atilde;o t&eacute;cnica urgente para definir Ruum Lite <span class="mtag">Status Report</span></div>
+          <div class="alert-subtitle">Ruum Lite em uso tempor&aacute;rio. Reuni&atilde;o t&eacute;cnica com Diego e Marcos deve ser agendada urgentemente para definir instala&ccedil;&atilde;o e controle de uso entre divis&otilde;es. Transfer&ecirc;ncia do gerenciamento para VAB conclu&iacute;da &mdash; &aacute;rea agora aut&ocirc;noma.</div>
+          <div class="responsible-tag">Resp: Viviane Caliari &nbsp;|&nbsp; Envolvidos: Diego, Marcos</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">ATEN&Ccedil;&Atilde;O</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Agendar reuni&atilde;o t&eacute;cnica com Diego e Marcos sobre Ruum Lite</div>
+        <div class="action-item"><span class="check">&rarr;</span> Verificar retorno de Diego sobre disponibilidade e necessidades</div>
+        <div class="action-item"><span class="check">&rarr;</span> Validar posicionamento de Gildo sobre uso do Ruum Lite no Com&eacute;rcio</div>
+        <div class="action-item"><span class="check">&rarr;</span> VAB aut&ocirc;noma: garantir transi&ccedil;&atilde;o sem depend&ecirc;ncia da VIX no planejamento</div>
+      </div>
+    </div>
+
+    <!-- W5 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Wave &mdash; Change Request aguardando aprova&ccedil;&atilde;o ap&oacute;s Go Live <span class="mtag">Daily Sandro</span></div>
+          <div class="alert-subtitle">Go Live Wave/SAP conclu&iacute;do. Opera&ccedil;&atilde;o assistida de 2 semanas iniciada. Change Request essencial para ajustes aguarda aprova&ccedil;&atilde;o &mdash; vinculada &agrave; auditoria. Problemas de ajuste de processo no lado Wave identificados.</div>
+          <div class="responsible-tag">Resp: Sandro Siqueira &middot; Supervisor &nbsp;|&nbsp; Opera&ccedil;&atilde;o assistida: at&eacute; 13/04</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">ATEN&Ccedil;&Atilde;O</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Garantir aprova&ccedil;&atilde;o da proposta t&eacute;cnica comercial da CR &mdash; Sandro l&iacute;der</div>
+        <div class="action-item"><span class="check">&rarr;</span> Manter engajamento ativo do cliente durante opera&ccedil;&atilde;o assistida</div>
+        <div class="action-item"><span class="check">&rarr;</span> Resolver ajustes de processo no lado do Wave identificados no Go Live</div>
+        <div class="action-item"><span class="check">&rarr;</span> Definir estrat&eacute;gia de comunica&ccedil;&atilde;o para eventuais cancelamentos</div>
+      </div>
+    </div>
+
+    <!-- W6 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Tax One &mdash; Escalada aprovada &agrave; diretoria comercial para revis&atilde;o de proposta <span class="mtag">Status Report</span></div>
+          <div class="alert-subtitle">Revis&atilde;o de proposta pendente no Tax One. Escalada &agrave; diretoria comercial foi aprovada para acelerar negocia&ccedil;&otilde;es. Marcelo apoiando na escalada. Aguardando retorno da diretoria.</div>
+          <div class="responsible-tag">Resp: Viviane Caliari &nbsp;|&nbsp; Escalada: Diretoria Comercial</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">ATEN&Ccedil;&Atilde;O</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Formalizar escalada para diretoria comercial com prazo de resposta</div>
+        <div class="action-item"><span class="check">&rarr;</span> Marcelo: auxiliar na escalada e acompanhar resultado</div>
+        <div class="action-item"><span class="check">&rarr;</span> Preparar resumo da posi&ccedil;&atilde;o atual para facilitar decis&atilde;o da diretoria</div>
+      </div>
+    </div>
+
+    <!-- W7 -->
+    <div class="alert-card warning" data-sev="warning">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9888;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">NOVA DEMANDA &mdash; Microsoft Pedagore descontinua Set/26: substituto urgente <span class="mtag">Discovery Demandas</span></div>
+          <div class="alert-subtitle">Microsoft Pedagore descontinuado em setembro/2026. Nova solu&ccedil;&atilde;o deve manter cadastro de projetos, gest&atilde;o de riscos, gera&ccedil;&atilde;o de reports e indicadores. Op&ccedil;&otilde;es: Pr&oacute;spera e MS Project Planner. Budget: at&eacute; R$ 30.000. Prazo cr&iacute;tico: implementa&ccedil;&atilde;o at&eacute; Set/26.</div>
+          <div class="responsible-tag">Resp: Marcelo Silveira &middot; Coordenador &nbsp;|&nbsp; Prazo: Set/2026</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge warning">NOVA DEMANDA</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">A&ccedil;&otilde;es Recomendadas</div>
+        <div class="action-item"><span class="urgent">!</span> Identificar substituta: avaliar Pr&oacute;spera vs. MS Project Planner formalmente</div>
+        <div class="action-item"><span class="check">&rarr;</span> Confirmar or&ccedil;amento: at&eacute; R$ 30.000 para implementa&ccedil;&atilde;o</div>
+        <div class="action-item"><span class="check">&rarr;</span> Avaliar impacto nas divis&otilde;es Com&eacute;rcio, Passageiros e Log&iacute;stica</div>
+        <div class="action-item"><span class="check">&rarr;</span> Assegurar implementa&ccedil;&atilde;o conclu&iacute;da at&eacute; Set/26 para n&atilde;o perder suporte</div>
+      </div>
+    </div>
+
+    <!-- I1 -->
+    <div class="alert-card info" data-sev="info">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#8505;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Processo Seletivo &mdash; Contrata&ccedil;&otilde;es em andamento para &aacute;reas de Projetos e T&eacute;cnica <span class="mtag">Status Report</span></div>
+          <div class="alert-subtitle">Processo seletivo em andamento para contrata&ccedil;&otilde;es r&aacute;pidas nas &aacute;reas de Projetos e t&eacute;cnica. Marcelo apoiando no acompanhamento das entrevistas e acelera&ccedil;&atilde;o das contrata&ccedil;&otilde;es pendentes.</div>
+          <div class="responsible-tag">Resp: Marcelo Silveira &middot; Coordenador</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge info">INFO</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">Pr&oacute;ximos Passos</div>
+        <div class="action-item"><span class="info-icon">i</span> Marcelo acompanhar entrevistas e acelerar contrata&ccedil;&otilde;es</div>
+        <div class="action-item"><span class="check">&rarr;</span> Monitorar pipeline de candidatos e prazos de oferta</div>
+      </div>
+    </div>
+
+    <!-- I2 -->
+    <div class="alert-card info" data-sev="info">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#8505;&#65039;</div>
+        <div class="alert-main">
+          <div class="alert-title">Provisionamento Financeiro &mdash; Bug identificado, reuni&atilde;o com fornecedor sendo organizada <span class="mtag">Status Report</span></div>
+          <div class="alert-subtitle">Bug identificado na ferramenta de provisionamento financeiro. Reuni&atilde;o com fornecedor sendo organizada. Sandro levantando informa&ccedil;&otilde;es t&eacute;cnicas com Vanessa e equipe. Jur&iacute;dico envolvido para levantar desafios.</div>
+          <div class="responsible-tag">Resp: Sandro Siqueira &nbsp;|&nbsp; T&eacute;cnico: Vanessa e equipe</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge info">INFO</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">Pr&oacute;ximos Passos</div>
+        <div class="action-item"><span class="info-icon">i</span> Sandro: levantar informa&ccedil;&otilde;es t&eacute;cnicas com Vanessa para reuni&atilde;o</div>
+        <div class="action-item"><span class="check">&rarr;</span> Propor reuni&atilde;o com fornecedores e time interno para evolu&ccedil;&atilde;o da ferramenta</div>
+        <div class="action-item"><span class="check">&rarr;</span> Jur&iacute;dico: levantar desafios no provisionamento e necessidades para solu&ccedil;&atilde;o adequada</div>
+      </div>
+    </div>
+
+    <!-- OK -->
+    <div class="alert-card ok" data-sev="ok">
+      <div class="alert-header">
+        <div class="alert-icon-large">&#9989;</div>
+        <div class="alert-main">
+          <div class="alert-title">Wave &mdash; GO LIVE conclu&iacute;do! Integra&ccedil;&atilde;o Wave/SAP em opera&ccedil;&atilde;o assistida <span class="mtag">Daily Sandro</span></div>
+          <div class="alert-subtitle">Go Live da integra&ccedil;&atilde;o Wave/SAP conclu&iacute;do com sucesso! Opera&ccedil;&atilde;o assistida de 2 semanas iniciada. Engajamento da equipe SAP e do fornecedor est&aacute; forte, integra&ccedil;&atilde;o t&eacute;cnica s&oacute;lida. Liderado por Sandro Siqueira.</div>
+          <div class="responsible-tag">Resp: Sandro Siqueira &middot; Supervisor &nbsp;|&nbsp; Opera&ccedil;&atilde;o assistida at&eacute;: 13/04/2026</div>
+        </div>
+        <div class="alert-right">
+          <div class="alert-time-badge">30/03/2026</div>
+          <div class="sev-badge ok">CONCLU&Iacute;DO</div>
+        </div>
+      </div>
+      <div class="alert-actions">
+        <div class="action-label">Pr&oacute;ximos Passos</div>
+        <div class="action-item"><span class="check">&#10003;</span> Manter opera&ccedil;&atilde;o assistida por 2 semanas com suporte dedicado</div>
+        <div class="action-item"><span class="check">&rarr;</span> Garantir aprova&ccedil;&atilde;o da Change Request vinculada &agrave; auditoria</div>
+        <div class="action-item"><span class="check">&rarr;</span> Resolver ajustes de processo no lado Wave identificados no Go Live</div>
+        <div class="action-item"><span class="info-icon">i</span> Documentar li&ccedil;&otilde;es aprendidas como refer&ecirc;ncia para o portf&oacute;lio</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;padding:12px;font-size:0.63rem;color:var(--text-dim);border:1px solid var(--border);border-radius:6px;background:var(--bg2);margin-top:16px">
+    <span class="source-tag">&#127897;&#65039; 4 reuni&otilde;es Fireflies &middot; 30/03/2026</span>
+    &nbsp;&nbsp;Gov. PMO Radar &middot; Status Report Projetos &middot; Discovery Demandas &middot; Daily Sandro/Viviane
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB &middot; Central de Alertas &middot; DTI Grupo &Aacute;guia Branca &middot; Atualizado 30/03/2026</div>
+
+<script>
+let currentFilter = 'all';
+function filterAlerts(severity) {
+  currentFilter = severity;
+  const cards = document.querySelectorAll('.alert-card');
+  let visible = 0;
+  cards.forEach(card => {
+    if (severity === 'all' || card.dataset.sev === severity) {
+      card.classList.remove('hidden');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = '';
+      visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+  document.getElementById('alert-count').textContent = 'Mostrando ' + visible + ' alerta' + (visible !== 1 ? 's' : '');
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  const fBtn = document.getElementById('fbtn-' + severity);
+  if (fBtn) fBtn.classList.add('active');
+  document.querySelectorAll('.summary-card').forEach(c => {
+    c.classList.remove('active','active-red','active-yellow','active-cyan','active-green');
+  });
+  const classMap = { all:'active', critical:'active-red', warning:'active-yellow', info:'active-cyan', ok:'active-green' };
+  const sumCard = document.getElementById('btn-' + severity);
+  if (sumCard) sumCard.classList.add(classMap[severity] || 'active');
+}
+filterAlerts('all');
+</script>
+</body>
+</html>

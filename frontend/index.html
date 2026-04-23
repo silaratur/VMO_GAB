@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Mission Control | Grupo Águia Branca</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg: #070b14;
+  --bg2: #0d1220;
+  --bg3: #111827;
+  --border: #1e2d45;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd700;
+  --red: #ff3b5c;
+  --orange: #ff8c00;
+  --text: #c8d8e8;
+  --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55;
+  --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.header-left { display: flex; align-items: center; gap: 16px; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.header-center { text-align: center; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px; }
+.mission-status { display: flex; align-items: center; gap: 8px; color: var(--green); font-size: 0.75rem; text-shadow: var(--glow-green); }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+.clock { font-size: 1.1rem; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+
+.grid-main { display: grid; grid-template-columns: 1fr 1fr 1fr 320px; gap: 12px; padding: 12px 16px; max-width: 1800px; margin: 0 auto; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: 0.4; }
+.card.green-accent::before { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+.card.red-accent::before { background: linear-gradient(90deg, transparent, var(--red), transparent); }
+.card.yellow-accent::before { background: linear-gradient(90deg, transparent, var(--yellow), transparent); }
+.card-title { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+.card-title span { font-size: 0.8rem; }
+
+.metrics-row { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
+.metric { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 12px; text-align: center; transition: border-color 0.3s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+.metric:hover { border-color: var(--cyan); }
+a.metric { display: block; }
+.metric-icon { font-size: 1.3rem; margin-bottom: 6px; }
+.metric-value { font-size: 1.6rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.metric-value.cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.metric-value.green { color: var(--green); text-shadow: var(--glow-green); }
+.metric-value.yellow { color: var(--yellow); }
+.metric-value.red { color: var(--red); }
+.metric-label { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+.metric-delta { font-size: 0.65rem; margin-top: 4px; }
+.metric-delta.up { color: var(--green); }
+.metric-delta.down { color: var(--red); }
+.metric-delta.warn { color: var(--yellow); }
+
+.projects-grid { display: flex; flex-direction: column; gap: 7px; }
+.project-item { display: grid; grid-template-columns: 10px 1fr auto auto; align-items: center; gap: 10px; padding: 9px 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; transition: border-color 0.2s; cursor: pointer; text-decoration: none; color: inherit; }
+.project-item:hover { border-color: var(--cyan); }
+a.project-item { display: grid; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.green { background: var(--green); box-shadow: var(--glow-green); }
+.status-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px #ffd70055; }
+.status-dot.red { background: var(--red); box-shadow: 0 0 8px #ff3b5c55; }
+.status-dot.gray { background: #444; }
+.project-name { font-size: 0.78rem; font-weight: 600; color: #ddd; }
+.project-meta { font-size: 0.6rem; color: var(--text-dim); margin-top: 2px; }
+.project-progress-wrap { width: 80px; }
+.progress-bar { background: #1a2535; border-radius: 99px; height: 5px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--cyan), var(--green)); }
+.progress-label { font-size: 0.6rem; color: var(--text-dim); text-align: right; margin-top: 2px; }
+.project-deadline { font-size: 0.65rem; color: var(--text-dim); text-align: right; white-space: nowrap; }
+.project-deadline.urgent { color: var(--red); font-weight: 700; }
+.project-deadline.soon { color: var(--yellow); }
+
+.risk-matrix { display: grid; grid-template-columns: 20px repeat(3, 1fr); grid-template-rows: repeat(3, 1fr) 20px; gap: 4px; height: 180px; }
+.risk-cell { border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; }
+.risk-cell.low { background: #052e1688; border: 1px solid #166534; color: var(--green); }
+.risk-cell.med { background: #451a0388; border: 1px solid #92400e; color: var(--yellow); }
+.risk-cell.high { background: #3b000888; border: 1px solid #7f1d1d; color: var(--red); }
+.risk-cell.axis { background: transparent; color: var(--text-dim); font-size: 0.55rem; text-align: center; }
+.risk-badge { background: var(--bg); border: 1px solid currentColor; border-radius: 99px; padding: 1px 5px; font-size: 0.58rem; font-weight: 700; }
+
+.alert-feed { display: flex; flex-direction: column; gap: 6px; max-height: 380px; overflow-y: auto; }
+.alert-feed::-webkit-scrollbar { width: 4px; }
+.alert-feed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.alert-item { display: flex; gap: 10px; padding: 8px 10px; background: var(--bg3); border-radius: 5px; border-left: 3px solid; font-size: 0.72rem; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+.alert-item.critical { border-color: var(--red); }
+.alert-item.warning { border-color: var(--yellow); }
+.alert-item.info { border-color: var(--cyan); }
+.alert-item.success { border-color: var(--green); }
+.alert-icon { font-size: 0.9rem; flex-shrink: 0; }
+.alert-text { flex: 1; color: var(--text); line-height: 1.4; }
+.alert-time { font-size: 0.6rem; color: var(--text-dim); white-space: nowrap; align-self: flex-start; }
+
+.team-grid { display: flex; flex-direction: column; gap: 9px; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; border: 2px solid var(--border); }
+.member-name { font-size: 0.75rem; color: #ddd; }
+.member-role { font-size: 0.58rem; color: var(--text-dim); }
+.utilization-bar { width: 65px; }
+.util-fill { height: 5px; border-radius: 99px; }
+.util-fill.ok { background: var(--green); }
+.util-fill.warn { background: var(--yellow); }
+.util-fill.over { background: var(--red); }
+.util-pct { font-size: 0.6rem; text-align: right; margin-top: 2px; }
+
+.span2 { grid-column: span 2; }
+.span3 { grid-column: span 3; }
+.sidebar { grid-column: 4; grid-row: 2 / 5; display: flex; flex-direction: column; gap: 12px; }
+
+.timeline { display: flex; flex-direction: column; gap: 6px; }
+.tl-date { color: var(--text-dim); text-align: right; font-size: 0.65rem; padding-top: 2px; }
+.tl-dot-wrap { display: flex; flex-direction: column; align-items: center; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
+.tl-dot.done { background: var(--green); border-color: var(--green); }
+.tl-dot.now { background: var(--cyan); border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+.tl-dot.next { background: transparent; border-color: var(--text-dim); }
+.tl-dot.risk { background: var(--red); border-color: var(--red); }
+.tl-line { width: 1px; flex: 1; background: var(--border); margin-top: 2px; min-height: 20px; }
+.tl-content .tl-title { color: #ddd; font-weight: 600; }
+.tl-content .tl-sub { color: var(--text-dim); font-size: 0.6rem; margin-top: 2px; }
+
+.source-tag { font-size: 0.58rem; color: var(--text-dim); background: #111827; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+.team-member { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; padding: 6px 8px; border-radius: 6px; text-decoration: none; color: inherit; transition: background 0.2s; cursor: pointer; }
+.team-member:hover { background: rgba(0,212,255,0.04); }
+.tl-item { display: grid; grid-template-columns: 80px 12px 1fr; gap: 8px; align-items: start; font-size: 0.72rem; text-decoration: none; color: inherit; padding: 4px 4px; border-radius: 6px; transition: background 0.2s; cursor: pointer; }
+.tl-item:hover { background: rgba(0,212,255,0.04); }
+.card-clickable { cursor: pointer; transition: border-color 0.2s; }
+.card-clickable:hover { border-color: var(--cyan) !important; }
+a.card-link { text-decoration: none; color: inherit; display: block; }
+
+.footer { text-align: center; padding: 8px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <div class="logo">VMO<span>GAB</span></div>
+      <div class="subtitle">DTI · Grupo Águia Branca · Value &amp; Automation Office</div>
+    </div>
+  </div>
+  <div class="header-center">
+    <div style="color:var(--cyan);letter-spacing:3px;font-size:0.8rem;">◈ MISSION CONTROL CENTER ◈</div>
+    <div style="margin-top:2px">PORTFÓLIO · RISCOS · KPIs · PERFORMANCE</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <div class="mission-status"><div class="pulse"></div> OPERACIONAL</div>
+    <div>
+      <div class="clock" id="clock">--:--:--</div>
+      <div style="font-size:0.6rem;color:var(--text-dim);text-align:right" id="date-display"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-main">
+
+  <!-- METRICS -->
+  <div class="metrics-row">
+    <a href="projetos.html" class="metric">
+      <div class="metric-icon">🚀</div>
+      <div class="metric-value cyan">9</div>
+      <div class="metric-label">Projetos Ativos</div>
+      <div class="metric-delta warn">2 críticos</div>
+    </a>
+    <a href="projetos.html" class="metric">
+      <div class="metric-icon">✅</div>
+      <div class="metric-value yellow">11%</div>
+      <div class="metric-label">Saudáveis</div>
+      <div class="metric-delta down">↓ 1 de 9</div>
+    </a>
+    <a href="projetos.html" class="metric">
+      <div class="metric-icon">🟡</div>
+      <div class="metric-value yellow">6</div>
+      <div class="metric-label">Em Atenção</div>
+      <div class="metric-delta warn">67% do portfólio</div>
+    </a>
+    <a href="projetos.html" class="metric">
+      <div class="metric-icon">🔴</div>
+      <div class="metric-value red">3</div>
+      <div class="metric-label">Críticos</div>
+      <div class="metric-delta down">Total Bus + 4Tax + Cert.Digital</div>
+    </a>
+    <a href="alertas.html" class="metric">
+      <div class="metric-icon">⚠️</div>
+      <div class="metric-value red">13</div>
+      <div class="metric-label">Alertas Ativos</div>
+      <div class="metric-delta down">↑ 4 reuniões 30/03</div>
+    </a>
+    <a href="time.html" class="metric">
+      <div class="metric-icon">👥</div>
+      <div class="metric-value red">130%</div>
+      <div class="metric-label">Pico Utilização</div>
+      <div class="metric-delta down">Juliana sobrecarregada</div>
+    </a>
+    <a href="alertas.html" class="metric">
+      <div class="metric-icon">📋</div>
+      <div class="metric-value yellow">5</div>
+      <div class="metric-label">Decisões Pendentes</div>
+      <div class="metric-delta warn">escalada necessária</div>
+    </a>
+    <a href="timeline.html" class="metric">
+      <div class="metric-icon">📅</div>
+      <div class="metric-value cyan">30 Mar</div>
+      <div class="metric-label">Última Atualização</div>
+      <div class="metric-delta" style="color:var(--text-dim)">4 reuniões hoje</div>
+    </a>
+    <a href="upload.html" class="metric" style="border-color:rgba(0,255,136,0.3)">
+      <div class="metric-icon">📥</div>
+      <div class="metric-value green" style="font-size:1rem">INGERIR</div>
+      <div class="metric-label">Upload de Contexto</div>
+      <div class="metric-delta" style="color:var(--green)">Excel · Word · PPT</div>
+    </a>
+  </div>
+
+  <!-- PORTFÓLIO -->
+  <div class="card span2 card-clickable" style="grid-row:2" onclick="location.href='projetos.html'">
+    <div class="card-title">
+      <div><span>📁</span> Portfólio de Projetos — Holding DTI</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="source-tag">🎙️ Fireflies 30/03/2026</span>
+        <a href="projetos.html" style="color:var(--cyan);text-decoration:none;font-size:0.7rem;border:1px solid rgba(0,212,255,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver tudo →</a>
+        <span style="color:var(--cyan)">9 ativos + Wave Op.Assistida</span>
+      </div>
+    </div>
+    <div class="projects-grid">
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot red"></div>
+        <div><div class="project-name">Total Bus — Migração Cloud Azure</div><div class="project-meta">Infra · PM: Vitor Coimbra · 700 agências impactadas · Divisão Passageiros | Stakeholder: Gladston Campos</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:20%;background:linear-gradient(90deg,var(--red),var(--orange))"></div></div><div class="progress-label">~20%</div></div>
+        <div class="project-deadline urgent">Mai/26 ⚠</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot red"></div>
+        <div><div class="project-name">Support Package (SEIDOR)</div><div class="project-meta">SAP · PM: Ana Luisa Curcio · decisão de parar ou seguir · Corporativo | Todas as divisões</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:35%;background:linear-gradient(90deg,var(--red),var(--orange))"></div></div><div class="progress-label">~35%</div></div>
+        <div class="project-deadline urgent">Decisão req.</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot yellow"></div>
+        <div><div class="project-name">CASH — Sistema de Pagamentos</div><div class="project-meta">Financeiro · PM: Juliana Barcelos · Finnet/Santander bloqueado · Corporativo | Todas as divisões</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:55%;background:linear-gradient(90deg,var(--yellow),var(--orange))"></div></div><div class="progress-label">~55%</div></div>
+        <div class="project-deadline soon">Replanejar</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot yellow"></div>
+        <div><div class="project-name">Certificado Digital</div><div class="project-meta">Segurança · PM: Juliana Barcelos · aprovações Comércio/VIX pendentes</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:40%;background:linear-gradient(90deg,var(--yellow),var(--orange))"></div></div><div class="progress-label">~40%</div></div>
+        <div class="project-deadline soon">Aguard. aprox.</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot yellow"></div>
+        <div><div class="project-name">4Tax — Solução Fiscal/Tributária SAP</div><div class="project-meta">Supply Chain · PM: Juliana Barcelos · 4 subcomponentes · Corporativo | Passageiros + Logística | Stakeholders: Gladston Campos, Raphael Leitão</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:45%;background:linear-gradient(90deg,var(--yellow),var(--orange))"></div></div><div class="progress-label">~45%</div></div>
+        <div class="project-deadline soon">Jun–Out/26</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot yellow"></div>
+        <div><div class="project-name">Onboarding Digital</div><div class="project-meta">RH/TI · PM: Vitor Coimbra · documentação consultoria pendente · Divisão Logística | Stakeholder: Raphael Leitão</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:30%;background:linear-gradient(90deg,var(--yellow),var(--orange))"></div></div><div class="progress-label">~30%</div></div>
+        <div class="project-deadline soon">06–10 Abr</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot yellow"></div>
+        <div><div class="project-name">LG — Gestão de Contratos</div><div class="project-meta">Jurídico · PM: Vitor Coimbra · PGP aguardando aprovação · Divisão Comércio | Stakeholder: Fabricio Ferri</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:25%;background:linear-gradient(90deg,var(--yellow),var(--orange))"></div></div><div class="progress-label">~25%</div></div>
+        <div class="project-deadline urgent">PGP vence 31/03</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot yellow"></div>
+        <div><div class="project-name">Caminhos Estratégicos</div><div class="project-meta">Estratégia · PM: Marcelo Silveira · indicadores a definir</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:50%;background:linear-gradient(90deg,var(--yellow),var(--orange))"></div></div><div class="progress-label">~50%</div></div>
+        <div class="project-deadline">Em andamento</div>
+      </a>
+      <a href="projetos.html" class="project-item">
+        <div class="status-dot green"></div>
+        <div><div class="project-name">Vem Comigo — Adiant. Recebíveis</div><div class="project-meta">Financeiro · PM: Juliana Barcelos · piloto fase 2 ativo · Divisão Logística | Stakeholder: Raphael Leitão</div></div>
+        <div class="project-progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div><div class="progress-label">~65%</div></div>
+        <div class="project-deadline">Piloto 15d</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI RADAR -->
+  <div class="card card-clickable" style="grid-row:2" onclick="location.href='kpis.html'">
+    <div class="card-title">
+      <span><span>📊</span> Saúde do Portfólio</span>
+      <a href="kpis.html" style="color:var(--cyan);text-decoration:none;font-size:0.65rem;border:1px solid rgba(0,212,255,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver KPIs →</a>
+    </div>
+    <canvas id="kpiChart" height="185"></canvas>
+  </div>
+
+  <!-- SIDEBAR ALERTAS -->
+  <div class="sidebar">
+    <div class="card red-accent card-clickable" style="flex:1" onclick="location.href='alertas.html'">
+      <div class="card-title">
+        <span><span>🚨</span> Central de Alertas <span style="color:var(--red)">13 ativos</span></span>
+        <a href="alertas.html" style="color:var(--red);text-decoration:none;font-size:0.65rem;border:1px solid rgba(255,59,92,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver todos →</a>
+      </div>
+      <div class="alert-feed" id="alertFeed">
+        <div class="alert-item critical">
+          <div class="alert-icon">🔴</div>
+          <div class="alert-text"><b>Total Bus</b> — PARALISADO aguardando estudo de conectividade. Gate com Gladston em 10/04.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item critical">
+          <div class="alert-icon">🔴</div>
+          <div class="alert-text"><b>4Tax (Fortex)</b> — Pendências técnicas críticas. Mara e Jefferson sem resposta. Risco de atraso formal.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item critical">
+          <div class="alert-icon">🔴</div>
+          <div class="alert-text"><b>Cert. Digital</b> — Gildo sem resposta executiva sobre auditoria. Marcelo deve exigir retorno.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item warning">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text"><b>LG</b> — Desvio 1% na migração gera cobrança extra inesperada. Sandro negociando.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item warning">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text"><b>Onboarding</b> — Doc. técnica de Wanderlei não entregue. Testes 06–10/abr em risco.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item warning">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text"><b>Support Package</b> — Proposta taxa 1601 pendente da Adejo (Cíntia/Priscila). Ana Luisa escalando.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item warning">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text"><b>Nova Demanda</b> — Microsoft Pedagore descontinua Set/26. Substituto urgente. Budget R$ 30k.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+        <div class="alert-item success">
+          <div class="alert-icon">✅</div>
+          <div class="alert-text"><b>Wave Go Live</b> — Integração Wave/SAP concluída! Operação assistida 2 semanas. Sandro lidera.</div>
+          <div class="alert-time">30/03</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATRIX RISCOS -->
+  <div class="card card-clickable" style="grid-row:3" onclick="location.href='riscos.html'">
+    <div class="card-title">
+      <span><span>⚠️</span> Matriz de Riscos — Real</span>
+      <a href="riscos.html" style="color:var(--red);text-decoration:none;font-size:0.65rem;border:1px solid rgba(255,59,92,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver riscos →</a>
+    </div>
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      <div style="flex:1">
+        <div style="font-size:0.6rem;color:var(--text-dim);margin-bottom:6px;text-align:center">IMPACTO →</div>
+        <div class="risk-matrix">
+          <div class="risk-cell axis" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:0.5rem">Alta</div>
+          <div class="risk-cell med"><span class="risk-badge" style="color:var(--yellow)">R3</span></div>
+          <div class="risk-cell high"><span class="risk-badge" style="color:var(--red)">R1 R2</span></div>
+          <div class="risk-cell high"><span class="risk-badge" style="color:var(--red)">R5</span></div>
+          <div class="risk-cell axis" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:0.5rem">Méd</div>
+          <div class="risk-cell low"></div>
+          <div class="risk-cell med"><span class="risk-badge" style="color:var(--yellow)">R4</span></div>
+          <div class="risk-cell high"><span class="risk-badge" style="color:var(--red)">R6</span></div>
+          <div class="risk-cell axis" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:0.5rem">Baixa</div>
+          <div class="risk-cell low"></div>
+          <div class="risk-cell low"><span class="risk-badge" style="color:var(--green)">R7</span></div>
+          <div class="risk-cell med"></div>
+          <div></div>
+          <div class="risk-cell axis">Baixo</div>
+          <div class="risk-cell axis">Médio</div>
+          <div class="risk-cell axis">Alto</div>
+        </div>
+        <div style="font-size:0.55rem;color:var(--text-dim);text-align:center;margin-top:2px">← PROB</div>
+      </div>
+      <div style="flex:1.2;font-size:0.63rem;display:flex;flex-direction:column;gap:5px;margin-top:20px">
+        <div style="color:var(--red)">🔴 <b>R1</b> Total Bus — paralisado conectividade</div>
+        <div style="color:var(--red)">🔴 <b>R2</b> 4Tax — pendências Mara/Jefferson</div>
+        <div style="color:var(--red)">🔴 <b>R3</b> Cert. Digital — Gildo sem resposta</div>
+        <div style="color:var(--yellow)">🟡 <b>R4</b> LG — custo extra migração</div>
+        <div style="color:var(--yellow)">🟡 <b>R5</b> Onboarding — doc. Wanderlei</div>
+        <div style="color:var(--yellow)">🟡 <b>R6</b> Wave — CR aprovação pendente</div>
+        <div style="color:var(--yellow)">🟡 <b>R7</b> Pedagore — nova demanda Set/26</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THROUGHPUT -->
+  <div class="card card-clickable" style="grid-row:3" onclick="location.href='kpis.html'">
+    <div class="card-title">
+      <span><span>📊</span> Distribuição por Status</span>
+      <a href="kpis.html" style="color:var(--cyan);text-decoration:none;font-size:0.65rem;border:1px solid rgba(0,212,255,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver KPIs →</a>
+    </div>
+    <canvas id="statusBarChart" height="160"></canvas>
+  </div>
+
+  <!-- TIME -->
+  <div class="card card-clickable" style="grid-row:3" onclick="location.href='time.html'">
+    <div class="card-title">
+      <span><span>👥</span> Carga do Time — Holding DTI</span>
+      <a href="time.html" style="color:var(--cyan);text-decoration:none;font-size:0.65rem;border:1px solid rgba(0,212,255,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver time →</a>
+    </div>
+    <div class="team-grid">
+      <a href="time.html" class="team-member">
+        <div class="avatar" style="background:#200a0a;color:var(--red);border-color:var(--red)">JB</div>
+        <div><div class="member-name">Juliana Barcelos</div><div class="member-role">Gerente de Projeto · 4 projetos</div></div>
+        <div class="utilization-bar"><div class="progress-bar" style="height:5px"><div class="util-fill over" style="width:100%"></div></div><div class="util-pct" style="color:var(--red)">~130%</div></div>
+      </a>
+      <a href="time.html" class="team-member">
+        <div class="avatar" style="background:#1a1400;color:var(--yellow);border-color:var(--yellow)">VC</div>
+        <div><div class="member-name">Vitor Coimbra</div><div class="member-role">Gerente de Projeto · Total Bus, LG, Onboarding</div></div>
+        <div class="utilization-bar"><div class="progress-bar" style="height:5px"><div class="util-fill warn" style="width:95%"></div></div><div class="util-pct" style="color:var(--yellow)">~95%</div></div>
+      </a>
+      <a href="time.html" class="team-member">
+        <div class="avatar" style="background:#0d2137;color:var(--cyan);border-color:var(--cyan)">AL</div>
+        <div><div class="member-name">Ana Luisa Curcio</div><div class="member-role">Gerente de Projeto · Support Package</div></div>
+        <div class="utilization-bar"><div class="progress-bar" style="height:5px"><div class="util-fill warn" style="width:80%"></div></div><div class="util-pct" style="color:var(--yellow)">~80%</div></div>
+      </a>
+      <a href="time.html" class="team-member">
+        <div class="avatar" style="background:#071a0d;color:var(--green);border-color:var(--green)">VV</div>
+        <div><div class="member-name">Viviane Caliari</div><div class="member-role">Supervisora de Projetos</div></div>
+        <div class="utilization-bar"><div class="progress-bar" style="height:5px"><div class="util-fill ok" style="width:75%"></div></div><div class="util-pct" style="color:var(--green)">~75%</div></div>
+      </a>
+      <a href="time.html" class="team-member">
+        <div class="avatar" style="background:#0d2137;color:var(--cyan);border-color:var(--cyan)">SS</div>
+        <div><div class="member-name">Sandro Siqueira</div><div class="member-role">Supervisor de Projetos</div></div>
+        <div class="utilization-bar"><div class="progress-bar" style="height:5px"><div class="util-fill ok" style="width:70%"></div></div><div class="util-pct" style="color:var(--green)">~70%</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="card span2 card-clickable" style="grid-row:4" onclick="location.href='timeline.html'">
+    <div class="card-title">
+      <span><span>📅</span> Próximos Marcos — Portfólio Real</span>
+      <a href="timeline.html" style="color:var(--cyan);text-decoration:none;font-size:0.65rem;border:1px solid rgba(0,212,255,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver timeline →</a>
+    </div>
+    <div class="timeline">
+      <a href="timeline.html" class="tl-item" onclick="event.stopPropagation()">
+        <div class="tl-date" style="color:var(--cyan)">Hoje</div>
+        <div class="tl-dot-wrap"><div class="tl-dot now"></div><div class="tl-line"></div></div>
+        <div class="tl-content"><div class="tl-title" style="color:var(--cyan)">Wave Go Live concluído · Operação assistida iniciada</div><div class="tl-sub">Sandro lidera · CR aguardando aprovação · 2 semanas de suporte</div></div>
+      </a>
+      <a href="timeline.html" class="tl-item" onclick="event.stopPropagation()">
+        <div class="tl-date" style="color:var(--yellow)">03 Abr</div>
+        <div class="tl-dot-wrap"><div class="tl-dot risk"></div><div class="tl-line"></div></div>
+        <div class="tl-content"><div class="tl-title" style="color:var(--yellow)">Prazo limite: doc. técnica Onboarding (Wanderlei)</div><div class="tl-sub">Receber documentação até 03/abr para revisar antes dos testes · Resp: Vitor</div></div>
+      </a>
+      <a href="timeline.html" class="tl-item" onclick="event.stopPropagation()">
+        <div class="tl-date">06–10 Abr</div>
+        <div class="tl-dot-wrap"><div class="tl-dot next"></div><div class="tl-line"></div></div>
+        <div class="tl-content"><div class="tl-title">Onboarding — testes integrados crossboarding/demissional</div><div class="tl-sub">Em risco se doc. Wanderlei não chegar até 03/abr · Resp: Vitor Coimbra</div></div>
+      </a>
+      <a href="timeline.html" class="tl-item" onclick="event.stopPropagation()">
+        <div class="tl-date" style="color:var(--red)">10 Abr</div>
+        <div class="tl-dot-wrap"><div class="tl-dot risk"></div><div class="tl-line"></div></div>
+        <div class="tl-content"><div class="tl-title" style="color:var(--red)">Gate Total Bus — aprovação Gladston (paralisado)</div><div class="tl-sub">Estudo de conectividade deve estar concluído por Infraestrutura · Resp: Vitor</div></div>
+      </a>
+      <a href="timeline.html" class="tl-item" onclick="event.stopPropagation()">
+        <div class="tl-date">13 Abr</div>
+        <div class="tl-dot-wrap"><div class="tl-dot next"></div><div class="tl-line"></div></div>
+        <div class="tl-content"><div class="tl-title">Wave — fim da operação assistida</div><div class="tl-sub">CR deve estar aprovada antes do encerramento · Resp: Sandro Siqueira</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- DONUT -->
+  <div class="card card-clickable" style="grid-row:4" onclick="location.href='projetos.html'">
+    <div class="card-title">
+      <span><span>🎯</span> Portfólio por Status</span>
+      <a href="projetos.html" style="color:var(--cyan);text-decoration:none;font-size:0.65rem;border:1px solid rgba(0,212,255,0.3);padding:2px 8px;border-radius:4px" onclick="event.stopPropagation()">Ver projetos →</a>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <canvas id="statusChart" height="155"></canvas>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <span style="font-size:0.65rem;color:var(--green)">● Saudável 1</span>
+        <span style="font-size:0.65rem;color:var(--yellow)">● Atenção 6</span>
+        <span style="font-size:0.65rem;color:var(--red)">● Crítico 2</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.62rem;color:var(--red);text-align:center;border:1px solid var(--red);border-radius:4px;padding:5px 10px;">
+        🔴 89% do portfólio requer atenção imediata
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB — MISSION CONTROL v1.2 · DTI Grupo Águia Branca · Atualizado: 30/03/2026 · 4 reuniões Fireflies · silaratur.cloud/vmo</div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toTimeString().slice(0,8);
+  document.getElementById('date-display').textContent = now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// KPI RADAR
+const kpiCtx = document.getElementById('kpiChart').getContext('2d');
+new Chart(kpiCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Prazo (IP)','Plano orig. (IHP)','Estabilidade (IHG)','Custo (IHC)','Satisfação (ISC)','Governança'],
+    datasets: [{
+      label: 'Portfólio Atual',
+      data: [45, 38, 30, 60, 65, 50],
+      backgroundColor: 'rgba(255, 59, 92, 0.1)',
+      borderColor: '#ff3b5c',
+      pointBackgroundColor: '#ff3b5c',
+      pointRadius: 4,
+      borderWidth: 2,
+    },{
+      label: 'Meta VMO',
+      data: [85, 85, 80, 90, 85, 90],
+      backgroundColor: 'rgba(0,255,136,0.05)',
+      borderColor: 'rgba(0,255,136,0.4)',
+      pointBackgroundColor: 'rgba(0,255,136,0.4)',
+      pointRadius: 3,
+      borderWidth: 1,
+      borderDash: [4,4],
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#4a6278', font: { size: 9 }, boxWidth: 12 } } },
+    scales: {
+      r: {
+        min: 0, max: 100,
+        grid: { color: '#1e2d45' },
+        angleLines: { color: '#1e2d45' },
+        pointLabels: { color: '#4a6278', font: { size: 9 } },
+        ticks: { display: false }
+      }
+    }
+  }
+});
+
+// STATUS BAR
+const sbCtx = document.getElementById('statusBarChart').getContext('2d');
+new Chart(sbCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Total Bus','Support Pkg','CASH','Cert. Digital','4Tax','Onboarding','LG','Cam. Estrat.','Vem Comigo'],
+    datasets: [{
+      label: 'Health Score',
+      data: [4, 6, 10, 9, 11, 8, 7, 12, 19],
+      backgroundColor: [
+        'rgba(255,59,92,0.7)','rgba(255,59,92,0.7)',
+        'rgba(255,215,0,0.7)','rgba(255,215,0,0.7)','rgba(255,215,0,0.7)',
+        'rgba(255,215,0,0.7)','rgba(255,215,0,0.7)','rgba(255,215,0,0.7)',
+        'rgba(0,255,136,0.7)'
+      ],
+      borderColor: ['#ff3b5c','#ff3b5c','#ffd700','#ffd700','#ffd700','#ffd700','#ffd700','#ffd700','#00ff88'],
+      borderWidth: 1,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      annotation: {}
+    },
+    scales: {
+      x: { grid: { color: '#1e2d45' }, ticks: { color: '#4a6278', font: { size: 8 }, maxRotation: 35 } },
+      y: { grid: { color: '#1e2d45' }, ticks: { color: '#4a6278', font: { size: 9 } }, min: 0, max: 24,
+           title: { display: true, text: 'Health Score /24', color: '#4a6278', font: { size: 9 } } }
+    }
+  }
+});
+
+// DONUT
+const stCtx = document.getElementById('statusChart').getContext('2d');
+new Chart(stCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Saudável', 'Atenção', 'Crítico'],
+    datasets: [{
+      data: [1, 6, 2],
+      backgroundColor: ['rgba(0,255,136,0.7)', 'rgba(255,215,0,0.7)', 'rgba(255,59,92,0.7)'],
+      borderColor: ['#00ff88', '#ffd700', '#ff3b5c'],
+      borderWidth: 2,
+      hoverOffset: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '65%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (c) => ` ${c.label}: ${c.raw} projetos` } }
+    }
+  }
+});
+</script>
+</body>
+</html>
