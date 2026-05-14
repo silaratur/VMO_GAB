@@ -1,312 +1,360 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VMO Consultoria — Dashboard de Projetos</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #3b82f6;
-      --green: #22c55e;
-      --yellow: #eab308;
-      --red: #ef4444;
-      --gray: #64748b;
-    }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
-    a { color: var(--accent); text-decoration: none; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO Autônomo — Dashboard de Projetos</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg2: #1e293b;
+  --border: #334155;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --orange: #f97316;
+  --gray: #64748b;
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --glow-blue: 0 0 16px #3b82f655;
+  --glow-green: 0 0 12px #22c55e55;
+  --glow-yellow: 0 0 12px #eab30855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* NAV */
-    nav { background: #0a1120; border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
-    .nav-brand { font-size: 17px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px; }
-    .nav-brand span { color: var(--accent); }
-    .nav-right { display: flex; align-items: center; gap: 16px; }
-    .nav-timestamp { color: var(--gray); font-size: 12px; }
-    .nav-badge { font-size: 11px; padding: 3px 8px; border-radius: 99px; background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 28px; background: var(--bg2); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.brand-logo { font-size: 1.15rem; font-weight: 700; color: var(--blue); letter-spacing: 1px; }
+.brand-logo span { color: var(--green); }
+.brand-sub { font-size: 0.65rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 20px; }
+.live-badge { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--green); font-weight: 600; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+.updated-at { font-size: 0.65rem; color: var(--text2); }
 
-    /* HERO */
-    .hero { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%); border-bottom: 1px solid var(--border); padding: 40px 24px; text-align: center; }
-    .hero h1 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
-    .hero h1 span { color: var(--accent); }
-    .hero p { color: var(--muted); font-size: 15px; max-width: 500px; margin: 0 auto 24px; }
-    .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
-    .hero-stat { text-align: center; }
-    .hero-stat-value { font-size: 36px; font-weight: 900; line-height: 1; }
-    .hero-stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.main { max-width: 1280px; margin: 0 auto; padding: 28px 20px; }
 
-    /* MAIN */
-    main { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+.section-title {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    /* SECTION HEADER */
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .section-title { font-size: 16px; font-weight: 800; }
-    .section-sub { font-size: 12px; color: var(--muted); }
+.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 36px; }
+@media(max-width:768px) { .metrics-row { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:480px) { .metrics-row { grid-template-columns: 1fr; } }
 
-    /* PROJECT CARD */
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-    .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; cursor: pointer; }
-    .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .project-card a { color: inherit; display: block; }
-    .project-card a:hover { text-decoration: none; }
-    .card-top { padding: 20px 20px 16px; }
-    .card-status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
-    .dot-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
-    .dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
-    .dot-gray { background: var(--gray); }
-    .card-id { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: 0.08em; }
-    .card-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; line-height: 1.3; }
-    .card-client { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
-    .card-progress { margin-bottom: 14px; }
-    .progress-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; color: var(--muted); }
-    .progress-bar { background: var(--border); border-radius: 99px; height: 6px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 99px; }
-    .fill-blue { background: linear-gradient(90deg, var(--accent), #818cf8); }
-    .fill-green { background: linear-gradient(90deg, #16a34a, var(--green)); }
-    .card-semaforo { display: flex; gap: 8px; margin-bottom: 16px; }
-    .sem-item { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 99px; }
-    .sem-green { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-    .sem-yellow { background: rgba(234,179,8,0.1); color: var(--yellow); border: 1px solid rgba(234,179,8,0.2); }
-    .sem-red { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-    .card-bottom { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15); }
-    .card-meta-left { font-size: 11px; color: var(--muted); }
-    .card-meta-left strong { color: var(--text); }
-    .card-link { font-size: 12px; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 4px; }
-    .card-badge { font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 700; }
-    .badge-iniciacao { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
-    .badge-execucao { background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
-    .badge-encerrado { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.metric-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 22px 16px; text-align: center; position: relative; overflow: hidden;
+  transition: transform .2s, border-color .2s;
+}
+.metric-card:hover { transform: translateY(-2px); border-color: var(--blue); }
+.metric-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.metric-card.blue::before { background: var(--blue); }
+.metric-card.green::before { background: var(--green); }
+.metric-card.yellow::before { background: var(--yellow); }
+.metric-card.gray::before { background: var(--gray); }
+.metric-icon { font-size: 1.5rem; margin-bottom: 10px; }
+.metric-value { font-size: 2.2rem; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+.metric-value.blue { color: var(--blue); text-shadow: var(--glow-blue); }
+.metric-value.green { color: var(--green); text-shadow: var(--glow-green); }
+.metric-value.yellow { color: var(--yellow); text-shadow: var(--glow-yellow); }
+.metric-value.sm { font-size: 1.4rem; }
+.metric-label { font-size: 0.68rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* SCORE BADGE */
-    .score-badge { font-size: 13px; font-weight: 800; }
+.projects-section { margin-bottom: 36px; }
 
-    /* SUMMARY CARDS */
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
-    @media (max-width: 700px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
-    .summary-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-    .summary-value { font-size: 36px; font-weight: 900; line-height: 1; }
-    .summary-label { font-size: 11px; color: var(--muted); margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-    .summary-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.project-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 12px; overflow: hidden; transition: border-color .2s, box-shadow .2s;
+  text-decoration: none; color: inherit; display: block;
+}
+.project-card:hover { border-color: var(--blue); box-shadow: 0 4px 24px #3b82f618; }
+.project-card.verde { border-left: 4px solid var(--green); }
+.project-card.atencao { border-left: 4px solid var(--yellow); }
+.project-card.critico { border-left: 4px solid var(--red); }
 
-    /* PIPELINE CARD */
-    .pipeline-summary { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 32px; }
-    .pipeline-title { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
-    .pipeline-agents { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pa { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 5px 10px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 99px; color: var(--text); }
+.project-inner {
+  display: grid;
+  grid-template-columns: 3fr 140px 160px 160px 160px;
+  align-items: center;
+  padding: 18px 22px;
+  gap: 16px;
+}
+@media(max-width:1024px) { .project-inner { grid-template-columns: 1fr 1fr; } }
+@media(max-width:600px) { .project-inner { grid-template-columns: 1fr; gap: 12px; } }
 
-    /* FOOTER */
-    footer { border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--gray); font-size: 12px; margin-top: 60px; }
-    footer strong { color: var(--muted); }
+.project-code { font-size: 0.62rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+.project-name { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+.project-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-size: 0.6rem; padding: 2px 9px; border-radius: 99px; border: 1px solid; font-weight: 600;
+}
+.tag.phase { border-color: var(--blue); color: var(--blue); }
+.tag.gp { border-color: var(--gray); color: var(--text2); }
+.tag.score { border-color: var(--green); color: var(--green); }
 
-    /* EMPTY STATE */
-    .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  </style>
+.col-center { text-align: center; }
+.col-right { text-align: right; }
+
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 13px; border-radius: 99px; font-size: 0.72rem; font-weight: 700;
+}
+.status-badge.verde { background: #22c55e14; color: var(--green); border: 1px solid #22c55e40; }
+.status-badge.atencao { background: #eab30814; color: var(--yellow); border: 1px solid #eab30840; }
+.status-badge.critico { background: #ef444414; color: var(--red); border: 1px solid #ef444440; }
+
+.bac-value { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+.bac-label { font-size: 0.6rem; color: var(--text2); margin-top: 3px; }
+
+.progress-pct { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+.progress-bar-wrap { background: #0f172a; border-radius: 99px; height: 6px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--green)); }
+.progress-sub { font-size: 0.6rem; color: var(--text2); margin-top: 5px; line-height: 1.4; }
+
+.risks-col { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.risk-pill { font-size: 0.62rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; }
+.risk-pill.critico { background: #ef444418; color: var(--red); }
+.risk-pill.alto { background: #f9731618; color: var(--orange); }
+.risk-pill.medio { background: #eab30818; color: var(--yellow); }
+.risk-pill.baixo { background: #22c55e18; color: var(--green); }
+
+.agents-section { margin-bottom: 36px; }
+.agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media(max-width:600px) { .agent-grid { grid-template-columns: repeat(2,1fr); } }
+
+.agent-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+}
+.agent-icon { font-size: 1.5rem; flex-shrink: 0; }
+.agent-name { font-size: 0.8rem; font-weight: 600; }
+.agent-role { font-size: 0.62rem; color: var(--text2); margin-top: 2px; }
+.agent-status-tag {
+  display: inline-block; margin-top: 6px;
+  font-size: 0.6rem; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.done { background: #22c55e14; color: var(--green); }
+
+.issues-section { margin-bottom: 36px; }
+.issues-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media(max-width:700px) { .issues-grid { grid-template-columns: 1fr; } }
+.issue-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+}
+.issue-id { font-size: 0.6rem; color: var(--text2); letter-spacing: 1px; margin-bottom: 4px; }
+.issue-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; }
+.issue-meta { font-size: 0.65rem; color: var(--text2); display: flex; gap: 12px; flex-wrap: wrap; }
+.issue-impact { color: var(--yellow); font-weight: 600; }
+
+.footer {
+  text-align: center; padding: 24px; border-top: 1px solid var(--border);
+  font-size: 0.65rem; color: var(--text2); margin-top: 8px;
+}
+.footer strong { color: var(--blue); }
+</style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-brand">🏛️ <span>VMO</span> Consultoria</div>
-  <div class="nav-right">
-    <span class="nav-badge">● Sistema Ativo</span>
-    <span class="nav-timestamp">Atualizado: 05/04/2026 às 20:30</span>
+<header class="header">
+  <div>
+    <div class="brand-logo">VMO<span>GAB</span></div>
+    <div class="brand-sub">Value Management Office — Grupo Águia Branca</div>
   </div>
-</nav>
-
-<div class="hero">
-  <h1>Dashboard de <span>Projetos VMO</span></h1>
-  <p>Visibilidade em tempo real de todos os projetos gerenciados pelo escritório VMO Consultoria</p>
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-value" style="color:var(--accent);">2</div>
-      <div class="hero-stat-label">Projetos Ativos</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-value" style="color:var(--green);">2</div>
-      <div class="hero-stat-label">Iniciação Aprovada</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-value" style="color:var(--green);">0</div>
-      <div class="hero-stat-label">Em Alerta</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-value" style="color:var(--muted);">0</div>
-      <div class="hero-stat-label">Encerrados</div>
-    </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="pulse"></div>PORTFÓLIO ATIVO</div>
+    <div class="updated-at">Atualizado em: 14/05/2026 às 20:00</div>
   </div>
-</div>
+</header>
 
-<main>
+<main class="main">
 
-  <!-- SUMMARY CARDS -->
-  <div class="summary-grid">
-    <div class="summary-card">
-      <div class="summary-value" style="color:var(--accent);">R$1,1M</div>
-      <div class="summary-label">Orçamento Total Ativo</div>
-      <div class="summary-sub">2 projetos em carteira · +R$8.640</div>
+  <div class="section-title">Visão Geral do Portfólio</div>
+  <div class="metrics-row">
+    <div class="metric-card blue">
+      <div class="metric-icon">📁</div>
+      <div class="metric-value blue">2</div>
+      <div class="metric-label">Projetos Ativos</div>
     </div>
-    <div class="summary-card">
-      <div class="summary-value" style="color:var(--green);">8.8</div>
-      <div class="summary-label">Score Médio de Qualidade</div>
-      <div class="summary-sub">Threshold VMO: ≥ 7.0</div>
+    <div class="metric-card green">
+      <div class="metric-icon">💰</div>
+      <div class="metric-value green sm">R$&nbsp;1,02M</div>
+      <div class="metric-label">Budget Total (BAC)</div>
     </div>
-    <div class="summary-card">
-      <div class="summary-value" style="color:var(--yellow);">1</div>
-      <div class="summary-label">Issues Abertas</div>
-      <div class="summary-sub">PROJ-2026-003 · I-003 (GP Interino)</div>
+    <div class="metric-card green">
+      <div class="metric-icon">🟢</div>
+      <div class="metric-value green">1</div>
+      <div class="metric-label">Projetos Verde</div>
     </div>
-    <div class="summary-card">
-      <div class="summary-value" style="color:var(--green);">100%</div>
-      <div class="summary-label">Doc. Iniciação OK</div>
-      <div class="summary-sub">PROJ-2026-001 · PROJ-2026-003</div>
+    <div class="metric-card yellow">
+      <div class="metric-icon">🟡</div>
+      <div class="metric-value yellow">1</div>
+      <div class="metric-label">Em Atenção</div>
     </div>
   </div>
 
-  <!-- PROJETOS -->
-  <div class="section-header">
-    <div>
-      <div class="section-title">Projetos em Carteira</div>
-      <div class="section-sub">2 projetos ativos · atualizado em 05/04/2026 às 20:30</div>
-    </div>
+  <div class="projects-section">
+    <div class="section-title">Projetos</div>
+
+    <a href="projetos/PROJ-2026-001.html" class="project-card verde">
+      <div class="project-inner">
+        <div>
+          <div class="project-code">PROJ-2026-001 · SAP FI · VIX Manutenção</div>
+          <div class="project-name">Inclusão de Aprovador SAP FI — Lançamentos Pré-Editados</div>
+          <div class="project-tags">
+            <span class="tag phase">Iniciação</span>
+            <span class="tag gp">GP: A designar</span>
+          </div>
+        </div>
+        <div class="col-center">
+          <span class="status-badge verde">🟢 Verde</span>
+        </div>
+        <div class="col-right">
+          <div class="bac-value">R$ 8.640</div>
+          <div class="bac-label">BAC aprovado</div>
+        </div>
+        <div>
+          <div class="progress-pct">0%</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="progress-sub">Pré-execução · Aguarda assinatura do TAP<br>Prazo: 60 du após assinatura</div>
+        </div>
+        <div class="risks-col">
+          <span class="risk-pill alto">3 ALTO</span>
+          <span class="risk-pill medio">2 MÉD</span>
+          <span class="risk-pill baixo">1 BAX</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="projetos/PROJ-2026-003.html" class="project-card atencao">
+      <div class="project-inner">
+        <div>
+          <div class="project-code">PROJ-2026-003 · ERP Selection · Holding GAB + VixPar + VAB</div>
+          <div class="project-name">Caminhos Estratégicos do ERP GAB — Fase 1 (Software Selection)</div>
+          <div class="project-tags">
+            <span class="tag phase">Execução — S5+</span>
+            <span class="tag gp">GP: Marcelo Silveira</span>
+            <span class="tag score">Score Iniciação 9,0/10</span>
+          </div>
+        </div>
+        <div class="col-center">
+          <span class="status-badge atencao">🟡 Atenção</span>
+        </div>
+        <div class="col-right">
+          <div class="bac-value">R$ 1.010.000</div>
+          <div class="bac-label">KPMG R$930K + Overhead R$80K</div>
+        </div>
+        <div>
+          <div class="progress-pct">45%</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:45%"></div></div>
+          <div class="progress-sub">M4/M7 concluídos · Deadline: 08/05/2026<br>R-001 CRÍTICO ativo · 4 issues abertas</div>
+        </div>
+        <div class="risks-col">
+          <span class="risk-pill critico">1 CRÍT</span>
+          <span class="risk-pill alto">4 ALTO</span>
+          <span class="risk-pill medio">2 MÉD</span>
+        </div>
+      </div>
+    </a>
   </div>
 
-  <div class="projects-grid">
-
-    <!-- PROJ-2026-001 -->
-    <div class="project-card">
-      <a href="projetos/PROJ-2026-001.html">
-        <div class="card-top">
-          <div class="card-status-row">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div class="status-dot dot-green"></div>
-              <span class="card-id">PROJ-2026-001</span>
-            </div>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <span class="card-badge badge-iniciacao">Iniciação</span>
-              <span class="score-badge" style="color:var(--green);">8.7★</span>
-            </div>
-          </div>
-          <div class="card-title">Inclusão de Aprovador SAP FI</div>
-          <div class="card-client">🏢 VIX Manutenção · Sponsor: Andre Chieppe</div>
-
-          <div class="card-progress">
-            <div class="progress-row">
-              <span>Progresso do Projeto</span>
-              <span style="font-weight:700;">0% <span style="color:var(--muted); font-weight:400;">(pré-execução)</span></span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill fill-blue" style="width:0%"></div></div>
-            <div class="progress-row" style="margin-top:8px;">
-              <span>Documentação de Iniciação</span>
-              <span style="color:var(--green); font-weight:700;">100%</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill fill-green" style="width:100%"></div></div>
-          </div>
-
-          <div class="card-semaforo">
-            <span class="sem-item sem-green">📅 Prazo</span>
-            <span class="sem-item sem-green">💰 Custo</span>
-            <span class="sem-item sem-yellow">⚠️ Riscos</span>
-            <span class="sem-item sem-green">✅ Qual.</span>
-          </div>
+  <div class="issues-section">
+    <div class="section-title">Issues Abertas — PROJ-2026-003</div>
+    <div class="issues-grid">
+      <div class="issue-card">
+        <div class="issue-id">I-001 · PROJ-2026-003</div>
+        <div class="issue-title">Kick Off Executivo sem data confirmada</div>
+        <div class="issue-meta">
+          <span class="issue-impact">⚠ Sponsors não formalmente alinhados</span>
+          <span>Resp: Marcelo Silveira</span>
+          <span>Prazo: 15/05/2026</span>
         </div>
-        <div class="card-bottom">
-          <div class="card-meta-left">
-            Orçamento: <strong>R$ 8.640</strong> · Prazo: <strong>Du 60</strong><br>
-            TAP aguarda assinatura · GP a designar
-          </div>
-          <div class="card-link">Ver detalhes →</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-id">I-002 · PROJ-2026-003</div>
+        <div class="issue-title">Inconsistência 5 vs. 6 pilares KPMG</div>
+        <div class="issue-meta">
+          <span class="issue-impact">⚠ Score Model metodologia incoerente</span>
+          <span>Resp: Marcelo → Wallacy Lima</span>
+          <span>Prazo: 16/05/2026</span>
         </div>
-      </a>
-    </div>
-
-    <!-- PROJ-2026-003 -->
-    <div class="project-card">
-      <a href="projetos/PROJ-2026-003.html">
-        <div class="card-top">
-          <div class="card-status-row">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div class="status-dot dot-yellow"></div>
-              <span class="card-id">PROJ-2026-003</span>
-            </div>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <span class="card-badge badge-execucao">Execução</span>
-              <span class="score-badge" style="color:var(--green);">8.9★</span>
-            </div>
-          </div>
-          <div class="card-title">Caminhos Estratégicos do ERP GAB</div>
-          <div class="card-client">🏢 Grupo Águia Branca · Sponsor: Décio Chieppe + 2</div>
-
-          <div class="card-progress">
-            <div class="progress-row">
-              <span>Progresso da Fase 1 (Software Selection)</span>
-              <span style="font-weight:700;">Semana 0 → 1</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill fill-blue" style="width:8%"></div></div>
-            <div class="progress-row" style="margin-top:8px;">
-              <span>Documentação de Iniciação</span>
-              <span style="color:var(--green); font-weight:700;">100%</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill fill-green" style="width:100%"></div></div>
-          </div>
-
-          <div class="card-semaforo">
-            <span class="sem-item sem-green">📅 Prazo</span>
-            <span class="sem-item sem-green">💰 Custo</span>
-            <span class="sem-item sem-red">🔴 Issues</span>
-            <span class="sem-item sem-yellow">⚠️ Gov.</span>
-          </div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-id">I-003 · PROJ-2026-003</div>
+        <div class="issue-title">Contatos dos 3 sponsors não registrados</div>
+        <div class="issue-meta">
+          <span class="issue-impact">⚠ Comunicação formal bloqueada</span>
+          <span>Resp: Marcelo Silveira</span>
+          <span>Prazo: 15/05/2026</span>
         </div>
-        <div class="card-bottom">
-          <div class="card-meta-left">
-            Orçamento: <strong>R$ 1,1M</strong> · KPMG · 5 semanas<br>
-            95 participantes · Workshops iniciam 06/04 ✅
-          </div>
-          <div class="card-link">Ver detalhes →</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-id">I-004 · PROJ-2026-003</div>
+        <div class="issue-title">Titularização do GP interno não confirmada</div>
+        <div class="issue-meta">
+          <span class="issue-impact">⚠ Risco R-004 ativo</span>
+          <span>Resp: Sponsor Décio Chieppe</span>
+          <span>Prazo: Semana corrente</span>
         </div>
-      </a>
-    </div>
-
-    <!-- CARD VAZIO — Novo Projeto -->
-    <div class="project-card" style="border-style:dashed; opacity:0.4; cursor:default;">
-      <div style="padding:40px 20px; text-align:center; color:var(--muted);">
-        <div style="font-size:32px; margin-bottom:8px;">+</div>
-        <div style="font-size:13px; font-weight:600;">Novo projeto</div>
-        <div style="font-size:11px; margin-top:4px;">Execute /opensquad run vmo-autonomo</div>
       </div>
     </div>
-
   </div>
 
-  <!-- PIPELINE STATUS -->
-  <div class="pipeline-summary">
-    <div class="pipeline-title">🤖 Pipeline VMO Autônomo — Última execução: PROJ-2026-003 (05/04/2026 às 19:15)</div>
-    <div class="pipeline-agents">
-      <span class="pa">📥 Iara Inbound ✅</span>
-      <span class="pa">🔍 Felipe Filtro ✅</span>
-      <span class="pa">📋 Diana Documento ✅</span>
-      <span class="pa">⚙️ Rafael Requisito ✅</span>
-      <span class="pa">📅 Carlos Cronograma ✅</span>
-      <span class="pa">⚠️ Pedro Perigo ✅</span>
-      <span class="pa">📊 Marcela Métrica ✅</span>
-      <span class="pa">📝 Sara Status ✅</span>
-      <span class="pa">✅ Vera Veredito ✅</span>
-    </div>
-    <div style="margin-top:12px; font-size:12px; color:var(--muted);">
-      12 steps concluídos · PROJ-2026-003 Score: 8.9/10 · Aprovado (Run 2026-04-05-173000) · DEM-2026-002 cancelada (equivocada)
+  <div class="agents-section">
+    <div class="section-title">Agentes VMO Autônomo — Run 2026-05-14 · Score 9,0/10 · APROVADO</div>
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="agent-icon">📥</div>
+        <div><div class="agent-name">Iara Inbound</div><div class="agent-role">Coleta de Demanda</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🔍</div>
+        <div><div class="agent-name">Felipe Filtro</div><div class="agent-role">Qualificação Comercial</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📋</div>
+        <div><div class="agent-name">Diana Documento</div><div class="agent-role">TAP · PM Canvas · Plano Geral</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">⚙️</div>
+        <div><div class="agent-name">Rafael Requisito</div><div class="agent-role">ERF — 39 requisitos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📅</div>
+        <div><div class="agent-name">Carlos Cronograma</div><div class="agent-role">WBS · Cronograma · 7 marcos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">⚠️</div>
+        <div><div class="agent-name">Pedro Perigo</div><div class="agent-role">Plano de Riscos — 10 riscos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📊</div>
+        <div><div class="agent-name">Marcela Métrica</div><div class="agent-role">Framework KPIs · EVM + 17 KRs</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📝</div>
+        <div><div class="agent-name">Sara Status</div><div class="agent-role">Status Report Inicial</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">✅</div>
+        <div><div class="agent-name">Vera Veredito</div><div class="agent-role">Revisão de Qualidade</div><div class="agent-status-tag done">✓ Aprovado 9,0/10</div></div>
+      </div>
     </div>
   </div>
 
 </main>
 
-<footer>
-  🌐 <strong>VMO Web Publisher</strong> · Gerado por Lucas Layout · <strong>Atualizado: 05/04/2026 às 20:30</strong><br>
-  Próxima atualização automática em ~6 horas · <span style="color:var(--border);">squads/vmo-web-publisher/output/site/index.html</span>
+<footer class="footer">
+  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Opensquad v0.1.14 · VMO Consultoria<br>
+  Atualizado em: 14/05/2026 às 20:00 · Próxima atualização automática: em 6h
 </footer>
 
 </body>
