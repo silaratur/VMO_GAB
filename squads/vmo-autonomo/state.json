@@ -1,24 +1,24 @@
 {
   "squad": "vmo-autonomo",
   "status": "running",
-  "step": { "current": 5, "total": 12, "label": "Criar Documentação Base + Especificar Requisitos" },
+  "step": { "current": 11, "total": 12, "label": "Revisão de Qualidade Final" },
   "agents": [
     { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
     { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done",    "desk": { "col": 2, "row": 1 } },
-    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "working", "desk": { "col": 3, "row": 1 } },
-    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "working", "desk": { "col": 1, "row": 2 } },
-    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "idle",    "desk": { "col": 2, "row": 2 } },
-    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "idle",    "desk": { "col": 3, "row": 2 } },
-    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "idle",    "desk": { "col": 1, "row": 3 } },
-    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "idle",    "desk": { "col": 2, "row": 3 } },
-    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "idle",    "desk": { "col": 3, "row": 3 } }
+    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "done",    "desk": { "col": 3, "row": 1 } },
+    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "done",    "desk": { "col": 1, "row": 2 } },
+    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "done",    "desk": { "col": 2, "row": 2 } },
+    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "done",    "desk": { "col": 3, "row": 2 } },
+    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "done",    "desk": { "col": 1, "row": 3 } },
+    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "done",    "desk": { "col": 2, "row": 3 } },
+    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "working", "desk": { "col": 3, "row": 3 } }
   ],
   "handoff": {
-    "from": "felipe-filtro",
-    "to": "diana-documento",
-    "message": "Qualificação aprovada (21/30 — 70%). Diana e Rafael trabalhando em paralelo.",
-    "completedAt": "2026-05-14T20:30:00Z"
+    "from": "sara-status",
+    "to": "vera-veredito",
+    "message": "Status Report #001 emitido. 8 documentos concluídos. Vera executa revisão de qualidade final — score mínimo 85/100 para aprovação.",
+    "completedAt": "2026-05-14T21:05:00Z"
   },
   "startedAt": "2026-05-14T20:15:00Z",
-  "updatedAt": "2026-05-14T20:30:00Z"
+  "updatedAt": "2026-05-14T21:05:00Z"
 }
