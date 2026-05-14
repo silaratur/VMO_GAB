@@ -1,0 +1,39 @@
+squad_code: "vmo-autonomo"
+purpose: "Squad autônomo de gestão de escritório de projetos (PMO→VMO) que gerencia o ciclo completo: da captação de demanda até monitoramento e encerramento. Inclui interações com solicitantes, qualificação de demandas, criação de documentação completa (termo de abertura, plano geral, PM Canvas, cronograma, plano de riscos), monitoramento de performance, pesquisa de satisfação, status reports, análise de propostas comerciais, criação de requisitos funcionais e leitura de repositórios de conversas (e-mails, documentos, reuniões)."
+domain: "mixed"
+
+company:
+  name: "VMO Consultoria"
+  tone: "Profissional e estratégico, orientado a resultados e geração de valor"
+  products: "Consultoria em Gestão de Escritórios de Projetos (PMO), evolução PMO→VMO, transformação digital para grandes corporações"
+
+language: "Português (Brasil)"
+
+context:
+  trigger: "Qualquer canal — formulário, e-mail, reunião/chat (Teams/Slack), sistemas existentes"
+  systems: "Microsoft 365 (Teams, Outlook, SharePoint)"
+  output_format: "Markdown (uso interno) + PDF (entrega ao cliente)"
+  audience: "Grandes corporações em transformação digital; stakeholders e solicitantes internos"
+  frequency: "On demand — inicia quando uma nova demanda é recebida"
+
+tools_needed:
+  - "built-in: web browsing"
+  - "built-in: file read/write"
+  - "apify: web research e monitoramento"
+  - "resend: envio de e-mails e notificações"
+
+investigation:
+  enabled: false
+  notes: "Usuário forneceu URLs de sites de referência (PMI, Axelos, Gartner, Monday.com, etc.) — pesquisa web bloqueada pelos sites; design baseado em conhecimento PMO/PMBOK/PRINCE2 built-in"
+  reference_urls:
+    - "https://www.pmi.org"
+    - "https://www.axelos.com"
+    - "https://www.gartner.com"
+    - "https://www.pmoglobalalliance.org"
+    - "https://houseofpmo.com"
+    - "https://www.smartsheet.com"
+    - "https://monday.com/blog/project-management/pmo/"
+    - "https://www.wrike.com"
+    - "https://www.mckinsey.com"
+
+target_formats: []

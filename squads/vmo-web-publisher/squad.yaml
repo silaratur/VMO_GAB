@@ -1,0 +1,26 @@
+squad:
+  code: vmo-web-publisher
+  name: VMO Web Publisher
+  description: >
+    Squad responsável por gerar e publicar o dashboard web do VMO Consultoria.
+    Varre todos os projetos ativos, lê os documentos de iniciação e execução,
+    e gera/atualiza páginas HTML com o status atualizado de cada projeto.
+    Roda automaticamente a cada 6 horas.
+  icon: 🌐
+  version: "1.0.0"
+  language: "Português (Brasil)"
+  company: VMO Consultoria
+
+agents:
+  - id: lucas-layout
+    path: ./agents/lucas-layout.agent.md
+
+pipeline:
+  entry: pipeline/pipeline.yaml
+
+memory:
+  squad: _memory/memories.md
+  runs: _memory/runs.md
+
+output:
+  site_root: ./output/site

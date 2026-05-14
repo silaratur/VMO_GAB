@@ -1,0 +1,28 @@
+{
+  "squad": "vmo-autonomo",
+  "status": "completed",
+  "step": { "current": 12, "total": 12, "label": "Pipeline Concluído" },
+  "agents": [
+    { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done", "desk": { "col": 1, "row": 1 } },
+    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done", "desk": { "col": 2, "row": 1 } },
+    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "done", "desk": { "col": 3, "row": 1 } },
+    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "done", "desk": { "col": 1, "row": 2 } },
+    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "done", "desk": { "col": 2, "row": 2 } },
+    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "done", "desk": { "col": 3, "row": 2 } },
+    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "done", "desk": { "col": 1, "row": 3 } },
+    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "done", "desk": { "col": 2, "row": 3 } },
+    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "done", "desk": { "col": 3, "row": 3 } }
+  ],
+  "handoff": {
+    "from": "vera-veredito",
+    "to": "checkpoint",
+    "message": "Pacote de iniciação APROVADO pelo GP sem ressalvas. Score 9,0/10.",
+    "completedAt": "2026-05-14T19:10:00Z"
+  },
+  "startedAt": "2026-05-14T18:43:47Z",
+  "completedAt": "2026-05-14T19:10:00Z",
+  "updatedAt": "2026-05-14T19:10:00Z",
+  "runId": "2026-05-14-184347",
+  "qualityScore": 9.0,
+  "verdict": "APROVADO"
+}

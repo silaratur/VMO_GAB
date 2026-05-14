@@ -1,0 +1,276 @@
+squad:
+  code: "vmo-autonomo"
+  name: "VMO Autônomo"
+  description: "Escritório de projetos autônomo PMO→VMO: da captação de demanda até a entrega completa da documentação de iniciação do projeto"
+
+agents:
+  - id: iara-inbound
+    name: "Iara Inbound"
+    title: "Coletora de Demandas"
+    icon: "📥"
+    execution: "subagent"
+    role_summary: "Coleta e lê demandas de qualquer canal: e-mail, Teams, documentos, formulários, atas de reunião"
+    skills: []
+    tasks:
+      - name: "coletar-demanda"
+        file: "tasks/coletar-demanda.md"
+        description: "Coleta dados da demanda de todos os canais disponíveis"
+      - name: "extrair-contexto"
+        file: "tasks/extrair-contexto.md"
+        description: "Estrutura e normaliza as informações da demanda coletada"
+
+  - id: felipe-filtro
+    name: "Felipe Filtro"
+    title: "Analista de Qualificação"
+    icon: "🔍"
+    execution: "inline"
+    role_summary: "Qualifica a demanda: analisa viabilidade estratégica, técnica e comercial — decide se pode ser transformada em projeto"
+    skills: []
+    tasks:
+      - name: "qualificar-demanda"
+        file: "tasks/qualificar-demanda.md"
+        description: "Aplica critérios de qualificação: alinhamento estratégico, viabilidade técnica, impacto e retorno"
+      - name: "analise-comercial"
+        file: "tasks/analise-comercial.md"
+        description: "Analisa viabilidade comercial, ROI estimado e proposta de valor"
+
+  - id: diana-documento
+    name: "Diana Documento"
+    title: "Arquiteta de Projetos"
+    icon: "📋"
+    execution: "subagent"
+    role_summary: "Cria o Termo de Abertura do Projeto (TAP), PM Canvas e Plano Geral do Projeto"
+    skills: []
+    tasks:
+      - name: "criar-tap"
+        file: "tasks/criar-tap.md"
+        description: "Cria o Termo de Abertura do Projeto (Project Charter) completo"
+      - name: "criar-pm-canvas"
+        file: "tasks/criar-pm-canvas.md"
+        description: "Cria o PM Canvas com os 9 blocos essenciais"
+      - name: "criar-plano-geral"
+        file: "tasks/criar-plano-geral.md"
+        description: "Cria o Plano Geral do Projeto com todos os planos subsidiários"
+
+  - id: rafael-requisito
+    name: "Rafael Requisito"
+    title: "Engenheiro de Requisitos"
+    icon: "⚙️"
+    execution: "subagent"
+    role_summary: "Especifica os Requisitos Funcionais e Não-Funcionais com rastreabilidade completa"
+    skills: []
+    tasks:
+      - name: "levantar-requisitos"
+        file: "tasks/levantar-requisitos.md"
+        description: "Elicita e documenta todos os requisitos do projeto"
+      - name: "criar-erf"
+        file: "tasks/criar-erf.md"
+        description: "Gera o Documento de Especificação de Requisitos Funcionais (ERF)"
+
+  - id: carlos-cronograma
+    name: "Carlos Cronograma"
+    title: "Planejador de Prazo"
+    icon: "📅"
+    execution: "inline"
+    role_summary: "Cria o cronograma detalhado com WBS, marcos, dependências e baseline de prazo"
+    skills: []
+    tasks:
+      - name: "criar-wbs"
+        file: "tasks/criar-wbs.md"
+        description: "Cria a Estrutura Analítica do Projeto (WBS/EAP)"
+      - name: "criar-cronograma"
+        file: "tasks/criar-cronograma.md"
+        description: "Gera o cronograma detalhado em formato Markdown com marcos e entregas"
+
+  - id: pedro-perigo
+    name: "Pedro Perigo"
+    title: "Analista de Riscos"
+    icon: "⚠️"
+    execution: "inline"
+    role_summary: "Identifica, classifica e planeja respostas aos riscos do projeto"
+    skills: []
+    tasks:
+      - name: "identificar-riscos"
+        file: "tasks/identificar-riscos.md"
+        description: "Identifica e categoriza riscos usando técnicas PMBOK (brainstorming, checklist, análise de premissas)"
+      - name: "criar-plano-riscos"
+        file: "tasks/criar-plano-riscos.md"
+        description: "Gera a Matriz de Riscos e o Plano de Resposta a Riscos"
+
+  - id: marcela-metrica
+    name: "Marcela Métrica"
+    title: "Monitora de Performance"
+    icon: "📊"
+    execution: "subagent"
+    role_summary: "Define e monitora KPIs de performance e gera análises de saúde do portfólio"
+    skills: []
+    tasks:
+      - name: "definir-kpis"
+        file: "tasks/definir-kpis.md"
+        description: "Define os KPIs de monitoramento do projeto (CPI, SPI, EV, etc.)"
+      - name: "analisar-performance"
+        file: "tasks/analisar-performance.md"
+        description: "Analisa a performance atual do projeto e gera relatório de saúde"
+
+  - id: sara-status
+    name: "Sara Status"
+    title: "Redatora de Relatórios"
+    icon: "📝"
+    execution: "inline"
+    role_summary: "Gera status reports periódicos e pesquisas de satisfação do cliente"
+    skills: []
+    tasks:
+      - name: "gerar-status-report"
+        file: "tasks/gerar-status-report.md"
+        description: "Gera o Status Report do projeto com semáforo de saúde"
+      - name: "pesquisa-satisfacao"
+        file: "tasks/pesquisa-satisfacao.md"
+        description: "Cria e processa pesquisa de satisfação do solicitante/cliente"
+
+  - id: vera-veredito
+    name: "Vera Veredito"
+    title: "Revisora de Qualidade VMO"
+    icon: "✅"
+    execution: "inline"
+    role_summary: "Revisora de qualidade: avalia todos os documentos gerados contra critérios PMBOK/VMO"
+    skills: []
+    tasks:
+      - name: "revisar-documentacao"
+        file: "tasks/revisar-documentacao.md"
+        description: "Revisa toda a documentação do projeto, pontua e emite APROVADO/REPROVADO"
+
+pipeline:
+  - step: 1
+    name: "Coletar Demanda"
+    type: "agent"
+    agent: "iara-inbound"
+    execution: "subagent"
+    output_file: "squads/vmo-autonomo/output/demanda-coletada.md"
+    model_tier: "powerful"
+
+  - step: 2
+    name: "checkpoint-validar-demanda"
+    type: "checkpoint"
+    output_file: "squads/vmo-autonomo/output/demanda-validada.md"
+
+  - step: 3
+    name: "Qualificar Demanda"
+    type: "agent"
+    agent: "felipe-filtro"
+    execution: "inline"
+    input_file: "squads/vmo-autonomo/output/demanda-validada.md"
+    output_file: "squads/vmo-autonomo/output/qualificacao.md"
+
+  - step: 4
+    name: "checkpoint-aprovar-qualificacao"
+    type: "checkpoint"
+    output_file: "squads/vmo-autonomo/output/qualificacao-aprovada.md"
+
+  - step: 5
+    name: "Criar Documentação Base (paralelo)"
+    type: "agent"
+    agent: "diana-documento"
+    execution: "subagent"
+    input_file: "squads/vmo-autonomo/output/qualificacao-aprovada.md"
+    output_file: "squads/vmo-autonomo/output/documentacao-base.md"
+    model_tier: "powerful"
+
+  - step: 6
+    name: "Especificar Requisitos (paralelo)"
+    type: "agent"
+    agent: "rafael-requisito"
+    execution: "subagent"
+    input_file: "squads/vmo-autonomo/output/qualificacao-aprovada.md"
+    output_file: "squads/vmo-autonomo/output/requisitos.md"
+    model_tier: "powerful"
+
+  - step: 7
+    name: "Criar Cronograma"
+    type: "agent"
+    agent: "carlos-cronograma"
+    execution: "inline"
+    input_file: "squads/vmo-autonomo/output/documentacao-base.md"
+    output_file: "squads/vmo-autonomo/output/cronograma.md"
+
+  - step: 8
+    name: "Plano de Riscos"
+    type: "agent"
+    agent: "pedro-perigo"
+    execution: "inline"
+    input_file: "squads/vmo-autonomo/output/documentacao-base.md"
+    output_file: "squads/vmo-autonomo/output/plano-riscos.md"
+
+  - step: 9
+    name: "Framework de KPIs"
+    type: "agent"
+    agent: "marcela-metrica"
+    execution: "subagent"
+    input_file: "squads/vmo-autonomo/output/documentacao-base.md"
+    output_file: "squads/vmo-autonomo/output/kpis.md"
+    model_tier: "fast"
+
+  - step: 10
+    name: "Status Report Inicial"
+    type: "agent"
+    agent: "sara-status"
+    execution: "inline"
+    input_file: "squads/vmo-autonomo/output/documentacao-base.md"
+    output_file: "squads/vmo-autonomo/output/status-report-inicial.md"
+
+  - step: 11
+    name: "Revisão de Qualidade"
+    type: "agent"
+    agent: "vera-veredito"
+    execution: "inline"
+    on_reject: 5
+    output_file: "squads/vmo-autonomo/output/revisao-final.md"
+
+  - step: 12
+    name: "checkpoint-aprovar-documentacao-final"
+    type: "checkpoint"
+
+investigation:
+  enriched: false
+
+research_brief: |
+  PMO → VMO FRAMEWORK
+
+  VMO (Value Management Office) é a evolução do PMO tradicional, com foco na
+  maximização de valor estratégico, não apenas na entrega dentro de prazo/custo.
+
+  Responsabilidades VMO:
+  - Alinhamento estratégico do portfólio
+  - Definição e rastreamento de KPIs de valor (ROI, satisfação, alinhamento)
+  - Governança lean e fluxo contínuo de valor
+  - Transição de projetos temporários para produtos duradouros
+
+  DOCUMENTOS CHAVE (PMBOK 7ª ed):
+  - Termo de Abertura do Projeto (TAP/Project Charter): autoriza o projeto,
+    define objetivos, escopo, partes interessadas, autoridade do GP
+  - PM Canvas: visão visual em 9 blocos (por quê, o quê, quem, quando, quanto,
+    como, premissas, restrições, riscos)
+  - Plano Geral do Projeto: integra 10 planos subsidiários (escopo, prazo,
+    custo, qualidade, recursos, comunicações, riscos, aquisições, stakeholders)
+  - Especificação de Requisitos Funcionais (ERF): rastreabilidade completa
+  - WBS/EAP + Cronograma Detalhado: marcos, dependências, baseline
+  - Plano de Riscos: identificação, análise qualitativa/quantitativa, respostas
+  - KPIs: CPI (Cost Performance Index), SPI (Schedule Performance Index),
+    EV (Earned Value), burndown, health score
+  - Status Report: semáforo (verde/amarelo/vermelho), progresso, ações
+
+  IA EM PMOs (2025-2026):
+  - PMOs com IA reclamam 3.200h/ano de trabalho administrativo
+  - Melhor prática: automação de relatórios + avaliação preditiva de riscos
+  - Humanos focam em liderança e estratégia; IA cuida da ciência de estimativa e rastreamento
+
+skills_installed:
+  - "web_search"
+  - "web_fetch"
+
+formats_selected: []
+
+best_practices_consulted:
+  - "researching.md"
+  - "review.md"
+  - "technical-writing.md"
+  - "data-analysis.md"
