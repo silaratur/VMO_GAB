@@ -1,7 +1,7 @@
 {
   "squad": "vmo-autonomo",
-  "status": "running",
-  "step": { "current": 11, "total": 12, "label": "Revisão de Qualidade Final" },
+  "status": "checkpoint",
+  "step": { "current": 12, "total": 12, "label": "Checkpoint Final — Aprovação GP" },
   "agents": [
     { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
     { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done",    "desk": { "col": 2, "row": 1 } },
@@ -11,14 +11,28 @@
     { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "done",    "desk": { "col": 3, "row": 2 } },
     { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "done",    "desk": { "col": 1, "row": 3 } },
     { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "done",    "desk": { "col": 2, "row": 3 } },
-    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "working", "desk": { "col": 3, "row": 3 } }
+    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "done",    "desk": { "col": 3, "row": 3 } }
   ],
   "handoff": {
-    "from": "sara-status",
-    "to": "vera-veredito",
-    "message": "Status Report #001 emitido. 8 documentos concluídos. Vera executa revisão de qualidade final — score mínimo 85/100 para aprovação.",
-    "completedAt": "2026-05-14T21:05:00Z"
+    "from": "vera-veredito",
+    "to": "gp-marcelo",
+    "message": "Revisão de qualidade concluída — Score 100/100. Documentação completa e consistente. Aguardando aprovação final do GP para encerrar o pipeline.",
+    "completedAt": "2026-05-14T21:10:00Z"
+  },
+  "result": {
+    "runId": "2026-05-14-201500",
+    "project": "PROJ-2026-004",
+    "demand": "DEM-2026-001",
+    "qualificationScore": "21/30 (70%) — APROVADO COM CONDIÇÕES",
+    "qualityScore": "100/100 — APROVADO",
+    "documentsGenerated": 8,
+    "outputPath": "squads/vmo-autonomo/output/2026-05-14-201500/",
+    "goLiveDate": "2026-11-28",
+    "budget": "R$ 90.000,00",
+    "criticalRisks": 3,
+    "blockers": ["Sponsor não identificado", "Orçamento não aprovado", "Modelo de execução indefinido"],
+    "blockerDeadline": "2026-06-13"
   },
   "startedAt": "2026-05-14T20:15:00Z",
-  "updatedAt": "2026-05-14T21:05:00Z"
+  "updatedAt": "2026-05-14T21:10:00Z"
 }
