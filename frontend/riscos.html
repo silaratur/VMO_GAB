@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Matriz de Riscos</title>
+<style>
+:root {
+  --bg: #070b14;
+  --bg2: #0d1220;
+  --bg3: #111827;
+  --border: #1e2d45;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd700;
+  --red: #ff3b5c;
+  --orange: #ff8c00;
+  --text: #c8d8e8;
+  --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55;
+  --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 0.75rem; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; transition: all 0.2s; letter-spacing: 1px; }
+.back-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); text-shadow: var(--glow-cyan); }
+.page-title { font-size: 0.9rem; color: var(--red); letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 12px #ff3b5c55; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px 16px; }
+
+.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.summary-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.summary-val { font-size: 2rem; font-weight: 700; }
+.summary-val.red { color: var(--red); text-shadow: 0 0 12px #ff3b5c55; }
+.summary-val.yellow { color: var(--yellow); }
+.summary-val.green { color: var(--green); text-shadow: var(--glow-green); }
+.summary-val.cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.summary-lbl { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1.4fr; gap: 20px; margin-bottom: 24px; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.card-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.card-title .icon { font-size: 0.9rem; margin-right: 6px; }
+
+/* MATRIX */
+.matrix-container { }
+.matrix-label-top { font-size: 0.65rem; color: var(--text-dim); text-align: center; margin-bottom: 8px; letter-spacing: 2px; }
+.matrix-grid { display: grid; grid-template-columns: 30px repeat(3, 1fr); grid-template-rows: repeat(3, 1fr) 30px; gap: 6px; height: 280px; }
+.matrix-cell { border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; }
+.matrix-cell.low { background: #052e1699; border: 1px solid #166534; }
+.matrix-cell.med { background: #451a0399; border: 1px solid #92400e; }
+.matrix-cell.high { background: #3b000899; border: 1px solid #7f1d1d; }
+.matrix-cell.axis { background: transparent; color: var(--text-dim); font-size: 0.6rem; text-align: center; display: flex; align-items: center; justify-content: center; }
+.risk-pill { background: rgba(0,0,0,0.5); border: 1px solid currentColor; border-radius: 99px; padding: 2px 7px; font-size: 0.65rem; font-weight: 700; white-space: nowrap; }
+.risk-pill.red { color: var(--red); }
+.risk-pill.yellow { color: var(--yellow); }
+.risk-pill.green { color: var(--green); }
+.matrix-label-side { font-size: 0.6rem; color: var(--text-dim); margin-top: 4px; text-align: center; letter-spacing: 2px; }
+
+/* RISK CARDS */
+.risk-list { display: flex; flex-direction: column; gap: 12px; }
+.risk-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; transition: border-color 0.2s; position: relative; overflow: hidden; }
+.risk-item:hover { border-color: var(--cyan); }
+.risk-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+.risk-item.critical::before { background: var(--red); }
+.risk-item.high::before { background: var(--orange); }
+.risk-item.medium::before { background: var(--yellow); }
+.risk-item.low::before { background: var(--green); }
+.risk-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.risk-id-name { display: flex; align-items: center; gap: 10px; }
+.risk-id { font-size: 0.75rem; font-weight: 700; color: var(--cyan); min-width: 28px; }
+.risk-name { font-size: 0.85rem; font-weight: 600; color: #e0eaf5; }
+.risk-project { font-size: 0.62rem; color: var(--text-dim); margin-top: 2px; }
+.risk-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 99px; border: 1px solid; font-weight: 700; white-space: nowrap; }
+.badge.red { color: var(--red); border-color: var(--red); background: rgba(255,59,92,0.1); }
+.badge.yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
+.badge.green { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.1); }
+.badge.orange { color: var(--orange); border-color: var(--orange); background: rgba(255,140,0,0.1); }
+.badge.cyan { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
+.risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.risk-section { }
+.rs-title { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; }
+.rs-content { font-size: 0.72rem; color: var(--text); line-height: 1.5; }
+.rs-content ul { padding-left: 12px; }
+.rs-content li { margin-bottom: 2px; }
+.rs-content .danger { color: var(--red); font-weight: 600; }
+.rs-content .warn { color: var(--yellow); }
+.rs-content .ok { color: var(--green); }
+.indicator-row { display: flex; gap: 12px; margin-top: 6px; }
+.indicator { text-align: center; }
+.ind-val { font-size: 0.85rem; font-weight: 700; }
+.ind-val.red { color: var(--red); }
+.ind-val.yellow { color: var(--yellow); }
+.ind-val.green { color: var(--green); }
+.ind-label { font-size: 0.52rem; color: var(--text-dim); text-transform: uppercase; }
+
+.footer { text-align: center; padding: 12px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 16px; }
+.source-tag { font-size: 0.58rem; color: var(--text-dim); background: #111827; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">VMO<span>GAB</span></div>
+    <div class="subtitle">DTI · Grupo Águia Branca · Value &amp; Automation Office</div>
+  </div>
+  <div class="page-title">◈ Matriz de Riscos</div>
+  <a href="/vmo/" class="back-btn">← Voltar ao Mission Control</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-val red">4</div>
+      <div class="summary-lbl">Riscos Críticos</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val yellow">2</div>
+      <div class="summary-lbl">Riscos Médios</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val green">1</div>
+      <div class="summary-lbl">Risco Baixo</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val cyan">7</div>
+      <div class="summary-lbl">Total Identificados</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <!-- MATRIZ VISUAL -->
+    <div class="card">
+      <div class="card-title"><span class="icon">⚠️</span> Matriz de Probabilidade × Impacto</div>
+      <div class="matrix-label-top">IMPACTO →</div>
+      <div class="matrix-grid">
+        <!-- Row Alta prob -->
+        <div class="matrix-cell axis" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:0.58rem;color:var(--red)">ALTA</div>
+        <div class="matrix-cell med">
+          <span class="risk-pill yellow">R3</span>
+        </div>
+        <div class="matrix-cell high">
+          <span class="risk-pill red">R1</span>
+          <span class="risk-pill red">R2</span>
+        </div>
+        <div class="matrix-cell high">
+          <span class="risk-pill red">R5</span>
+          <span class="risk-pill red">R6</span>
+        </div>
+        <!-- Row Média prob -->
+        <div class="matrix-cell axis" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:0.58rem;color:var(--yellow)">MÉD</div>
+        <div class="matrix-cell low"></div>
+        <div class="matrix-cell med">
+          <span class="risk-pill yellow">R4</span>
+        </div>
+        <div class="matrix-cell high"></div>
+        <!-- Row Baixa prob -->
+        <div class="matrix-cell axis" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:0.58rem;color:var(--green)">BAIXA</div>
+        <div class="matrix-cell low"></div>
+        <div class="matrix-cell low">
+          <span class="risk-pill green">R7</span>
+        </div>
+        <div class="matrix-cell med"></div>
+        <!-- Bottom axis -->
+        <div></div>
+        <div class="matrix-cell axis">BAIXO</div>
+        <div class="matrix-cell axis">MÉDIO</div>
+        <div class="matrix-cell axis">ALTO</div>
+      </div>
+      <div class="matrix-label-side">← PROBABILIDADE</div>
+
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:var(--red)">
+          <div style="width:10px;height:10px;background:#3b000899;border:1px solid #7f1d1d;border-radius:2px"></div> Zona Crítica
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:var(--yellow)">
+          <div style="width:10px;height:10px;background:#451a0399;border:1px solid #92400e;border-radius:2px"></div> Zona de Atenção
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:var(--green)">
+          <div style="width:10px;height:10px;background:#052e1699;border:1px solid #166534;border-radius:2px"></div> Zona Aceitável
+        </div>
+      </div>
+    </div>
+
+    <!-- RESUMO RISCOS -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> Resumo Executivo de Riscos</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--red)">
+          <span style="color:var(--red);font-weight:700;font-size:0.75rem">R1</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">Total Bus — Execução sem plano</div><div style="font-size:0.6rem;color:var(--text-dim)">Infra · PM: Vitor Coimbra</div></div>
+          <span class="badge red">Alta / Alto</span>
+          <span class="badge red">CRÍTICO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--red)">
+          <span style="color:var(--red);font-weight:700;font-size:0.75rem">R2</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">SEIDOR — Fornecedor sem flex.</div><div style="font-size:0.6rem;color:var(--text-dim)">SAP · PM: Ana Luisa · Consultoria SAP Platinum Partner</div></div>
+          <span class="badge red">Alta / Alto</span>
+          <span class="badge red">CRÍTICO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--orange)">
+          <span style="color:var(--yellow);font-weight:700;font-size:0.75rem">R3</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">CASH — Finnet/Santander atrasam</div><div style="font-size:0.6rem;color:var(--text-dim)">Financeiro · PM: Juliana</div></div>
+          <span class="badge yellow">Alta / Médio</span>
+          <span class="badge yellow">ATENÇÃO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--yellow)">
+          <span style="color:var(--yellow);font-weight:700;font-size:0.75rem">R4</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">Cert. Digital — Aprovações</div><div style="font-size:0.6rem;color:var(--text-dim)">Segurança · PM: Juliana</div></div>
+          <span class="badge yellow">Méd / Médio</span>
+          <span class="badge yellow">ATENÇÃO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--red)">
+          <span style="color:var(--red);font-weight:700;font-size:0.75rem">R5</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">LG — PGP vence 31/03</div><div style="font-size:0.6rem;color:var(--text-dim)">Jurídico · PM: Vitor Coimbra</div></div>
+          <span class="badge red">Alta / Alto</span>
+          <span class="badge red">CRÍTICO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--red)">
+          <span style="color:var(--red);font-weight:700;font-size:0.75rem">R6</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">Juliana — Sobrecarga 130%</div><div style="font-size:0.6rem;color:var(--text-dim)">Time · 4 projetos simultâneos</div></div>
+          <span class="badge red">Alta / Alto</span>
+          <span class="badge red">CRÍTICO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--green)">
+          <span style="color:var(--green);font-weight:700;font-size:0.75rem">R7</span>
+          <div><div style="font-size:0.75rem;font-weight:600;color:#e0eaf5">4Tax CTEOS — Prod fechamento</div><div style="font-size:0.6rem;color:var(--text-dim)">Supply Chain · PM: Juliana</div></div>
+          <span class="badge green">Baixa / Médio</span>
+          <span class="badge green">BAIXO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETALHES DOS RISCOS -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-title"><span class="icon">🔍</span> Análise Detalhada de Riscos</div>
+    <div class="risk-list">
+
+      <!-- R1 -->
+      <div class="risk-item critical">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R1</div>
+            <div>
+              <div class="risk-name">Total Bus — Execução sem Plano Aprovado</div>
+              <div class="risk-project">Projeto: Total Bus · Migração Cloud Azure · PM: Vitor Coimbra</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge red">Probabilidade: Alta</span>
+            <span class="badge red">Impacto: Alto</span>
+            <span class="badge red">CRÍTICO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              Execução do projeto Total Bus iniciada sem plano de projeto formalmente aprovado. Conectividade para as 700 agências ainda indefinida — 3 cenários sendo avaliados sem decisão tomada.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val red">Alta</div><div class="ind-label">Prob.</div></div>
+              <div class="indicator"><div class="ind-val red">Alto</div><div class="ind-label">Impacto</div></div>
+              <div class="indicator"><div class="ind-val red">Crítico</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="danger">Reprovação no gate com Gladstone (10/abr)</li>
+                <li class="danger">Atraso na entrega com impacto em 700 agências</li>
+                <li class="warn">Retrabalho e aumento de custo</li>
+                <li>Dano à credibilidade do VMO</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li><span class="danger">HOJE:</span> Apresentar 3 cenários p/ Cota (30/03)</li>
+                <li>Decidir cenário de conectividade na reunião</li>
+                <li>Formalizar plano de projeto em até 5 dias úteis</li>
+                <li>Resp: <span class="warn">Vitor Coimbra + VMO</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R2 -->
+      <div class="risk-item critical">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R2</div>
+            <div>
+              <div class="risk-name">SEIDOR — Fornecedor sem Flexibilidade</div>
+              <div class="risk-project">Projeto: Support Package (SEIDOR) · SAP · Consultoria SAP Platinum Partner · PM: Ana Luisa Curcio</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge red">Probabilidade: Alta</span>
+            <span class="badge red">Impacto: Alto</span>
+            <span class="badge red">CRÍTICO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              Fornecedor SEIDOR demonstra rigidez total nas negociações do Support Package. Marcelo (sponsor) ainda não decidiu entre continuar o contrato ou encerrar. Projeto em limbo.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val red">Alta</div><div class="ind-label">Prob.</div></div>
+              <div class="indicator"><div class="ind-val red">Alto</div><div class="ind-label">Impacto</div></div>
+              <div class="indicator"><div class="ind-val red">Crítico</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="danger">Contrato SAP comprometido sem decisão</li>
+                <li class="warn">Time alocado sem entrega de valor</li>
+                <li class="warn">Custo do fornecedor sem retorno</li>
+                <li>Ana Luisa travada sem possibilidade de agir</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li><span class="danger">BLOQUEIO:</span> Marcelo decide: parar ou seguir</li>
+                <li>Se seguir: renegociar termos com SEIDOR ou trocar fornecedor</li>
+                <li>Se parar: formalizar encerramento</li>
+                <li>Resp: <span class="warn">Marcelo Silveira (sponsor)</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R3 -->
+      <div class="risk-item high">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R3</div>
+            <div>
+              <div class="risk-name">CASH — Finnet e Santander não Cumprem Prazos</div>
+              <div class="risk-project">Projeto: CASH · Sistema de Pagamentos · PM: Juliana Barcelos</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge red">Probabilidade: Alta</span>
+            <span class="badge yellow">Impacto: Médio</span>
+            <span class="badge yellow">ATENÇÃO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              Parceiros bancários Finnet (VAN bancária - integração ERP/bancos) e Santander estão atrasando entregas de integração. Change Request (CR) em risco de vencer por inação externa. Reunião marcada para 27/03 às 16h.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val red">Alta</div><div class="ind-label">Prob.</div></div>
+              <div class="indicator"><div class="ind-val yellow">Médio</div><div class="ind-label">Impacto</div></div>
+              <div class="indicator"><div class="ind-val yellow">Atenção</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="warn">CR vence e precisa ser renovado</li>
+                <li class="warn">Atraso no cronograma do CASH</li>
+                <li>Replanejamento necessário</li>
+                <li>Impacto no fluxo financeiro dos clientes</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li>Reunião 16h (27/03) para cobrar SLA</li>
+                <li>Formalizar cobrança por escrito</li>
+                <li>Renovar CR preventivamente</li>
+                <li>Resp: <span class="warn">Juliana Barcelos</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R4 -->
+      <div class="risk-item medium">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R4</div>
+            <div>
+              <div class="risk-name">Certificado Digital — Aprovações Pendentes</div>
+              <div class="risk-project">Projeto: Certificado Digital · Segurança · PM: Juliana Barcelos</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge yellow">Probabilidade: Média</span>
+            <span class="badge yellow">Impacto: Médio</span>
+            <span class="badge yellow">ATENÇÃO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              Aprovações das unidades de Comércio e VIX pendentes. Cleomar (aprovador responsável) está em licença, sem substituto formal identificado. Projeto travado aguardando sign-off.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val yellow">Média</div><div class="ind-label">Prob.</div></div>
+              <div class="indicator"><div class="ind-val yellow">Médio</div><div class="ind-label">Impacto</div></div>
+              <div class="indicator"><div class="ind-val yellow">Atenção</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="warn">Projeto continua parado sem aprovações</li>
+                <li class="warn">Risco de compliance em certificados vencidos</li>
+                <li>Cronograma comprometido</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li>Identificar substituto de Cleomar para aprovação</li>
+                <li>Escalar para gestores de Comércio e VIX</li>
+                <li>Prazo máximo: definir data limite</li>
+                <li>Resp: <span class="warn">Juliana Barcelos + VMO</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R5 -->
+      <div class="risk-item critical">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R5</div>
+            <div>
+              <div class="risk-name">LG — PGP Vence 31/03 sem Aprovação</div>
+              <div class="risk-project">Projeto: LG · Gestão de Contratos · PM: Vitor Coimbra</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge red">Probabilidade: Alta</span>
+            <span class="badge red">Impacto: Alto</span>
+            <span class="badge red">CRÍTICO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              PGP do projeto LG vence em 31/03/2026. Camila (aprovadora) entra em férias. Sem aprovação antes das férias, o projeto pode ser bloqueado formalmente até o retorno.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val red">Alta</div><div class="ind-label">Prob.</div></div>
+              <div class="indicator"><div class="ind-val red">Alto</div><div class="ind-label">Impacto</div></div>
+              <div class="indicator"><div class="ind-val red">Crítico</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="danger">Projeto LG bloqueado formalmente</li>
+                <li class="warn">Execução parada até Camila retornar</li>
+                <li class="warn">Impacto na janela de aprovação Gladstone (10/abr)</li>
+                <li>Replanejamento necessário</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li><span class="danger">HOJE:</span> Cobrar aprovação de Camila antes das férias</li>
+                <li>Identificar substituto se Camila não aprovar</li>
+                <li>Escalar para gestor de Camila se necessário</li>
+                <li>Resp: <span class="warn">Vitor Coimbra (HOJE)</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R6 -->
+      <div class="risk-item critical">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R6</div>
+            <div>
+              <div class="risk-name">Juliana Barcelos — Sobrecarga 130% em 4 Projetos</div>
+              <div class="risk-project">Risco de Capacidade · Time VMO · 4 projetos simultâneos</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge red">Probabilidade: Alta</span>
+            <span class="badge red">Impacto: Alto</span>
+            <span class="badge red">CRÍTICO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              Juliana Barcelos está alocada a 130% da capacidade gerenciando 4 projetos simultâneos: CASH, Certificado Digital, 4Tax e Vem Comigo. Risco de burnout e degradação da qualidade de gestão.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val red">130%</div><div class="ind-label">Carga</div></div>
+              <div class="indicator"><div class="ind-val red">4</div><div class="ind-label">Projetos</div></div>
+              <div class="indicator"><div class="ind-val red">Crítico</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="danger">Qualidade de gestão degradada nos 4 projetos</li>
+                <li class="danger">Risco de burnout do recurso</li>
+                <li class="warn">Projetos críticos sem PM dedicada</li>
+                <li>Perda do único projeto saudável (Vem Comigo)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li>Redistribuir pelo menos 1 projeto para outro PM</li>
+                <li>Priorizar CASH e Vem Comigo (mais urgentes)</li>
+                <li>Contratar recurso adicional (Caminhos Estratégicos)</li>
+                <li>Resp: <span class="warn">Gestão VMO + Marcelo</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R7 -->
+      <div class="risk-item low">
+        <div class="risk-header">
+          <div class="risk-id-name">
+            <div class="risk-id">R7</div>
+            <div>
+              <div class="risk-name">4Tax CTEOS — Subida para Produção em Período de Fechamento</div>
+              <div class="risk-project">Projeto: 4Tax · Supply Chain · PM: Juliana Barcelos</div>
+            </div>
+          </div>
+          <div class="risk-badges">
+            <span class="badge green">Probabilidade: Baixa</span>
+            <span class="badge yellow">Impacto: Médio</span>
+            <span class="badge green">BAIXO</span>
+          </div>
+        </div>
+        <div class="risk-grid">
+          <div class="risk-section">
+            <div class="rs-title">Descrição</div>
+            <div class="rs-content">
+              Solução transitória CTEOS testada em QAS com sucesso. Janela para subida em produção coincide com período de fechamento contábil, o que pode gerar restrições de mudança.
+            </div>
+            <div class="indicator-row">
+              <div class="indicator"><div class="ind-val green">Baixa</div><div class="ind-label">Prob.</div></div>
+              <div class="indicator"><div class="ind-val yellow">Médio</div><div class="ind-label">Impacto</div></div>
+              <div class="indicator"><div class="ind-val green">Baixo</div><div class="ind-label">Nível</div></div>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Consequências se não mitigado</div>
+            <div class="rs-content">
+              <ul>
+                <li class="warn">Conflito com freeze de produção no fechamento</li>
+                <li>Atraso na subida para produção</li>
+                <li class="ok">Risco gerenciável — QAS já aprovado</li>
+              </ul>
+            </div>
+          </div>
+          <div class="risk-section">
+            <div class="rs-title">Plano de Mitigação</div>
+            <div class="rs-content">
+              <ul>
+                <li>Aguardar fim do período de fechamento</li>
+                <li>Confirmar janela de deploy com TI/Infra</li>
+                <li>Manter QAS aprovado como contingência</li>
+                <li>Resp: <span class="warn">Juliana Barcelos</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:12px;font-size:0.63rem;color:var(--text-dim);border:1px solid var(--border);border-radius:6px;background:var(--bg2);">
+    <span class="source-tag">🎙️ Dados extraídos da reunião Fireflies · 27/03/2026</span>
+    &nbsp;&nbsp;Riscos identificados e priorizados com base na discussão da equipe VMO
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB · Matriz de Riscos · DTI Grupo Águia Branca · Reunião 27/03/2026</div>
+
+</body>
+</html>

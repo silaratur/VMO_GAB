@@ -1,0 +1,93 @@
+pipeline:
+  name: "VMO Autônomo — Iniciação de Projeto"
+  version: "1.0.0"
+  squad: vmo-autonomo
+  description: >
+    Pipeline de iniciação de projeto: da demanda recebida até o pacote completo
+    de documentação aprovado pelo VMO (TAP, PM Canvas, ERF, Cronograma, Riscos,
+    KPIs e Status Report inicial).
+
+steps:
+  - step: 1
+    name: "Coletar Demanda"
+    file: steps/step-01-coletar-demanda.md
+    type: agent
+    agent: iara-inbound
+    execution: subagent
+
+  - step: 2
+    name: "Checkpoint: Validar Demanda"
+    file: steps/step-02-checkpoint-validar-demanda.md
+    type: checkpoint
+
+  - step: 3
+    name: "Qualificar Demanda"
+    file: steps/step-03-qualificar-demanda.md
+    type: agent
+    agent: felipe-filtro
+    execution: inline
+
+  - step: 4
+    name: "Checkpoint: Aprovar Qualificação"
+    file: steps/step-04-checkpoint-aprovar-qualificacao.md
+    type: checkpoint
+
+  - step: 5
+    name: "Criar Documentação Base"
+    file: steps/step-05-criar-documentacao-base.md
+    type: agent
+    agent: diana-documento
+    execution: subagent
+
+  - step: 6
+    name: "Especificar Requisitos"
+    file: steps/step-06-especificar-requisitos.md
+    type: agent
+    agent: rafael-requisito
+    execution: subagent
+
+  - step: 7
+    name: "Criar Cronograma"
+    file: steps/step-07-criar-cronograma.md
+    type: agent
+    agent: carlos-cronograma
+    execution: inline
+
+  - step: 8
+    name: "Plano de Riscos"
+    file: steps/step-08-plano-riscos.md
+    type: agent
+    agent: pedro-perigo
+    execution: inline
+
+  - step: 9
+    name: "Framework de KPIs"
+    file: steps/step-09-framework-kpis.md
+    type: agent
+    agent: marcela-metrica
+    execution: subagent
+
+  - step: 10
+    name: "Status Report Inicial"
+    file: steps/step-10-status-report-inicial.md
+    type: agent
+    agent: sara-status
+    execution: inline
+
+  - step: 11
+    name: "Revisão de Qualidade"
+    file: steps/step-11-revisao-qualidade.md
+    type: agent
+    agent: vera-veredito
+    execution: inline
+    on_reject: 5
+
+  - step: 12
+    name: "Checkpoint: Aprovar Documentação Final"
+    file: steps/step-12-checkpoint-aprovacao-final.md
+    type: checkpoint
+
+checkpoints:
+  - step: 2
+  - step: 4
+  - step: 12

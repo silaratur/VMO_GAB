@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROJ-2026-001 — VMO Consultoria</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --gray: #64748b;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav { background: #0a1120; border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .nav-brand span { color: var(--accent); }
+    .nav-back { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .nav-back:hover { color: var(--text); text-decoration: none; }
+    .nav-timestamp { color: var(--gray); font-size: 12px; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border-bottom: 1px solid var(--border); padding: 32px 24px; }
+    .hero-inner { max-width: 1100px; margin: 0 auto; }
+    .hero-breadcrumb { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+    .hero-title { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .hero-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+    .meta-item strong { color: var(--text); }
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+    .badge-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .badge-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+    .badge-red { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    .badge-blue { background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+    .badge-gray { background: rgba(100,116,139,0.15); color: var(--gray); border: 1px solid rgba(100,116,139,0.3); }
+
+    /* MAIN */
+    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+    @media (max-width: 768px) { main { grid-template-columns: 1fr; } }
+    .col-left { display: flex; flex-direction: column; gap: 24px; }
+    .col-right { display: flex; flex-direction: column; gap: 24px; }
+
+    /* CARD */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .card-body { padding: 20px; }
+
+    /* SEMÁFORO */
+    .semaforo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    @media (max-width: 600px) { .semaforo-grid { grid-template-columns: repeat(3, 1fr); } }
+    .semaforo-item { text-align: center; }
+    .semaforo-dot { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .dot-green { background: rgba(34,197,94,0.2); border: 2px solid var(--green); }
+    .dot-yellow { background: rgba(234,179,8,0.2); border: 2px solid var(--yellow); }
+    .dot-red { background: rgba(239,68,68,0.2); border: 2px solid var(--red); }
+    .semaforo-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .semaforo-status { font-size: 11px; font-weight: 700; margin-top: 2px; }
+    .text-green { color: var(--green); }
+    .text-yellow { color: var(--yellow); }
+    .text-red { color: var(--red); }
+    .text-muted { color: var(--muted); }
+
+    /* PROGRESS */
+    .progress-section { }
+    .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+    .progress-bar { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 16px; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), #818cf8); transition: width 0.5s ease; }
+    .progress-fill-green { background: linear-gradient(90deg, #16a34a, var(--green)); }
+
+    /* KPI CARDS */
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+    .kpi-value { font-size: 28px; font-weight: 800; line-height: 1; }
+    .kpi-label { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .kpi-sub { font-size: 11px; margin-top: 6px; }
+
+    /* MARCOS */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+    .icon-done { background: rgba(34,197,94,0.2); border: 1px solid var(--green); }
+    .icon-pending { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); }
+    .icon-blocked { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+    .timeline-content { flex: 1; }
+    .timeline-name { font-size: 13px; font-weight: 600; }
+    .timeline-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .timeline-du { font-size: 11px; color: var(--accent); font-weight: 600; }
+
+    /* RISCOS */
+    .risk-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
+    .risk-row:last-child { border-bottom: none; }
+    .risk-id { font-size: 11px; font-weight: 700; color: var(--muted); width: 32px; }
+    .risk-desc { font-size: 12px; flex: 1; margin: 0 10px; }
+    .risk-level { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+    .risk-high { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    .risk-med { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+    .risk-low { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+
+    /* ISSUES */
+    .issue-row { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(51,65,85,0.5); align-items: flex-start; }
+    .issue-row:last-child { border-bottom: none; }
+    .issue-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); flex-shrink: 0; margin-top: 1px; }
+    .issue-tag-done { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .issue-content { flex: 1; }
+    .issue-title { font-size: 12px; font-weight: 600; }
+    .issue-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* AGENTS GRID */
+    .agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .agent-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
+    .agent-icon { font-size: 20px; margin-bottom: 4px; }
+    .agent-name { font-size: 10px; color: var(--muted); font-weight: 600; }
+    .agent-status { font-size: 10px; margin-top: 2px; font-weight: 700; }
+
+    /* STAKEHOLDERS */
+    .stakeholder-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
+    .stakeholder-row:last-child { border-bottom: none; }
+    .stakeholder-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .stakeholder-info { flex: 1; }
+    .stakeholder-name { font-size: 13px; font-weight: 600; }
+    .stakeholder-role { font-size: 11px; color: var(--muted); }
+
+    /* INFO TABLE */
+    .info-table { width: 100%; border-collapse: collapse; }
+    .info-table tr { border-bottom: 1px solid rgba(51,65,85,0.5); }
+    .info-table tr:last-child { border-bottom: none; }
+    .info-table td { padding: 8px 0; font-size: 13px; vertical-align: top; }
+    .info-table td:first-child { color: var(--muted); width: 40%; font-size: 12px; }
+    .info-table td:last-child { font-weight: 500; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 20px 24px; text-align: center; color: var(--gray); font-size: 12px; margin-top: 40px; }
+
+    /* SCORE */
+    .score-ring { text-align: center; padding: 8px 0; }
+    .score-number { font-size: 48px; font-weight: 900; color: var(--green); line-height: 1; }
+    .score-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .score-max { font-size: 20px; color: var(--muted); font-weight: 400; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">🏛️ <span>VMO</span> Consultoria</div>
+  <a href="../index.html" class="nav-back">← Dashboard</a>
+  <div class="nav-timestamp">Atualizado: 05/04/2026 às 20:30</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-breadcrumb">VMO Consultoria › Projetos › PROJ-2026-001</div>
+    <h1 class="hero-title">Inclusão de Aprovador SAP FI</h1>
+    <p class="hero-subtitle">Lançamentos Pré-Editados — VIX Manutenção</p>
+    <div class="hero-meta">
+      <span class="badge badge-green">✅ INICIAÇÃO APROVADA</span>
+      <span class="badge badge-blue">🟦 AGUARDANDO ASSINATURA TAP</span>
+      <div class="meta-item">📋 <strong>PROJ-2026-001</strong></div>
+      <div class="meta-item">🏢 <strong>VIX Manutenção</strong></div>
+      <div class="meta-item">👤 Sponsor: <strong>Andre Chieppe</strong></div>
+      <div class="meta-item">📅 Prazo máximo: <strong>Du 60</strong> após assinatura do TAP</div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- COLUNA ESQUERDA -->
+  <div class="col-left">
+
+    <!-- SEMÁFORO -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Status por Dimensão</span>
+        <span class="badge badge-green">🟢 VERDE GERAL</span>
+      </div>
+      <div class="card-body">
+        <div class="semaforo-grid">
+          <div class="semaforo-item">
+            <div class="semaforo-dot dot-green">📅</div>
+            <div class="semaforo-label">Cronograma</div>
+            <div class="semaforo-status text-green">VERDE</div>
+          </div>
+          <div class="semaforo-item">
+            <div class="semaforo-dot dot-green">💰</div>
+            <div class="semaforo-label">Custo</div>
+            <div class="semaforo-status text-green">VERDE</div>
+          </div>
+          <div class="semaforo-item">
+            <div class="semaforo-dot dot-green">📦</div>
+            <div class="semaforo-label">Escopo</div>
+            <div class="semaforo-status text-green">VERDE</div>
+          </div>
+          <div class="semaforo-item">
+            <div class="semaforo-dot dot-yellow">⚠️</div>
+            <div class="semaforo-label">Riscos</div>
+            <div class="semaforo-status text-yellow">ATENÇÃO</div>
+          </div>
+          <div class="semaforo-item">
+            <div class="semaforo-dot dot-green">✅</div>
+            <div class="semaforo-label">Qualidade</div>
+            <div class="semaforo-status text-green">VERDE</div>
+          </div>
+        </div>
+        <div style="margin-top:16px; padding: 12px; background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; font-size: 12px; color: var(--yellow);">
+          ⚠️ <strong>Riscos em atenção:</strong> 3 riscos de nível ALTO identificados (R01, R02, R03) — ainda não materializados. Planos de mitigação definidos para todos.
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESSO -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Progresso do Projeto</span>
+        <span class="badge badge-gray">Fase Pré-Execução</span>
+      </div>
+      <div class="card-body">
+        <div class="progress-section">
+          <div class="progress-label">
+            <span>Progresso Geral</span>
+            <span style="font-weight:700;">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+
+          <div class="progress-label">
+            <span>Documentação de Iniciação</span>
+            <span style="font-weight:700; color: var(--green);">100%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill progress-fill-green" style="width:100%"></div></div>
+
+          <div class="progress-label">
+            <span>Score de Qualidade VMO</span>
+            <span style="font-weight:700; color: var(--green);">8.7/10</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill progress-fill-green" style="width:87%"></div></div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:8px;">
+          Projeto em fase pré-execução. O cronograma de 60 dias úteis será ativado após a assinatura formal do TAP pelo Sponsor Andre Chieppe.
+        </p>
+      </div>
+    </div>
+
+    <!-- CRONOGRAMA / MARCOS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Marcos do Projeto</span>
+        <span style="font-size:12px; color:var(--muted);">Baseline: 60 du</span>
+      </div>
+      <div class="card-body" style="padding:12px 20px;">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M0 — TAP Assinado <span class="timeline-du">Du 2</span></div>
+              <div class="timeline-meta">Aguardando assinatura de Andre Chieppe (Sponsor)</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M1 — Kickoff <span class="timeline-du">Du 5</span></div>
+              <div class="timeline-meta">Reunião com DTI e solicitante — Ivanilde Ribeiro Machado</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M2 — Viabilidade Técnica <span class="timeline-du">Du 10</span></div>
+              <div class="timeline-meta">Spike técnico ZFI0057 — Basis SAP confirma sem ABAP</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M3 — Config. QAS Aprovada <span class="timeline-du">Du 28</span></div>
+              <div class="timeline-meta">Parametrização em DEV + testes unitários aprovados</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M4 — Testes Integrados OK <span class="timeline-du">Du 40</span></div>
+              <div class="timeline-meta">UAT aprovado por Ivanilde em ambiente QAS</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M5 — Treinamento Concluído <span class="timeline-du">Du 46</span></div>
+              <div class="timeline-meta">Confirmação formal de Andre Chieppe (Diretor Financeiro)</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M6 — Go-Live / PRD <span class="timeline-du">Du 52</span></div>
+              <div class="timeline-meta">Sistema em produção + aceite do Sponsor</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon icon-pending">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-name">M7 — Encerramento <span class="timeline-du">Du 60</span></div>
+              <div class="timeline-meta">Auditoria 30 dias + lições aprendidas + aceite final</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs EVM -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">KPIs — Earned Value Management</span>
+        <span style="font-size:12px; color:var(--muted);">BAC: R$ 8.640</span>
+      </div>
+      <div class="card-body">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-value" style="color:var(--muted);">—</div>
+            <div class="kpi-label">CPI (Cost Performance)</div>
+            <div class="kpi-sub text-muted">Baseline: 1,00 | Meta: ≥ 1,00</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" style="color:var(--muted);">—</div>
+            <div class="kpi-label">SPI (Schedule Performance)</div>
+            <div class="kpi-sub text-muted">Baseline: 1,00 | Meta: ≥ 1,00</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" style="color:var(--text); font-size:22px;">R$0</div>
+            <div class="kpi-label">EV — Earned Value</div>
+            <div class="kpi-sub text-muted">Pré-execução (Du 0)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" style="color:var(--accent); font-size:22px;">R$8.640</div>
+            <div class="kpi-label">EAC — Est. at Completion</div>
+            <div class="kpi-sub text-muted">Baseline | Teto aprovado</div>
+          </div>
+        </div>
+        <div style="margin-top:16px; padding:12px; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:8px; font-size:12px; color:var(--muted);">
+          📊 Medição EVM inicia após assinatura do TAP (Du 0). Frequência: semanal toda segunda-feira.
+        </div>
+      </div>
+    </div>
+
+    <!-- RISCOS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Registro de Riscos</span>
+        <div style="display:flex; gap:6px;">
+          <span class="badge badge-red">3 ALTO</span>
+          <span class="badge badge-yellow">3 MÉDIO</span>
+          <span class="badge badge-green">1 BAIXO</span>
+        </div>
+      </div>
+      <div class="card-body" style="padding:12px 20px;">
+        <div class="risk-row">
+          <div class="risk-id">R01</div>
+          <div class="risk-desc">Parametrização ZFI0057 exige ABAP não previsto — impacto em custo e prazo</div>
+          <span class="risk-level risk-high">ALTO</span>
+        </div>
+        <div class="risk-row">
+          <div class="risk-id">R02</div>
+          <div class="risk-desc">Indisponibilidade do ambiente QAS na janela de testes planejada</div>
+          <span class="risk-level risk-high">ALTO</span>
+        </div>
+        <div class="risk-row">
+          <div class="risk-id">R03</div>
+          <div class="risk-desc">Indisponibilidade ou resistência do Diretor Financeiro ao treinamento</div>
+          <span class="risk-level risk-high">ALTO</span>
+        </div>
+        <div class="risk-row">
+          <div class="risk-id">R04</div>
+          <div class="risk-desc">Janelas de transporte PRD incompatíveis com o cronograma</div>
+          <span class="risk-level risk-med">MÉDIO</span>
+        </div>
+        <div class="risk-row">
+          <div class="risk-id">R05</div>
+          <div class="risk-desc">Outros aprovadores do fluxo ZFI0057 impactados pela parametrização</div>
+          <span class="risk-level risk-med">MÉDIO</span>
+        </div>
+        <div class="risk-row">
+          <div class="risk-id">R06</div>
+          <div class="risk-desc">Custo real supera teto de R$ 8.640</div>
+          <span class="risk-level risk-med">MÉDIO</span>
+        </div>
+        <div class="risk-row">
+          <div class="risk-id">R07</div>
+          <div class="risk-desc">Resistência dos usuários do fluxo à nova etapa de aprovação</div>
+          <span class="risk-level risk-low">BAIXO</span>
+        </div>
+        <div style="margin-top:12px; padding:10px 12px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:8px; font-size:12px; color:var(--red);">
+          ⚠️ <strong>Atenção ao Sponsor:</strong> Valor esperado total dos riscos (R$ 5.450) supera a reserva de contingência do orçamento (R$ 1.440). R01 isolado gera R$ 3.000 de exposição esperada. Sinalizar no kickoff.
+        </div>
+      </div>
+    </div>
+
+    <!-- ISSUES -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Issues Abertas</span>
+        <span class="badge badge-yellow">1 Aberta</span>
+      </div>
+      <div class="card-body" style="padding:12px 20px;">
+        <div class="issue-row">
+          <span class="issue-tag issue-tag-done">✅ RESOLVIDA</span>
+          <div class="issue-content">
+            <div class="issue-title">I-001 — Nome do Sponsor confirmado: Andre Chieppe</div>
+            <div class="issue-meta">Resolvida em 05/04/2026 · TAP pronto para assinatura</div>
+          </div>
+        </div>
+        <div class="issue-row">
+          <span class="issue-tag">⏳ ABERTA</span>
+          <div class="issue-content">
+            <div class="issue-title">I-002 — Gerente de Projeto não designado</div>
+            <div class="issue-meta">Responsável: PMO VMO Consultoria · Prazo: imediato após assinatura do TAP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COLUNA DIREITA -->
+  <div class="col-right">
+
+    <!-- SCORE VMO -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Score de Qualidade VMO</span>
+      </div>
+      <div class="card-body">
+        <div class="score-ring">
+          <div class="score-number">8.7<span class="score-max">/10</span></div>
+          <div class="score-label">🟢 APROVADO — Vera Veredito</div>
+        </div>
+        <div style="margin-top:16px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; color:var(--muted);">TAP <span style="color:var(--text);">8.5</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; color:var(--muted);">PM Canvas <span style="color:var(--text);">9.0</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; color:var(--muted);">ERF <span style="color:var(--text);">8.5</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; color:var(--muted);">Cronograma <span style="color:var(--text);">9.0</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; color:var(--muted);">Plano de Riscos <span style="color:var(--text);">8.5</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; color:var(--muted);">KPIs <span style="color:var(--text);">9.0</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted);">Status Report <span style="color:var(--text);">8.5</span></div>
+        </div>
+        <div style="margin-top:12px; padding:10px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:8px; font-size:11px; color:var(--green); text-align:center;">
+          ✅ Todos os critérios BLOCKING atendidos
+        </div>
+      </div>
+    </div>
+
+    <!-- PIPELINE AGENTS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Pipeline VMO Autônomo</span>
+        <span class="badge badge-green">Concluído</span>
+      </div>
+      <div class="card-body">
+        <div class="agents-grid">
+          <div class="agent-card">
+            <div class="agent-icon">📥</div>
+            <div class="agent-name">Iara Inbound</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">🔍</div>
+            <div class="agent-name">Felipe Filtro</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📋</div>
+            <div class="agent-name">Diana Doc.</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">⚙️</div>
+            <div class="agent-name">Rafael Req.</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📅</div>
+            <div class="agent-name">Carlos Cron.</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">⚠️</div>
+            <div class="agent-name">Pedro Perigo</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📊</div>
+            <div class="agent-name">Marcela Mét.</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📝</div>
+            <div class="agent-name">Sara Status</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">✅</div>
+            <div class="agent-name">Vera Veredito</div>
+            <div class="agent-status text-green">✅ Done</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:11px; color:var(--muted); text-align:center;">
+          Concluído em 03/04/2026 às 14:52 · 12 steps · 9 agentes
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO PROJETO -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Informações</span>
+      </div>
+      <div class="card-body" style="padding:14px 20px;">
+        <table class="info-table">
+          <tr><td>ID do Projeto</td><td>PROJ-2026-001</td></tr>
+          <tr><td>Demanda</td><td>DEM-2026-001</td></tr>
+          <tr><td>Área Solicitante</td><td>VIX Manutenção</td></tr>
+          <tr><td>Área Executora</td><td>DTI / Basis SAP</td></tr>
+          <tr><td>Sponsor</td><td>Andre Chieppe</td></tr>
+          <tr><td>Solicitante</td><td>Ivanilde Ribeiro Machado</td></tr>
+          <tr><td>Gerente de Projeto</td><td><span style="color:var(--yellow);">A designar (PMO)</span></td></tr>
+          <tr><td>Orçamento Aprovado</td><td>R$ 8.640 (teto)</td></tr>
+          <tr><td>Prazo Máximo</td><td>Du 60 após TAP</td></tr>
+          <tr><td>Tecnologia</td><td>SAP FI · ZFI0057 · SBWP</td></tr>
+          <tr><td>Aprovado por VMO</td><td>Marcelo Silveira</td></tr>
+          <tr><td>Data Aprovação</td><td>03/04/2026</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- STAKEHOLDERS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Stakeholders</span>
+      </div>
+      <div class="card-body" style="padding:12px 20px;">
+        <div class="stakeholder-row">
+          <div class="stakeholder-avatar" style="background:#7c3aed;">AC</div>
+          <div class="stakeholder-info">
+            <div class="stakeholder-name">Andre Chieppe</div>
+            <div class="stakeholder-role">Sponsor · Diretor Financeiro · VIX Manutenção</div>
+          </div>
+        </div>
+        <div class="stakeholder-row">
+          <div class="stakeholder-avatar" style="background:#0891b2;">IR</div>
+          <div class="stakeholder-info">
+            <div class="stakeholder-name">Ivanilde Ribeiro Machado</div>
+            <div class="stakeholder-role">Solicitante · VIX Manutenção</div>
+          </div>
+        </div>
+        <div class="stakeholder-row">
+          <div class="stakeholder-avatar" style="background:#d97706;">GP</div>
+          <div class="stakeholder-info">
+            <div class="stakeholder-name">A designar pelo PMO</div>
+            <div class="stakeholder-role">Gerente de Projeto</div>
+          </div>
+        </div>
+        <div class="stakeholder-row">
+          <div class="stakeholder-avatar" style="background:#16a34a;">MS</div>
+          <div class="stakeholder-info">
+            <div class="stakeholder-name">Marcelo Silveira</div>
+            <div class="stakeholder-role">VMO Consultoria · Aprovador Final</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Documentos</span>
+      </div>
+      <div class="card-body" style="padding:12px 20px;">
+        <div style="display:flex; flex-direction:column; gap:8px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span>📄 TAP (v1.1)</span>
+            <span class="badge badge-yellow" style="font-size:10px;">Aguarda assinatura</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span>🗂️ PM Canvas</span>
+            <span class="badge badge-green" style="font-size:10px;">✅ Aprovado</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span>⚙️ ERF (22 requisitos)</span>
+            <span class="badge badge-green" style="font-size:10px;">✅ Aprovado</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span>📅 Cronograma (WBS 3 níveis)</span>
+            <span class="badge badge-green" style="font-size:10px;">✅ Aprovado</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span>⚠️ Plano de Riscos (7 riscos)</span>
+            <span class="badge badge-green" style="font-size:10px;">✅ Aprovado</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span>📊 Framework KPIs (EVM + 5 KRs)</span>
+            <span class="badge badge-green" style="font-size:10px;">✅ Aprovado</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
+            <span>📝 Status Report Inicial</span>
+            <span class="badge badge-green" style="font-size:10px;">✅ Aprovado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  🌐 VMO Web Publisher · Gerado por Lucas Layout · <strong>Atualizado: 05/04/2026 às 20:30</strong> · Próxima atualização automática em ~6h
+  <br>
+  <span style="color:var(--border);">squads/vmo-web-publisher/output/site/projetos/PROJ-2026-001.html</span>
+</footer>
+
+</body>
+</html>

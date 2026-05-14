@@ -1,0 +1,25 @@
+{
+  "squad": "vmo-autonomo",
+  "status": "completed",
+  "step": { "current": 12, "total": 12, "label": "Concluído" },
+  "agents": [
+    { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done", "desk": { "col": 1, "row": 1 } },
+    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done", "desk": { "col": 2, "row": 1 } },
+    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "done", "desk": { "col": 3, "row": 1 } },
+    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "done", "desk": { "col": 1, "row": 2 } },
+    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "done", "desk": { "col": 2, "row": 2 } },
+    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "done", "desk": { "col": 3, "row": 2 } },
+    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "done", "desk": { "col": 1, "row": 3 } },
+    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "done", "desk": { "col": 2, "row": 3 } },
+    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "done", "desk": { "col": 3, "row": 3 } }
+  ],
+  "handoff": {
+    "from": "vera-veredito",
+    "to": null,
+    "message": "Pipeline concluído. Documentação aprovada: 8.7/10. Aprovado por Marcelo Silveira.",
+    "completedAt": "2026-04-03T14:52:00Z"
+  },
+  "startedAt": "2026-04-03T13:42:20Z",
+  "updatedAt": "2026-04-03T14:52:00Z",
+  "completedAt": "2026-04-03T14:52:00Z"
+}

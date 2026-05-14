@@ -1,0 +1,10 @@
+id,name,title,icon,execution,path
+iara-inbound,Iara Inbound,Coletora de Demandas,📥,subagent,./agents/iara-inbound.agent.md
+felipe-filtro,Felipe Filtro,Analista de Qualificação,🔍,inline,./agents/felipe-filtro.agent.md
+diana-documento,Diana Documento,Arquiteta de Projetos,📋,subagent,./agents/diana-documento.agent.md
+rafael-requisito,Rafael Requisito,Engenheiro de Requisitos,⚙️,subagent,./agents/rafael-requisito.agent.md
+carlos-cronograma,Carlos Cronograma,Planejador de Prazo,📅,inline,./agents/carlos-cronograma.agent.md
+pedro-perigo,Pedro Perigo,Analista de Riscos,⚠️,inline,./agents/pedro-perigo.agent.md
+marcela-metrica,Marcela Métrica,Monitora de Performance,📊,subagent,./agents/marcela-metrica.agent.md
+sara-status,Sara Status,Redatora de Relatórios,📝,inline,./agents/sara-status.agent.md
+vera-veredito,Vera Veredito,Revisora de Qualidade VMO,✅,inline,./agents/vera-veredito.agent.md

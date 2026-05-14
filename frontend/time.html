@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Time VMO</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg: #070b14;
+  --bg2: #0d1220;
+  --bg3: #111827;
+  --border: #1e2d45;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd700;
+  --red: #ff3b5c;
+  --orange: #ff8c00;
+  --text: #c8d8e8;
+  --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55;
+  --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 0.75rem; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; transition: all 0.2s; letter-spacing: 1px; }
+.back-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); text-shadow: var(--glow-cyan); }
+.page-title { font-size: 0.9rem; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; text-shadow: var(--glow-cyan); }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px 16px; }
+
+.summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+.summary-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.summary-val { font-size: 1.8rem; font-weight: 700; }
+.summary-val.red { color: var(--red); text-shadow: 0 0 12px #ff3b5c55; }
+.summary-val.yellow { color: var(--yellow); }
+.summary-val.green { color: var(--green); text-shadow: var(--glow-green); }
+.summary-val.cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.summary-lbl { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+.team-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px; }
+.member-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s; }
+.member-card:hover { border-color: var(--cyan); }
+.member-card.overload { border-top: 3px solid var(--red); }
+.member-card.warn { border-top: 3px solid var(--yellow); }
+.member-card.ok { border-top: 3px solid var(--green); }
+.member-header { padding: 20px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); }
+.avatar-large { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; border: 2px solid; flex-shrink: 0; }
+.member-info { flex: 1; }
+.member-name-large { font-size: 1rem; font-weight: 700; color: #e0eaf5; margin-bottom: 2px; }
+.member-role-large { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.util-display { text-align: right; }
+.util-pct-large { font-size: 1.8rem; font-weight: 700; }
+.util-pct-large.red { color: var(--red); text-shadow: 0 0 10px #ff3b5c55; }
+.util-pct-large.yellow { color: var(--yellow); }
+.util-pct-large.green { color: var(--green); text-shadow: var(--glow-green); }
+.util-label { font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; }
+.member-body { padding: 16px 20px; }
+.util-bar-full { background: #1a2535; border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 12px; position: relative; }
+.util-bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease; }
+.util-bar-fill.red { background: linear-gradient(90deg, var(--orange), var(--red)); }
+.util-bar-fill.yellow { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+.util-bar-fill.green { background: linear-gradient(90deg, var(--cyan), var(--green)); }
+.capacity-line { position: absolute; top: 0; right: 0; width: 1px; height: 100%; background: rgba(255,255,255,0.2); }
+
+.proj-tags-title { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 8px; }
+.proj-tags { display: flex; flex-direction: column; gap: 6px; }
+.proj-tag { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--bg3); border-radius: 6px; border: 1px solid var(--border); }
+.proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.proj-dot.red { background: var(--red); }
+.proj-dot.yellow { background: var(--yellow); }
+.proj-dot.green { background: var(--green); }
+.proj-tag-name { font-size: 0.72rem; color: #ddd; font-weight: 600; flex: 1; }
+.proj-tag-meta { font-size: 0.6rem; color: var(--text-dim); }
+.proj-tag-pct { font-size: 0.65rem; font-weight: 700; }
+
+.alerts-section { margin-top: 12px; }
+.alert-mini { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; background: var(--bg3); border-radius: 5px; border-left: 2px solid; font-size: 0.7rem; margin-bottom: 5px; }
+.alert-mini.critical { border-color: var(--red); }
+.alert-mini.warning { border-color: var(--yellow); }
+.alert-mini.info { border-color: var(--cyan); }
+.alert-mini.ok { border-color: var(--green); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.card-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 14px; }
+
+.full-member-card { grid-column: 1 / -1; }
+
+.source-tag { font-size: 0.58rem; color: var(--text-dim); background: #111827; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+.footer { text-align: center; padding: 12px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">VMO<span>GAB</span></div>
+    <div class="subtitle">DTI · Grupo Águia Branca · Value &amp; Automation Office</div>
+  </div>
+  <div class="page-title">◈ Carga do Time VMO</div>
+  <a href="/vmo/" class="back-btn">← Voltar ao Mission Control</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-val cyan">7</div>
+      <div class="summary-lbl">Membros no Time</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val red">130%</div>
+      <div class="summary-lbl">Pico de Utilização</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val yellow">94%</div>
+      <div class="summary-lbl">Utilização Média</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val red">1</div>
+      <div class="summary-lbl">Sobrecarregado</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val green">9</div>
+      <div class="summary-lbl">Projetos Cobertos</div>
+    </div>
+  </div>
+
+  <div class="team-cards">
+
+    <!-- JULIANA BARCELOS -->
+    <div class="member-card overload">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#200a0a;color:var(--red);border-color:var(--red)">JB</div>
+        <div class="member-info">
+          <div class="member-name-large">Juliana Barcelos</div>
+          <div class="member-role-large">Gerente de Projeto</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large red">~130%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--red)">ACIMA DA CAPACIDADE</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill red" style="width:100%"></div>
+        </div>
+        <div class="proj-tags-title">Projetos Alocados (4)</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot yellow"></div>
+            <div class="proj-tag-name">CASH — Sistema de Pagamentos</div>
+            <div class="proj-tag-meta">Financeiro</div>
+            <div class="proj-tag-pct" style="color:var(--yellow)">~35%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot yellow"></div>
+            <div class="proj-tag-name">Certificado Digital</div>
+            <div class="proj-tag-meta">Segurança</div>
+            <div class="proj-tag-pct" style="color:var(--yellow)">~30%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot yellow"></div>
+            <div class="proj-tag-name">4Tax — Solução Fiscal SAP</div>
+            <div class="proj-tag-meta">Supply Chain</div>
+            <div class="proj-tag-pct" style="color:var(--yellow)">~35%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot green"></div>
+            <div class="proj-tag-name">Vem Comigo — Adiant. Recebíveis</div>
+            <div class="proj-tag-meta">Financeiro</div>
+            <div class="proj-tag-pct" style="color:var(--green)">~30%</div>
+          </div>
+        </div>
+        <div class="alerts-section">
+          <div class="alert-mini critical">
+            <span>🔴</span>
+            <div><strong>SOBRECARGA CRÍTICA:</strong> 130% de utilização com 4 projetos simultâneos. Risco imediato de burnout e degradação da qualidade de gestão.</div>
+          </div>
+          <div class="alert-mini warning">
+            <span>⚠️</span>
+            <div>Redistribuição necessária. Considerar transferir 4Tax ou Certificado Digital para outro PM.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VITOR COIMBRA -->
+    <div class="member-card warn">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#1a1400;color:var(--yellow);border-color:var(--yellow)">VC</div>
+        <div class="member-info">
+          <div class="member-name-large">Vitor Coimbra de Oliveira</div>
+          <div class="member-role-large">Gerente de Projeto</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large yellow">~95%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--yellow)">QUASE NO LIMITE</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill yellow" style="width:95%"></div>
+        </div>
+        <div class="proj-tags-title">Projetos Alocados (3)</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot red"></div>
+            <div class="proj-tag-name">Total Bus — Migração Cloud Azure</div>
+            <div class="proj-tag-meta">Infra · CRÍTICO</div>
+            <div class="proj-tag-pct" style="color:var(--red)">~40%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot yellow"></div>
+            <div class="proj-tag-name">LG — Gestão de Contratos</div>
+            <div class="proj-tag-meta">Jurídico · PGP 31/03</div>
+            <div class="proj-tag-pct" style="color:var(--yellow)">~30%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot yellow"></div>
+            <div class="proj-tag-name">Onboarding Digital</div>
+            <div class="proj-tag-meta">RH/TI</div>
+            <div class="proj-tag-pct" style="color:var(--yellow)">~25%</div>
+          </div>
+        </div>
+        <div class="alerts-section">
+          <div class="alert-mini warning">
+            <span>⚠️</span>
+            <div><strong>ATENÇÃO:</strong> Total Bus crítico e LG com PGP vencendo 31/03 simultaneamente. Risco de atenção dividida.</div>
+          </div>
+          <div class="alert-mini warning">
+            <span>⚠️</span>
+            <div>Gate com Gladstone (10/abr) para Total Bus, LG e Onboarding — prepare todos os três projetos.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANA LUISA CURCIO -->
+    <div class="member-card warn">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#0d2137;color:var(--cyan);border-color:var(--cyan)">AL</div>
+        <div class="member-info">
+          <div class="member-name-large">Ana Luisa Curcio Magalhaes</div>
+          <div class="member-role-large">Gerente de Projeto</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large yellow">~80%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--yellow)">UTILIZAÇÃO MODERADA</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill yellow" style="width:80%"></div>
+        </div>
+        <div class="proj-tags-title">Projetos Alocados (1)</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot red"></div>
+            <div class="proj-tag-name">Support Package (SEIDOR)</div>
+            <div class="proj-tag-meta">SAP · ERP · CRÍTICO — Consultoria SAP Platinum Partner</div>
+            <div class="proj-tag-pct" style="color:var(--red)">~80%</div>
+          </div>
+        </div>
+        <div class="alerts-section">
+          <div class="alert-mini critical">
+            <span>🔴</span>
+            <div><strong>PROJETO BLOQUEADO:</strong> SEIDOR aguardando decisão de Marcelo. Ana Luisa está travada sem poder agir.</div>
+          </div>
+          <div class="alert-mini info">
+            <span>ℹ️</span>
+            <div>Com 20% de capacidade livre, pode absorver novo projeto ou apoiar Juliana após decisão do SEIDOR.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIVIANE CALIARI -->
+    <div class="member-card ok">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#071a0d;color:var(--green);border-color:var(--green)">VV</div>
+        <div class="member-info">
+          <div class="member-name-large">Viviane Caliari</div>
+          <div class="member-role-large">Supervisora de Projetos</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large green">~75%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--green)">SAUDÁVEL</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill green" style="width:75%"></div>
+        </div>
+        <div class="proj-tags-title">Atuação</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot green"></div>
+            <div class="proj-tag-name">Suporte PMO — Portfólio Geral</div>
+            <div class="proj-tag-meta">Apoio aos PMs</div>
+            <div class="proj-tag-pct" style="color:var(--green)">~75%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot green"></div>
+            <div class="proj-tag-name">Governança e Documentação</div>
+            <div class="proj-tag-meta">VMO Office</div>
+            <div class="proj-tag-pct" style="color:var(--green)">~15%</div>
+          </div>
+        </div>
+        <div class="alerts-section">
+          <div class="alert-mini ok">
+            <span>✅</span>
+            <div>Carga saudável. Pode absorver demandas de apoio do portfólio sem risco de sobrecarga.</div>
+          </div>
+          <div class="alert-mini info">
+            <span>ℹ️</span>
+            <div>Candidata a apoiar redistribuição de demandas de Juliana Barcelos nos projetos de atenção.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SANDRO — full width -->
+  <div style="margin-bottom:20px">
+    <div class="member-card ok">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#0d2137;color:var(--cyan);border-color:var(--cyan)">SS</div>
+        <div class="member-info">
+          <div class="member-name-large">Sandro Siqueira</div>
+          <div class="member-role-large">Supervisor de Projetos</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large green">~70%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--green)">SAUDÁVEL — MAIOR CAPACIDADE DISPONÍVEL</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill green" style="width:70%"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+          <div>
+            <div class="proj-tags-title">Atuação</div>
+            <div class="proj-tags">
+              <div class="proj-tag">
+                <div class="proj-dot green"></div>
+                <div class="proj-tag-name">Apoio aos Projetos do Portfólio</div>
+                <div class="proj-tag-meta">Análise PMO</div>
+                <div class="proj-tag-pct" style="color:var(--cyan)">~70%</div>
+              </div>
+              <div class="proj-tag">
+                <div class="proj-dot green"></div>
+                <div class="proj-tag-name">Relatórios e KPIs</div>
+                <div class="proj-tag-meta">Indicadores</div>
+                <div class="proj-tag-pct" style="color:var(--cyan)">~20%</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="alerts-section">
+              <div class="alert-mini ok">
+                <span>✅</span>
+                <div>Maior capacidade disponível do time. Pode ser escalado para apoiar projetos críticos ou absorver redistribuição de carga de Juliana.</div>
+              </div>
+              <div class="alert-mini info">
+                <span>ℹ️</span>
+                <div>30% de capacidade livre disponível. Ideal para assumir acompanhamento de 4Tax ou Certificado Digital como suporte de projetos.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARCELO SILVEIRA — COORDENADOR -->
+  <div style="margin-bottom:20px">
+    <div class="member-card ok" style="border-top:3px solid var(--cyan)">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#071426;color:var(--cyan);border-color:var(--cyan)">MS</div>
+        <div class="member-info">
+          <div class="member-name-large">Marcelo Silveira</div>
+          <div class="member-role-large">Coordenador de Projetos | DTI</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large green">~60%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--green)">SAUDÁVEL — LIDERANÇA DO PORTFÓLIO</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill green" style="width:60%"></div>
+        </div>
+        <div class="proj-tags-title">Atuação</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot yellow"></div>
+            <div class="proj-tag-name">Caminhos Estratégicos</div>
+            <div class="proj-tag-meta">Estratégia · Corporativo | Todas as divisões</div>
+            <div class="proj-tag-pct" style="color:var(--yellow)">~40%</div>
+          </div>
+          <div class="proj-tag">
+            <div class="proj-dot green"></div>
+            <div class="proj-tag-name">Governança VMO · Decisões de Portfólio</div>
+            <div class="proj-tag-meta">Coordenação DTI</div>
+            <div class="proj-tag-pct" style="color:var(--green)">~20%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIEGO VOLPATO — SUPERVISOR SUSTENTAÇÃO ERP -->
+  <div style="margin-bottom:20px">
+    <div class="member-card ok">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#0d2137;color:var(--cyan);border-color:var(--cyan)">DV</div>
+        <div class="member-info">
+          <div class="member-name-large">Diego Volpato</div>
+          <div class="member-role-large">Supervisor de Sustentação ERP</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large green">~75%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--green)">SAUDÁVEL</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill green" style="width:75%"></div>
+        </div>
+        <div class="proj-tags-title">Atuação</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot green"></div>
+            <div class="proj-tag-name">Sustentação ERP SAP — Portfólio</div>
+            <div class="proj-tag-meta">ERP · Manutenção e Suporte</div>
+            <div class="proj-tag-pct" style="color:var(--green)">~75%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADALMARIO CRUZ -->
+  <div style="margin-bottom:20px">
+    <div class="member-card ok">
+      <div class="member-header">
+        <div class="avatar-large" style="background:#071a0d;color:var(--green);border-color:var(--green)">AC</div>
+        <div class="member-info">
+          <div class="member-name-large">Adalmario Cruz</div>
+          <div class="member-role-large">Gerente de Projeto</div>
+        </div>
+        <div class="util-display">
+          <div class="util-pct-large green">~70%</div>
+          <div class="util-label">Utilização</div>
+        </div>
+      </div>
+      <div class="member-body">
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:6px">
+          <span>Carga atual</span>
+          <span style="color:var(--green)">SAUDÁVEL</span>
+        </div>
+        <div class="util-bar-full">
+          <div class="util-bar-fill green" style="width:70%"></div>
+        </div>
+        <div class="proj-tags-title">Atuação</div>
+        <div class="proj-tags">
+          <div class="proj-tag">
+            <div class="proj-dot green"></div>
+            <div class="proj-tag-name">Gestão de Projetos — Portfólio DTI</div>
+            <div class="proj-tag-meta">Gerência de Projetos</div>
+            <div class="proj-tag-pct" style="color:var(--green)">~70%</div>
+          </div>
+        </div>
+        <div class="alerts-section">
+          <div class="alert-mini ok">
+            <span>✅</span>
+            <div>Carga saudável. Disponível para absorver projetos adicionais ou apoiar redistribuição do portfólio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <!-- GRÁFICO DE UTILIZAÇÃO -->
+    <div class="card">
+      <div class="card-title"><span>📊</span> Comparativo de Utilização do Time</div>
+      <canvas id="utilChart" height="220"></canvas>
+    </div>
+    <!-- RECOMENDAÇÕES -->
+    <div class="card">
+      <div class="card-title"><span>🎯</span> Recomendações de Redistribuição</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--red)">
+          <div style="color:var(--red);font-size:0.65rem;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">URGENTE — Juliana 130%</div>
+          <div style="font-size:0.72rem;color:var(--text);line-height:1.6">
+            Transferir <strong>4Tax</strong> ou <strong>Certificado Digital</strong> para Sandro Siqueira (70%) ou Viviane Caliari (75%). Isso reduziria Juliana para ~95–100% e melhoraria a qualidade de gestão dos projetos restantes.
+          </div>
+        </div>
+        <div style="padding:12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--yellow)">
+          <div style="color:var(--yellow);font-size:0.65rem;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">MÉDIO PRAZO — Ana Luisa Bloqueada</div>
+          <div style="font-size:0.72rem;color:var(--text);line-height:1.6">
+            Após decisão do SEIDOR, Ana Luisa (80%) ficará com capacidade significativa. Direcionar para apoiar Total Bus (crítico) ou absorver projeto de Juliana.
+          </div>
+        </div>
+        <div style="padding:12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--cyan)">
+          <div style="color:var(--cyan);font-size:0.65rem;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">ESTRATÉGICO — Nova Contratação</div>
+          <div style="font-size:0.72rem;color:var(--text);line-height:1.6">
+            Caminhos Estratégicos requer novo recurso. Contratar PM ou analista sênior para absorver pelo menos 1 projeto de Juliana e gerir Caminhos Estratégicos.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:12px;font-size:0.63rem;color:var(--text-dim);border:1px solid var(--border);border-radius:6px;background:var(--bg2);">
+    <span class="source-tag">🎙️ Dados extraídos da reunião Fireflies · 27/03/2026</span>
+    &nbsp;&nbsp;Capacidade calculada considerando 100% = 1 PM gerenciando projetos em full dedication
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB · Carga do Time VMO · DTI Grupo Águia Branca · Reunião 27/03/2026</div>
+
+<script>
+const utilCtx = document.getElementById('utilChart').getContext('2d');
+new Chart(utilCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Juliana\nBarcellos', 'Vitor\nCoimbra', 'Ana Luisa\nCurcio', 'Viviane\nCaliari', 'Sandro\nSiqueira', 'Marcelo\nSilveira', 'Diego\nVolpato', 'Adalmario\nCruz'],
+    datasets: [
+      {
+        label: 'Utilização Atual (%)',
+        data: [130, 95, 80, 75, 70, 60, 75, 70],
+        backgroundColor: [
+          'rgba(255,59,92,0.7)',
+          'rgba(255,215,0,0.7)',
+          'rgba(255,215,0,0.7)',
+          'rgba(0,255,136,0.6)',
+          'rgba(0,255,136,0.6)',
+          'rgba(0,212,255,0.6)',
+          'rgba(0,255,136,0.6)',
+          'rgba(0,255,136,0.6)'
+        ],
+        borderColor: ['#ff3b5c','#ffd700','#ffd700','#00ff88','#00ff88','#00d4ff','#00ff88','#00ff88'],
+        borderWidth: 1,
+        borderRadius: 4,
+      },
+      {
+        label: 'Capacidade Máxima (100%)',
+        data: [100, 100, 100, 100, 100, 100, 100, 100],
+        backgroundColor: 'transparent',
+        borderColor: 'rgba(0,212,255,0.3)',
+        borderWidth: 1,
+        borderDash: [4,4],
+        type: 'line',
+        pointRadius: 0,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#4a6278', font: { size: 9 }, boxWidth: 10 } }
+    },
+    scales: {
+      x: { grid: { color: '#1e2d45' }, ticks: { color: '#4a6278', font: { size: 9 } } },
+      y: {
+        grid: { color: '#1e2d45' },
+        ticks: { color: '#4a6278', font: { size: 9 }, callback: v => v + '%' },
+        min: 0, max: 140,
+        title: { display: true, text: 'Utilização (%)', color: '#4a6278', font: { size: 9 } }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+squad:
+  code: vmo-autonomo
+  name: VMO Autônomo
+  description: >
+    Escritório de projetos autônomo (PMO→VMO) que gerencia o ciclo completo
+    de iniciação de projetos: da captação de demanda até a entrega da documentação
+    completa (TAP, PM Canvas, ERF, Cronograma, Riscos, KPIs e Status Report).
+  icon: 🏛️
+  version: "1.0.0"
+  language: "Português (Brasil)"
+  company: VMO Consultoria
+
+agents:
+  - id: iara-inbound
+    path: ./agents/iara-inbound.agent.md
+  - id: felipe-filtro
+    path: ./agents/felipe-filtro.agent.md
+  - id: diana-documento
+    path: ./agents/diana-documento.agent.md
+  - id: rafael-requisito
+    path: ./agents/rafael-requisito.agent.md
+  - id: carlos-cronograma
+    path: ./agents/carlos-cronograma.agent.md
+  - id: pedro-perigo
+    path: ./agents/pedro-perigo.agent.md
+  - id: marcela-metrica
+    path: ./agents/marcela-metrica.agent.md
+  - id: sara-status
+    path: ./agents/sara-status.agent.md
+  - id: vera-veredito
+    path: ./agents/vera-veredito.agent.md
+
+skills:
+  - web_search
+  - web_fetch
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+
+pipeline:
+  entry: pipeline/pipeline.yaml
+
+memory:
+  squad: _memory/memories.md
+  runs: _memory/runs.md

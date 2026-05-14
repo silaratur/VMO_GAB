@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Portfólio de Projetos</title>
+<style>
+:root {
+  --bg: #070b14;
+  --bg2: #0d1220;
+  --bg3: #111827;
+  --border: #1e2d45;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd700;
+  --red: #ff3b5c;
+  --orange: #ff8c00;
+  --text: #c8d8e8;
+  --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55;
+  --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 0.75rem; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; transition: all 0.2s; letter-spacing: 1px; }
+.back-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); text-shadow: var(--glow-cyan); }
+.page-title { font-size: 0.9rem; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px 16px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-dim); }
+.badge { font-size: 0.65rem; padding: 3px 10px; border-radius: 99px; border: 1px solid; font-weight: 700; }
+.badge.red { color: var(--red); border-color: var(--red); background: rgba(255,59,92,0.08); }
+.badge.yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.08); }
+.badge.green { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.08); }
+
+.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.summary-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.summary-val { font-size: 2rem; font-weight: 700; }
+.summary-val.red { color: var(--red); }
+.summary-val.yellow { color: var(--yellow); }
+.summary-val.green { color: var(--green); }
+.summary-val.cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.summary-lbl { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+.projects-section { margin-bottom: 32px; }
+.project-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 14px; overflow: hidden; transition: border-color 0.2s; }
+.project-card:hover { border-color: var(--cyan); }
+.project-card.critical { border-left: 3px solid var(--red); }
+.project-card.warning { border-left: 3px solid var(--yellow); }
+.project-card.ok { border-left: 3px solid var(--green); }
+.project-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; }
+.project-header:hover .expand-icon { color: var(--cyan); }
+.project-title-block { display: flex; align-items: center; gap: 12px; }
+.status-indicator { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.status-indicator.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+.status-indicator.yellow { background: var(--yellow); box-shadow: 0 0 8px #ffd70055; }
+.status-indicator.green { background: var(--green); box-shadow: var(--glow-green); }
+.project-title { font-size: 0.9rem; font-weight: 700; color: #e0eaf5; }
+.project-category { font-size: 0.6rem; color: var(--text-dim); margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+.project-header-right { display: flex; align-items: center; gap: 16px; }
+.health-score { text-align: center; }
+.health-num { font-size: 1.4rem; font-weight: 700; }
+.health-num.red { color: var(--red); }
+.health-num.yellow { color: var(--yellow); }
+.health-num.green { color: var(--green); }
+.health-label { font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.expand-icon { font-size: 0.8rem; color: var(--text-dim); transition: color 0.2s; }
+.project-body { padding: 0 18px 18px; border-top: 1px solid var(--border); display: none; }
+.project-body.open { display: block; }
+.project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.project-section { }
+.ps-title { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.ps-content { font-size: 0.73rem; color: var(--text); line-height: 1.6; }
+.ps-content ul { padding-left: 14px; }
+.ps-content li { margin-bottom: 3px; }
+.ps-content .highlight { color: var(--cyan); font-weight: 600; }
+.ps-content .warn { color: var(--yellow); }
+.ps-content .danger { color: var(--red); font-weight: 600; }
+.ps-content .ok { color: var(--green); }
+.progress-wrap { margin-top: 10px; }
+.progress-label-row { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--text-dim); margin-bottom: 4px; }
+.progress-bar { background: #1a2535; border-radius: 99px; height: 6px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; }
+.progress-fill.red { background: linear-gradient(90deg, var(--red), var(--orange)); }
+.progress-fill.yellow { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+.progress-fill.green { background: linear-gradient(90deg, var(--cyan), var(--green)); }
+.meta-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip { font-size: 0.6rem; padding: 3px 8px; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; color: var(--text-dim); }
+.chip.red { border-color: rgba(255,59,92,0.4); color: var(--red); }
+.chip.yellow { border-color: rgba(255,215,0,0.4); color: var(--yellow); }
+.chip.green { border-color: rgba(0,255,136,0.4); color: var(--green); }
+.chip.cyan { border-color: rgba(0,212,255,0.4); color: var(--cyan); }
+
+.source-tag { font-size: 0.58rem; color: var(--text-dim); background: #111827; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+.footer { text-align: center; padding: 12px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">VMO<span>GAB</span></div>
+    <div class="subtitle">DTI · Grupo Águia Branca · Value &amp; Automation Office</div>
+  </div>
+  <div class="page-title">◈ Portfólio de Projetos</div>
+  <a href="/vmo/" class="back-btn">← Voltar ao Mission Control</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-val cyan">9</div>
+      <div class="summary-lbl">Projetos Ativos</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val red">2</div>
+      <div class="summary-lbl">Críticos</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val yellow">6</div>
+      <div class="summary-lbl">Em Atenção</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val green">1</div>
+      <div class="summary-lbl">Saudável</div>
+    </div>
+  </div>
+
+  <!-- CRÍTICOS -->
+  <div class="projects-section">
+    <div class="section-header">
+      <div class="section-title">Projetos Críticos</div>
+      <span class="badge red">2 críticos · ação imediata</span>
+    </div>
+
+    <!-- Total Bus -->
+    <div class="project-card critical">
+      <div class="project-header" onclick="toggle('totalbus')">
+        <div class="project-title-block">
+          <div class="status-indicator red"></div>
+          <div>
+            <div class="project-title">Total Bus — Migração Cloud Azure</div>
+            <div class="project-category">Infraestrutura · Infra · High Impact · Divisão Passageiros | Stakeholder: Gladston Campos</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num red">4/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge red">CRÍTICO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="totalbus">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="danger">~20%</span></div>
+          <div class="progress-bar"><div class="progress-fill red" style="width:20%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Vitor Coimbra</div>
+              <div><span class="highlight">Prazo:</span> <span class="danger">Maio/2026</span></div>
+              <div><span class="highlight">Escopo:</span> 700 agências impactadas</div>
+              <div><span class="highlight">Tipo:</span> Migração Cloud Azure</div>
+              <div><span class="highlight">Área:</span> Infraestrutura / DTI</div>
+              <div><span class="highlight">Stakeholder:</span> Gladston Campos (Gate 10/abr) · Divisão Passageiros</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip red">Sem plano aprovado</span>
+              <span class="chip red">700 agências</span>
+              <span class="chip yellow">Gate 10/Abr</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="danger">Execução iniciada sem plano de projeto aprovado</li>
+                <li class="danger">Solução de conectividade ainda indefinida</li>
+                <li class="warn">3 cenários de conectividade sendo avaliados</li>
+                <li class="warn">Apresentação técnica a Cota em 30/03 para decidir cenário</li>
+                <li class="warn">Gate com Gladstone marcado para 10/abr — risco de reprovação</li>
+                <li>Escala de impacto muito alta: 700 agências</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li><span class="danger">URGENTE:</span> Aprovar plano de projeto formal</li>
+                <li>30/Mar: Apresentação técnica (3 cenários) para Cota</li>
+                <li>Decidir e descartar cenários de conectividade</li>
+                <li>Preparar documentação para gate Gladstone (10/abr)</li>
+                <li>Estruturar cronograma com marcos claros até Mai/26</li>
+                <li>Mapear dependências de todas as 700 agências</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seidor -->
+    <div class="project-card critical">
+      <div class="project-header" onclick="toggle('seidor')">
+        <div class="project-title-block">
+          <div class="status-indicator red"></div>
+          <div>
+            <div class="project-title">Support Package (SEIDOR)</div>
+            <div class="project-category">SAP · ERP · Consultoria SAP Platinum Partner · Corporativo | Todas as divisões</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num red">6/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge red">CRÍTICO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="seidor">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~35%</span></div>
+          <div class="progress-bar"><div class="progress-fill red" style="width:35%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Ana Luisa Curcio</div>
+              <div><span class="highlight">Prazo:</span> <span class="danger">Decisão requerida URGENTE</span></div>
+              <div><span class="highlight">Decisor:</span> Marcelo (Sponsor)</div>
+              <div><span class="highlight">Tipo:</span> Support Package SAP</div>
+              <div><span class="highlight">Fornecedor:</span> SEIDOR (sem flexibilidade) — Consultoria SAP Platinum Partner</div>
+              <div><span class="highlight">Status:</span> Paralelo — aguardando decisão</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip red">Decisão parar/seguir</span>
+              <span class="chip red">Fornecedor rígido</span>
+              <span class="chip yellow">Marcelo decide</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="danger">Fornecedor SEIDOR sem flexibilidade de negociação</li>
+                <li class="danger">Decisão estratégica pendente com Marcelo: parar ou seguir</li>
+                <li class="warn">Sem decisão, o projeto permanece em limbo operacional</li>
+                <li class="warn">Custo de oportunidade alto — time alocado sem entrega</li>
+                <li>Impacto direto no ambiente SAP da Holding</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li><span class="danger">BLOQUEIO:</span> Escalar decisão para Marcelo imediatamente</li>
+                <li>Apresentar análise custo-benefício: parar vs. seguir</li>
+                <li>Se seguir: negociar flexibilidade com SEIDOR (ou trocar fornecedor)</li>
+                <li>Se parar: formalizar encerramento e comunicar stakeholders</li>
+                <li>Liberar Ana Luisa para outros projetos conforme decisão</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EM ATENÇÃO -->
+  <div class="projects-section">
+    <div class="section-header">
+      <div class="section-title">Projetos em Atenção</div>
+      <span class="badge yellow">6 projetos · monitoramento ativo</span>
+    </div>
+
+    <!-- CASH -->
+    <div class="project-card warning">
+      <div class="project-header" onclick="toggle('cash')">
+        <div class="project-title-block">
+          <div class="status-indicator yellow"></div>
+          <div>
+            <div class="project-title">CASH — Sistema de Pagamentos</div>
+            <div class="project-category">Financeiro · Integração Bancária · Corporativo | Todas as divisões</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num yellow">10/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge yellow">ATENÇÃO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="cash">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~55%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:55%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Juliana Barcelos</div>
+              <div><span class="highlight">Prazo:</span> <span class="warn">Replanejar</span></div>
+              <div><span class="highlight">Parceiros:</span> Finnet + Santander</div>
+              <div><span class="highlight">VAN Bancária:</span> Finnet — integração ERP/bancos</div>
+              <div><span class="highlight">Tipo:</span> Sistema de Pagamentos/Financeiro</div>
+              <div><span class="highlight">Bloqueio:</span> Integrações bancárias atrasadas</div>
+              <div><span class="highlight">Reunião:</span> 16h marcada (27/03)</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip red">Finnet bloqueado</span>
+              <span class="chip red">Santander bloqueado</span>
+              <span class="chip yellow">CR em risco</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="danger">Finnet não cumpre prazos de integração</li>
+                <li class="danger">Santander não cumpre prazos de integração</li>
+                <li class="warn">CR (Change Request) em risco de vencer</li>
+                <li class="warn">Dependência externa de dois fornecedores críticos</li>
+                <li>PM Juliana já sobrecarregada com 4 projetos simultâneos</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li>Reunião 16h (27/03): alinhar prazos com Finnet e Santander</li>
+                <li>Cobrar SLA dos fornecedores bancários formalmente</li>
+                <li>Renovar ou renegociar o CR antes do vencimento</li>
+                <li>Replanejar cronograma com novos prazos realistas</li>
+                <li>Escalar bloqueio se reunião não resolver</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certificado Digital -->
+    <div class="project-card warning">
+      <div class="project-header" onclick="toggle('certdigital')">
+        <div class="project-title-block">
+          <div class="status-indicator yellow"></div>
+          <div>
+            <div class="project-title">Certificado Digital</div>
+            <div class="project-category">Segurança · Compliance · Infraestrutura · Corporativo | Todas as divisões</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num yellow">9/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge yellow">ATENÇÃO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="certdigital">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~40%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:40%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Juliana Barcelos</div>
+              <div><span class="highlight">Prazo:</span> <span class="warn">Aguardando aprovações</span></div>
+              <div><span class="highlight">Unidades:</span> Comércio + VIX pendentes</div>
+              <div><span class="highlight">Responsável unidade:</span> Cleomar (em licença)</div>
+              <div><span class="highlight">Bloqueio:</span> Aprovações internas pendentes</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip yellow">Comércio pendente</span>
+              <span class="chip yellow">VIX pendente</span>
+              <span class="chip red">Cleomar em licença</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="warn">Aprovações das unidades Comércio e VIX pendentes</li>
+                <li class="danger">Cleomar (aprovador) está em licença</li>
+                <li class="warn">Bloqueio de avanço enquanto aprovações não chegarem</li>
+                <li>PM Juliana sobrecarregada — risco de follow-up insuficiente</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li>Identificar substituto de Cleomar para aprovações</li>
+                <li>Escalar aprovações para gestores das unidades</li>
+                <li>Definir prazo máximo para desbloqueio</li>
+                <li>Preparar documentação para agilizar aprovação quando voltar</li>
+                <li>Considerar redistribuição de follow-up para liberar Juliana</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORTEX -->
+    <div class="project-card warning">
+      <div class="project-header" onclick="toggle('fortex')">
+        <div class="project-title-block">
+          <div class="status-indicator yellow"></div>
+          <div>
+            <div class="project-title">4Tax — Solução Fiscal/Tributária SAP (ex-FORTEX)</div>
+            <div class="project-category">Supply Chain · Solução fiscal/tributária SAP - substitui GRC-NFe · 4 Subcomponentes · Corporativo | Passageiros + Logística | Stakeholders: Gladston Campos, Raphael Leitão</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num yellow">11/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge yellow">ATENÇÃO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="fortex">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~45%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:45%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais + Subcomponentes</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Juliana Barcelos</div>
+              <div><span class="highlight">Prazo:</span> <span class="warn">Jun–Out/2026</span></div>
+              <div style="margin-top:8px;font-size:0.65rem;color:var(--text-dim)">4 SUBCOMPONENTES:</div>
+              <ul style="margin-top:4px">
+                <li><span class="highlight">Embalde</span> — mensageria interna</li>
+                <li><span class="highlight">Outbound</span> — comunicação externa</li>
+                <li><span class="highlight">Reforma Tributária</span> — adequações fiscais</li>
+                <li><span class="warn">CTEOS</span> — solução transitória (risco)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="warn">CTEOS testado em QAS, subida prod. em período de fechamento</li>
+                <li class="warn">4 subcomponentes simultâneos com PM sobrecarregada</li>
+                <li class="warn">Reforma tributária com prazos regulatórios externos</li>
+                <li>Complexidade alta: múltiplas frentes em paralelo</li>
+                <li>Risco de atraso em cascata entre subcomponentes</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li>Aguardar fechamento para subir CTEOS para produção</li>
+                <li>Confirmar janela de produção para CTEOS sem risco</li>
+                <li>Monitorar prazos regulatórios da Reforma Tributária</li>
+                <li>Avaliar redistribuição de subcomponentes entre analistas</li>
+                <li>Atualizar cronograma integrado dos 4 subcomponentes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onboarding Digital -->
+    <div class="project-card warning">
+      <div class="project-header" onclick="toggle('onboarding')">
+        <div class="project-title-block">
+          <div class="status-indicator yellow"></div>
+          <div>
+            <div class="project-title">Onboarding Digital</div>
+            <div class="project-category">RH / TI · Experiência do Colaborador · Divisão Logística | Stakeholder: Raphael Leitão</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num yellow">8/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge yellow">ATENÇÃO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="onboarding">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~30%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:30%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Vitor Coimbra</div>
+              <div><span class="highlight">Prazo testes:</span> <span class="warn">06–10/Abril</span></div>
+              <div><span class="highlight">Bloqueio:</span> Documentação consultoria pendente</div>
+              <div><span class="highlight">Próximo marco:</span> Testes integrados abr/26</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip red">Doc. pendente</span>
+              <span class="chip yellow">Testes 06-10/Abr</span>
+              <span class="chip cyan">Vitor</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="danger">Consultoria não entregou documentação necessária</li>
+                <li class="warn">Testes integrados marcados para 06–10/abr sem doc</li>
+                <li class="warn">Risco de não conseguir executar testes no prazo</li>
+                <li>PM Vitor também gerencia Total Bus e LG</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li><span class="danger">URGENTE:</span> Cobrar documentação da consultoria agora</li>
+                <li>Definir prazo final improrrogável para entrega da doc.</li>
+                <li>Preparar ambiente de testes para 06/abr</li>
+                <li>Contingência: iniciar testes com doc parcial se necessário</li>
+                <li>Comunicar riscos aos stakeholders de RH</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LG -->
+    <div class="project-card warning">
+      <div class="project-header" onclick="toggle('lg')">
+        <div class="project-title-block">
+          <div class="status-indicator yellow"></div>
+          <div>
+            <div class="project-title">LG — Gestão de Contratos</div>
+            <div class="project-category">Jurídico · Gestão Contratual · Divisão Comércio | Stakeholder: Fabricio Ferri</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num yellow">7/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge yellow">ATENÇÃO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="lg">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~25%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:25%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Vitor Coimbra</div>
+              <div><span class="highlight">Prazo crítico:</span> <span class="danger">PGP vence 31/03/2026</span></div>
+              <div><span class="highlight">Aprovadora:</span> Camila (entra em férias)</div>
+              <div><span class="highlight">Bloqueio:</span> PGP aguardando aprovação</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip red">PGP vence 31/03</span>
+              <span class="chip red">Camila em férias</span>
+              <span class="chip yellow">URGENTE</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="danger">PGP vence em 31/03 — aprovação não obtida</li>
+                <li class="danger">Camila (aprovadora) entra em férias</li>
+                <li class="warn">Sem aprovação do PGP, projeto pode ser bloqueado</li>
+                <li class="warn">Vitor gerencia Total Bus, LG e Onboarding simultaneamente</li>
+                <li>Risco de perda de janela de aprovação</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li><span class="danger">HOJE:</span> Cobrar aprovação do PGP de Camila antes das férias</li>
+                <li>Identificar substituto de Camila para aprovação se necessário</li>
+                <li>Preparar para gate com Gladstone em 10/abr</li>
+                <li>Documentar status atual para continuidade pós-férias</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caminhos Estratégicos -->
+    <div class="project-card warning">
+      <div class="project-header" onclick="toggle('caminhos')">
+        <div class="project-title-block">
+          <div class="status-indicator yellow"></div>
+          <div>
+            <div class="project-title">Caminhos Estratégicos</div>
+            <div class="project-category">Estratégia · Inovação · Gestão Organizacional · Corporativo | Todas as divisões</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num yellow">12/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge yellow">ATENÇÃO</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="caminhos">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="warn">~50%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:50%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Marcelo Silveira</div>
+              <div><span class="highlight">Prazo:</span> Em andamento</div>
+              <div><span class="highlight">Foco:</span> Indicadores estratégicos DTI</div>
+              <div><span class="highlight">Bloqueio:</span> Indicadores ainda não criados</div>
+              <div><span class="highlight">Necessidade:</span> Contratação de recurso</div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip yellow">Indicadores pendentes</span>
+              <span class="chip red">Contratação necessária</span>
+              <span class="chip cyan">Marcelo Silveira</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Riscos Identificados</div>
+            <div class="ps-content">
+              <ul>
+                <li class="warn">Indicadores de desempenho ainda não definidos/criados</li>
+                <li class="warn">Contratação de recurso necessária para avançar</li>
+                <li>Sem indicadores, não há como medir progresso estratégico</li>
+                <li>Alinhamento entre DTI e liderança ainda em construção</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li>Definir e criar KPIs estratégicos do projeto</li>
+                <li>Iniciar processo seletivo/contratação de recurso</li>
+                <li>Alinhar indicadores com diretoria e liderança</li>
+                <li>Estabelecer cadência de monitoramento estratégico</li>
+                <li>Mapear gap atual vs. meta estratégica</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAUDÁVEL -->
+  <div class="projects-section">
+    <div class="section-header">
+      <div class="section-title">Projeto Saudável</div>
+      <span class="badge green">1 projeto · referência do portfólio</span>
+    </div>
+
+    <!-- Vem Comigo -->
+    <div class="project-card ok">
+      <div class="project-header" onclick="toggle('vemcomigo')">
+        <div class="project-title-block">
+          <div class="status-indicator green"></div>
+          <div>
+            <div class="project-title">Vem Comigo — Adiantamento de Recebíveis</div>
+            <div class="project-category">Financeiro · Fintech · Inovação · Divisão Logística | Stakeholder: Raphael Leitão</div>
+          </div>
+        </div>
+        <div class="project-header-right">
+          <div class="health-score">
+            <div class="health-num green">19/24</div>
+            <div class="health-label">Health Score</div>
+          </div>
+          <span class="badge green">SAUDÁVEL</span>
+          <div class="expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="project-body" id="vemcomigo">
+        <div class="progress-wrap">
+          <div class="progress-label-row"><span>Progresso estimado</span><span class="ok">~65%</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:65%"></div></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-section">
+            <div class="ps-title">Informações Gerais</div>
+            <div class="ps-content">
+              <div><span class="highlight">PM:</span> Juliana Barcelos</div>
+              <div><span class="highlight">Fase:</span> <span class="ok">Piloto Fase 2 ativo</span></div>
+              <div><span class="highlight">Escopo:</span> 10 fornecedores no piloto</div>
+              <div><span class="highlight">Stakeholder:</span> Zerboni (apresentação próx. terça)</div>
+              <div><span class="highlight">Status:</span> <span class="ok">Único projeto saudável do portfólio</span></div>
+            </div>
+            <div class="meta-chips">
+              <span class="chip green">Piloto ativo</span>
+              <span class="chip green">10 fornecedores</span>
+              <span class="chip cyan">Fase 2</span>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Pontos de Atenção</div>
+            <div class="ps-content">
+              <ul>
+                <li class="ok">Piloto Fase 2 em andamento com 10 fornecedores</li>
+                <li class="ok">Único projeto com health score positivo no portfólio</li>
+                <li class="warn">Apresentação de Changes para Zerboni na próxima terça</li>
+                <li class="warn">Cadastro de fornecedor + Distorno aguardam aprovação de prazo</li>
+                <li>PM Juliana sobrecarregada — risco de perda de qualidade</li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-section">
+            <div class="ps-title">Próximas Ações</div>
+            <div class="ps-content">
+              <ul>
+                <li><span class="ok">OK:</span> Manter ritmo do piloto fase 2</li>
+                <li>Próxima terça: apresentar Changes para Zerboni</li>
+                <li>Obter aprovação para extensão de prazo (cadastro fornecedor + Distorno)</li>
+                <li>Documentar lições aprendidas do piloto para escalar</li>
+                <li>Planejar expansão além dos 10 fornecedores iniciais</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:12px;font-size:0.63rem;color:var(--text-dim);border:1px solid var(--border);border-radius:6px;background:var(--bg2);">
+    <span class="source-tag">🎙️ Dados extraídos da reunião Fireflies · 27/03/2026</span>
+    &nbsp;&nbsp;Clique nos cards para expandir detalhes &nbsp;|&nbsp; Health Score: escala 0–24
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB · Portfólio de Projetos · DTI Grupo Águia Branca · Reunião 27/03/2026</div>
+
+<script>
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+// Auto-open first two (critical)
+document.querySelectorAll('.project-card.critical .project-body').forEach(b => b.classList.add('open'));
+</script>
+</body>
+</html>
