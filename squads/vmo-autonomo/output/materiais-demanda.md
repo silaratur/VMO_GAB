@@ -1,171 +1,87 @@
-# Materiais da Demanda — Projeto: Caminhos Estratégicos do ERP GAB
+# Materiais da Demanda — Plataforma Interna de Gestão de Ideias de Inovação
 
 **Fontes:**
-1. Proposta Comercial KPMG — Software Selection ERP GAB (documento PDF, assinado via DocuSign 13–17/03/2026)
-2. Apresentação de Kick Off Operacional — 02/04/2026 (documento PDF)
-3. Informações complementares fornecidas pelo GP interno (Marcelo Silveira) via chat em 05/04/2026
+1. Transcrição de reunião Fireflies — "Discovery Demandas - Sara <> JADSON" (ID: 01KPV48BER47DVPT37Q0CGCNXN)
 
-**Data de coleta:** 05/04/2026
-**Coletado por:** Usuário (GP interno) — insumo para Iara Inbound
+**Data de coleta:** 2026-05-14
+**Coletado por:** VMO Autônomo — integração Fireflies
 
 ---
 
-## Identificação do Projeto
+## Transcrição da Reunião (Discovery Demandas - Sara <> JADSON)
+**Data:** 2026-04-22 | **Duração:** ~10 min | **Organizer:** silaratur@gmail.com
 
-**Nome do projeto:** Caminhos Estratégicos do ERP GAB
-**Tipo:** Assessment de Seleção de Software ERP (Software Selection)
-**Organização solicitante:** Grupo Águia Branca (GAB) — Holding + Divisão Logística (VixPar) + Divisão Passageiros (VAB)
-**Parceiro contratado:** KPMG Consultoria Ltda.
-**Status atual:** Em execução — Semana 0 / transição para Semana 1 (em 05/04/2026)
+**Solicitante:** Jadson
+**Entrevistador:** Sara (Agente VMO)
 
 ---
 
-## Contexto e Motivação
+### Conteúdo da Reunião
 
-O atual sistema ERP utilizado pelo Grupo Águia Branca é o SAP ECC 6.0, plataforma que terá seu suporte encerrado pela SAP em 2027. Esta condição — conhecida como "end of maintenance" — cria uma pressão de negócio objetiva: a organização precisa avaliar, selecionar e planejar a migração para uma nova plataforma ERP antes do prazo de descontinuação do suporte.
+**Sara:** Me conte com suas palavras o que é esta demanda e como ela melhora o seu dia-a-dia?
 
-O projeto "Caminhos Estratégicos do ERP GAB" foi contratado para responder à seguinte pergunta estratégica: **qual plataforma ERP melhor atende às necessidades do Grupo Águia Branca para os próximos 10 anos?**
+**Jadson:** Essa demanda é referente a implementar uma plataforma que possa ajudar no cadastro das ideias e iniciativas de inovação que as pessoas da empresa têm. Ela resolveria no dia-a-dia porque isso fica documentado, guardado. A gente consegue fazer um fluxo, fazer a gestão completa das ideias que as pessoas vão tendo no projeto de inovações pelo grupo.
 
-O escopo do assessment cobre as três entidades do grupo:
-- **Holding GAB** — finanças corporativas, controladoria, gestão de pessoas
-- **VixPar (Divisão Logística / VIX Manutenção)** — manutenção de frotas, suprimentos, fiscal
-- **VAB (Divisão Passageiros / Viação Águia Branca)** — operações de passageiros, DP/SESMT, RH
+**Sara:** Pode me dar um exemplo prático?
 
----
+**Jadson:** O exemplo prático é um colaborador ter uma ideia de inovação. Hoje ele tem uma plataforma que ele acessa, mas é uma plataforma terceira. A ideia é desenvolver uma plataforma própria onde ele consiga acessar um portal, cadastrar a sua ideia, qual o problema que ela resolve, quais os ganhos, benefícios, e afins. Isso dar visibilidade à ideia, ser aprovado pelo gestor para ser implementado. Ele conseguir fazer um plano de ação macro dentro dessa plataforma. A gente consegue monitorar todos os projetos de inovação que estão em andamento, quais os times.
 
-## Escopo do Projeto
+**Sara:** Como isso funciona hoje e como você espera que funcione?
 
-### Fase 1: Software Selection (Foco deste pipeline)
-- **Duração:** 5 semanas (02/04/2026 a 08/05/2026)
-- **Investimento:** R$ 930.000,00
-- **Objetivo:** Avaliar três plataformas ERP candidatas e produzir uma recomendação fundamentada
+**Jadson:** Existe um sistema hoje, uma plataforma que ele acessa e faz isso. Só que essa plataforma hoje custa algum dinheiro. Estou querendo desenvolver uma plataforma própria com algumas particularidades que a gente já percebeu aqui no nosso processo e que faça a mesma coisa que já faz hoje. Só com a plataforma própria e com esses ajustes.
 
-**Plataformas candidatas avaliadas:**
-1. SAP S/4HANA Rise
-2. Oracle ERP Cloud
-3. TOTVS Protheus
+**Sara:** O que muda na prática?
 
-**Áreas de processo cobertas:**
-- Manutenção / Frotas
-- Suprimentos
-- Finanças
-- Fiscal
-- Departamento Pessoal (DP) / SESMT
-- Recursos Humanos (RH)
-- Tecnologia
+**Jadson:** Na prática o que muda é que sai um sistema terceiro e entra um software próprio mais adequado à nossa realidade aqui do grupo.
 
-### Fase 2: RFP (planejada para início em paralelo no final da Fase 1)
-- **Duração:** 4 semanas
-- **Investimento:** R$ 170.000,00
-- **Objetivo:** Elaboração e condução do processo de RFP com os fornecedores finalistas
+**Sara:** Essa demanda é uma melhoria, uma nova solução ou um estudo de viabilidade?
 
----
+**Jadson:** É uma melhoria. Ela melhora algo que já existe, simplifica, fica mais barato.
 
-## Metodologia
+**Sara:** Essa demanda atende a algum requisito legal ou obrigatório?
 
-KPMG Powered Enterprise — avaliação estruturada por modelo de pontuação (Score Model) com 5 pilares ponderados:
+**Jadson:** Não, nenhum requisito legal ou obrigatório.
 
-| Pilar | Peso |
-|---|---|
-| Estratégico | 30% |
-| Produto | 20% |
-| Tecnologia | 20% |
-| Cliente | 10% |
-| Financeiro | 10% |
-| Operação | 10% |
+**Sara:** Essa demanda impacta outras divisões — comércio, passageiros, logística?
 
-**Nota:** A soma dos pesos declarados é 100% distribuídos em 6 pilares (o enunciado original menciona "5 pilares" mas lista 6 — registrado como inconsistência a verificar com a KPMG).
+**Jadson:** Sim. Hoje ela já é usada pelo grupo, as outras divisões. A ideia é que elas continuem utilizando e que seja transparente essa transição para elas.
 
----
+**Sara:** Quais áreas serão impactadas?
 
-## Estrutura de Governança
+**Jadson:** Áreas de negócio, todas. Porque todas as pessoas que podem acessar hoje essa plataforma. O impacto para eles é mínimo, porque basicamente o que deve mudar para o usuário final é o link que ele acessa.
 
-### Equipe KPMG
-| Nome | Papel |
-|---|---|
-| Rodrigo Figaro | Sócio responsável (KPMG) |
-| Wallacy Lima | Gerente Sênior (KPMG) |
-| + 20 especialistas | Equipe técnica KPMG |
+**Sara:** Será necessário integrar com outros sistemas?
 
-### Equipe GAB (Internos)
-| Nome | Papel | Contato |
-|---|---|---|
-| Marcelo Silveira | GP Interno (interino) | marcelov@aguiabranca.com.br |
-| Décio Luiz Chieppe | Sponsor — VP Inovação e Finanças (Holding) | — |
-| Paula Barcelos T. Corrêa | Sponsor — Diretora (VAB Passageiros) | — |
-| Patrícia Poubel Chieppe | Sponsor — Diretora (VixPar Logística) | — |
+**Jadson:** A princípio não, pelo menos nesse primeiro momento não há necessidade de integração. Pode ser que no futuro a gente identifique algum ponto de evolução que seja necessário integração, mas hoje pode considerar que não tem integração.
 
----
+**Sara:** Me explique como essa solução deveria funcionar na prática.
 
-## Cronograma de Alto Nível
+**Jadson:** O colaborador do grupo acessa um site, um portal. O time de inovação é o gestor dessa plataforma. Ele pode colocar desafios específicos, problemas específicos, campanhas, e os colaboradores podem dar ideias para resolver esses desafios. Ou ainda o colaborador pode, de forma avulsa, dar uma ideia de forma mais geral. Essa ideia passa por um fluxo de aprovação — o gestor da área e os envolvidos que precisam ser identificados no cadastro da ideia. Se aprovada, tanto a ideia quanto o investimento necessário, ela é implementada pela própria área ou com ajuda da área de projetos ou tecnologia. Precisa ter um módulo de mini gestão de projetos — pelo menos um nível de planejamento da implementação. E mensuração de ganhos.
 
-| Semana | Período | Atividade Principal |
-|---|---|---|
-| Semana 0 | 30/03–03/04/2026 | Kickoff Operacional (02/04/2026) |
-| Semana 1 | 06–10/04/2026 | Entendimento de Processos — Manutenção, Suprimentos, Financeiro, Fiscal |
-| Semana 2 | 13–17/04/2026 | Entendimento de Processos — RH/DP/SESMT, continuação Financeiro |
-| Semana 3 | 20–24/04/2026 | Análise e Definição de Aderências |
-| Semana 4 | 27/04–01/05/2026 | Análise e Definição de Aderências (continuação) |
-| Semana 5 | 04–08/05/2026 | Revisões finais + Apresentação de resultados + Início RFP em paralelo |
+**Sara:** Existe orçamento aprovado?
 
-**Datas-chave confirmadas:**
-- Kick Off Operacional: 02/04/2026 (realizado)
-- Kick Off Executivo: Abril/2026 (data exata não confirmada)
-- Entrega final Software Selection: ~08/05/2026
-- Contrato assinado via DocuSign: 13–17/03/2026
+**Jadson:** Não existe orçamento aprovado. A minha ideia é que a gente consiga levantar os custos primeiro desse desenvolvimento. E aí preciso fazer uma análise de como viabilizarei essa verba.
 
----
+**Sara:** Qual a expectativa de investimento?
 
-## Cadência de Comunicação e Governança
+**Jadson:** Hoje, anualmente, a gente paga na solução que utiliza cerca de R$ 80 mil, R$ 90 mil por ano. Minha expectativa é que a gente consiga desenvolver uma solução usando por volta desse valor e que ela consiga ser paga em um ano. Assim que desenvolver a solução, rescindo o contrato com a solução existente. E o valor que deixarei de pagar no ano seguinte paga esse investimento.
 
-| Tipo | Frequência | Dia |
-|---|---|---|
-| Flash Report (stand-up) | Diário | Todos os dias úteis |
-| Status Report | Semanal | Quarta-feira |
-| Comitê Executivo | Semanal | Quinta-feira |
+**Sara:** Existe uma data desejada?
 
----
+**Jadson:** Tem sim. A ideia é que até dezembro desse ano a gente tenha isso pronto, porque ao lançamento do Prêmio Inovação — onde a gente utiliza bastante essa plataforma — em janeiro de 27, já consiga utilizar essa nova solução.
 
-## Riscos Identificados (da proposta KPMG)
+**Sara:** Por que essa demanda era importante agora?
 
-1. Baixo engajamento das áreas de negócio nos workshops
-2. Foco excessivo em ferramenta em detrimento da definição do cenário-alvo de processos
-3. Dependência excessiva de percepções individuais em vez de dados objetivos
-4. Comunicação insuficiente sobre o projeto para os stakeholders internos
+**Jadson:** Porque a gente já avançou e amadureceu bastante no processo de inovação aqui no grupo. Entendo que a solução atual é cara pelo que ela entrega. Vejo que é uma solução para ser desenvolvida dentro de casa de relativa complexidade baixa. A gente pode fazer mais com menos.
 
----
+**Sara:** Isso reduz custos?
 
-## Classificação da Iniciativa
+**Jadson:** Reduz custo de licenciamento com a plataforma atual. Com o valor que pago por um ano dessa plataforma, desenvolver nossa solução própria e que ela não tenha custo de manutenção mensal como tenho hoje.
 
-| Campo | Resposta |
-|---|---|
-| Tipo | Projeto Estratégico — Assessment / Seleção de Plataforma |
-| Requisito legal/obrigatório? | Não (porém há pressão de prazo: SAP ECC end of maintenance em 2027) |
-| Solução de mercado existente? | Sim — avaliação de plataformas SAP S/4HANA, Oracle ERP Cloud, TOTVS Protheus |
-| Impacta outras áreas? | Sim — Holding, Logística (VixPar), Passageiros (VAB) |
-| Impacta outras divisões? | Sim — 3 divisões do grupo |
-| Requer integração com outros sistemas? | A definir — depende da plataforma selecionada |
-| Investimento aprovado? | Sim — contrato assinado (R$ 930K Fase 1 + R$ 170K Fase 2) |
-| Processo documentado? | Parcialmente — metodologia KPMG Powered Enterprise disponível |
-| Escopo detalhado disponível? | Sim — proposta KPMG com detalhamento por semana |
-| Urgência justificada? | Sim — descontinuação do suporte SAP ECC em 2027 |
+**Sara:** Melhora o processo?
 
----
+**Jadson:** Sim, mas é um objetivo secundário. Com a solução própria, permite adequar para todos os colaboradores. Hoje tenho uma limitação de licenciamento — se expandir para todos os funcionários do grupo fica muito cara, maior do que os R$ 80-90 mil por ano. A solução própria permite flexibilidade de expandir para todos os usuários sem custo absurdo. E também permite customizar a plataforma para desafios específicos do grupo.
 
-## Ganhos Esperados
+**Sara:** Quais ganhos são esperados?
 
-- **Decisão estratégica fundamentada:** Escolha de plataforma ERP baseada em critérios objetivos e ponderados
-- **Redução de risco:** Evitar escolha inadequada de plataforma com impacto de 10+ anos
-- **Alinhamento executivo:** Sponsors das 3 entidades do grupo envolvidos e comprometidos com o processo
-- **Continuidade operacional:** Garantir substituição do SAP ECC antes do fim do suporte (2027)
-- **Preparação para RFP:** Saída do assessment alimenta diretamente o processo de seleção de fornecedor (Fase 2)
-
----
-
-## Observações do GP Interno
-
-- O projeto está em andamento real, gerenciado pelo time de PMO humano em paralelo com o VMO Autônomo
-- A KPMG é a consultoria responsável pela execução da metodologia de assessment
-- O GP interno Marcelo Silveira atua de forma interina — confirmar se há previsão de titularização do cargo
-- A demanda anterior (DEM-2026-002 — SAP FI Aprovador) foi criada equivocadamente e deve ser suspensa/cancelada
-- Este projeto é a prioridade do VMO Autônomo a partir de 05/04/2026
+**Jadson:** Flexibilidade para adaptar à operação atual, possibilidade de aumentar para todos os usuários sem aumentar custo, fazer mais com menos.
