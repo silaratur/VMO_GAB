@@ -1,0 +1,33 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        run: |
+          python3 -m venv /opt/vmo_gab/venv || true
+          /opt/vmo_gab/venv/bin/pip install -r requirements.txt --quiet
+
+      - name: Copy app files
+        run: |
+          mkdir -p /opt/vmo_gab
+          cp -r app/ requirements.txt /opt/vmo_gab/
+
+      - name: Restart service
+        run: |
+          pkill -f "uvicorn app.main:app" 2>/dev/null || true
+          sleep 1
+          cd /opt/vmo_gab
+          nohup /opt/vmo_gab/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 > /opt/vmo_gab/app.log 2>&1 &
+          sleep 2
+          curl -sf http://localhost:8000/health && echo "Deploy concluido com sucesso!" || echo "App iniciando..."

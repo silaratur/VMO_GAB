@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
 dashboard/node_modules/
+venv/
 
 # Browser session (private - login cookies)
 _opensquad/_browser_profile/
@@ -13,6 +14,16 @@ _opensquad/_browser_profile/
 dist/
 build/
 *.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Environment
+.env
 
 # OS
 .DS_Store

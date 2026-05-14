@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMO GAB — Timeline & Roadmap</title>
+<style>
+:root {
+  --bg: #070b14;
+  --bg2: #0d1220;
+  --bg3: #111827;
+  --border: #1e2d45;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd700;
+  --red: #ff3b5c;
+  --orange: #ff8c00;
+  --text: #c8d8e8;
+  --text-dim: #4a6278;
+  --glow-cyan: 0 0 12px #00d4ff55;
+  --glow-green: 0 0 12px #00ff8855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+
+.header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.subtitle { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 0.75rem; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; transition: all 0.2s; letter-spacing: 1px; }
+.back-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); text-shadow: var(--glow-cyan); }
+.page-title { font-size: 0.9rem; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; text-shadow: var(--glow-cyan); }
+
+.container { max-width: 1300px; margin: 0 auto; padding: 20px 16px; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+.card-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+
+/* TIMELINE VERTICAL */
+.timeline-container { position: relative; padding-left: 24px; }
+.timeline-container::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--red), var(--yellow), var(--cyan), var(--green)); opacity: 0.3; }
+
+.tl-event { position: relative; margin-bottom: 20px; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+.tl-event::before { content: ''; position: absolute; left: -22px; top: 18px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+.tl-event.risk::before { background: var(--red); border-color: var(--red); box-shadow: 0 0 8px var(--red); }
+.tl-event.now::before { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulseNode 1.5s infinite; }
+.tl-event.next::before { background: transparent; border-color: var(--text-dim); }
+.tl-event.warning::before { background: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 8px #ffd70055; }
+.tl-event.done::before { background: var(--green); border-color: var(--green); }
+@keyframes pulseNode { 0%,100%{box-shadow:0 0 8px var(--cyan)} 50%{box-shadow:0 0 20px var(--cyan)} }
+
+.tl-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; transition: border-color 0.2s; }
+.tl-card:hover { border-color: var(--cyan); }
+.tl-card.risk { border-left: 3px solid var(--red); }
+.tl-card.now { border-left: 3px solid var(--cyan); }
+.tl-card.next { border-left: 3px solid var(--text-dim); }
+.tl-card.warning { border-left: 3px solid var(--yellow); }
+.tl-card.done { border-left: 3px solid var(--green); }
+
+.tl-date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.tl-date { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
+.tl-date.red { color: var(--red); text-shadow: 0 0 8px #ff3b5c55; }
+.tl-date.cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.tl-date.yellow { color: var(--yellow); }
+.tl-date.green { color: var(--green); }
+.tl-date.dim { color: var(--text-dim); }
+.tl-sev { font-size: 0.58rem; padding: 2px 8px; border-radius: 99px; border: 1px solid; font-weight: 700; }
+.tl-sev.red { color: var(--red); border-color: var(--red); background: rgba(255,59,92,0.1); }
+.tl-sev.yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
+.tl-sev.cyan { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
+.tl-sev.green { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.1); }
+.tl-project-tag { font-size: 0.6rem; color: var(--text-dim); background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; }
+.tl-title { font-size: 0.9rem; font-weight: 700; color: #e0eaf5; margin-bottom: 5px; }
+.tl-desc { font-size: 0.72rem; color: var(--text); line-height: 1.6; margin-bottom: 8px; }
+.tl-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.65rem; color: var(--text-dim); }
+.tl-meta span { display: flex; align-items: center; gap: 4px; }
+.tl-actions { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.tl-action { display: flex; align-items: flex-start; gap: 7px; font-size: 0.68rem; color: var(--text); padding: 4px 8px; background: rgba(0,0,0,0.2); border-radius: 4px; }
+.action-arrow { color: var(--cyan); flex-shrink: 0; }
+.action-bang { color: var(--red); flex-shrink: 0; font-weight: 700; }
+
+/* GANTT */
+.gantt-wrap { overflow-x: auto; }
+.gantt { min-width: 900px; }
+.gantt-header { display: grid; grid-template-columns: 200px repeat(8, 1fr); gap: 2px; margin-bottom: 4px; }
+.gantt-proj-col { font-size: 0.6rem; color: var(--text-dim); padding: 6px 8px; text-transform: uppercase; letter-spacing: 1px; }
+.gantt-month { font-size: 0.6rem; color: var(--text-dim); padding: 6px 4px; text-align: center; text-transform: uppercase; letter-spacing: 1px; background: var(--bg3); border-radius: 4px; }
+.gantt-row { display: grid; grid-template-columns: 200px repeat(8, 1fr); gap: 2px; margin-bottom: 3px; align-items: center; }
+.gantt-proj-name { font-size: 0.72rem; color: #ddd; padding: 8px; display: flex; align-items: center; gap: 6px; }
+.proj-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.proj-dot.red { background: var(--red); }
+.proj-dot.yellow { background: var(--yellow); }
+.proj-dot.green { background: var(--green); }
+.gantt-cell { height: 28px; border-radius: 3px; background: var(--bg3); position: relative; }
+.gantt-bar { height: 100%; border-radius: 3px; position: relative; display: flex; align-items: center; padding: 0 6px; font-size: 0.58rem; font-weight: 700; white-space: nowrap; overflow: hidden; }
+.gantt-bar.red { background: rgba(255,59,92,0.5); border: 1px solid rgba(255,59,92,0.6); color: var(--red); }
+.gantt-bar.yellow { background: rgba(255,215,0,0.3); border: 1px solid rgba(255,215,0,0.5); color: var(--yellow); }
+.gantt-bar.green { background: rgba(0,255,136,0.2); border: 1px solid rgba(0,255,136,0.4); color: var(--green); }
+.gantt-bar.cyan { background: rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.4); color: var(--cyan); }
+.gantt-milestone { position: absolute; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background: var(--red); border: 1px solid #fff3; border-radius: 2px; rotate: 45deg; }
+.gantt-today { background: rgba(0,212,255,0.1); border-left: 1px dashed rgba(0,212,255,0.4); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.summary-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip { padding: 6px 14px; border-radius: 99px; border: 1px solid; font-size: 0.65rem; font-weight: 600; }
+.chip.red { color: var(--red); border-color: rgba(255,59,92,0.4); background: rgba(255,59,92,0.06); }
+.chip.yellow { color: var(--yellow); border-color: rgba(255,215,0,0.4); background: rgba(255,215,0,0.06); }
+.chip.cyan { color: var(--cyan); border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.06); }
+.chip.green { color: var(--green); border-color: rgba(0,255,136,0.4); background: rgba(0,255,136,0.06); }
+
+.source-tag { font-size: 0.58rem; color: var(--text-dim); background: #111827; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+.footer { text-align: center; padding: 12px; color: var(--text-dim); font-size: 0.6rem; letter-spacing: 2px; border-top: 1px solid var(--border); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">VMO<span>GAB</span></div>
+    <div class="subtitle">DTI · Grupo Águia Branca · Value &amp; Automation Office</div>
+  </div>
+  <div class="page-title">◈ Timeline & Roadmap</div>
+  <a href="/vmo/" class="back-btn">← Voltar ao Mission Control</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-chips">
+    <span class="chip red">⚠ 2 Marcos Urgentes Esta Semana</span>
+    <span class="chip yellow">3 Marcos em Abril</span>
+    <span class="chip cyan">Gate Gladstone: 10/Abr</span>
+    <span class="chip green">Vem Comigo: Próxima Terça</span>
+  </div>
+
+  <!-- GANTT SIMPLIFICADO -->
+  <div class="card">
+    <div class="card-title">
+      <span>📅 Gantt Simplificado — Portfólio Mar–Out/2026</span>
+      <span class="source-tag">🎙️ Reunião 27/03/2026</span>
+    </div>
+    <div class="gantt-wrap">
+      <div class="gantt">
+        <div class="gantt-header">
+          <div class="gantt-proj-col">Projeto</div>
+          <div class="gantt-month">Mar/26</div>
+          <div class="gantt-month" style="background:rgba(0,212,255,0.1);color:var(--cyan)">Abr/26</div>
+          <div class="gantt-month">Mai/26</div>
+          <div class="gantt-month">Jun/26</div>
+          <div class="gantt-month">Jul/26</div>
+          <div class="gantt-month">Ago/26</div>
+          <div class="gantt-month">Set/26</div>
+          <div class="gantt-month">Out/26</div>
+        </div>
+
+        <!-- Total Bus -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot red"></div>Total Bus</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar red" style="width:100%">PLANEJAMENTO</div></div>
+          <div class="gantt-cell"><div class="gantt-bar red" style="width:100%">GATE 10/ABR ▲</div></div>
+          <div class="gantt-cell"><div class="gantt-bar red" style="width:100%">EXECUÇÃO →</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">EXECUÇÃO</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">EXECUÇÃO</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- SEIDOR -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot red"></div>SEIDOR</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar red" style="width:100%">DECISÃO ❗</div></div>
+          <div class="gantt-cell"><div class="gantt-bar" style="background:rgba(100,100,100,0.2);border:1px dashed #333;color:#444;width:100%">???</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- CASH -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot yellow"></div>CASH</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar yellow" style="width:100%">REPLAN.</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">INTEGRAÇÃO</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">INTEGRAÇÃO</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">TESTES</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- Cert Digital -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot yellow"></div>Cert. Digital</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar yellow" style="width:100%">APROVAÇÕES</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">APROVAÇÕES</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">EXECUÇÃO</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- 4Tax -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot yellow"></div>4Tax</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar yellow" style="width:100%">QAS OK</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">PROD CTEOS</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">Embalde</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">Outbound</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">Ref. Trib.</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">Out</div></div>
+        </div>
+
+        <!-- Onboarding -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot yellow"></div>Onboarding</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar yellow" style="width:100%">DOC. PEND.</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">TESTES 6-10/ABR</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">AJUSTES</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- LG -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot yellow"></div>LG</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar red" style="width:100%">PGP 31/03❗</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">GATE 10/ABR</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">EXECUÇÃO</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- Cam. Estrat. -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot yellow"></div>Cam. Estrat.</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar yellow" style="width:100%">KPIs</div></div>
+          <div class="gantt-cell"><div class="gantt-bar yellow" style="width:100%">CONTRAT.</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">EXEC.</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">EXEC.</div></div>
+          <div class="gantt-cell"><div class="gantt-bar cyan" style="width:100%">EXEC.</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <!-- Vem Comigo -->
+        <div class="gantt-row">
+          <div class="gantt-proj-name"><div class="proj-dot green"></div>Vem Comigo</div>
+          <div class="gantt-cell gantt-today"><div class="gantt-bar green" style="width:100%">PILOTO F2 ✓</div></div>
+          <div class="gantt-cell"><div class="gantt-bar green" style="width:100%">ZERBONI</div></div>
+          <div class="gantt-cell"><div class="gantt-bar green" style="width:100%">ESCALA</div></div>
+          <div class="gantt-cell"><div class="gantt-bar green" style="width:100%">ESCALA</div></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+          <div class="gantt-cell"></div>
+        </div>
+
+        <div style="margin-top:8px;font-size:0.6rem;color:var(--text-dim);display:flex;gap:12px;flex-wrap:wrap">
+          <span style="color:var(--cyan)">▌ Coluna atual (Abr/26)</span>
+          <span style="color:var(--red)">■ Crítico</span>
+          <span style="color:var(--yellow)">■ Em execução/atenção</span>
+          <span style="color:var(--cyan)">■ Planejado</span>
+          <span style="color:var(--green)">■ Saudável</span>
+          <span>▲ Marco importante</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINHA DO TEMPO VERTICAL -->
+  <div class="card">
+    <div class="card-title"><span>⏱️</span> Marcos Próximos — Detalhe Completo</div>
+    <div class="timeline-container">
+
+      <!-- 30/Mar -->
+      <div class="tl-event now">
+        <div class="tl-card now">
+          <div class="tl-date-row">
+            <div class="tl-date cyan">30 Mar 2026</div>
+            <span class="tl-sev cyan">HOJE</span>
+            <span class="tl-project-tag">Total Bus</span>
+          </div>
+          <div class="tl-title">Apresentação Técnica — 3 Cenários de Conectividade</div>
+          <div class="tl-desc">
+            Vitor Coimbra apresenta os 3 cenários de conectividade para Cota. Objetivo: decidir qual cenário adotar
+            e quais descartar para o projeto de migração Cloud Azure das 700 agências. Decisão crítica para viabilizar
+            a formalização do plano de projeto.
+          </div>
+          <div class="tl-meta">
+            <span>Responsável: Vitor Coimbra</span>
+            <span>Para: Cota</span>
+            <span>Projeto: Total Bus</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-bang">!</span> Preparar apresentação executiva com prós/contras de cada cenário</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Ter recomendação clara para acelerar decisão</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Registrar decisão tomada formalmente</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 31/Mar -->
+      <div class="tl-event risk">
+        <div class="tl-card risk">
+          <div class="tl-date-row">
+            <div class="tl-date red">31 Mar 2026</div>
+            <span class="tl-sev red">URGENTE</span>
+            <span class="tl-project-tag">LG</span>
+          </div>
+          <div class="tl-title">PGP do Projeto LG — Vencimento do Prazo</div>
+          <div class="tl-desc">
+            O Plano de Gestão de Projeto (PGP) do LG vence em 31/03/2026. Camila, responsável pela aprovação formal,
+            entra em férias. É imperativo obter a assinatura/aprovação ANTES das férias de Camila. Sem aprovação,
+            o projeto LG pode ser formalmente bloqueado, impactando o gate com Gladstone em 10/abr.
+          </div>
+          <div class="tl-meta">
+            <span>Responsável: Vitor Coimbra</span>
+            <span>Aprovadora: Camila</span>
+            <span>Projeto: LG</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-bang">!</span> URGENTE: Cobrar aprovação de Camila hoje (27/03) — prazo 31/03</div>
+            <div class="tl-action"><span class="action-bang">!</span> Se Camila não responder: escalar para gestor imediato</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Identificar substituto formal para aprovação caso necessário</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Próx. Terça -->
+      <div class="tl-event warning">
+        <div class="tl-card warning">
+          <div class="tl-date-row">
+            <div class="tl-date yellow">01 Abr 2026 (Próx. Terça)</div>
+            <span class="tl-sev yellow">EM BREVE</span>
+            <span class="tl-project-tag">Vem Comigo</span>
+          </div>
+          <div class="tl-title">Vem Comigo — Apresentação Changes para Zerboni</div>
+          <div class="tl-desc">
+            Juliana Barcelos apresenta os Changes do projeto Vem Comigo para Zerboni.
+            Pauta: funcionalidade de Cadastro de Fornecedor e Distorno. Objetivo: obter aprovação para
+            extensão de prazo nestas funcionalidades, mantendo o piloto fase 2 com os 10 fornecedores em andamento.
+          </div>
+          <div class="tl-meta">
+            <span>Responsável: Juliana Barcelos</span>
+            <span>Stakeholder: Zerboni</span>
+            <span>Projeto: Vem Comigo</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-arrow">→</span> Preparar deck de Changes com impactos claros</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Justificar extensão de prazo com dados do piloto</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Apresentar resultados do piloto fase 2 (10 fornecedores)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06-10/Abr -->
+      <div class="tl-event next">
+        <div class="tl-card next">
+          <div class="tl-date-row">
+            <div class="tl-date dim">06–10 Abr 2026</div>
+            <span class="tl-sev yellow">ATENÇÃO</span>
+            <span class="tl-project-tag">Onboarding Digital</span>
+          </div>
+          <div class="tl-title">Onboarding Digital — Janela de Testes Integrados</div>
+          <div class="tl-desc">
+            Período reservado para execução dos testes integrados do projeto Onboarding Digital.
+            Pré-requisito crítico: documentação da consultoria deve estar disponível antes do início dos testes.
+            Se a documentação não chegar até ~03/abr, os testes podem precisar ser postergados.
+          </div>
+          <div class="tl-meta">
+            <span>Responsável: Vitor Coimbra</span>
+            <span>Pré-req: Documentação consultoria</span>
+            <span>Projeto: Onboarding Digital</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-bang">!</span> Cobrar documentação da consultoria com prazo: 03/abr (improrrogável)</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Preparar ambiente de testes com antecedência</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Definir critérios de aceite para os testes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10/Abr -->
+      <div class="tl-event warning">
+        <div class="tl-card warning">
+          <div class="tl-date-row">
+            <div class="tl-date yellow">10 Abr 2026</div>
+            <span class="tl-sev yellow">GATE CRÍTICO</span>
+            <span class="tl-project-tag">Total Bus · LG · Onboarding</span>
+          </div>
+          <div class="tl-title">Gate Executivo com Gladstone — Total Bus, LG e Onboarding</div>
+          <div class="tl-desc">
+            Gate de governança executiva com Gladstone cobrindo os três projetos gerenciados por Vitor Coimbra:
+            Total Bus, LG e Onboarding Digital. Reunião estratégica para apresentação de status, riscos e
+            estratégias. Resultado definirá continuidade e priorização dos projetos. Presença de toda a equipe VMO recomendada.
+          </div>
+          <div class="tl-meta">
+            <span>Apresentador: Vitor Coimbra</span>
+            <span>Decisor: Gladstone</span>
+            <span>3 projetos em pauta</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-bang">!</span> Preparar status atualizado dos 3 projetos com métricas</div>
+            <div class="tl-action"><span class="action-bang">!</span> Ter planos de mitigação de risco documentados e prontos</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Preparar recomendações claras para cada projeto</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Apresentar impacto do LG (PGP aprovado ou não)</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Ter cronograma revisado do Total Bus com baseline aprovado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mai/26 -->
+      <div class="tl-event next">
+        <div class="tl-card next">
+          <div class="tl-date-row">
+            <div class="tl-date dim">Mai 2026</div>
+            <span class="tl-sev red">DEADLINE</span>
+            <span class="tl-project-tag">Total Bus</span>
+          </div>
+          <div class="tl-title">Total Bus — Prazo Alvo para Migração</div>
+          <div class="tl-desc">
+            Prazo-alvo para conclusão do projeto Total Bus — migração Cloud Azure das 700 agências.
+            Com o planejamento atual incompleto e conectividade indefinida, este prazo está em risco sério.
+            Depende das decisões e ações tomadas nas próximas semanas.
+          </div>
+          <div class="tl-meta">
+            <span>Responsável: Vitor Coimbra</span>
+            <span>700 agências impactadas</span>
+            <span>Status: EM RISCO</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-bang">!</span> Prazo em alto risco — depende de decisões urgentes agora</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Replanejar após decisão de conectividade (30/03)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jun–Out/26 -->
+      <div class="tl-event next">
+        <div class="tl-card next">
+          <div class="tl-date-row">
+            <div class="tl-date dim">Jun–Out 2026</div>
+            <span class="tl-sev cyan">PLANEJADO</span>
+            <span class="tl-project-tag">4Tax</span>
+          </div>
+          <div class="tl-title">4Tax — Entregas dos 4 Subcomponentes</div>
+          <div class="tl-desc">
+            Janela de entrega dos subcomponentes do 4Tax: Embalde, Outbound, Reforma Tributária e CTEOS.
+            CTEOS já testado em QAS — aguarda janela de produção pós-fechamento.
+            Os demais subcomponentes terão entregas escalonadas ao longo do segundo semestre de 2026.
+          </div>
+          <div class="tl-meta">
+            <span>Responsável: Juliana Barcelos</span>
+            <span>4 subcomponentes</span>
+            <span>Projeto: 4Tax</span>
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><span class="action-arrow">→</span> Confirmar janela de produção do CTEOS</div>
+            <div class="tl-action"><span class="action-arrow">→</span> Monitorar prazos regulatórios da Reforma Tributária</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span>⚡</span> Ações Críticas Esta Semana</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--red)">
+          <div style="color:var(--red);font-size:0.65rem;font-weight:700;margin-bottom:4px">HOJE (27-30/03)</div>
+          <div style="font-size:0.72rem">Cobrar aprovação PGP LG de Camila antes das férias</div>
+        </div>
+        <div style="padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--red)">
+          <div style="color:var(--red);font-size:0.65rem;font-weight:700;margin-bottom:4px">HOJE (27-30/03)</div>
+          <div style="font-size:0.72rem">Apresentar 3 cenários de conectividade p/ Cota (Total Bus)</div>
+        </div>
+        <div style="padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--yellow)">
+          <div style="color:var(--yellow);font-size:0.65rem;font-weight:700;margin-bottom:4px">PRÓXIMA TERÇA</div>
+          <div style="font-size:0.72rem">Apresentação Changes Vem Comigo para Zerboni</div>
+        </div>
+        <div style="padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--yellow)">
+          <div style="color:var(--yellow);font-size:0.65rem;font-weight:700;margin-bottom:4px">ANTES 03/ABR</div>
+          <div style="font-size:0.72nm">Cobrar documentação da consultoria para Onboarding</div>
+        </div>
+        <div style="padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--red)">
+          <div style="color:var(--red);font-size:0.65rem;font-weight:700;margin-bottom:4px">ESCALAR AGORA</div>
+          <div style="font-size:0.72rem">Decisão SEIDOR: Marcelo deve decidir parar ou continuar</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span> Distribuição de Marcos por Projeto</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">Total Bus</div>
+          <div style="font-size:0.72rem;color:var(--text-dim)">30/Mar · 10/Abr · Mai/26</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">SEIDOR</div>
+          <div style="font-size:0.72rem;color:var(--text-dim)">Decisão urgente</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">LG</div>
+          <div style="font-size:0.72rem;color:var(--red)">31/Mar (PGP) · 10/Abr</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">Onboarding</div>
+          <div style="font-size:0.72rem;color:var(--text-dim)">06–10/Abr (testes)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">CASH</div>
+          <div style="font-size:0.72rem;color:var(--text-dim)">Reunião Finnet/Santander</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">4Tax CTEOS</div>
+          <div style="font-size:0.72rem;color:var(--text-dim)">Pós-fechamento → Prod</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0"></div>
+          <div style="flex:1;font-size:0.72rem">Vem Comigo</div>
+          <div style="font-size:0.72rem;color:var(--green)">Próx. Terça (Zerboni)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:12px;font-size:0.63rem;color:var(--text-dim);border:1px solid var(--border);border-radius:6px;background:var(--bg2);">
+    <span class="source-tag">🎙️ Dados extraídos da reunião Fireflies · 27/03/2026</span>
+    &nbsp;&nbsp;Marcos baseados nos compromissos e riscos discutidos pela equipe VMO
+  </div>
+
+</div>
+
+<div class="footer">VMO GAB · Timeline & Roadmap · DTI Grupo Águia Branca · Reunião 27/03/2026</div>
+
+</body>
+</html>
