@@ -297,6 +297,35 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 .cp-node.end { border-color: var(--green); color: var(--green); background: #22c55e10; }
 .cp-arrow { color: var(--text2); font-size: 0.8rem; padding: 0 4px; flex-shrink: 0; }
 
+/* Downloads section */
+.downloads-section {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 22px 28px; margin-bottom: 28px;
+}
+.downloads-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.downloads-title { font-size: 0.8rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.downloads-sub { font-size: 0.7rem; color: var(--text2); }
+.downloads-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.download-btn {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  text-decoration: none; transition: all .2s; color: var(--text);
+}
+.download-btn:hover { border-color: var(--blue); background: #3b82f610; transform: translateY(-1px); }
+.download-btn.package { border-color: var(--green); background: #22c55e10; }
+.download-btn.package:hover { border-color: var(--green); background: #22c55e20; }
+.download-btn.docx { border-color: var(--blue); background: #3b82f610; }
+.download-btn.docx:hover { background: #3b82f620; }
+.dl-icon { font-size: 1.4rem; flex-shrink: 0; }
+.dl-info { flex: 1; min-width: 0; }
+.dl-name { font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dl-type { font-size: 0.62rem; color: var(--text2); margin-top: 2px; }
+.dl-badge { font-size: 0.58rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
+.dl-badge.md { background: #eab30820; color: var(--yellow); }
+.dl-badge.docx { background: #3b82f620; color: var(--blue); }
+.dl-badge.pkg { background: #22c55e20; color: var(--green); }
+.section-sep { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
 footer {
   text-align: center; padding: 28px 20px;
   font-size: 0.65rem; color: var(--gray); border-top: 1px solid var(--border); margin-top: 40px;
@@ -351,6 +380,112 @@ footer {
         <span class="qual-big">21/30</span>
         <span class="qual-label">Qualificação Felipe</span>
       </div>
+    </div>
+  </div>
+
+  <!-- DOWNLOADS -->
+  <div class="downloads-section">
+    <div class="downloads-header">
+      <div class="downloads-title">📥 Documentos para Download</div>
+      <div class="downloads-sub">9 documentos individuais (.md) · Pacote consolidado (.md e .docx)</div>
+    </div>
+
+    <!-- Pacotes completos -->
+    <div class="downloads-grid" style="margin-bottom:12px">
+      <a class="download-btn package" href="docs/PROJ-2026-004-pacote-completo.docx" download>
+        <span class="dl-icon">📄</span>
+        <div class="dl-info">
+          <div class="dl-name">Pacote Completo</div>
+          <div class="dl-type">Todos os 9 documentos • Word</div>
+        </div>
+        <span class="dl-badge docx">.docx</span>
+      </a>
+      <a class="download-btn package" href="docs/PROJ-2026-004-pacote-completo.md" download>
+        <span class="dl-icon">📝</span>
+        <div class="dl-info">
+          <div class="dl-name">Pacote Completo</div>
+          <div class="dl-type">Todos os 9 documentos • Markdown</div>
+        </div>
+        <span class="dl-badge pkg">.md</span>
+      </a>
+    </div>
+
+    <hr class="section-sep">
+
+    <!-- Documentos individuais -->
+    <div class="downloads-grid">
+      <a class="download-btn" href="docs/01-demanda-coletada.md" download>
+        <span class="dl-icon">📥</span>
+        <div class="dl-info">
+          <div class="dl-name">01 — Demanda Coletada</div>
+          <div class="dl-type">Iara Inbound • 12 lacunas</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/02-qualificacao.md" download>
+        <span class="dl-icon">🔍</span>
+        <div class="dl-info">
+          <div class="dl-name">02 — Qualificação</div>
+          <div class="dl-type">Felipe Filtro • 21/30 (70%)</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/03-tap-canvas-plano-geral.md" download>
+        <span class="dl-icon">📋</span>
+        <div class="dl-info">
+          <div class="dl-name">03 — TAP + PM Canvas + Plano</div>
+          <div class="dl-type">Diana Documento • 10 planos</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/04-erf-requisitos.md" download>
+        <span class="dl-icon">⚙️</span>
+        <div class="dl-info">
+          <div class="dl-name">04 — ERF — Requisitos</div>
+          <div class="dl-type">Rafael Requisito • 37 RFs + 10 RNFs</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/05-cronograma.md" download>
+        <span class="dl-icon">📅</span>
+        <div class="dl-info">
+          <div class="dl-name">05 — Cronograma</div>
+          <div class="dl-type">Carlos Cronograma • WBS + 9 marcos</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/06-plano-riscos.md" download>
+        <span class="dl-icon">⚠️</span>
+        <div class="dl-info">
+          <div class="dl-name">06 — Plano de Riscos</div>
+          <div class="dl-type">Pedro Perigo • 12 riscos mapeados</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/07-kpis.md" download>
+        <span class="dl-icon">📊</span>
+        <div class="dl-info">
+          <div class="dl-name">07 — KPIs e Métricas</div>
+          <div class="dl-type">Marcela Métrica • EVM + 5 KRs</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/08-status-report.md" download>
+        <span class="dl-icon">📝</span>
+        <div class="dl-info">
+          <div class="dl-name">08 — Status Report #001</div>
+          <div class="dl-type">Sara Status • + Pesquisa satisfação</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
+      <a class="download-btn" href="docs/09-revisao-qualidade.md" download>
+        <span class="dl-icon">✅</span>
+        <div class="dl-info">
+          <div class="dl-name">09 — Revisão de Qualidade</div>
+          <div class="dl-type">Vera Veredito • Score 100/100</div>
+        </div>
+        <span class="dl-badge md">.md</span>
+      </a>
     </div>
   </div>
 
