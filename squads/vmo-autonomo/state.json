@@ -1,26 +1,21 @@
 {
   "squad": "vmo-autonomo",
-  "status": "checkpoint",
-  "step": { "current": 4, "total": 12, "label": "Checkpoint — Parecer de Qualificação GP" },
+  "status": "running",
+  "step": { "current": 5, "total": 12, "label": "Instrução — Diana Documento + Rafael Requisito (paralelo)" },
   "agents": [
     { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
     { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done",    "desk": { "col": 2, "row": 1 } },
-    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "idle",    "desk": { "col": 3, "row": 1 } },
-    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "idle",    "desk": { "col": 1, "row": 2 } },
+    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "working", "desk": { "col": 3, "row": 1 } },
+    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "working", "desk": { "col": 1, "row": 2 } },
     { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "idle",    "desk": { "col": 2, "row": 2 } },
     { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "idle",    "desk": { "col": 3, "row": 2 } },
     { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "idle",    "desk": { "col": 1, "row": 3 } },
     { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "idle",    "desk": { "col": 2, "row": 3 } },
     { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "idle",    "desk": { "col": 3, "row": 3 } }
   ],
-  "handoff": {
-    "from": "felipe-filtro",
-    "to": "checkpoint-4",
-    "output": "squads/vmo-autonomo/output/2026-05-15-150000/v1/qualificacao.md"
-  },
   "run": "2026-05-15-150000",
   "project": "PROJ-2026-005",
   "demand": "DEM-2026-002",
   "startedAt": "2026-05-15T15:00:00Z",
-  "updatedAt": "2026-05-15T15:25:00Z"
+  "updatedAt": "2026-05-15T15:30:00Z"
 }
