@@ -1,38 +1,26 @@
 {
   "squad": "vmo-autonomo",
   "status": "checkpoint",
-  "step": { "current": 12, "total": 12, "label": "Checkpoint Final — Aprovação GP" },
+  "step": { "current": 2, "total": 12, "label": "Checkpoint — Validação da Demanda Coletada" },
   "agents": [
     { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
-    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done",    "desk": { "col": 2, "row": 1 } },
-    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "done",    "desk": { "col": 3, "row": 1 } },
-    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "done",    "desk": { "col": 1, "row": 2 } },
-    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "done",    "desk": { "col": 2, "row": 2 } },
-    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "done",    "desk": { "col": 3, "row": 2 } },
-    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "done",    "desk": { "col": 1, "row": 3 } },
-    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "done",    "desk": { "col": 2, "row": 3 } },
-    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "done",    "desk": { "col": 3, "row": 3 } }
+    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "idle",    "desk": { "col": 2, "row": 1 } },
+    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "idle",    "desk": { "col": 3, "row": 1 } },
+    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "idle",    "desk": { "col": 1, "row": 2 } },
+    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "idle",    "desk": { "col": 2, "row": 2 } },
+    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "idle",    "desk": { "col": 3, "row": 2 } },
+    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "idle",    "desk": { "col": 1, "row": 3 } },
+    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "idle",    "desk": { "col": 2, "row": 3 } },
+    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "idle",    "desk": { "col": 3, "row": 3 } }
   ],
   "handoff": {
-    "from": "vera-veredito",
-    "to": "gp-marcelo",
-    "message": "Revisão de qualidade concluída — Score 100/100. Documentação completa e consistente. Aguardando aprovação final do GP para encerrar o pipeline.",
-    "completedAt": "2026-05-14T21:10:00Z"
+    "from": "iara-inbound",
+    "to": "checkpoint-2",
+    "output": "squads/vmo-autonomo/output/2026-05-15-150000/v1/demanda-coletada.md"
   },
-  "result": {
-    "runId": "2026-05-14-201500",
-    "project": "PROJ-2026-004",
-    "demand": "DEM-2026-001",
-    "qualificationScore": "21/30 (70%) — APROVADO COM CONDIÇÕES",
-    "qualityScore": "100/100 — APROVADO",
-    "documentsGenerated": 8,
-    "outputPath": "squads/vmo-autonomo/output/2026-05-14-201500/",
-    "goLiveDate": "2026-11-28",
-    "budget": "R$ 90.000,00",
-    "criticalRisks": 3,
-    "blockers": ["Sponsor não identificado", "Orçamento não aprovado", "Modelo de execução indefinido"],
-    "blockerDeadline": "2026-06-13"
-  },
-  "startedAt": "2026-05-14T20:15:00Z",
-  "updatedAt": "2026-05-14T21:10:00Z"
+  "run": "2026-05-15-150000",
+  "project": "PROJ-2026-005",
+  "demand": "DEM-2026-002",
+  "startedAt": "2026-05-15T15:00:00Z",
+  "updatedAt": "2026-05-15T15:10:00Z"
 }
