@@ -1,10 +1,10 @@
 {
   "squad": "vmo-autonomo",
-  "status": "checkpoint",
-  "step": { "current": 2, "total": 12, "label": "Checkpoint — Validação da Demanda Coletada" },
+  "status": "running",
+  "step": { "current": 3, "total": 12, "label": "Qualificação da Demanda — Felipe Filtro" },
   "agents": [
     { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
-    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "idle",    "desk": { "col": 2, "row": 1 } },
+    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "working", "desk": { "col": 2, "row": 1 } },
     { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "idle",    "desk": { "col": 3, "row": 1 } },
     { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "idle",    "desk": { "col": 1, "row": 2 } },
     { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "idle",    "desk": { "col": 2, "row": 2 } },
@@ -14,13 +14,13 @@
     { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "idle",    "desk": { "col": 3, "row": 3 } }
   ],
   "handoff": {
-    "from": "iara-inbound",
-    "to": "checkpoint-2",
-    "output": "squads/vmo-autonomo/output/2026-05-15-150000/v1/demanda-coletada.md"
+    "from": "checkpoint-2",
+    "to": "felipe-filtro",
+    "output": "squads/vmo-autonomo/output/2026-05-15-150000/v1/qualificacao.md"
   },
   "run": "2026-05-15-150000",
   "project": "PROJ-2026-005",
   "demand": "DEM-2026-002",
   "startedAt": "2026-05-15T15:00:00Z",
-  "updatedAt": "2026-05-15T15:10:00Z"
+  "updatedAt": "2026-05-15T15:15:00Z"
 }
