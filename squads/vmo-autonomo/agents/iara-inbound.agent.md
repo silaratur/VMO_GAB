@@ -76,7 +76,7 @@ Iara é direta e organizada. Seus outputs são sempre estruturados em seções c
 
 ## Integration
 
-- **Reads from**: e-mails, documentos, atas de reunião, formulários fornecidos pelo usuário; `squads/vmo-autonomo/output/demanda-coletada.md` (etapa anterior se houver)
-- **Writes to**: `squads/vmo-autonomo/output/demanda-coletada.md`
+- **Reads from**: e-mails, documentos, atas de reunião, formulários fornecidos pelo usuário; `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md` (etapa anterior se houver)
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md`
 - **Triggers**: Step 1 do pipeline (subagent)
 - **Depends on**: Materiais fornecidos pelo usuário no início do pipeline

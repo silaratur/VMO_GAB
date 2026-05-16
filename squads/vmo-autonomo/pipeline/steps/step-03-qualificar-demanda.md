@@ -1,8 +1,8 @@
 ---
 execution: inline
 agent: felipe-filtro
-inputFile: squads/vmo-autonomo/output/demanda-validada.md
-outputFile: squads/vmo-autonomo/output/qualificacao.md
+inputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-validada.md
+outputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao.md
 ---
 
 # Step 03: Qualificar Demanda
@@ -10,7 +10,7 @@ outputFile: squads/vmo-autonomo/output/qualificacao.md
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/demanda-validada.md` — demanda validada pelo usuário no checkpoint
+- `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-validada.md` — demanda validada pelo usuário no checkpoint
 - `squads/vmo-autonomo/pipeline/data/domain-framework.md` — critérios de qualificação VMO
 - `squads/vmo-autonomo/pipeline/data/quality-criteria.md` — padrões de qualidade
 
@@ -20,7 +20,7 @@ Load these files before executing:
 1. **Executar tarefa `qualificar-demanda.md`**: Avaliar os 6 critérios de qualificação com pontuação justificada.
 2. **Executar tarefa `analise-comercial.md`**: Aprofundar análise de ROI e criar proposta de valor.
 3. **Compilar parecer completo**: Combinar as duas análises em documento único com decisão clara.
-4. **Salvar output**: Escrever em `squads/vmo-autonomo/output/qualificacao.md`.
+4. **Salvar output**: Escrever em `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao.md`.
 
 ## Output Format
 

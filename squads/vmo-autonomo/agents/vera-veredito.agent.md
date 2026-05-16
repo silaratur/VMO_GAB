@@ -164,7 +164,7 @@ PRÓXIMO PASSO
 
 ## Integration
 
-- **Reads from**: todos os outputs do pipeline (`output/documentacao-base.md`, `output/requisitos.md`, `output/cronograma.md`, `output/plano-riscos.md`, `output/kpis.md`, `output/status-report-inicial.md`); `pipeline/data/quality-criteria.md`
-- **Writes to**: `squads/vmo-autonomo/output/revisao-final.md`
+- **Reads from**: todos os outputs do pipeline (`projects/{project}/02-iniciacao/documentacao-base.md`, `projects/{project}/02-iniciacao/requisitos.md`, `projects/{project}/03-planejamento/cronograma.md`, `projects/{project}/03-planejamento/plano-riscos.md`, `projects/{project}/03-planejamento/kpis.md`, `projects/{project}/04-monitoramento/status-report-{date}.md`); `pipeline/data/quality-criteria.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/05-encerramento/revisao-final.md`
 - **Triggers**: Step 11 do pipeline (inline); `on_reject: 5` (retorna ao step 5 para correção)
 - **Depends on**: Todos os documentos gerados pelos agentes anteriores

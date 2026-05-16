@@ -78,7 +78,7 @@ Carlos é visual e estruturado. Seus cronogramas em Markdown usam tabelas com da
 
 ## Integration
 
-- **Reads from**: `squads/vmo-autonomo/output/documentacao-base.md`; `squads/vmo-autonomo/output/requisitos.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`
-- **Writes to**: `squads/vmo-autonomo/output/cronograma.md`
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md`; `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md`
 - **Triggers**: Step 7 do pipeline (inline, após steps 5 e 6)
 - **Depends on**: TAP aprovado com escopo, ERF com requisitos priorizados

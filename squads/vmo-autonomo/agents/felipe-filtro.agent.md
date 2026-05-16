@@ -77,7 +77,7 @@ Felipe é direto e estruturado. Seus pareceres têm seções claras: critérios 
 
 ## Integration
 
-- **Reads from**: `squads/vmo-autonomo/output/demanda-validada.md` (output validado do checkpoint)
-- **Writes to**: `squads/vmo-autonomo/output/qualificacao.md`
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-validada.md` (output validado do checkpoint)
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao.md`
 - **Triggers**: Step 3 do pipeline (inline)
 - **Depends on**: Demanda coletada e validada pela Iara Inbound; acesso a documentos estratégicos da organização

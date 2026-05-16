@@ -78,7 +78,7 @@ Rafael escreve requisitos com a precisão de quem sabe que eles vão virar crit�
 
 ## Integration
 
-- **Reads from**: `squads/vmo-autonomo/output/qualificacao-aprovada.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`
-- **Writes to**: `squads/vmo-autonomo/output/requisitos.md`
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md`
 - **Triggers**: Step 6 do pipeline (subagent, paralelo com Diana Documento)
 - **Depends on**: Qualificação aprovada com escopo preliminar e stakeholders identificados

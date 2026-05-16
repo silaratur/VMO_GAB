@@ -78,7 +78,7 @@ Pedro é metódico e visual. Seus documentos usam matrizes de probabilidade × i
 
 ## Integration
 
-- **Reads from**: `squads/vmo-autonomo/output/documentacao-base.md`; `squads/vmo-autonomo/output/cronograma.md`; `squads/vmo-autonomo/pipeline/data/anti-patterns.md`
-- **Writes to**: `squads/vmo-autonomo/output/plano-riscos.md`
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md`; `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md`; `squads/vmo-autonomo/pipeline/data/anti-patterns.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md`
 - **Triggers**: Step 8 do pipeline (inline)
 - **Depends on**: TAP, Plano Geral, Cronograma (para identificar riscos de prazo) e Requisitos (para riscos técnicos)

@@ -1,6 +1,6 @@
 ---
 type: checkpoint
-outputFile: squads/vmo-autonomo/output/qualificacao-aprovada.md
+outputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md
 ---
 
 # Step 04: Checkpoint — Aprovar Qualificação
@@ -9,7 +9,7 @@ O Felipe Filtro analisou a demanda e emitiu um parecer de qualificação. Revise
 
 ## O que foi analisado
 
-Leia o arquivo `squads/vmo-autonomo/output/qualificacao.md` e apresente ao usuário:
+Leia o arquivo `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao.md` e apresente ao usuário:
 
 1. **Resumo do parecer**: decisão emitida, pontuação e principais justificativas
 2. **Condições bloqueantes** (se houver): o que precisa ser resolvido antes de avançar
@@ -25,6 +25,6 @@ Apresente com AskUserQuestion:
 
 ## Output
 
-Salvar a qualificação aprovada (com decisão do usuário e quaisquer ressalvas registradas) em `squads/vmo-autonomo/output/qualificacao-aprovada.md`.
+Salvar a qualificação aprovada (com decisão do usuário e quaisquer ressalvas registradas) em `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md`.
 
 **Nota:** Somente avançar para o Step 05 se o usuário aprovar (opções 1 ou 2). Se opção 4, encerrar o pipeline e aguardar resolução das condições.

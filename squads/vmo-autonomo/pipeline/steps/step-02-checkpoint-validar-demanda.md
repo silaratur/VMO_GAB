@@ -1,6 +1,6 @@
 ---
 type: checkpoint
-outputFile: squads/vmo-autonomo/output/demanda-validada.md
+outputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-validada.md
 ---
 
 # Step 02: Checkpoint — Validar Demanda
@@ -9,7 +9,7 @@ A Iara Inbound coletou e estruturou a demanda. Revise o resumo abaixo e confirme
 
 ## O que foi coletado
 
-Leia o arquivo `squads/vmo-autonomo/output/demanda-coletada.md` e apresente ao usuário:
+Leia o arquivo `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md` e apresente ao usuário:
 
 1. **Resumo da demanda**: solicitante, necessidade, pedido e benefício esperado em 3-5 linhas
 2. **Lacunas identificadas**: campos que precisam de confirmação ou esclarecimento
@@ -24,4 +24,4 @@ Apresente com AskUserQuestion:
 
 ## Output
 
-Salvar o documento de demanda validada (com as correções do usuário, se houver) em `squads/vmo-autonomo/output/demanda-validada.md`.
+Salvar o documento de demanda validada (com as correções do usuário, se houver) em `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-validada.md`.

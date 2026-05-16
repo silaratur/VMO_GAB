@@ -1,8 +1,8 @@
 ---
 execution: inline
 agent: vera-veredito
-inputFile: squads/vmo-autonomo/output/documentacao-base.md
-outputFile: squads/vmo-autonomo/output/revisao-final.md
+inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
+outputFile: squads/vmo-autonomo/projects/{project}/05-encerramento/revisao-final.md
 on_reject: 5
 ---
 
@@ -11,12 +11,12 @@ on_reject: 5
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/documentacao-base.md` — TAP + PM Canvas + Plano Geral
-- `squads/vmo-autonomo/output/requisitos.md` — ERF com RFs e RNFs
-- `squads/vmo-autonomo/output/cronograma.md` — WBS + Cronograma detalhado
-- `squads/vmo-autonomo/output/plano-riscos.md` — Registro de Riscos + Plano de Resposta
-- `squads/vmo-autonomo/output/kpis.md` — Framework de KPIs e semáforo de saúde
-- `squads/vmo-autonomo/output/status-report-inicial.md` — Status Report #001 + Pesquisa de Satisfação
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md` — TAP + PM Canvas + Plano Geral
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md` — ERF com RFs e RNFs
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md` — WBS + Cronograma detalhado
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md` — Registro de Riscos + Plano de Resposta
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md` — Framework de KPIs e semáforo de saúde
+- `squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md` — Status Report #001 + Pesquisa de Satisfação
 - `squads/vmo-autonomo/pipeline/data/quality-criteria.md` — critérios de qualidade por documento
 - `squads/vmo-autonomo/pipeline/data/anti-patterns.md` — anti-padrões e bloqueadores conhecidos
 
@@ -29,7 +29,7 @@ Load these files before executing:
    - Score ≥ 85 e nenhum bloqueador CRÍTICO: **APROVADO** → prosseguir para Step 12
    - Score < 85 ou qualquer bloqueador CRÍTICO: **REPROVADO** → retornar ao Step 5 (on_reject: 5)
 4. **Se reprovado**: Listar exatamente quais documentos falharam e quais critérios precisam ser corrigidos.
-5. **Salvar output**: Escrever relatório completo em `squads/vmo-autonomo/output/revisao-final.md`.
+5. **Salvar output**: Escrever relatório completo em `squads/vmo-autonomo/projects/{project}/05-encerramento/revisao-final.md`.
 
 ### Rejection Loop
 Quando `on_reject: 5` é acionado, o pipeline retorna ao Step 5 (Diana Documento) com:

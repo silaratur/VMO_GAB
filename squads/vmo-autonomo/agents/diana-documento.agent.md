@@ -79,7 +79,7 @@ Diana escreve de forma clara e estruturada. Seus documentos são auto-explicativ
 
 ## Integration
 
-- **Reads from**: `squads/vmo-autonomo/output/qualificacao-aprovada.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`; `squads/vmo-autonomo/pipeline/data/output-examples.md`
-- **Writes to**: `squads/vmo-autonomo/output/documentacao-base.md`
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`; `squads/vmo-autonomo/pipeline/data/output-examples.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md`
 - **Triggers**: Step 5 do pipeline (subagent, paralelo com Rafael Requisito)
 - **Depends on**: Qualificação aprovada com dados completos de sponsor, orçamento e escopo preliminar

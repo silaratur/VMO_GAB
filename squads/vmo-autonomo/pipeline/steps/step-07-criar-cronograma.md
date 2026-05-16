@@ -1,8 +1,8 @@
 ---
 execution: inline
 agent: carlos-cronograma
-inputFile: squads/vmo-autonomo/output/documentacao-base.md
-outputFile: squads/vmo-autonomo/output/cronograma.md
+inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
+outputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md
 ---
 
 # Step 07: Criar Cronograma
@@ -10,8 +10,8 @@ outputFile: squads/vmo-autonomo/output/cronograma.md
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/documentacao-base.md` — TAP com escopo, fases e restrições de prazo
-- `squads/vmo-autonomo/output/requisitos.md` — ERF com requisitos priorizados para decomposição técnica
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md` — TAP com escopo, fases e restrições de prazo
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md` — ERF com requisitos priorizados para decomposição técnica
 - `squads/vmo-autonomo/pipeline/data/domain-framework.md` — fases típicas de projetos PMO e entregas
 
 ## Instructions
@@ -20,7 +20,7 @@ Load these files before executing:
 1. **Executar tarefa `criar-wbs.md`**: Decompor o escopo em WBS com mínimo 3 níveis.
 2. **Executar tarefa `criar-cronograma.md`**: Criar cronograma com datas, dependências e caminho crítico.
 3. **Incluir buffer de contingência**: 15% do prazo total como reserva de gestão explícita.
-4. **Salvar output**: Escrever WBS + Cronograma em `squads/vmo-autonomo/output/cronograma.md`.
+4. **Salvar output**: Escrever WBS + Cronograma em `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md`.
 
 ## Output Format
 

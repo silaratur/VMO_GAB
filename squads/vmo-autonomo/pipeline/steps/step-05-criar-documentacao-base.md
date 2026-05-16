@@ -1,8 +1,8 @@
 ---
 execution: subagent
 agent: diana-documento
-inputFile: squads/vmo-autonomo/output/qualificacao-aprovada.md
-outputFile: squads/vmo-autonomo/output/documentacao-base.md
+inputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md
+outputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
 model_tier: powerful
 ---
 
@@ -11,7 +11,7 @@ model_tier: powerful
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/qualificacao-aprovada.md` — qualificação aprovada com todos os dados do projeto
+- `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md` — qualificação aprovada com todos os dados do projeto
 - `squads/vmo-autonomo/pipeline/data/domain-framework.md` — padrões e modelos PMO/PMBOK
 - `squads/vmo-autonomo/pipeline/data/output-examples.md` — exemplos de TAP e PM Canvas
 - `squads/vmo-autonomo/pipeline/data/quality-criteria.md` — critérios de qualidade dos documentos
@@ -23,7 +23,7 @@ Load these files before executing:
 2. **Executar tarefa `criar-pm-canvas.md`**: Gerar o PM Canvas em 9 blocos consistente com o TAP.
 3. **Executar tarefa `criar-plano-geral.md`**: Gerar o Plano Geral com os 10 planos subsidiários.
 4. **Verificar consistência cross-documentos**: Confirmar que prazo, custo, escopo e stakeholders são idênticos nos três documentos.
-5. **Salvar output consolidado**: Escrever todos os três documentos em `squads/vmo-autonomo/output/documentacao-base.md`.
+5. **Salvar output consolidado**: Escrever todos os três documentos em `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md`.
 
 ## Output Format
 

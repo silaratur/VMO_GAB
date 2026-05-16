@@ -70,12 +70,20 @@ Before starting execution:
    🤖 Agents: {list agent names with icons}
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ```
-5b. **Initialize run folder**: Generate a unique run ID for this execution:
-   - Format: `YYYY-MM-DD-HHmmss` using the current timestamp (e.g. `2026-03-03-143022`)
-   - Check if `squads/{name}/output/{run_id}/` already exists
-     - If it does (sub-second collision), append `-2`, `-3`, etc. until the folder does not exist
-   - Create the folder using Bash: `mkdir -p squads/{name}/output/{run_id}`
-   - Store `run_id` in working memory for this run — it will be used for ALL output paths
+5b. **Initialize project folder**: Determine the project code and create the folder structure:
+   - Read `squads/{name}/_memory/runs.md`. Count the number of data rows (lines starting with `|` that are not the header or `|---` separator) to determine the current run count. Next number = count + 1, zero-padded to 3 digits.
+   - Generate project code: `PROJ-{YYYY}-{NNN}` (e.g. `PROJ-2026-006`)
+   - Generate demand code: `DEM-{YYYY}-{NNN}` (same counter, e.g. `DEM-2026-006`)
+   - Store both codes in working memory — they will be used throughout the run.
+   - Create the full folder structure using Bash:
+     ```bash
+     mkdir -p "squads/{name}/projects/{project_code}/01-qualificacao"
+     mkdir -p "squads/{name}/projects/{project_code}/02-iniciacao"
+     mkdir -p "squads/{name}/projects/{project_code}/03-planejamento"
+     mkdir -p "squads/{name}/projects/{project_code}/04-monitoramento"
+     mkdir -p "squads/{name}/projects/{project_code}/05-encerramento"
+     ```
+   - Add `"project": "{project_code}"` and `"demand": "{demand_code}"` fields to the state.json being initialized in step 6.
 6. **Initialize state.json**: Create `squads/{name}/state.json` from scratch (see below). State writes are always mandatory.
    - **IMPORTANT**: You MUST write to `squads/{name}/state.json` before every step and after every handoff. This is non-negotiable. Never skip these writes.
    - Create `state.json` from scratch:
@@ -178,7 +186,7 @@ When an agent's `.agent.md` frontmatter contains a `tasks:` field:
    e. Check task veto conditions (same enforcement as step veto conditions below)
 
 3. **Final output**: The output of the LAST task in the chain becomes the step's output
-   - Apply the Output Path Transformation (Steps 1 and 2: run_id injection + version folder) to the `outputFile` path before saving — this applies regardless of whether the step runs as `execution: inline` or `execution: subagent`
+   - Apply Output Path Resolution to the `outputFile` path before saving — this applies regardless of whether the step runs as `execution: inline` or `execution: subagent`
    - Save to the **transformed** outputFile path
    - This is what the next step (or checkpoint) receives
 
@@ -190,42 +198,23 @@ When an agent's `.agent.md` frontmatter contains a `tasks:` field:
 5. **Backward compatibility**: If the agent's frontmatter does NOT contain a `tasks:` field,
    execute the agent monolithically as before (current behavior unchanged).
 
-### Output Path Transformation
+### Output Path Resolution
 
-Before saving any output file in a step, apply these rules to determine the final path:
+Before saving any output file in a step, resolve placeholders in the path:
 
-#### Step 1 — Insert run_id
+1. Replace `{project}` with the project code stored in working memory (e.g. `PROJ-2026-006`)
+2. Replace `{date}` with today's date in `YYYY-MM-DD` format (used by Sara Status for status reports)
+3. Paths that contain neither `{project}` nor `{date}` are left unchanged (e.g. `squads/{name}/pipeline/data/` paths or `squads/{name}/output/materiais-demanda.md`)
 
-- If the path starts with `squads/{name}/output/`, insert `{run_id}/` immediately after `output/`
-  - Example: `squads/carousel/output/slides/draft.md` → `squads/carousel/output/2026-03-03-143022/slides/draft.md`
-  - Example: `squads/carousel/output/angles-brief.yaml` → `squads/carousel/output/2026-03-03-143022/angles-brief.yaml`
-- If the path does NOT start with `squads/{name}/output/`, leave it unchanged
+Examples:
+- `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md`
+  → `squads/vmo-autonomo/projects/PROJ-2026-006/01-qualificacao/demanda-coletada.md`
+- `squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md`
+  → `squads/vmo-autonomo/projects/PROJ-2026-006/04-monitoramento/status-report-2026-05-16.md`
 
-#### Step 2 — Insert version folder
+The phase folders are created during initialization — no additional folder creation is needed per step.
 
-Apply to every path that was transformed in Step 1:
-
-1. Determine the **output group** = the parent directory of the file (after Step 1 transformation)
-   - Example: `squads/carousel/output/2026-03-03-143022/slides/draft.md` → group is `squads/carousel/output/2026-03-03-143022/slides/`
-   - Example: `squads/carousel/output/2026-03-03-143022/angles-brief.yaml` → group is `squads/carousel/output/2026-03-03-143022/`
-
-2. Detect existing versions for this group using Bash:
-   ```bash
-   ls -1 squads/{name}/output/{run_id}/{relative-group}/ 2>/dev/null | grep -E '^v[0-9]+$' | sort -V | tail -1
-   ```
-   - If the command returns a version (e.g. `v2`) → use `v3`
-   (Always increment the highest version found, even if lower versions have gaps — e.g. if `v1` and `v3` exist, use `v4`)
-   - If the command returns nothing (no versions yet) → use `v1`
-   (`{relative-group}` is the portion of the group path after `squads/{name}/output/{run_id}/`, e.g. `slides/` or empty string for root-level files)
-
-3. Insert the version folder immediately before the filename:
-   - `squads/carousel/output/2026-03-03-143022/slides/draft.md` → `squads/carousel/output/2026-03-03-143022/slides/v1/draft.md`
-   - `squads/carousel/output/2026-03-03-143022/angles-brief.yaml` → `squads/carousel/output/2026-03-03-143022/v1/angles-brief.yaml`
-
-4. **Cache per group**: within a single step execution, once a version is determined for a group, reuse it for all subsequent files in that same group. Do not re-run the `ls` per file.
-   If the same file path is written twice within a step, both writes go to the same versioned path (the second write overwrites the first within that version).
-
-Apply this transformation consistently for every write in this step.
+Apply this resolution consistently to every `inputFile`, `outputFile`, and inline path reference in each step.
 
 ### For each pipeline step:
 
@@ -258,7 +247,7 @@ Apply this transformation consistently for every write in this step.
    ```bash
    test -s "{transformed inputFile path}" && echo "VALIDATION:PASS" || echo "VALIDATION:FAIL"
    ```
-   - Apply the Output Path Transformation (Step 1: run_id injection) to the `inputFile` path before running the check.
+   - Apply Output Path Resolution to the `inputFile` path before running the check.
    - If the Bash output contains `VALIDATION:PASS` → proceed to execute the step.
    - If the Bash output contains `VALIDATION:FAIL` → do NOT execute the step. Present to user:
      ```
@@ -279,7 +268,7 @@ Apply this transformation consistently for every write in this step.
 - Inform user: `🔍 {Agent Name} is working in the background...`
 - Read the step's `model_tier` frontmatter field (if present).
   Valid values: `fast` or `powerful`. If absent or any other value: default to `powerful`.
-- **Before building the subagent prompt**: Apply the Output Path Transformation (Step 1: run_id injection + Step 2: version folder) to all output paths referenced in the step file. Store the transformed path(s) in working memory — they will be used both in the prompt and in post-completion verification. Never pass raw paths from the step file to the subagent.
+- **Before building the subagent prompt**: Apply Output Path Resolution to all output paths referenced in the step file. Store the resolved path(s) in working memory — they will be used both in the prompt and in post-completion verification. Never pass raw paths from the step file to the subagent.
 - Use the Task tool to dispatch the step as a subagent:
   - If `model_tier: fast`: use the fastest/lightest model available in your current IDE.
   - If `model_tier: powerful` or absent/invalid: use the default model (no model override needed)
@@ -301,17 +290,17 @@ Apply this transformation consistently for every write in this step.
 - Announce: `{icon} {Agent Name} is working...`
 - Follow the step instructions
 - Present output directly in the conversation
-- Save output to the specified output file — apply the Output Path Transformation (Steps 1 and 2) to the path before writing. Do not write to the raw path from the step file.
+- Save output to the specified output file — apply Output Path Resolution to the path before writing. Do not write to the raw path from the step file.
 - Proceed to Post-Step Output Validation (below) before advancing.
 
 #### If `type: checkpoint`
 - Present the checkpoint message to the user
 - If the checkpoint requires a choice (numbered list), present options as a numbered list
-- **Always include the file path** of any generated content the user needs to review. Example: "Review the content at `squads/{name}/output/{run_id}/v1/content.md` and let me know if it looks good."
+- **Always include the file path** of any generated content the user needs to review. Example: "Review the content at `squads/{name}/projects/{project_code}/01-qualificacao/demanda-coletada.md` and let me know if it looks good."
 - Wait for user input before proceeding
 - Save the user's choice/response for the next step
 - **If the step frontmatter contains `outputFile`**: after collecting the user's full response,
-  apply the Output Path Transformation **Step 1 only** (run_id injection — skip Step 2, version folder) to the `outputFile` path, then write the response to the transformed path using the Write tool before moving to the next step. Checkpoint files are user input captures, not versioned output — Step 2 does not apply here, regardless of the general "every write" rule in the Output Path Transformation section above.
+  apply Output Path Resolution to the `outputFile` path, then write the response to the resolved path using the Write tool before moving to the next step.
   Use this format:
   ```
   # Research Focus
@@ -329,10 +318,10 @@ After a step produces output (subagent or inline) and BEFORE Veto Condition Enfo
 **If the step declares an `outputFile`** (single or multiple), run via Bash tool for EACH output file:
 
 ```bash
-test -s "{transformed outputFile path}" && echo "VALIDATION:PASS" || echo "VALIDATION:FAIL"
+test -s "{resolved outputFile path}" && echo "VALIDATION:PASS" || echo "VALIDATION:FAIL"
 ```
 
-Use the **stored transformed path** (after Output Path Transformation Steps 1 and 2), not the raw path from the step file.
+Use the **resolved path** (after Output Path Resolution), not the raw path from the step file.
 
 **Rules:**
 - If ALL output files return `VALIDATION:PASS` → proceed to Veto Condition Enforcement.
@@ -426,8 +415,7 @@ Steps 1 and 4 are binary bash gates. If either fails, the pipeline does NOT adva
 
 ### After Pipeline Completion
 
-1. Save final output to `squads/{name}/output/{run_id}/{filename}.md`
-   (The run folder was created during initialization — no separate date subfolder needed)
+1. The project documents were saved to `squads/{name}/projects/{project_code}/` during step execution — no additional save needed.
 1b. **Update dashboard** — MANDATORY. Write `squads/{name}/state.json` with:
     - `"status": "completed"`
     - All agents: `"status": "done"`
@@ -441,9 +429,9 @@ Steps 1 and 4 are binary bash gates. If either fails, the pipeline does NOT adva
 After writing the final "completed" state to `squads/{name}/state.json`:
 
 1. Add the `completedAt` field (or `failedAt` if status is `failed`) with the current ISO timestamp
-2. Copy `state.json` to the run output folder for permanent history:
+2. Copy `state.json` to the project folder for permanent record:
    ```bash
-   cp squads/{name}/state.json squads/{name}/output/{run_id}/state.json
+   cp squads/{name}/state.json squads/{name}/projects/{project_code}/state.json
    ```
 3. Wait 10 seconds (so the dashboard can display the completed state)
 4. Delete the working copy:
@@ -487,17 +475,18 @@ This archives the run state for the `runs` command while keeping the squad root 
    ```markdown
    # Run History: {squad-name}
 
-   | Data | Run ID | Tema | Output | Resultado |
-   |------|--------|------|--------|-----------|
+   | Data | Projeto | Demanda | Tema | Output | Resultado |
+   |------|---------|---------|------|--------|-----------|
    ```
    Then proceed to prepend the new row.
 
    Read `squads/{name}/_memory/runs.md`. Prepend one new row to the table (immediately after the header row), with:
    - `Data`: today's date in YYYY-MM-DD format
-   - `Run ID`: the `run_id` for this execution
+   - `Projeto`: the project code for this execution (e.g. `PROJ-2026-006`)
+   - `Demanda`: the demand code for this execution (e.g. `DEM-2026-006`)
    - `Tema`: the topic or user request from this run (1 sentence max)
-   - `Output`: brief description of what was generated (e.g., "Carrossel 9 slides", "Thread 7 posts")
-   - `Resultado`: one of — `Aprovado` / `Rejeitado` / `Publicado` / `Abortado`
+   - `Output`: brief description of what was generated (e.g., "Pacote de iniciação 8 documentos")
+   - `Resultado`: one of — `Aprovado` / `Rejeitado` / `Abortado`
 
    No other data. Do not add preferences, scores, file paths, or technical notes to `runs.md`.
 
@@ -505,8 +494,8 @@ This archives the run state for the `runs` command while keeping the squad root 
    ```
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ✅ Pipeline complete!
-   📁 Run folder: squads/{name}/output/{run_id}/
-   📄 Output saved to: {output path}
+   📁 Projeto: {project_code}
+   📁 Pasta: squads/{name}/projects/{project_code}/
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
    What would you like to do?
@@ -525,7 +514,7 @@ This archives the run state for the `runs` command while keeping the squad root 
 ## Pipeline State
 
 Track pipeline state in memory during execution:
-- Run ID (run_id) — the output subfolder name for this execution
+- Project code (project_code) and demand code (demand_code)
 - Current step index
 - Outputs from each completed step (file paths)
 - User choices at checkpoints

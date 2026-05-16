@@ -1,8 +1,8 @@
 ---
 execution: inline
 agent: pedro-perigo
-inputFile: squads/vmo-autonomo/output/documentacao-base.md
-outputFile: squads/vmo-autonomo/output/plano-riscos.md
+inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
+outputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md
 ---
 
 # Step 08: Plano de Riscos
@@ -10,9 +10,9 @@ outputFile: squads/vmo-autonomo/output/plano-riscos.md
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/documentacao-base.md` — TAP com premissas, restrições e contexto
-- `squads/vmo-autonomo/output/cronograma.md` — cronograma com caminho crítico (fontes de risco de prazo)
-- `squads/vmo-autonomo/output/requisitos.md` — requisitos (fontes de riscos técnicos)
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md` — TAP com premissas, restrições e contexto
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md` — cronograma com caminho crítico (fontes de risco de prazo)
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md` — requisitos (fontes de riscos técnicos)
 - `squads/vmo-autonomo/pipeline/data/anti-patterns.md` — riscos típicos em projetos PMO
 
 ## Instructions
@@ -21,7 +21,7 @@ Load these files before executing:
 1. **Executar tarefa `identificar-riscos.md`**: Identificar mínimo 5 riscos com P×I e nível de prioridade.
 2. **Executar tarefa `criar-plano-riscos.md`**: Definir estratégia de resposta, trigger e reserva de contingência.
 3. **Compilar documento único**: Registro de Riscos + Plano de Resposta em arquivo único.
-4. **Salvar output**: Escrever em `squads/vmo-autonomo/output/plano-riscos.md`.
+4. **Salvar output**: Escrever em `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md`.
 
 ## Output Format
 

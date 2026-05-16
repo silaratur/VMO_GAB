@@ -2,12 +2,12 @@
 task: "Revisar Documentação do Projeto"
 order: 1
 input:
-  - documentacao_base: "TAP, PM Canvas e Plano Geral (output/documentacao-base.md)"
-  - requisitos: "Especificação de Requisitos Funcionais (output/requisitos.md)"
-  - cronograma: "WBS e Cronograma detalhado (output/cronograma.md)"
-  - plano_riscos: "Registro de Riscos e Plano de Resposta (output/plano-riscos.md)"
-  - kpis: "Framework de KPIs (output/kpis.md)"
-  - status_report: "Status Report inicial (output/status-report-inicial.md)"
+  - documentacao_base: "TAP, PM Canvas e Plano Geral (projects/{project}/02-iniciacao/documentacao-base.md)"
+  - requisitos: "Especificação de Requisitos Funcionais (projects/{project}/02-iniciacao/requisitos.md)"
+  - cronograma: "WBS e Cronograma detalhado (projects/{project}/03-planejamento/cronograma.md)"
+  - plano_riscos: "Registro de Riscos e Plano de Resposta (projects/{project}/03-planejamento/plano-riscos.md)"
+  - kpis: "Framework de KPIs (projects/{project}/03-planejamento/kpis.md)"
+  - status_report: "Status Report inicial (projects/{project}/04-monitoramento/status-report-{date}.md)"
   - quality_criteria: "pipeline/data/quality-criteria.md"
 output:
   - revisao_final: "Veredicto consolidado com pontuação por documento e plano de correção"

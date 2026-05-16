@@ -1,6 +1,6 @@
 ---
 type: checkpoint
-outputFile: squads/vmo-autonomo/output/aprovacao-final.md
+outputFile: squads/vmo-autonomo/projects/{project}/05-encerramento/aprovacao-final.md
 ---
 
 # Step 12: Checkpoint — Aprovar Documentação Final
@@ -32,7 +32,7 @@ Documentos produzidos:
   ✅ Status Report #001 — Iniciação concluída
   ✅ Pesquisa de Satisfação — Template pronto
 
-Todos os documentos em: squads/vmo-autonomo/output/
+Todos os documentos em: squads/vmo-autonomo/projects/{project}/05-encerramento/
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -120,6 +120,6 @@ Para monitorar o projeto, use:
   /opensquad run vmo-autonomo
 
 Documentação completa em:
-  squads/vmo-autonomo/output/
+  squads/vmo-autonomo/projects/{project}/05-encerramento/
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```

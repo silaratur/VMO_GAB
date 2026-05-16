@@ -1,8 +1,8 @@
 ---
 execution: subagent
 agent: rafael-requisito
-inputFile: squads/vmo-autonomo/output/qualificacao-aprovada.md
-outputFile: squads/vmo-autonomo/output/requisitos.md
+inputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md
+outputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md
 model_tier: powerful
 ---
 
@@ -11,8 +11,8 @@ model_tier: powerful
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/qualificacao-aprovada.md` — qualificação com escopo e resultado esperado
-- `squads/vmo-autonomo/output/documentacao-base.md` — TAP com escopo delimitado (se já disponível)
+- `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md` — qualificação com escopo e resultado esperado
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md` — TAP com escopo delimitado (se já disponível)
 - `squads/vmo-autonomo/pipeline/data/domain-framework.md` — referência de tipos de requisitos PMO/TI
 
 ## Instructions
@@ -20,7 +20,7 @@ Load these files before executing:
 ### Process
 1. **Executar tarefa `levantar-requisitos.md`**: Elicitar todos os RF e RNF a partir do escopo e resultado esperado.
 2. **Executar tarefa `criar-erf.md`**: Organizar, priorizar com MoSCoW e adicionar critérios de aceitação.
-3. **Salvar output**: Escrever a ERF completa em `squads/vmo-autonomo/output/requisitos.md`.
+3. **Salvar output**: Escrever a ERF completa em `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md`.
 
 **Nota:** Este step roda em paralelo com o Step 05. Ambos leem `qualificacao-aprovada.md` independentemente.
 

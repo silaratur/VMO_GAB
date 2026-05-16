@@ -1,8 +1,8 @@
 ---
 execution: inline
 agent: sara-status
-inputFile: squads/vmo-autonomo/output/documentacao-base.md
-outputFile: squads/vmo-autonomo/output/status-report-inicial.md
+inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
+outputFile: squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md
 ---
 
 # Step 10: Status Report Inicial
@@ -10,10 +10,10 @@ outputFile: squads/vmo-autonomo/output/status-report-inicial.md
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/documentacao-base.md` — TAP com objetivos e critérios de sucesso
-- `squads/vmo-autonomo/output/kpis.md` — framework de KPIs e semáforo de saúde
-- `squads/vmo-autonomo/output/plano-riscos.md` — riscos identificados
-- `squads/vmo-autonomo/output/cronograma.md` — baseline de prazo
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md` — TAP com objetivos e critérios de sucesso
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md` — framework de KPIs e semáforo de saúde
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md` — riscos identificados
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md` — baseline de prazo
 
 ## Instructions
 
@@ -21,7 +21,7 @@ Load these files before executing:
 1. **Executar tarefa `gerar-status-report.md`**: Criar o primeiro status report do projeto (fase de iniciação concluída).
 2. **Executar tarefa `pesquisa-satisfacao.md`**: Criar o template da pesquisa de satisfação para a fase de iniciação.
 3. **Status inicial**: Como este é o report de iniciação, o status geral deve refletir "Iniciação concluída — aguardando início da execução" com semáforo verde.
-4. **Salvar output**: Escrever ambos documentos em `squads/vmo-autonomo/output/status-report-inicial.md`.
+4. **Salvar output**: Escrever ambos documentos em `squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md`.
 
 ## Output Format
 

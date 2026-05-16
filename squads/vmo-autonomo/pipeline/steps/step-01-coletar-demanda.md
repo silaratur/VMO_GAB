@@ -2,7 +2,7 @@
 execution: subagent
 agent: iara-inbound
 inputFile: squads/vmo-autonomo/output/materiais-demanda.md
-outputFile: squads/vmo-autonomo/output/demanda-coletada.md
+outputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md
 model_tier: powerful
 ---
 
@@ -21,7 +21,7 @@ Load these files before executing:
 1. **Inventariar os materiais fornecidos**: Listar todos os arquivos e conteúdos disponíveis com tipo e data.
 2. **Executar tarefa `coletar-demanda.md`**: Ler agente Iara Inbound e seguir a task de coleta estruturada.
 3. **Executar tarefa `extrair-contexto.md`**: Normalizar e estruturar os dados coletados em formato padronizado.
-4. **Salvar output**: Escrever o documento completo em `squads/vmo-autonomo/output/demanda-coletada.md`.
+4. **Salvar output**: Escrever o documento completo em `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md`.
 
 ## Output Format
 

@@ -1,8 +1,8 @@
 ---
 execution: subagent
 agent: marcela-metrica
-inputFile: squads/vmo-autonomo/output/documentacao-base.md
-outputFile: squads/vmo-autonomo/output/kpis.md
+inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
+outputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md
 model_tier: fast
 ---
 
@@ -11,9 +11,9 @@ model_tier: fast
 ## Context Loading
 
 Load these files before executing:
-- `squads/vmo-autonomo/output/documentacao-base.md` — TAP com critérios de sucesso e plano com baseline de custo
-- `squads/vmo-autonomo/output/cronograma.md` — baseline de prazo para EVM
-- `squads/vmo-autonomo/output/plano-riscos.md` — riscos para KPIs de gestão de riscos
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md` — TAP com critérios de sucesso e plano com baseline de custo
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md` — baseline de prazo para EVM
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md` — riscos para KPIs de gestão de riscos
 - `squads/vmo-autonomo/pipeline/data/quality-criteria.md` — critérios de qualidade para calibrar thresholds
 
 ## Instructions
@@ -22,7 +22,7 @@ Load these files before executing:
 1. **Executar tarefa `definir-kpis.md`**: Definir todos os KPIs com metas, thresholds e responsáveis.
 2. **Configurar EVM**: Definir BAC, método de medição de EV e regras por tipo de entregável.
 3. **Criar semáforo de saúde**: Tabela de thresholds verde/amarelo/vermelho por dimensão.
-4. **Salvar output**: Escrever framework completo em `squads/vmo-autonomo/output/kpis.md`.
+4. **Salvar output**: Escrever framework completo em `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md`.
 
 ## Output Format
 

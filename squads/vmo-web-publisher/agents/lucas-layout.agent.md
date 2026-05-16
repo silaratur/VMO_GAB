@@ -84,6 +84,6 @@ squads/vmo-web-publisher/output/site/
 
 ## Integration
 
-- **Reads from**: `squads/*/output/*/state.json`, `squads/*/output/*/*/status-report-inicial.md`, `squads/*/output/*/*/kpis.md`, `squads/*/output/*/*/plano-riscos.md`, `squads/*/output/*/*/cronograma.md`
+- **Reads from**: `squads/*/projects/*/state.json`, `squads/*/projects/*/04-monitoramento/status-report-*.md`, `squads/*/projects/*/03-planejamento/kpis.md`, `squads/*/projects/*/03-planejamento/plano-riscos.md`, `squads/*/projects/*/03-planejamento/cronograma.md`
 - **Writes to**: `squads/vmo-web-publisher/output/site/index.html`, `squads/vmo-web-publisher/output/site/projetos/*.html`
 - **Triggered by**: Cron a cada 6 horas ou `/opensquad run vmo-web-publisher`

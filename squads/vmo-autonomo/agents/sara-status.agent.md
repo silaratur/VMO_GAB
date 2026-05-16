@@ -77,7 +77,7 @@ Sara é clara, direta e visualmente organizada. Usa emojis funcionais (🟢🟡�
 
 ## Integration
 
-- **Reads from**: `squads/vmo-autonomo/output/documentacao-base.md`; `squads/vmo-autonomo/output/kpis.md`; `squads/vmo-autonomo/output/plano-riscos.md`
-- **Writes to**: `squads/vmo-autonomo/output/status-report-inicial.md`
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md`; `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md`; `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md`
 - **Triggers**: Step 10 do pipeline (inline)
 - **Depends on**: TAP (critérios de sucesso), KPIs definidos pela Marcela, Plano de Riscos do Pedro
