@@ -6,7 +6,7 @@ outputFile: squads/vmo-autonomo/projects/{project}/05-encerramento/revisao-final
 on_reject: 5
 ---
 
-# Step 11: Revisão de Qualidade
+# Step 12: Revisão de Qualidade
 
 ## Context Loading
 
@@ -16,6 +16,7 @@ Load these files before executing:
 - `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md` — WBS + Cronograma detalhado
 - `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md` — Registro de Riscos + Plano de Resposta
 - `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md` — Framework de KPIs e semáforo de saúde
+- `squads/vmo-autonomo/projects/{project}/03-planejamento/work-request.md` — Work Request para fornecedores
 - `squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md` — Status Report #001 + Pesquisa de Satisfação
 - `squads/vmo-autonomo/pipeline/data/quality-criteria.md` — critérios de qualidade por documento
 - `squads/vmo-autonomo/pipeline/data/anti-patterns.md` — anti-padrões e bloqueadores conhecidos

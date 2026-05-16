@@ -3,7 +3,7 @@ type: checkpoint
 outputFile: squads/vmo-autonomo/projects/{project}/05-encerramento/aprovacao-final.md
 ---
 
-# Step 12: Checkpoint — Aprovar Documentação Final
+# Step 13: Checkpoint — Aprovar Documentação Final
 
 ## Purpose
 
@@ -29,6 +29,7 @@ Documentos produzidos:
   ✅ Cronograma — WBS + Datas + Caminho Crítico
   ✅ Plano de Riscos — Registro + Plano de Resposta
   ✅ Framework de KPIs — EVM + Semáforo de Saúde
+  ✅ Work Request — Pronto para envio a fornecedores
   ✅ Status Report #001 — Iniciação concluída
   ✅ Pesquisa de Satisfação — Template pronto
 

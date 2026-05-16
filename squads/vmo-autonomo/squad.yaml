@@ -4,7 +4,7 @@ squad:
   description: >
     Escritório de projetos autônomo (PMO→VMO) que gerencia o ciclo completo
     de iniciação de projetos: da captação de demanda até a entrega da documentação
-    completa (TAP, PM Canvas, ERF, Cronograma, Riscos, KPIs e Status Report).
+    completa (TAP, PM Canvas, ERF, Cronograma, Riscos, KPIs, Work Request e Status Report).
   icon: 🏛️
   version: "1.0.0"
   language: "Português (Brasil)"
@@ -25,6 +25,8 @@ agents:
     path: ./agents/pedro-perigo.agent.md
   - id: marcela-metrica
     path: ./agents/marcela-metrica.agent.md
+  - id: fabio-fornecedor
+    path: ./agents/fabio-fornecedor.agent.md
   - id: sara-status
     path: ./agents/sara-status.agent.md
   - id: vera-veredito

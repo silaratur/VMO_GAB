@@ -5,7 +5,7 @@ inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base
 outputFile: squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md
 ---
 
-# Step 10: Status Report Inicial
+# Step 11: Status Report Inicial
 
 ## Context Loading
 

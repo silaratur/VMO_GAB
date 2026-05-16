@@ -5,7 +5,7 @@ pipeline:
   description: >
     Pipeline de iniciação de projeto: da demanda recebida até o pacote completo
     de documentação aprovado pelo VMO (TAP, PM Canvas, ERF, Cronograma, Riscos,
-    KPIs e Status Report inicial).
+    KPIs, Work Request e Status Report inicial).
 
 steps:
   - step: 1
@@ -68,26 +68,33 @@ steps:
     execution: subagent
 
   - step: 10
+    name: "Criar Work Request"
+    file: steps/step-10-criar-work-request.md
+    type: agent
+    agent: fabio-fornecedor
+    execution: subagent
+
+  - step: 11
     name: "Status Report Inicial"
-    file: steps/step-10-status-report-inicial.md
+    file: steps/step-11-status-report-inicial.md
     type: agent
     agent: sara-status
     execution: inline
 
-  - step: 11
+  - step: 12
     name: "Revisão de Qualidade"
-    file: steps/step-11-revisao-qualidade.md
+    file: steps/step-12-revisao-qualidade.md
     type: agent
     agent: vera-veredito
     execution: inline
     on_reject: 5
 
-  - step: 12
+  - step: 13
     name: "Checkpoint: Aprovar Documentação Final"
-    file: steps/step-12-checkpoint-aprovacao-final.md
+    file: steps/step-13-checkpoint-aprovacao-final.md
     type: checkpoint
 
 checkpoints:
   - step: 2
   - step: 4
-  - step: 12
+  - step: 13

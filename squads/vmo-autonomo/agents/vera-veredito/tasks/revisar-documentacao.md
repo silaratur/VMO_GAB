@@ -7,6 +7,7 @@ input:
   - cronograma: "WBS e Cronograma detalhado (projects/{project}/03-planejamento/cronograma.md)"
   - plano_riscos: "Registro de Riscos e Plano de Resposta (projects/{project}/03-planejamento/plano-riscos.md)"
   - kpis: "Framework de KPIs (projects/{project}/03-planejamento/kpis.md)"
+  - work_request: "Work Request para fornecedores (projects/{project}/03-planejamento/work-request.md)"
   - status_report: "Status Report inicial (projects/{project}/04-monitoramento/status-report-{date}.md)"
   - quality_criteria: "pipeline/data/quality-criteria.md"
 output:
