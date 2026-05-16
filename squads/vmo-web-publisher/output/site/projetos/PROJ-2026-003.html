@@ -1,735 +1,464 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PROJ-2026-003 — VMO Consultoria</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #3b82f6;
-      --green: #22c55e;
-      --yellow: #eab308;
-      --red: #ef4444;
-      --gray: #64748b;
-    }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJ-2026-003 — Caminhos Estratégicos do ERP GAB</title>
+<style>
+:root {
+  --bg: #0f172a; --bg2: #1e293b; --border: #334155;
+  --blue: #3b82f6; --green: #22c55e; --yellow: #eab308;
+  --red: #ef4444; --orange: #f97316; --gray: #64748b;
+  --text: #f1f5f9; --text2: #94a3b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    nav { background: #0a1120; border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
-    .nav-brand { font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-    .nav-brand span { color: var(--accent); }
-    .nav-back { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 6px; }
-    .nav-back:hover { color: var(--text); text-decoration: none; }
-    .nav-timestamp { color: var(--gray); font-size: 12px; }
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 28px; background: var(--bg2); border-bottom: 1px solid var(--border);
+}
+.back-link { font-size: 0.75rem; color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.back-link:hover { text-decoration: underline; }
+.header-title { font-size: 0.72rem; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+.updated-at { font-size: 0.65rem; color: var(--text2); }
 
-    .hero { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border-bottom: 1px solid var(--border); padding: 32px 24px; }
-    .hero-inner { max-width: 1100px; margin: 0 auto; }
-    .hero-breadcrumb { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
-    .hero-title { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-    .hero-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
-    .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
-    .meta-item strong { color: var(--text); }
-    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; }
-    .badge-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-    .badge-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
-    .badge-red { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-    .badge-blue { background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
-    .badge-gray { background: rgba(100,116,139,0.15); color: var(--gray); border: 1px solid rgba(100,116,139,0.3); }
+.main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
 
-    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
-    @media (max-width: 768px) { main { grid-template-columns: 1fr; } }
-    .col-left { display: flex; flex-direction: column; gap: 24px; }
-    .col-right { display: flex; flex-direction: column; gap: 24px; }
+.hero {
+  background: var(--bg2); border: 1px solid var(--border); border-left: 5px solid var(--yellow);
+  border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
+}
+.hero-code { font-size: 0.65rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.hero-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 14px; line-height: 1.3; }
+.hero-meta { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.meta-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.meta-value { font-size: 0.85rem; font-weight: 600; }
+.status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 99px; font-size: 0.75rem; font-weight: 700; }
+.verde { background: #22c55e14; color: var(--green); border: 1px solid #22c55e40; }
+.atencao { background: #eab30814; color: var(--yellow); border: 1px solid #eab30840; }
+.critico { background: #ef444414; color: var(--red); border: 1px solid #ef444440; }
 
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-    .card-body { padding: 20px; }
+.section-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    .semaforo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-    @media (max-width: 600px) { .semaforo-grid { grid-template-columns: repeat(3, 1fr); } }
-    .semaforo-item { text-align: center; }
-    .semaforo-dot { width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .dot-green { background: rgba(34,197,94,0.2); border: 2px solid var(--green); }
-    .dot-yellow { background: rgba(234,179,8,0.2); border: 2px solid var(--yellow); }
-    .dot-red { background: rgba(239,68,68,0.2); border: 2px solid var(--red); }
-    .semaforo-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-    .semaforo-status { font-size: 11px; font-weight: 700; margin-top: 2px; }
-    .text-green { color: var(--green); }
-    .text-yellow { color: var(--yellow); }
-    .text-red { color: var(--red); }
-    .text-muted { color: var(--muted); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:700px) { .grid-2 { grid-template-columns: 1fr; } }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+@media(max-width:700px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
 
-    .progress-section { }
-    .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
-    .progress-bar { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 16px; }
-    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), #818cf8); }
-    .progress-fill-green { background: linear-gradient(90deg, #16a34a, var(--green)); }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.card-title { font-size: 0.68rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
 
-    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
-    .kpi-value { font-size: 28px; font-weight: 800; line-height: 1; }
-    .kpi-label { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-    .kpi-sub { font-size: 11px; margin-top: 6px; }
+.semaphore-grid { display: flex; flex-direction: column; gap: 8px; }
+.sem-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 8px; }
+.sem-row.verde-bg { background: #22c55e0d; border: 1px solid #22c55e20; }
+.sem-row.amarelo-bg { background: #eab3080d; border: 1px solid #eab30820; }
+.sem-icon { font-size: 1.1rem; flex-shrink: 0; }
+.sem-label { font-size: 0.8rem; font-weight: 600; flex: 1; }
+.sem-note { font-size: 0.68rem; color: var(--text2); }
 
-    .timeline { display: flex; flex-direction: column; gap: 0; }
-    .timeline-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
-    .timeline-item:last-child { border-bottom: none; }
-    .timeline-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
-    .icon-done { background: rgba(34,197,94,0.2); border: 1px solid var(--green); }
-    .icon-pending { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); }
-    .icon-blocked { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
-    .timeline-content { flex: 1; }
-    .timeline-name { font-size: 13px; font-weight: 600; }
-    .timeline-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .timeline-du { font-size: 11px; color: var(--accent); font-weight: 600; }
+.kpi-card { text-align: center; }
+.kpi-value { font-size: 1.9rem; font-weight: 800; margin-bottom: 4px; }
+.kpi-name { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.kpi-sub { font-size: 0.65rem; color: var(--text2); }
+.kpi-badge { display: inline-block; margin-top: 6px; font-size: 0.6rem; padding: 2px 8px; border-radius: 99px; }
+.kpi-badge.meta { background: #22c55e14; color: var(--green); }
 
-    .risk-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
-    .risk-row:last-child { border-bottom: none; }
-    .risk-id { font-size: 11px; font-weight: 700; color: var(--muted); width: 36px; }
-    .risk-desc { font-size: 12px; flex: 1; margin: 0 10px; }
-    .risk-level { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
-    .risk-critical { background: rgba(239,68,68,0.2); color: var(--red); border: 1px solid rgba(239,68,68,0.4); }
-    .risk-high { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
-    .risk-med { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
-    .risk-low { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+/* Marco timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.marco { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.marco:last-child { border-bottom: none; }
+.marco-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+.marco-info { flex: 1; }
+.marco-name { font-size: 0.82rem; font-weight: 600; }
+.marco-desc { font-size: 0.68rem; color: var(--text2); margin-top: 2px; }
+.marco-date { font-size: 0.7rem; color: var(--text2); flex-shrink: 0; text-align: right; }
+.marco-date strong { display: block; color: var(--text); font-size: 0.75rem; }
 
-    .issue-row { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(51,65,85,0.5); align-items: flex-start; }
-    .issue-row:last-child { border-bottom: none; }
-    .issue-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
-    .issue-critical { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-    .issue-high { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
-    .issue-content { flex: 1; }
-    .issue-title { font-size: 12px; font-weight: 600; }
-    .issue-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+/* Risk table */
+.risk-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.risk-table th { text-align: left; padding: 8px 10px; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); border-bottom: 1px solid var(--border); }
+.risk-table td { padding: 10px 10px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+.risk-table tr:last-child td { border-bottom: none; }
+.risk-tag { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+.r-critico { background: #ef444418; color: var(--red); }
+.r-alto { background: #f9731618; color: var(--orange); }
+.r-medio { background: #eab30818; color: var(--yellow); }
+.r-ativo { font-size: 0.6rem; color: var(--red); font-weight: 600; }
+.r-monit { font-size: 0.6rem; color: var(--yellow); font-weight: 600; }
 
-    .agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .agent-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
-    .agent-icon { font-size: 20px; margin-bottom: 4px; }
-    .agent-name { font-size: 10px; color: var(--muted); font-weight: 600; }
-    .agent-status { font-size: 10px; margin-top: 2px; font-weight: 700; }
+/* Issues */
+.issue-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+.issue-id { font-size: 0.6rem; color: var(--text2); letter-spacing: 1px; margin-bottom: 3px; }
+.issue-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; }
+.issue-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.65rem; color: var(--text2); }
+.issue-prazo { color: var(--red); font-weight: 600; }
 
-    .stakeholder-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
-    .stakeholder-row:last-child { border-bottom: none; }
-    .stakeholder-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-    .stakeholder-info { flex: 1; }
-    .stakeholder-name { font-size: 13px; font-weight: 600; }
-    .stakeholder-role { font-size: 11px; color: var(--muted); }
+/* Score */
+.score-card { display: flex; align-items: center; gap: 20px; }
+.score-big { font-size: 3rem; font-weight: 800; color: var(--green); }
+.score-info { }
+.score-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+.score-verdict { font-size: 1rem; font-weight: 700; color: var(--green); margin-top: 4px; }
+.score-from { font-size: 0.68rem; color: var(--text2); margin-top: 4px; }
 
-    .info-table { width: 100%; border-collapse: collapse; }
-    .info-table tr { border-bottom: 1px solid rgba(51,65,85,0.5); }
-    .info-table tr:last-child { border-bottom: none; }
-    .info-table td { padding: 8px 0; font-size: 13px; vertical-align: top; }
-    .info-table td:first-child { color: var(--muted); width: 40%; font-size: 12px; }
-    .info-table td:last-child { font-weight: 500; }
+.progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.progress-pct-big { font-size: 1.6rem; font-weight: 800; color: var(--blue); }
+.progress-label { font-size: 0.7rem; color: var(--text2); }
+.progress-bar-big { background: #0f172a; border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 8px; }
+.progress-fill-big { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--green)); }
 
-    footer { border-top: 1px solid var(--border); padding: 20px 24px; text-align: center; color: var(--gray); font-size: 12px; margin-top: 40px; }
+/* Plataformas */
+.plataforma-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media(max-width:600px) { .plataforma-grid { grid-template-columns: 1fr; } }
+.plataforma-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+.plataforma-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; }
+.plataforma-status { font-size: 0.65rem; color: var(--text2); }
 
-    .score-ring { text-align: center; padding: 8px 0; }
-    .score-number { font-size: 48px; font-weight: 900; color: var(--green); line-height: 1; }
-    .score-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
-    .score-max { font-size: 20px; color: var(--muted); font-weight: 400; }
-
-    .alert-box { padding: 12px 16px; border-radius: 8px; font-size: 12px; margin-top: 12px; }
-    .alert-red { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: var(--red); }
-    .alert-yellow { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.2); color: var(--yellow); }
-    .alert-green { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: var(--green); }
-
-    .pilar-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(51,65,85,0.5); }
-    .pilar-row:last-child { border-bottom: none; }
-    .pilar-name { font-size: 12px; flex: 1; }
-    .pilar-peso { font-size: 11px; color: var(--muted); width: 32px; text-align: right; }
-    .pilar-bar { flex: 2; background: var(--border); border-radius: 99px; height: 5px; overflow: hidden; }
-    .pilar-fill { height: 100%; border-radius: 99px; background: var(--accent); }
-
-    .erp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .erp-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
-    .erp-logo { font-size: 22px; margin-bottom: 6px; }
-    .erp-name { font-size: 12px; font-weight: 700; }
-    .erp-vendor { font-size: 10px; color: var(--muted); margin-top: 2px; }
-    .erp-status { font-size: 10px; margin-top: 6px; padding: 2px 8px; border-radius: 99px; display: inline-block; background: rgba(59,130,246,0.1); color: var(--accent); border: 1px solid rgba(59,130,246,0.25); font-weight: 600; }
-  </style>
+.footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); font-size: 0.65rem; color: var(--text2); margin-top: 16px; }
+.footer strong { color: var(--blue); }
+</style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-brand">🏛️ <span>VMO</span> Consultoria</div>
-  <a href="../index.html" class="nav-back">← Dashboard</a>
-  <div class="nav-timestamp">Atualizado: 05/04/2026 às 20:30</div>
-</nav>
+<header class="header">
+  <a href="../index.html" class="back-link">← Dashboard Portfólio</a>
+  <div class="header-title">PROJ-2026-003 · ERP Selection · Holding GAB + VixPar + VAB</div>
+  <div class="updated-at">Atualizado em: 14/05/2026 às 20:00</div>
+</header>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-breadcrumb">VMO Consultoria › Projetos › PROJ-2026-003</div>
-    <h1 class="hero-title">Caminhos Estratégicos do ERP GAB</h1>
-    <p class="hero-subtitle">Software Selection — Grupo Águia Branca · Assessment KPMG Powered Enterprise</p>
+<main class="main">
+
+  <div class="hero">
+    <div class="hero-code">PROJ-2026-003 · Software Selection · Run: 2026-05-14 · KPMG Advisory</div>
+    <div class="hero-title">Caminhos Estratégicos do ERP GAB — Fase 1 (Software Selection)</div>
     <div class="hero-meta">
-      <span class="badge badge-green">✅ INICIAÇÃO APROVADA 88,75/100</span>
-      <span class="badge badge-green">✅ 95 PARTICIPANTES CONFIRMADOS</span>
-      <span class="badge badge-yellow">⚠️ I-003 EM RESOLUÇÃO</span>
-      <div class="meta-item">📋 <strong>PROJ-2026-003</strong></div>
-      <div class="meta-item">🏢 <strong>Grupo Águia Branca</strong></div>
-      <div class="meta-item">🤝 Consultora: <strong>KPMG</strong></div>
-      <div class="meta-item">📅 Entrega: <strong>08/05/2026</strong></div>
+      <div>
+        <div class="meta-label">Status Consolidado</div>
+        <div><span class="status-badge atencao">🟡 Atenção</span></div>
+      </div>
+      <div>
+        <div class="meta-label">BAC Total</div>
+        <div class="meta-value">R$ 1.010.000</div>
+      </div>
+      <div>
+        <div class="meta-label">Deadline</div>
+        <div class="meta-value" style="color:var(--red)">08/05/2026 ⚠ Passou</div>
+      </div>
+      <div>
+        <div class="meta-label">Fase</div>
+        <div class="meta-value">Execução — Semana 5+</div>
+      </div>
+      <div>
+        <div class="meta-label">GP (interino)</div>
+        <div class="meta-value">Marcelo Silveira</div>
+      </div>
+      <div>
+        <div class="meta-label">Contrato</div>
+        <div class="meta-value">KPMG Advisory — R$ 930K</div>
+      </div>
     </div>
   </div>
-</div>
 
-<main>
-  <!-- COLUNA ESQUERDA -->
-  <div class="col-left">
-
-    <!-- ALERTA RESOLVIDO -->
-    <div class="alert-box alert-green">
-      <strong>✅ I-001 + I-002 RESOLVIDAS em 05/04/2026:</strong> Convites enviados via Outlook para <strong>95 participantes</strong> (VIX · VAB · Holding). Agenda Macro confirmada — workshops iniciam <strong>amanhã 06/04/2026</strong> conforme planejado.<br>
-      S1: Manutenção · Suprimentos · RH/DP/SESMT · Finanças/Fiscal (06–10/04) · S2: Rodada 2 (14–17/04) · S3: Benchmarking (20–24/04) · S4: Sandbox (27–30/04) · S5: Revisões + Apresentação Executiva (04–08/05)
-    </div>
-
-    <!-- SEMÁFORO -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Status por Dimensão</span>
-        <span class="badge badge-green">🟢 VERDE</span>
-      </div>
-      <div class="card-body">
-        <div class="semaforo-grid">
-          <div class="semaforo-item">
-            <div class="semaforo-dot dot-green">📅</div>
-            <div class="semaforo-label">Cronograma</div>
-            <div class="semaforo-status text-green">VERDE</div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div>
+      <div class="section-title">Semáforo de Dimensões</div>
+      <div class="card">
+        <div class="semaphore-grid">
+          <div class="sem-row verde-bg">
+            <div class="sem-icon">🟢</div>
+            <div class="sem-label">Cronograma</div>
+            <div class="sem-note">M1–M4 realizados conforme plano; M5–M7 em execução</div>
           </div>
-          <div class="semaforo-item">
-            <div class="semaforo-dot dot-green">💰</div>
-            <div class="semaforo-label">Custo</div>
-            <div class="semaforo-status text-green">VERDE</div>
+          <div class="sem-row verde-bg">
+            <div class="sem-icon">🟢</div>
+            <div class="sem-label">Custo</div>
+            <div class="sem-note">Contrato KPMG em vigor; sem desvio identificado</div>
           </div>
-          <div class="semaforo-item">
-            <div class="semaforo-dot dot-green">📦</div>
-            <div class="semaforo-label">Escopo</div>
-            <div class="semaforo-status text-green">VERDE</div>
+          <div class="sem-row verde-bg">
+            <div class="sem-icon">🟢</div>
+            <div class="sem-label">Escopo</div>
+            <div class="sem-note">Sem mudanças de escopo aprovadas</div>
           </div>
-          <div class="semaforo-item">
-            <div class="semaforo-dot dot-yellow">⚠️</div>
-            <div class="semaforo-label">Riscos</div>
-            <div class="semaforo-status text-yellow">ATENÇÃO</div>
+          <div class="sem-row amarelo-bg">
+            <div class="sem-icon">🟡</div>
+            <div class="sem-label">Riscos</div>
+            <div class="sem-note">R-001 CRÍTICO ativo; R-007 ALTO sem resolução confirmada</div>
           </div>
-          <div class="semaforo-item">
-            <div class="semaforo-dot dot-yellow">🏛️</div>
-            <div class="semaforo-label">Governança</div>
-            <div class="semaforo-status text-yellow">ATENÇÃO</div>
-          </div>
-        </div>
-        <div class="alert-box alert-green" style="margin-top:16px;">
-          ✅ <strong>Riscos:</strong> I-001 e I-002 resolvidas em 05/04 · R-001 (agenda) encerrado · 95 participantes confirmados · Semana 1 inicia amanhã
-        </div>
-        <div class="alert-box alert-yellow" style="margin-top:8px;">
-          ⚠️ <strong>Governança:</strong> I-003 aberta — GP Interino (Marcelo Silveira) sem backup (prazo 07/04) · R-002 e R-003 permanecem para monitoramento
-        </div>
-      </div>
-    </div>
-
-    <!-- PROGRESSO -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Progresso do Projeto</span>
-        <span class="badge badge-blue">Semana 0 → 1</span>
-      </div>
-      <div class="card-body">
-        <div class="progress-section">
-          <div class="progress-label">
-            <span>Fase 1 — Software Selection (5 semanas)</span>
-            <span style="font-weight:700;">~8% <span style="color:var(--muted); font-weight:400;">(Kick Off realizado)</span></span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:8%"></div></div>
-
-          <div class="progress-label">
-            <span>Workshops concluídos (7 áreas de processo)</span>
-            <span style="font-weight:700; color:var(--muted);">0 / 7</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
-
-          <div class="progress-label">
-            <span>Documentação VMO de Iniciação</span>
-            <span style="font-weight:700; color:var(--green);">100%</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill progress-fill-green" style="width:100%"></div></div>
-
-          <div class="progress-label">
-            <span>Score de Qualidade VMO (Vera Veredito)</span>
-            <span style="font-weight:700; color:var(--green);">8.875/10</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill progress-fill-green" style="width:88.75%"></div></div>
-        </div>
-        <p style="font-size:12px; color:var(--muted); margin-top:8px;">
-          SPI: 1,00 · CPI: n/d (sem faturas KPMG recebidas ainda) · BAC: R$ 930.000 (Fase 1)
-        </p>
-      </div>
-    </div>
-
-    <!-- MARCOS / CRONOGRAMA -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Marcos do Projeto</span>
-        <span style="font-size:12px; color:var(--muted);">Fase 1: 02/04 → 08/05/2026</span>
-      </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-icon icon-done">✓</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M01 — Kick Off Operacional KPMG</div>
-              <div class="timeline-meta">02/04/2026 · Realizado · KPMG + GP Interno</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-done">✓</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M02 — Documentação VMO de Iniciação</div>
-              <div class="timeline-meta">05/04/2026 · Concluído · 9 artefatos · 88,75/100</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-done">✓</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M03 — Início Workshops Semana 1 <span class="timeline-du">06/04/2026</span></div>
-              <div class="timeline-meta" style="color:var(--green);">✅ Convites enviados · 95 participantes · 06/04 Manutenção · 07/04 Suprimentos · 08/04 RH/DP/SESMT · 09-10/04 Finanças/Fiscal</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">○</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M04 — Kick Off Executivo</div>
-              <div class="timeline-meta">Abril/2026 (data não confirmada) · Rodrigo Figaro (KPMG) + Sponsors</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">○</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M05 — Conclusão Workshops S1+S2 <span class="timeline-du">17/04/2026</span></div>
-              <div class="timeline-meta">Manutenção · Suprimentos · Finanças · Fiscal · RH · DP/SESMT · Tecnologia</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">○</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M06 — Mid-Point Review <span class="timeline-du">24/04/2026</span></div>
-              <div class="timeline-meta">Semana 3 · Validação com Sponsors · Score Model Pilares 1–2</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">○</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M07 — Matrizes de Aderência Consolidadas <span class="timeline-du">30/04/2026</span></div>
-              <div class="timeline-meta">3 plataformas × 7 áreas · Score Model completo (6 pilares)</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">○</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M08 — Entrega Final Software Selection <span class="timeline-du" style="color:var(--yellow);">08/05/2026</span></div>
-              <div class="timeline-meta" style="color:var(--yellow);">⭐ MARCO PRINCIPAL · Relatório + Apresentação ao Comitê Executivo</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">○</div>
-            <div class="timeline-content">
-              <div class="timeline-name">M09 — Entrega Final RFP (Fase 2) <span class="timeline-du">~06/06/2026</span></div>
-              <div class="timeline-meta">Início ~11/05/2026 · R$ 170.000 · Seleção de fornecedor ERP</div>
-            </div>
+          <div class="sem-row verde-bg">
+            <div class="sem-icon">🟢</div>
+            <div class="sem-label">Qualidade</div>
+            <div class="sem-note">100% dos entregáveis de iniciação VMO produzidos (Score 9,0/10)</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ISSUES ABERTAS -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Issues Abertas</span>
-        <span class="badge badge-yellow">1 aberta · 2 resolvidas</span>
-      </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <div class="issue-row">
-          <span class="issue-tag" style="background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);">RESOLVIDA</span>
-          <div class="issue-content">
-            <div class="issue-title" style="color:var(--muted);text-decoration:line-through;">I-001 — Agenda da Semana 1 não confirmada</div>
-            <div class="issue-meta">✅ Resolvida 05/04 — Convites enviados via Outlook · Agenda Macro confirmada S1–S5</div>
-          </div>
+    <div>
+      <div class="section-title">Progresso — PV Baseline</div>
+      <div class="card">
+        <div class="progress-header">
+          <div class="progress-pct-big">45%</div>
+          <div class="progress-label">EV Acumulado ≈ R$ 454.500</div>
         </div>
-        <div class="issue-row">
-          <span class="issue-tag" style="background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);">RESOLVIDA</span>
-          <div class="issue-content">
-            <div class="issue-title" style="color:var(--muted);text-decoration:line-through;">I-002 — Participantes internos GAB não designados</div>
-            <div class="issue-meta">✅ Resolvida 05/04 — 95 participantes em 3 divisões (VIX · VAB · Holding), 8 áreas de processo</div>
-          </div>
-        </div>
-        <div class="issue-row">
-          <span class="issue-tag issue-high">ALTO</span>
-          <div class="issue-content">
-            <div class="issue-title">I-003 — GP Interno (Marcelo Silveira) atua de forma interina</div>
-            <div class="issue-meta">Sem previsão de titularização ou backup definido · Resp: Diretoria GAB · Prazo: <strong style="color:var(--yellow);">07/04/2026</strong></div>
+        <div class="progress-bar-big"><div class="progress-fill-big" style="width:45%"></div></div>
+        <p style="font-size:0.7rem;color:var(--text2);margin-bottom:16px">M4 concluído (S1+S2 realizadas) · M5–M7 pendentes</p>
+
+        <div class="section-title" style="margin-bottom:12px">Score da Iniciação VMO Autônomo</div>
+        <div class="score-card">
+          <div class="score-big">9,0</div>
+          <div class="score-info">
+            <div class="score-label">Score de Qualidade</div>
+            <div class="score-verdict">✅ APROVADO pelo GP</div>
+            <div class="score-from">Vera Veredito — 14/05/2026 · Sem ressalvas</div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- PLATAFORMAS CANDIDATAS -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Plataformas ERP em Avaliação</span>
-        <span style="font-size:12px; color:var(--muted);">3 candidatos</span>
+  <div class="section-title">KPIs EVM (Baseline)</div>
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="card kpi-card">
+      <div class="kpi-name">BAC</div>
+      <div class="kpi-value" style="color:var(--blue);font-size:1.3rem">R$&nbsp;1.010.000</div>
+      <div class="kpi-sub">R$930K KPMG + R$80K overhead</div>
+    </div>
+    <div class="card kpi-card">
+      <div class="kpi-name">CPI</div>
+      <div class="kpi-value" style="color:var(--green)">1,00</div>
+      <div class="kpi-sub">Baseline — sem desvio</div>
+      <div class="kpi-badge meta">Meta ≥ 1,00</div>
+    </div>
+    <div class="card kpi-card">
+      <div class="kpi-name">SPI</div>
+      <div class="kpi-value" style="color:var(--yellow)">0,90</div>
+      <div class="kpi-sub">M5–M7 pendentes</div>
+      <div class="kpi-badge" style="background:#eab30814;color:var(--yellow)">⚠ Alerta</div>
+    </div>
+  </div>
+
+  <div class="section-title">Cronograma — 7 Marcos</div>
+  <div class="card" style="margin-bottom:24px">
+    <div class="timeline">
+      <div class="marco">
+        <div class="marco-icon">✅</div>
+        <div class="marco-info"><div class="marco-name">M0 — Contrato assinado</div><div class="marco-desc">Mobilização da equipe KPMG (22 especialistas)</div></div>
+        <div class="marco-date"><strong>17/03/2026</strong>Realizado</div>
       </div>
-      <div class="card-body">
-        <div class="erp-grid">
-          <div class="erp-card">
-            <div class="erp-logo">🔵</div>
-            <div class="erp-name">SAP S/4HANA Rise</div>
-            <div class="erp-vendor">SAP SE</div>
-            <div class="erp-status">Em Avaliação</div>
-          </div>
-          <div class="erp-card">
-            <div class="erp-logo">🔴</div>
-            <div class="erp-name">Oracle ERP Cloud</div>
-            <div class="erp-vendor">Oracle Corporation</div>
-            <div class="erp-status">Em Avaliação</div>
-          </div>
-          <div class="erp-card">
-            <div class="erp-logo">🟠</div>
-            <div class="erp-name">TOTVS Protheus</div>
-            <div class="erp-vendor">TOTVS S.A.</div>
-            <div class="erp-status">Em Avaliação</div>
-          </div>
-        </div>
-        <p style="font-size:12px; color:var(--muted); margin-top:14px;">
-          Metodologia: KPMG Powered Enterprise — Score Model com 6 pilares ponderados. Contexto: substituição do SAP ECC 6.0 (end of maintenance 2027).
-        </p>
+      <div class="marco">
+        <div class="marco-icon">✅</div>
+        <div class="marco-info"><div class="marco-name">M1 — Kick Off Operacional</div><div class="marco-desc">Plano de projeto, cronograma detalhado, mapa de workshops</div></div>
+        <div class="marco-date"><strong>02/04/2026</strong>Realizado</div>
+      </div>
+      <div class="marco">
+        <div class="marco-icon">⚠️</div>
+        <div class="marco-info"><div class="marco-name">M2 — Kick Off Executivo</div><div class="marco-desc">Alinhamento formal dos sponsors à metodologia</div></div>
+        <div class="marco-date" style="color:var(--red)"><strong>TBD (Abril)</strong>Sem data — I-001</div>
+      </div>
+      <div class="marco">
+        <div class="marco-icon">✅</div>
+        <div class="marco-info"><div class="marco-name">M3 — Entendimento Ciclo 1 (S1)</div><div class="marco-desc">Workshops: Manutenção/Frotas, Suprimentos, Financeiro, Fiscal</div></div>
+        <div class="marco-date"><strong>10/04/2026</strong>Realizado</div>
+      </div>
+      <div class="marco">
+        <div class="marco-icon">✅</div>
+        <div class="marco-info"><div class="marco-name">M4 — Entendimento Ciclo 2 (S2)</div><div class="marco-desc">Workshops: RH/DP/SESMT, Financeiro Avançado, Tecnologia</div></div>
+        <div class="marco-date"><strong>17/04/2026</strong>Realizado</div>
+      </div>
+      <div class="marco">
+        <div class="marco-icon">⏳</div>
+        <div class="marco-info"><div class="marco-name">M5 — Score Model Consolidado</div><div class="marco-desc">Avaliação das 3 plataformas em 6 pilares — SAP, Oracle, TOTVS</div></div>
+        <div class="marco-date" style="color:var(--yellow)"><strong>01/05/2026</strong>Em execução S3–S4</div>
+      </div>
+      <div class="marco">
+        <div class="marco-icon">⏳</div>
+        <div class="marco-info"><div class="marco-name">M6 — Aprovação da Recomendação</div><div class="marco-desc">Apresentação final aos 3 sponsors · Aprovação formal</div></div>
+        <div class="marco-date" style="color:var(--red)"><strong>08/05/2026</strong>Pendente</div>
+      </div>
+      <div class="marco">
+        <div class="marco-icon">⏳</div>
+        <div class="marco-info"><div class="marco-name">M7 — Encerramento Fase 1</div><div class="marco-desc">Relatório final · Pesquisa NPS · Handoff para Fase 2 (RFP)</div></div>
+        <div class="marco-date" style="color:var(--red)"><strong>08/05/2026</strong>Pendente</div>
       </div>
     </div>
+  </div>
 
-    <!-- SCORE MODEL PILARES -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Score Model — Pilares de Avaliação</span>
-        <span style="font-size:12px; color:var(--muted);">KPMG Powered Enterprise</span>
-      </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <div class="pilar-row">
-          <div class="pilar-name">🎯 Estratégico</div>
-          <div class="pilar-peso">30%</div>
-          <div class="pilar-bar"><div class="pilar-fill" style="width:100%; background:linear-gradient(90deg,#6366f1,#818cf8);"></div></div>
+  <div class="grid-2" style="margin-bottom:24px">
+    <div>
+      <div class="section-title">Issues Abertas</div>
+      <div>
+        <div class="issue-card">
+          <div class="issue-id">I-001</div>
+          <div class="issue-title">Kick Off Executivo sem data confirmada</div>
+          <div class="issue-meta"><span class="issue-prazo">Prazo: 15/05/2026</span><span>Resp: Marcelo Silveira</span></div>
         </div>
-        <div class="pilar-row">
-          <div class="pilar-name">📦 Produto</div>
-          <div class="pilar-peso">20%</div>
-          <div class="pilar-bar"><div class="pilar-fill" style="width:66.7%; background:var(--accent);"></div></div>
+        <div class="issue-card">
+          <div class="issue-id">I-002</div>
+          <div class="issue-title">Inconsistência 5 vs. 6 pilares KPMG no Score Model</div>
+          <div class="issue-meta"><span class="issue-prazo">Prazo: 16/05/2026</span><span>Resp: Marcelo → Wallacy Lima</span></div>
         </div>
-        <div class="pilar-row">
-          <div class="pilar-name">💻 Tecnologia</div>
-          <div class="pilar-peso">20%</div>
-          <div class="pilar-bar"><div class="pilar-fill" style="width:66.7%; background:var(--accent);"></div></div>
+        <div class="issue-card">
+          <div class="issue-id">I-003</div>
+          <div class="issue-title">Contatos (e-mail) dos 3 sponsors não registrados</div>
+          <div class="issue-meta"><span class="issue-prazo">Prazo: 15/05/2026</span><span>Resp: Marcelo Silveira</span></div>
         </div>
-        <div class="pilar-row">
-          <div class="pilar-name">👥 Cliente</div>
-          <div class="pilar-peso">10%</div>
-          <div class="pilar-bar"><div class="pilar-fill" style="width:33.3%; background:var(--green);"></div></div>
-        </div>
-        <div class="pilar-row">
-          <div class="pilar-name">💰 Financeiro</div>
-          <div class="pilar-peso">10%</div>
-          <div class="pilar-bar"><div class="pilar-fill" style="width:33.3%; background:var(--green);"></div></div>
-        </div>
-        <div class="pilar-row">
-          <div class="pilar-name">⚙️ Operação</div>
-          <div class="pilar-peso">10%</div>
-          <div class="pilar-bar"><div class="pilar-fill" style="width:33.3%; background:var(--green);"></div></div>
-        </div>
-        <div class="alert-box alert-yellow" style="margin-top:12px;">
-          ⚠️ I-005: Material KPMG cita "5 pilares" mas lista 6. Confirmar com Wallacy Lima antes da Semana 3.
-        </div>
-      </div>
-    </div>
-
-    <!-- RISCOS -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Riscos em Destaque</span>
-        <span class="badge badge-red">3 críticos · 4 altos</span>
-      </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <div class="risk-row">
-          <div class="risk-id">R-001</div>
-          <div class="risk-desc">Workshops Semana 1 atrasam por falta de agenda e participantes</div>
-          <div class="risk-level risk-critical">CRÍTICO 🔴</div>
-        </div>
-        <div class="risk-row">
-          <div class="risk-id">R-002</div>
-          <div class="risk-desc">Baixo engajamento das áreas de negócio nos workshops</div>
-          <div class="risk-level risk-critical">CRÍTICO 🔴</div>
-        </div>
-        <div class="risk-row">
-          <div class="risk-id">R-003</div>
-          <div class="risk-desc">Score Model influenciado por percepções individuais vs. dados objetivos</div>
-          <div class="risk-level risk-critical">CRÍTICO 🔴</div>
-        </div>
-        <div class="risk-row">
-          <div class="risk-id">R-004</div>
-          <div class="risk-desc">Saída do GP Interno sem substituto designado</div>
-          <div class="risk-level risk-high">ALTO 🟠</div>
-        </div>
-        <div class="risk-row">
-          <div class="risk-id">R-005</div>
-          <div class="risk-desc">Foco em ferramenta sem definição do cenário-alvo de processos</div>
-          <div class="risk-level risk-high">ALTO 🟠</div>
-        </div>
-        <div class="risk-row">
-          <div class="risk-id">R-007</div>
-          <div class="risk-desc">Feriado 01/05 comprime Semana 4 para 4 dias úteis</div>
-          <div class="risk-level risk-high">ALTO 🟠</div>
-        </div>
-        <div class="risk-row">
-          <div class="risk-id">R-010</div>
-          <div class="risk-desc">Comitê Executivo não aprova recomendação KPMG na apresentação final</div>
-          <div class="risk-level risk-high">ALTO 🟠</div>
-        </div>
-        <div style="margin-top:10px; font-size:11px; color:var(--muted);">+ 8 riscos MÉDIO · Reserva de contingência calculada: R$ 498.000</div>
-      </div>
-    </div>
-
-  </div><!-- /col-left -->
-
-  <!-- COLUNA DIREITA -->
-  <div class="col-right">
-
-    <!-- SCORE VMO -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Score de Qualidade VMO</span>
-      </div>
-      <div class="card-body">
-        <div class="score-ring">
-          <div class="score-number">8.9<span class="score-max">/10</span></div>
-          <div class="score-label">Aprovado com Condições · Vera Veredito<br>88,75/100 · Revisão 1 de 3</div>
+        <div class="issue-card">
+          <div class="issue-id">I-004</div>
+          <div class="issue-title">Titularização do GP interno não confirmada</div>
+          <div class="issue-meta"><span class="issue-prazo">Prazo: Semana corrente</span><span>Resp: Sponsor Décio Chieppe</span></div>
         </div>
       </div>
     </div>
 
-    <!-- EVM -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">EVM — Earned Value</span>
-        <span style="font-size:11px; color:var(--muted);">Baseline v1.0</span>
+    <div>
+      <div class="section-title">Plataformas em Avaliação</div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="plataforma-grid">
+          <div class="plataforma-card">
+            <div class="plataforma-name">SAP S/4HANA</div>
+            <div class="plataforma-status" style="color:var(--yellow)">⏳ Em avaliação</div>
+          </div>
+          <div class="plataforma-card">
+            <div class="plataforma-name">Oracle ERP Cloud</div>
+            <div class="plataforma-status" style="color:var(--yellow)">⏳ Em avaliação</div>
+          </div>
+          <div class="plataforma-card">
+            <div class="plataforma-name">TOTVS Protheus</div>
+            <div class="plataforma-status" style="color:var(--yellow)">⏳ Em avaliação</div>
+          </div>
+        </div>
+        <p style="font-size:0.7rem;color:var(--text2);margin-top:12px">Score Model em 6 pilares: Estratégico (30%) · Produto (20%) · Tecnologia (20%) · Cliente (10%) · Financeiro (10%) · Operação (10%)</p>
       </div>
-      <div class="card-body">
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-value" style="color:var(--green);">1,00</div>
-            <div class="kpi-label">SPI</div>
-            <div class="kpi-sub" style="color:var(--green);">No baseline</div>
+      <div class="section-title">Próximos 3 Passos Críticos</div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="background:var(--blue);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">1</div>
+            <div><div style="font-size:0.8rem;font-weight:600">Confirmar data do KO Executivo e coletar contatos dos sponsors</div><div style="font-size:0.65rem;color:var(--text2);margin-top:2px">Resp: Marcelo Silveira · Prazo: 15/05/2026</div></div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-value" style="color:var(--muted);">n/d</div>
-            <div class="kpi-label">CPI</div>
-            <div class="kpi-sub" style="color:var(--muted);">Sem faturas</div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="background:var(--blue);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">2</div>
+            <div><div style="font-size:0.8rem;font-weight:600">Solicitar esclarecimento formal dos pilares KPMG a Wallacy Lima</div><div style="font-size:0.65rem;color:var(--text2);margin-top:2px">Resp: Marcelo Silveira · Prazo: 16/05/2026</div></div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-value" style="font-size:18px; color:var(--accent);">R$930K</div>
-            <div class="kpi-label">BAC Fase 1</div>
-            <div class="kpi-sub" style="color:var(--muted);">Contrato KPMG</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-value" style="font-size:18px; color:var(--muted);">R$0</div>
-            <div class="kpi-label">AC Acumulado</div>
-            <div class="kpi-sub" style="color:var(--muted);">Semana 0</div>
-          </div>
-        </div>
-        <p style="font-size:11px; color:var(--muted); margin-top:10px;">
-          PV semanal: R$ 186.000 / semana · Regra EV: 0/100 por entregável KPMG aceito
-        </p>
-      </div>
-    </div>
-
-    <!-- INFORMAÇÕES DO PROJETO -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Informações do Projeto</span>
-      </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <table class="info-table">
-          <tr><td>ID</td><td>PROJ-2026-003 / DEM-2026-003</td></tr>
-          <tr><td>Run ID</td><td>2026-04-05-173000</td></tr>
-          <tr><td>Tipo</td><td>Assessment Estratégico — Software Selection</td></tr>
-          <tr><td>Fase atual</td><td>Fase 1 — Software Selection</td></tr>
-          <tr><td>Início</td><td>02/04/2026 (Kick Off Operacional)</td></tr>
-          <tr><td>Entrega Fase 1</td><td>~08/05/2026</td></tr>
-          <tr><td>Entrega Fase 2</td><td>~06/06/2026</td></tr>
-          <tr><td>Orçamento Fase 1</td><td>R$ 930.000</td></tr>
-          <tr><td>Orçamento Fase 2</td><td>R$ 170.000</td></tr>
-          <tr><td>Total contratado</td><td><strong>R$ 1.100.000</strong></td></tr>
-          <tr><td>Consultora</td><td>KPMG (22 profissionais)</td></tr>
-          <tr><td>Metodologia</td><td>Powered Enterprise · Score Model</td></tr>
-          <tr><td>Complexidade VMO</td><td>ALTA</td></tr>
-          <tr><td>Qualificação</td><td>27/30 (90%) — Aprovado</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- STAKEHOLDERS -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Stakeholders Principais</span>
-      </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <div class="stakeholder-row">
-          <div class="stakeholder-avatar" style="background:#6366f1;">MS</div>
-          <div class="stakeholder-info">
-            <div class="stakeholder-name">Marcelo Silveira</div>
-            <div class="stakeholder-role">GP Interno (Interino) · marcelov@aguiabranca.com.br</div>
-          </div>
-        </div>
-        <div class="stakeholder-row">
-          <div class="stakeholder-avatar" style="background:#0ea5e9;">DC</div>
-          <div class="stakeholder-info">
-            <div class="stakeholder-name">Décio Luiz Chieppe</div>
-            <div class="stakeholder-role">Sponsor · VP Inovação e Finanças (Holding GAB)</div>
-          </div>
-        </div>
-        <div class="stakeholder-row">
-          <div class="stakeholder-avatar" style="background:#8b5cf6;">PB</div>
-          <div class="stakeholder-info">
-            <div class="stakeholder-name">Paula Barcelos T. Corrêa</div>
-            <div class="stakeholder-role">Sponsor · Diretora (VAB Passageiros)</div>
-          </div>
-        </div>
-        <div class="stakeholder-row">
-          <div class="stakeholder-avatar" style="background:#ec4899;">PC</div>
-          <div class="stakeholder-info">
-            <div class="stakeholder-name">Patrícia Poubel Chieppe</div>
-            <div class="stakeholder-role">Sponsor · Diretora (VixPar Logística)</div>
-          </div>
-        </div>
-        <div class="stakeholder-row">
-          <div class="stakeholder-avatar" style="background:#0369a1;">RF</div>
-          <div class="stakeholder-info">
-            <div class="stakeholder-name">Rodrigo Figaro</div>
-            <div class="stakeholder-role">Sócio Responsável · KPMG</div>
-          </div>
-        </div>
-        <div class="stakeholder-row">
-          <div class="stakeholder-avatar" style="background:#0369a1;">WL</div>
-          <div class="stakeholder-info">
-            <div class="stakeholder-name">Wallacy Lima</div>
-            <div class="stakeholder-role">Gerente Sênior · KPMG (ponto de contato operacional)</div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="background:var(--blue);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">3</div>
+            <div><div style="font-size:0.8rem;font-weight:600">Agendar apresentação final com os 3 sponsors para 07–08/05</div><div style="font-size:0.65rem;color:var(--text2);margin-top:2px">Resp: Marcelo Silveira · Prazo: Imediato</div></div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- CADÊNCIA -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Cadência de Governança</span>
+  <div class="section-title">Registro de Riscos</div>
+  <div class="card" style="margin-bottom:24px">
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nível</th>
+          <th>Categoria</th>
+          <th>Descrição</th>
+          <th>Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>R-001</td>
+          <td><span class="risk-tag r-critico">CRÍTICO</span></td>
+          <td>Stakeholders</td>
+          <td>Baixo engajamento das áreas de negócio das 3 entidades nos workshops</td>
+          <td>20</td>
+          <td><span class="r-monit">🟡 S1-S2 realizadas; confirmar S3-S5</span></td>
+        </tr>
+        <tr>
+          <td>R-002</td>
+          <td><span class="risk-tag r-alto">ALTO</span></td>
+          <td>Prazo</td>
+          <td>Kick Off Executivo sem data — sponsors desalinhados ao longo do processo</td>
+          <td>12</td>
+          <td><span class="r-ativo">🔴 I-001 aberta</span></td>
+        </tr>
+        <tr>
+          <td>R-003</td>
+          <td><span class="risk-tag r-alto">ALTO</span></td>
+          <td>Qualidade</td>
+          <td>Score Model com &lt; 70% de critérios objetivos — excesso de percepções individuais</td>
+          <td>15</td>
+          <td><span class="r-monit">🟡 Definir critérios antes da S3</span></td>
+        </tr>
+        <tr>
+          <td>R-004</td>
+          <td><span class="risk-tag r-alto">ALTO</span></td>
+          <td>RH</td>
+          <td>Substituição do GP interno Marcelo Silveira durante o projeto — descontinuidade</td>
+          <td>10</td>
+          <td><span class="r-monit">🟡 I-004 aberta</span></td>
+        </tr>
+        <tr>
+          <td>R-007</td>
+          <td><span class="risk-tag r-alto">ALTO</span></td>
+          <td>Técnico</td>
+          <td>Inconsistência nos pilares KPMG (5 vs. 6) — Score Model metodologicamente incoerente</td>
+          <td>9</td>
+          <td><span class="r-ativo">🔴 Ativo — I-002 aberta</span></td>
+        </tr>
+        <tr>
+          <td>R-008</td>
+          <td><span class="risk-tag r-alto">ALTO</span></td>
+          <td>Stakeholders</td>
+          <td>Sponsor ausente na apresentação final — aprovação formal bloqueada</td>
+          <td>10</td>
+          <td><span class="r-monit">🟡 Confirmar presença com antecedência</span></td>
+        </tr>
+        <tr>
+          <td>R-005</td>
+          <td><span class="risk-tag r-medio">MÉDIO</span></td>
+          <td>Prazo</td>
+          <td>Plataforma candidata recusa-se a participar das demonstrações técnicas</td>
+          <td>8</td>
+          <td>Monitorando</td>
+        </tr>
+        <tr>
+          <td>R-006</td>
+          <td><span class="risk-tag r-medio">MÉDIO</span></td>
+          <td>Financeiro</td>
+          <td>Fase 2 (RFP, R$170K) descontinuada após Fase 1 — recomendação sem operacionalização</td>
+          <td>6</td>
+          <td>Aceitar c/ monitoramento</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Entidades Participantes</div>
+  <div class="card" style="margin-bottom:24px">
+    <div style="display:flex;gap:24px;flex-wrap:wrap">
+      <div style="text-align:center;flex:1;min-width:140px">
+        <div style="font-size:1.5rem;margin-bottom:6px">🏢</div>
+        <div style="font-size:0.85rem;font-weight:700">Holding GAB</div>
+        <div style="font-size:0.65rem;color:var(--text2)">Sponsor: Décio Chieppe</div>
       </div>
-      <div class="card-body" style="padding:12px 20px;">
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">📋</div>
-            <div class="timeline-content">
-              <div class="timeline-name">Flash Report Diário</div>
-              <div class="timeline-meta">Todos os dias úteis · KPMG + GP Interno · Próximo: 06/04</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">📊</div>
-            <div class="timeline-content">
-              <div class="timeline-name">Status Report Semanal</div>
-              <div class="timeline-meta">Quartas-feiras · GP + Leads KPMG · Próximo: 09/04</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-icon icon-pending">🏛️</div>
-            <div class="timeline-content">
-              <div class="timeline-name">Comitê Executivo</div>
-              <div class="timeline-meta">Quintas-feiras · Sponsors + Rodrigo Figaro · Próximo: 10/04</div>
-            </div>
-          </div>
-        </div>
+      <div style="text-align:center;flex:1;min-width:140px">
+        <div style="font-size:1.5rem;margin-bottom:6px">🚌</div>
+        <div style="font-size:0.85rem;font-weight:700">VixPar</div>
+        <div style="font-size:0.65rem;color:var(--text2)">Manutenção / Frotas / Suprimentos</div>
+      </div>
+      <div style="text-align:center;flex:1;min-width:140px">
+        <div style="font-size:1.5rem;margin-bottom:6px">✈️</div>
+        <div style="font-size:0.85rem;font-weight:700">VAB</div>
+        <div style="font-size:0.65rem;color:var(--text2)">RH / DP / SESMT / Fiscal</div>
       </div>
     </div>
+  </div>
 
-    <!-- AGENTES VMO -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Agentes VMO Autônomo</span>
-        <span class="badge badge-green">12/12 ✓</span>
-      </div>
-      <div class="card-body">
-        <div class="agents-grid">
-          <div class="agent-card">
-            <div class="agent-icon">📥</div>
-            <div class="agent-name">Iara Inbound</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">🔍</div>
-            <div class="agent-name">Felipe Filtro</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">📋</div>
-            <div class="agent-name">Diana Doc.</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">⚙️</div>
-            <div class="agent-name">Rafael Req.</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">📅</div>
-            <div class="agent-name">Carlos Cron.</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">⚠️</div>
-            <div class="agent-name">Pedro Perigo</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">📊</div>
-            <div class="agent-name">Marcela Mét.</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">📝</div>
-            <div class="agent-name">Sara Status</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-          <div class="agent-card">
-            <div class="agent-icon">✅</div>
-            <div class="agent-name">Vera Veredito</div>
-            <div class="agent-status text-green">✅ Done</div>
-          </div>
-        </div>
-        <div style="margin-top:12px; font-size:11px; color:var(--muted);">
-          Run: 2026-04-05-173000 · 9 artefatos · ~250KB · Status: completed
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /col-right -->
 </main>
 
-<footer>
-  🌐 <strong>VMO Web Publisher</strong> · PROJ-2026-003 · <strong>Atualizado: 05/04/2026 às 19:35</strong><br>
-  <span style="color:var(--border);">squads/vmo-web-publisher/output/site/projetos/PROJ-2026-003.html</span>
+<footer class="footer">
+  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Opensquad v0.1.14 · VMO Consultoria<br>
+  Atualizado em: 14/05/2026 às 20:00 · Dados do run: 2026-05-14 · Score VMO Autônomo: 9,0/10
 </footer>
 
 </body>
