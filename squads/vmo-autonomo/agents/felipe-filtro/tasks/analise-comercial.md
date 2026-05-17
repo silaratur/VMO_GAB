@@ -2,7 +2,7 @@
 task: "Análise Comercial"
 order: 2
 input:
-  - qualificacao_basica: "Output da tarefa anterior com pontuação dos critérios"
+  - qualificacao_basica: "Output da tarefa anterior com score de valor, score de complexidade, modalidade e decisão"
   - dados_financeiros: "Qualquer informação de custo ou benefício disponível"
 output:
   - analise_roi: "Análise de retorno sobre investimento detalhada"
