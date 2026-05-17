@@ -3,7 +3,7 @@ type: checkpoint
 outputFile: squads/vmo-autonomo/projects/{project}/05-encerramento/aprovacao-final.md
 ---
 
-# Step 13: Checkpoint — Aprovar Documentação Final
+# Step 14: Checkpoint — Aprovar Documentação Final
 
 ## Purpose
 
@@ -32,6 +32,7 @@ Documentos produzidos:
   ✅ Work Request — Pronto para envio a fornecedores
   ✅ Status Report #001 — Iniciação concluída
   ✅ Pesquisa de Satisfação — Template pronto
+  ✅ Auditoria de Governança — Aprovada por Gabriel Governança
 
 Todos os documentos em: squads/vmo-autonomo/projects/{project}/05-encerramento/
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

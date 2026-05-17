@@ -5,7 +5,7 @@ pipeline:
   description: >
     Pipeline de iniciação de projeto: da demanda recebida até o pacote completo
     de documentação aprovado pelo VMO (TAP, PM Canvas, ERF, Cronograma, Riscos,
-    KPIs, Work Request e Status Report inicial).
+    KPIs, Work Request, Status Report e Auditoria de Governança).
 
 steps:
   - step: 1
@@ -90,11 +90,19 @@ steps:
     on_reject: 5
 
   - step: 13
+    name: "Auditoria de Governança"
+    file: steps/step-13-auditoria-governanca.md
+    type: agent
+    agent: gabriel-governanca
+    execution: inline
+    on_reject: 5
+
+  - step: 14
     name: "Checkpoint: Aprovar Documentação Final"
-    file: steps/step-13-checkpoint-aprovacao-final.md
+    file: steps/step-14-checkpoint-aprovacao-final.md
     type: checkpoint
 
 checkpoints:
   - step: 2
   - step: 4
-  - step: 13
+  - step: 14

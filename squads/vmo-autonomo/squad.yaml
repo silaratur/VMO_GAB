@@ -4,7 +4,8 @@ squad:
   description: >
     Escritório de projetos autônomo (PMO→VMO) que gerencia o ciclo completo
     de iniciação de projetos: da captação de demanda até a entrega da documentação
-    completa (TAP, PM Canvas, ERF, Cronograma, Riscos, KPIs, Work Request e Status Report).
+    completa com auditoria de governança (TAP, PM Canvas, ERF, Cronograma, Riscos,
+    KPIs, Work Request, Status Report e Auditoria de Governança VMO).
   icon: 🏛️
   version: "1.0.0"
   language: "Português (Brasil)"
@@ -31,6 +32,8 @@ agents:
     path: ./agents/sara-status.agent.md
   - id: vera-veredito
     path: ./agents/vera-veredito.agent.md
+  - id: gabriel-governanca
+    path: ./agents/gabriel-governanca.agent.md
 
 skills:
   - web_search

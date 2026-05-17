@@ -9,3 +9,4 @@ marcela-metrica,Marcela Métrica,Monitora de Performance,📊,subagent,./agents/
 fabio-fornecedor,Fábio Fornecedor,Especialista em Solicitação de Trabalho,📤,subagent,./agents/fabio-fornecedor.agent.md
 sara-status,Sara Status,Redatora de Relatórios,📝,inline,./agents/sara-status.agent.md
 vera-veredito,Vera Veredito,Revisora de Qualidade VMO,✅,inline,./agents/vera-veredito.agent.md
+gabriel-governanca,Gabriel Governança,Auditor de Governança VMO,🛡️,inline,./agents/gabriel-governanca.agent.md
