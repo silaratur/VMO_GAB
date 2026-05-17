@@ -10,6 +10,10 @@
 
 ## Técnico (específico do squad)
 
+- **Nova estrutura de pastas validada (2026-05-16):** A migração de `output/{run_id}/v{N}/` para `projects/{PROJ-CODE}/{fase}/` funciona corretamente. Todos os 10 agentes escreveram nos caminhos corretos com placeholder `{project}` resolvido. Estrutura de fases: 01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento.
+- **Fábio Fornecedor validado (Step 10):** Primeiro run completo com o agente de Work Request. Score 8,5/10 na revisão da Vera. Artefato Obrigatório (10 grupos / 41 itens) transcrito corretamente. Inconsistência narrativa identificada: seção de contexto deve referenciar "plataforma SaaS terceira" (não "planilhas e e-mails") para projetos de substituição de sistema.
+- **Ressalva de sponsor registrada pelo GP:** Nivel mínimo de sponsor para aprovação de TAP é Diretor ou superior. Registrar como condição bloqueante CB-01 explícita no TAP, não apenas como lacuna genérica.
+
 ## Run History
 
 ### Run 2026-05-15-150000 — PROJ-2026-005

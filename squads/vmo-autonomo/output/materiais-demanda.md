@@ -1,57 +1,97 @@
-# Transcrição Consolidada — Discovery Demandas
-# Hugo <> Sandro Siqueira
-# Data: 2026-05-15 | ID Fireflies: 01KRP1TW4YV4TZMB3V0044FD16
+# Materiais da Demanda — Plataforma de Gestão de Ideias e Inovação
 
-## Metadados da Reunião
+## Fonte
+- **Tipo:** Reunião gravada (Fireflies)
+- **Título:** Discovery Demandas - Sara <> JADSON
+- **Data:** 22/04/2026
+- **ID Fireflies:** 01KPV48BER47DVPT37Q0CGCNXN
+- **Participantes:** Jadson (solicitante), Sara (coletora — Agente VMO)
 
-- **Título:** Discovery Demandas - Hugo <> Sandro Siqueira
-- **Data:** 2026-05-15T14:49:47.000Z
-- **ID Fireflies:** 01KRP1TW4YV4TZMB3V0044FD16
-- **Entrevistador:** Hugo (Agente VMO)
-- **Entrevistado:** Sandro Siqueira (Coordenador de Contabilidade — Divisão Comércio)
+---
 
-## Resumo Automático Fireflies
+## Transcrição Estruturada
 
-A empresa planeja substituir o produto atual, Fiscal Defender, por um módulo Auditor Fiscal integrado ao ERP (NBS), visando aumentar a eficiência fiscal sem custos adicionais. A proposta da NBS elimina a necessidade de integrações externas e promete manter a auditoria fiscal obrigatória, reduzindo custos que atualmente são de R$ 78 mil por ano. O novo sistema manterá as operações diárias sem alterações no fluxo de trabalho, mas com melhorias na usabilidade. A mudança afetará principalmente o setor de comércio, impactando áreas contábil, financeira e jurídica, além de centralizar dados para garantir conformidade fiscal.
+**Solicitante:** Jadson — Gestor da Área de Inovação do Grupo
 
-**Keywords:** Fiscal Defender, Auditor Fiscal, compliance, integração ERP, auditoria fiscal, NBS
+### O que é a demanda
 
-## Transcrição
+Implementar uma plataforma própria para gestão de ideias e iniciativas de inovação do grupo, substituindo a plataforma terceira atualmente utilizada.
 
-**Hugo:** Me conte com suas palavras o que é esta demanda e como ela melhora seu dia a dia.
+> *"Estou pensando aqui em implementar uma plataforma que ela possa ajudar aí no cadastro das ideias e iniciativas de inovação que as pessoas da empresa têm."*
 
-**Sandro:** Atualmente, a gente tem um produto chamado Fiscal Defender, ao qual a gente paga R$ 78 mil por ano, em uma parceria com o fornecedor do nosso RP, chamado NBS. A gente fez um acordo onde a NBS desenvolveria esse módulo sem custos para nós, esse módulo se chamaria Auditor Fiscal, onde a gente teria a oportunidade até de incrementar o uso de funcionalidades que a gente tem hoje no produto atual pago. E reduzindo também a integração. Eu teria tudo dentro de um mesmo RP e não precisaria de uma integração para fazer conversar o produto atual com meu RP.
+### Como funciona hoje
 
-**Hugo:** Essa demanda é uma melhoria, uma nova solução ou um estudo de viabilidade?
+Existe uma plataforma terceira (SaaS) contratada que realiza a gestão de ideias. É usada por colaboradores de todas as divisões do grupo (Comércio, Passageiros, Logística). Custo atual: **R$ 80–90 mil/ano** em licenciamento.
 
-**Sandro:** É uma nova solução, na minha visão.
+### Problemas com a solução atual
 
-**Hugo:** Essa demanda atende a algum requisito legal ou obrigatório?
+- Custo elevado de licenciamento (~R$80-90k/ano)
+- Expansão para todos os colaboradores tornaria o custo ainda mais elevado
+- Pouca flexibilidade para customização às particularidades do grupo
+- Dependência de fornecedor externo
 
-**Sandro:** Sim. A solução atual e a nova solução são responsáveis pela auditoria das notas fiscais, de forma que a gente identifique possíveis fraudes, chances de multa, pagamentos indevidos, etc.
+### O que a nova solução deve fazer
 
-**Hugo:** Existe um prazo legal específico ou é uma necessidade contínua de compliance?
+O colaborador acessa um portal web e pode:
 
-**Sandro:** É uma necessidade contínua de compliance que a gente já tem hoje, é rotineira, uma ferramenta rotineira.
+1. **Cadastrar ideias avulsas** — descrever a ideia, o problema que resolve, ganhos esperados, benefícios e outros atributos
+2. **Responder a campanhas/desafios** — time de inovação publica desafios específicos; colaboradores submetem ideias
+3. **Fluxo de aprovação** — aprovação pelo gestor da área e pelos envolvidos identificados no cadastro
+4. **Mini gestão de projetos** — ideias aprovadas ganham módulo de planejamento de implementação (plano de ação macro)
+5. **Mensuração de ganhos** — acompanhamento dos resultados das ideias implementadas
+6. **Dashboard de visibilidade** — projetos de inovação em andamento, times envolvidos, status
 
-**Hugo:** Essa demanda impacta outras divisões como comércio, passageiros ou logística?
+### Impacto para os usuários
 
-**Sandro:** Uma demanda exclusiva da divisão comércio. [Após reconexão:] Além do setor de contabilidade, o setor financeiro e jurídico também será impactado.
+> *"O impacto para eles é mínimo, porque basicamente o que deve mudar para o usuário final é basicamente o link que ele acessa."*
 
-**Hugo:** Será necessário integrar com outros sistemas?
+Transição transparente: usuários continuam com a mesma funcionalidade, apenas em nova plataforma própria.
 
-**Sandro:** Acredito que não, não tenho essa resposta. Hoje o Fiscal Defender busca dados do próprio NBS e uma possibilidade de interação com outros sistemas seria através do Power BI também para relatórios gerenciais ou operacionais.
+### Integrações
 
-**Hugo:** Me explique como essa solução deveria funcionar na prática.
+Sem integração com outros sistemas no escopo inicial. Evoluções futuras podem identificar pontos de integração.
 
-**Sandro:** A gente está desenhando a ferramenta para ela seguir o processo atual. Em suma, o processo não mudará, o que a gente terá serão funcionalidades mais aderentes ao nosso dia a dia, ao nosso negócio, de forma a facilitar a operação do sistema.
+### Requisito legal
 
-**Hugo:** Pode me dar um exemplo concreto?
+Não há requisito legal ou regulatório envolvido.
 
-**Sandro:** Para mim não mudaria nada em termos de tarefas. As tarefas seriam as mesmas. Hoje a gente tem a importação das notas fiscais para o Fiscal Defender, e ele faz todo o trabalho de auditar, gerar relatórios para nós. O que vai ter é mais usabilidade do sistema para que a gente possa fazer isso de forma mais rápida e vai ser integrado ao nosso atual RP falando o mesmo conceito.
+### Tipo de demanda
 
-## Action Items (Fireflies)
+Melhoria — substitui solução existente com plataforma própria mais adequada e de menor custo.
 
-- Confirmar junto às áreas financeira e jurídica os impactos detalhados da nova solução Auditor Fiscal
-- Avaliar a necessidade concreta de integração do Auditor Fiscal com outros sistemas além do NBS e Power BI
-- Fornecer exemplos concretos de melhorias no uso prático do novo módulo
+---
+
+## Dados Estruturados da Demanda
+
+| Campo | Valor |
+|-------|-------|
+| **Solicitante** | Jadson |
+| **Cargo/Área** | Gestor da Área de Inovação |
+| **Divisão** | Inovação (impacta todas as divisões do grupo) |
+| **Canal de coleta** | Reunião de discovery gravada — 22/04/2026 |
+| **Tipo** | Melhoria (substitui plataforma terceira) |
+| **Necessidade** | Plataforma própria de gestão de ideias e inovação |
+| **Problema atual** | Custo de R$80-90k/ano em licença SaaS com limitação de escala e customização |
+| **Benefício esperado** | Redução de custo de licenciamento; flexibilidade para todos os colaboradores; customização ao grupo |
+| **ROI estimado** | Payback em 1 ano: valor da licença anual (~R$80-90k) viabiliza o desenvolvimento |
+| **Impacto de não fazer** | Continuar pagando R$80-90k/ano + restrição de escala e customização |
+| **Urgência** | Alta — prazo de dezembro/2026 vinculado ao Prêmio Inovação de Janeiro/2027 |
+| **Data desejada de entrega** | Dezembro de 2026 |
+| **Orçamento** | Não aprovado — necessário levantar custos para aprovação |
+| **Expectativa de investimento** | ~R$80-90k (equivalente ao custo anual da licença atual) |
+| **Sponsor** | Não identificado explicitamente — Jadson é o solicitante e gestor da área |
+| **Integração** | Não há integração no escopo inicial |
+| **Requisito legal** | Não há |
+| **Áreas impactadas** | Todas as divisões do grupo (usuários finais); Área de Inovação (gestora) |
+
+---
+
+## Lacunas Identificadas
+
+1. **Sponsor executivo** — não identificado sponsor formal nível diretoria/VP
+2. **Orçamento** — não formalmente aprovado; depende de levantamento de custos
+3. **Número de usuários** — quantos colaboradores usam hoje e quantos seriam habilitados na nova solução
+4. **Atributos do cadastro de ideia** — quais campos exatos além dos mencionados (problema, ganhos, benefícios)
+5. **Critérios de aprovação** — detalhamento do fluxo (quem aprova, quantas etapas, critérios objetivos)
+6. **Infraestrutura** — onde a plataforma será hospedada (cloud, data center próprio, misto)
+7. **Time de desenvolvimento** — interno, fornecedor externo ou misto
