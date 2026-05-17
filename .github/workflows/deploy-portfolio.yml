@@ -18,15 +18,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Garantir nginx instalado
+        run: |
+          if ! command -v nginx &>/dev/null; then
+            apt-get update -qq
+            apt-get install -y nginx
+            systemctl enable nginx
+            systemctl start nginx
+            echo "✅ nginx instalado"
+          else
+            echo "✅ nginx já instalado: $(nginx -v 2>&1)"
+          fi
+
       - name: Criar diretório web root
         run: |
           mkdir -p /var/www/vmo-portfolio/projetos/docs
+          echo "✅ Diretório /var/www/vmo-portfolio/ pronto"
 
       - name: Copiar site do portfolio
         run: |
           rsync -av --delete \
             squads/vmo-web-publisher/output/site/ \
             /var/www/vmo-portfolio/
+          TOTAL=$(find /var/www/vmo-portfolio -name "*.html" | wc -l)
+          echo "✅ $TOTAL páginas publicadas"
 
       - name: Configurar permissões
         run: |
@@ -37,35 +52,55 @@ jobs:
         run: |
           cp infra/nginx-vmo-portfolio.conf /etc/nginx/sites-available/vmo-portfolio
           ln -sf /etc/nginx/sites-available/vmo-portfolio /etc/nginx/sites-enabled/vmo-portfolio
-          nginx -t
+          # Remover default para evitar conflito
+          rm -f /etc/nginx/sites-enabled/default
+          nginx -t && echo "✅ Config nginx válida"
 
       - name: Recarregar nginx
         run: |
           systemctl reload nginx
+          echo "✅ nginx recarregado"
 
-      - name: Verificar deploy
+      - name: Verificar deploy HTTP
         run: |
-          sleep 2
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/index.html 2>/dev/null || echo "000")
+          sleep 3
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/ 2>/dev/null || echo "000")
           if [ "$STATUS" = "200" ]; then
-            echo "✅ Portfolio acessível: http://silaratur.cloud"
+            echo "✅ Site acessível em http://silaratur.cloud"
           else
-            echo "⚠️ Status HTTP: $STATUS — verificar logs"
+            echo "⚠️ Status HTTP: $STATUS"
             nginx -t
+            systemctl status nginx --no-pager | tail -20
           fi
 
-      - name: Instalar SSL com Certbot (se não configurado)
+      - name: Configurar SSL com Certbot
         run: |
           if [ ! -f /etc/letsencrypt/live/silaratur.cloud/fullchain.pem ]; then
-            apt-get install -y certbot python3-certbot-nginx 2>/dev/null || true
+            echo "🔐 Configurando SSL..."
+            apt-get install -y certbot python3-certbot-nginx 2>/dev/null
             certbot --nginx \
               -d silaratur.cloud \
               -d www.silaratur.cloud \
               --non-interactive \
               --agree-tos \
               --email silaratur@gmail.com \
-              --redirect \
-              2>/dev/null && echo "✅ SSL configurado" || echo "⚠️ SSL: verificar manualmente"
+              --redirect && echo "✅ SSL configurado — https://silaratur.cloud" \
+              || echo "⚠️ SSL falhou — site disponível em HTTP"
           else
             echo "✅ SSL já configurado"
+            certbot renew --quiet 2>/dev/null || true
           fi
+
+      - name: Verificar deploy final
+        run: |
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          HTTPS=$(curl -s -o /dev/null -w "%{http_code}" https://silaratur.cloud/ 2>/dev/null || echo "000")
+          HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://silaratur.cloud/ 2>/dev/null || echo "000")
+          echo "HTTP  → $HTTP"
+          echo "HTTPS → $HTTPS"
+          PAGES=$(find /var/www/vmo-portfolio -name "*.html" | wc -l)
+          echo "Páginas: $PAGES"
+          echo "URL: https://silaratur.cloud"
+          echo "Data: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
