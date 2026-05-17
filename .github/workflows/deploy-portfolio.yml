@@ -1,0 +1,71 @@
+name: Deploy VMO Portfolio
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'squads/vmo-web-publisher/output/site/**'
+      - 'infra/nginx-vmo-portfolio.conf'
+      - '.github/workflows/deploy-portfolio.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Criar diretório web root
+        run: |
+          mkdir -p /var/www/vmo-portfolio/projetos/docs
+
+      - name: Copiar site do portfolio
+        run: |
+          rsync -av --delete \
+            squads/vmo-web-publisher/output/site/ \
+            /var/www/vmo-portfolio/
+
+      - name: Configurar permissões
+        run: |
+          chown -R www-data:www-data /var/www/vmo-portfolio
+          chmod -R 755 /var/www/vmo-portfolio
+
+      - name: Instalar/atualizar nginx config
+        run: |
+          cp infra/nginx-vmo-portfolio.conf /etc/nginx/sites-available/vmo-portfolio
+          ln -sf /etc/nginx/sites-available/vmo-portfolio /etc/nginx/sites-enabled/vmo-portfolio
+          nginx -t
+
+      - name: Recarregar nginx
+        run: |
+          systemctl reload nginx
+
+      - name: Verificar deploy
+        run: |
+          sleep 2
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/index.html 2>/dev/null || echo "000")
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Portfolio acessível: http://silaratur.cloud"
+          else
+            echo "⚠️ Status HTTP: $STATUS — verificar logs"
+            nginx -t
+          fi
+
+      - name: Instalar SSL com Certbot (se não configurado)
+        run: |
+          if [ ! -f /etc/letsencrypt/live/silaratur.cloud/fullchain.pem ]; then
+            apt-get install -y certbot python3-certbot-nginx 2>/dev/null || true
+            certbot --nginx \
+              -d silaratur.cloud \
+              -d www.silaratur.cloud \
+              --non-interactive \
+              --agree-tos \
+              --email silaratur@gmail.com \
+              --redirect \
+              2>/dev/null && echo "✅ SSL configurado" || echo "⚠️ SSL: verificar manualmente"
+          else
+            echo "✅ SSL já configurado"
+          fi

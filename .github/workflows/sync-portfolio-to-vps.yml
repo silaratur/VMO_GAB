@@ -1,0 +1,32 @@
+name: Sync Portfolio to VPS
+
+# Dispara sempre que o Lucas Layout atualiza o site (push no master com mudanças no output)
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'squads/vmo-web-publisher/output/site/**'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync site para web root
+        run: |
+          mkdir -p /var/www/vmo-portfolio
+          rsync -av --delete \
+            squads/vmo-web-publisher/output/site/ \
+            /var/www/vmo-portfolio/
+          chown -R www-data:www-data /var/www/vmo-portfolio
+          echo "✅ Portfolio sincronizado: $(date)"
+
+      - name: Verificar
+        run: |
+          TOTAL=$(find /var/www/vmo-portfolio -name "*.html" | wc -l)
+          echo "📄 $TOTAL páginas publicadas em http://silaratur.cloud"
