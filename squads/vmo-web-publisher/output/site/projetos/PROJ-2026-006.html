@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJ-2026-006 — Plataforma de Gestão de Ideias e Inovação</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg2: #1e293b;
+  --border: #334155;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --orange: #f97316;
+  --gray: #64748b;
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --glow-blue: 0 0 16px #3b82f655;
+  --glow-green: 0 0 12px #22c55e55;
+  --glow-yellow: 0 0 12px #eab30855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 28px; background: var(--bg2); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.brand-logo { font-size: 1.15rem; font-weight: 700; color: var(--blue); letter-spacing: 1px; }
+.brand-logo span { color: var(--green); }
+.brand-sub { font-size: 0.65rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 20px; }
+.back-link {
+  font-size: 0.72rem; color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border: 1px solid #3b82f640; border-radius: 6px; transition: background .2s;
+}
+.back-link:hover { background: #3b82f614; }
+.updated-at { font-size: 0.65rem; color: var(--text2); }
+
+.main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+
+.project-hero {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+  padding: 28px; margin-bottom: 28px; border-left: 5px solid var(--yellow);
+}
+.project-meta { font-size: 0.62rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.project-title { font-size: 1.55rem; font-weight: 800; margin-bottom: 12px; line-height: 1.3; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tag {
+  font-size: 0.62rem; padding: 3px 11px; border-radius: 99px; border: 1px solid; font-weight: 600;
+}
+.tag.atencao { border-color: var(--yellow); color: var(--yellow); }
+.tag.blue { border-color: var(--blue); color: var(--blue); }
+.tag.gray { border-color: var(--gray); color: var(--text2); }
+.tag.green { border-color: var(--green); color: var(--green); }
+.tag.red { border-color: var(--red); color: var(--red); }
+
+.hero-status-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 16px; border-radius: 99px; font-size: 0.8rem; font-weight: 700;
+}
+.status-badge.atencao { background: #eab30814; color: var(--yellow); border: 1px solid #eab30840; }
+.status-badge.verde { background: #22c55e14; color: var(--green); border: 1px solid #22c55e40; }
+.status-badge.critico { background: #ef444414; color: var(--red); border: 1px solid #ef444440; }
+
+.section-title {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Semáforo */
+.semaforo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 28px; }
+@media(max-width:900px) { .semaforo-grid { grid-template-columns: repeat(3,1fr); } }
+@media(max-width:540px) { .semaforo-grid { grid-template-columns: repeat(2,1fr); } }
+
+.sema-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 12px; text-align: center;
+}
+.sema-icon { font-size: 1.4rem; margin-bottom: 8px; }
+.sema-dim { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.sema-status { font-size: 0.75rem; font-weight: 700; }
+.sema-status.atencao { color: var(--yellow); }
+.sema-status.verde { color: var(--green); }
+.sema-status.critico { color: var(--red); }
+.sema-status.na { color: var(--gray); }
+.sema-detail { font-size: 0.6rem; color: var(--text2); margin-top: 4px; line-height: 1.4; }
+
+/* KPIs */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
+@media(max-width:900px) { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:480px) { .kpi-grid { grid-template-columns: 1fr; } }
+
+.kpi-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 14px; text-align: center; position: relative; overflow: hidden;
+}
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.kpi-card.blue::before { background: var(--blue); }
+.kpi-card.green::before { background: var(--green); }
+.kpi-card.yellow::before { background: var(--yellow); }
+.kpi-card.gray::before { background: var(--gray); }
+.kpi-value { font-size: 1.9rem; font-weight: 800; line-height: 1; margin-bottom: 5px; }
+.kpi-value.blue { color: var(--blue); text-shadow: var(--glow-blue); }
+.kpi-value.green { color: var(--green); text-shadow: var(--glow-green); }
+.kpi-value.yellow { color: var(--yellow); text-shadow: var(--glow-yellow); }
+.kpi-value.sm { font-size: 1.2rem; }
+.kpi-label { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.kpi-sub { font-size: 0.58rem; color: var(--text2); }
+
+/* Cronograma */
+.timeline { margin-bottom: 28px; }
+.milestone-row {
+  display: flex; align-items: flex-start; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.milestone-row:last-child { border-bottom: none; }
+.milestone-dot {
+  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+}
+.milestone-dot.future { background: #334155; color: var(--text2); }
+.milestone-dot.critical { background: #eab30814; border: 2px solid var(--yellow); color: var(--yellow); }
+.milestone-label { font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; }
+.milestone-date { font-size: 0.65rem; color: var(--blue); font-weight: 600; margin-bottom: 3px; }
+.milestone-desc { font-size: 0.65rem; color: var(--text2); line-height: 1.4; }
+
+/* Riscos */
+.risks-section { margin-bottom: 28px; }
+.risk-summary-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px;
+}
+@media(max-width:600px) { .risk-summary-row { grid-template-columns: repeat(2,1fr); } }
+
+.risk-count-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px; text-align: center;
+}
+.risk-count { font-size: 1.8rem; font-weight: 800; }
+.risk-count.critico { color: var(--red); }
+.risk-count.alto { color: var(--orange); }
+.risk-count.medio { color: var(--yellow); }
+.risk-count.baixo { color: var(--green); }
+.risk-level { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+.risk-table { width: 100%; border-collapse: collapse; }
+.risk-table th { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.risk-table td { font-size: 0.75rem; padding: 10px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+.risk-table tr:last-child td { border-bottom: none; }
+.risk-table tr:hover td { background: #1e293b; }
+.risk-id { font-size: 0.6rem; color: var(--text2); }
+.risk-pill { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+.risk-pill.critico { background: #ef444418; color: var(--red); }
+.risk-pill.alto { background: #f9731618; color: var(--orange); }
+.risk-pill.medio { background: #eab30818; color: var(--yellow); }
+.risk-pill.baixo { background: #22c55e18; color: var(--green); }
+
+/* Condições Bloqueantes */
+.cb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
+@media(max-width:640px) { .cb-grid { grid-template-columns: 1fr; } }
+.cb-card {
+  background: var(--bg2); border: 1px solid #ef444430; border-radius: 10px; padding: 16px;
+  border-left: 4px solid var(--red);
+}
+.cb-id { font-size: 0.6rem; color: var(--red); letter-spacing: 1px; margin-bottom: 4px; font-weight: 700; }
+.cb-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+.cb-meta { font-size: 0.65rem; color: var(--text2); display: flex; flex-direction: column; gap: 3px; }
+.cb-deadline { color: var(--yellow); font-weight: 600; }
+.cb-owner { color: var(--blue); }
+
+/* Agentes */
+.agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 28px; }
+@media(max-width:600px) { .agent-grid { grid-template-columns: repeat(2,1fr); } }
+.agent-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+}
+.agent-icon { font-size: 1.5rem; flex-shrink: 0; }
+.agent-name { font-size: 0.8rem; font-weight: 600; }
+.agent-role { font-size: 0.62rem; color: var(--text2); margin-top: 2px; }
+.agent-status-tag {
+  display: inline-block; margin-top: 6px;
+  font-size: 0.6rem; padding: 2px 8px; border-radius: 99px; font-weight: 600;
+}
+.done { background: #22c55e14; color: var(--green); }
+
+/* Próximos Passos */
+.next-steps { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 28px; }
+.step-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.step-item:last-child { border-bottom: none; }
+.step-num { background: #3b82f620; color: var(--blue); border: 1px solid #3b82f640; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.step-action { font-size: 0.82rem; font-weight: 600; margin-bottom: 3px; }
+.step-meta { font-size: 0.62rem; color: var(--text2); display: flex; gap: 12px; flex-wrap: wrap; }
+.step-owner { color: var(--blue); }
+.step-date { color: var(--yellow); font-weight: 600; }
+
+.footer {
+  text-align: center; padding: 24px; border-top: 1px solid var(--border);
+  font-size: 0.65rem; color: var(--text2); margin-top: 8px;
+}
+.footer strong { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <div class="brand-logo">VMO<span>GAB</span></div>
+    <div class="brand-sub">Value Management Office — Grupo Águia Branca</div>
+  </div>
+  <div class="header-right">
+    <a href="../index.html" class="back-link">← Todos os Projetos</a>
+    <div class="updated-at">Atualizado em: 17/05/2026 às 18:30</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Hero -->
+  <div class="project-hero">
+    <div class="project-meta">PROJ-2026-006 · DEM-2026-006 · Plataforma Web · Grupo Águia Branca — Área de Inovação</div>
+    <div class="project-title">Plataforma Própria de Gestão de Ideias e Inovação</div>
+    <div class="hero-tags">
+      <span class="tag atencao">🟡 Atenção</span>
+      <span class="tag blue">Instrução Concluída</span>
+      <span class="tag gray">GP: Marcelo Silveira</span>
+      <span class="tag gray">Solicitante: Jadson</span>
+      <span class="tag green">Qualificação 70/100</span>
+      <span class="tag red">2 Condições Bloqueantes</span>
+    </div>
+    <div class="hero-status-row">
+      <span class="status-badge atencao">🟡 ATENÇÃO — Aguarda Resolução de CBs</span>
+      <span style="font-size:0.72rem;color:var(--text2)">Pipeline concluído em 16/05/2026 · Score 92,25/100 · APROVADO</span>
+    </div>
+  </div>
+
+  <!-- Semáforo -->
+  <div class="section-title">Semáforo de Saúde do Projeto</div>
+  <div class="semaforo-grid">
+    <div class="sema-card">
+      <div class="sema-icon">📅</div>
+      <div class="sema-dim">Cronograma</div>
+      <div class="sema-status atencao">🟡 ATENÇÃO</div>
+      <div class="sema-detail">Kick-off em risco se CB-01 não resolvida até 13/06. Go-live 07/12/2026 ainda alcançável.</div>
+    </div>
+    <div class="sema-card">
+      <div class="sema-icon">💰</div>
+      <div class="sema-dim">Custo</div>
+      <div class="sema-status atencao">🟡 ATENÇÃO</div>
+      <div class="sema-detail">BAC R$100k estimado. Orçamento não aprovado formalmente (CB-02 aberta).</div>
+    </div>
+    <div class="sema-card">
+      <div class="sema-icon">📋</div>
+      <div class="sema-dim">Escopo</div>
+      <div class="sema-status verde">🟢 VERDE</div>
+      <div class="sema-detail">31 RF + 13 RNF documentados. 6 módulos com exclusões explícitas.</div>
+    </div>
+    <div class="sema-card">
+      <div class="sema-icon">⚠️</div>
+      <div class="sema-dim">Riscos</div>
+      <div class="sema-status critico">🔴 CRÍTICO</div>
+      <div class="sema-detail">4 riscos CRÍTICOS abertos. VME R$260k. RSK-001 (sponsor) é a prioridade máxima.</div>
+    </div>
+    <div class="sema-card">
+      <div class="sema-icon">😊</div>
+      <div class="sema-dim">Satisfação</div>
+      <div class="sema-status na">⚪ N/A</div>
+      <div class="sema-detail">Fase pré-execução. Pesquisa PSAT-001 emitida. Prazo de resposta: 30/05/2026.</div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="section-title">Parâmetros do Projeto</div>
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-label">BAC (Orçamento)</div>
+      <div class="kpi-value blue sm">R$ 100k</div>
+      <div class="kpi-sub">Aprovação formal pendente (CB-02)</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Go-Live Planejado</div>
+      <div class="kpi-value green sm">07/12</div>
+      <div class="kpi-sub">2026 · Prazo máx.: 31/12/2026</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Economia Anual</div>
+      <div class="kpi-value yellow sm">R$ 85k</div>
+      <div class="kpi-sub">Meta KPI-R-03 · Payback ~14 meses</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Módulos no Escopo</div>
+      <div class="kpi-value yellow">6</div>
+      <div class="kpi-sub">M1 a M6 · 28 semanas de dev</div>
+    </div>
+    <div class="kpi-card gray">
+      <div class="kpi-label">Meta CPI</div>
+      <div class="kpi-value" style="color:var(--gray)">≥1,00</div>
+      <div class="kpi-sub">Verde ≥ 0,95 · Vermelho &lt; 0,85</div>
+    </div>
+    <div class="kpi-card gray">
+      <div class="kpi-label">Meta SPI</div>
+      <div class="kpi-value" style="color:var(--gray)">≥1,00</div>
+      <div class="kpi-sub">Verde ≥ 0,95 · Vermelho &lt; 0,85</div>
+    </div>
+    <div class="kpi-card gray">
+      <div class="kpi-label">Meta Adoção</div>
+      <div class="kpi-value" style="color:var(--gray)">80%</div>
+      <div class="kpi-sub">KPI-R-04 · D+60 pós go-live</div>
+    </div>
+    <div class="kpi-card gray">
+      <div class="kpi-label">Meta Satisfação</div>
+      <div class="kpi-value" style="color:var(--gray)">7,5</div>
+      <div class="kpi-sub">KPI-R-05 · Pesquisa D+30 pós go-live</div>
+    </div>
+  </div>
+
+  <!-- Condições Bloqueantes -->
+  <div class="section-title">Condições Bloqueantes — Ação Imediata Requerida</div>
+  <div class="cb-grid">
+    <div class="cb-card">
+      <div class="cb-id">CB-01 — CRÍTICO</div>
+      <div class="cb-title">Sponsor Executivo (Diretor+) não identificado</div>
+      <div class="cb-meta">
+        <span>Sem sponsor não há autorização de orçamento nem representação executiva</span>
+        <span class="cb-owner">Responsável: Jadson</span>
+        <span class="cb-deadline">Prazo limite: 13/06/2026</span>
+        <span>Risco associado: RSK-001 (P×I = 20 — CRÍTICO)</span>
+      </div>
+    </div>
+    <div class="cb-card">
+      <div class="cb-id">CB-02 — ALTO</div>
+      <div class="cb-title">Orçamento R$ 100.000 não aprovado formalmente</div>
+      <div class="cb-meta">
+        <span>Depende de CB-01. Sem aprovação não é possível contratar ou alocar recursos</span>
+        <span class="cb-owner">Responsável: Sponsor a designar</span>
+        <span class="cb-deadline">Prazo limite: 20/06/2026</span>
+        <span>Risco associado: RSK-002 (P×I = 16 — CRÍTICO)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cronograma / Marcos -->
+  <div class="section-title">Cronograma — Marcos Principais</div>
+  <div class="timeline" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:6px 20px;margin-bottom:28px;">
+    <div class="milestone-row">
+      <div class="milestone-dot critical">M0</div>
+      <div>
+        <div class="milestone-label">Kick-off Formal</div>
+        <div class="milestone-date">24/06/2026</div>
+        <div class="milestone-desc">Condicionado à resolução de CB-01 + CB-02. Ata assinada por GP e sponsor.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future">M1</div>
+      <div>
+        <div class="milestone-label">Especificação e Protótipo Aprovados</div>
+        <div class="milestone-date">31/07/2026</div>
+        <div class="milestone-desc">ERF v2 com sign-off + protótipo validado por ≥ 3 usuários-chave.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future">M2</div>
+      <div>
+        <div class="milestone-label">Módulos M1 e M2 Desenvolvidos e Testados</div>
+        <div class="milestone-date">04/09/2026</div>
+        <div class="milestone-desc">Cadastro de Ideias + Campanhas. Cobertura de testes ≥ 80%. Nenhum bug crítico.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future">M3</div>
+      <div>
+        <div class="milestone-label">Módulos M3 e M4 Desenvolvidos e Testados</div>
+        <div class="milestone-date">09/10/2026</div>
+        <div class="milestone-desc">Fluxo de Aprovação + Mini Gestão. Motor de workflow validado.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future">M4</div>
+      <div>
+        <div class="milestone-label">Módulos M5 e M6 Desenvolvidos e Testados</div>
+        <div class="milestone-date">13/11/2026</div>
+        <div class="milestone-desc">Mensuração de Ganhos + Dashboard. Dashboards por perfil funcionais.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future">M5</div>
+      <div>
+        <div class="milestone-label">Testes Integrados e UAT Concluídos</div>
+        <div class="milestone-date">20/11/2026</div>
+        <div class="milestone-desc">Sign-off UAT formal. Zero bugs críticos e severos abertos.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future">M6</div>
+      <div>
+        <div class="milestone-label">Buffer 15% — Absorção de Riscos</div>
+        <div class="milestone-date">23/11 → 04/12/2026</div>
+        <div class="milestone-desc">3,5 semanas de buffer centralizado. Nenhum escopo novo admitido.</div>
+      </div>
+    </div>
+    <div class="milestone-row">
+      <div class="milestone-dot future" style="background:#22c55e20;border:2px solid var(--green);color:var(--green)">M8</div>
+      <div>
+        <div class="milestone-label" style="color:var(--green)">GO-LIVE em Produção 🚀</div>
+        <div class="milestone-date">07/12/2026</div>
+        <div class="milestone-desc">Todos os módulos M1-M6 ativos. Smoke test aprovado. Prazo máximo: 31/12/2026.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Riscos -->
+  <div class="section-title">Registro de Riscos</div>
+  <div class="risk-summary-row">
+    <div class="risk-count-card">
+      <div class="risk-count critico">4</div>
+      <div class="risk-level">Críticos</div>
+    </div>
+    <div class="risk-count-card">
+      <div class="risk-count alto">5</div>
+      <div class="risk-level">Altos</div>
+    </div>
+    <div class="risk-count-card">
+      <div class="risk-count medio">2</div>
+      <div class="risk-level">Médios</div>
+    </div>
+    <div class="risk-count-card">
+      <div class="risk-count baixo">1</div>
+      <div class="risk-level">Baixo</div>
+    </div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px;">
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Risco</th>
+          <th>Nível</th>
+          <th>P×I</th>
+          <th>VME</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="risk-id">RSK-001</td>
+          <td>Sponsor de Diretor+ não identificado — bloqueia autorização formal do TAP</td>
+          <td><span class="risk-pill critico">CRÍTICO</span></td>
+          <td>20</td>
+          <td>R$ 80k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-002</td>
+          <td>Orçamento R$100k insuficiente para o escopo real de 6 módulos</td>
+          <td><span class="risk-pill critico">CRÍTICO</span></td>
+          <td>16</td>
+          <td>R$ 24k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-003</td>
+          <td>Atraso acumulado no caminho crítico — ameaça go-live de 07/12 e Prêmio Inovação jan/2027</td>
+          <td><span class="risk-pill critico">CRÍTICO</span></td>
+          <td>20</td>
+          <td>R$ 68k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-004</td>
+          <td>Complexidade do M3 (Motor de Aprovação) subestimada — risco de 2-4 semanas extras</td>
+          <td><span class="risk-pill critico">CRÍTICO</span></td>
+          <td>16</td>
+          <td>R$ 16k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-005</td>
+          <td>Modelo de desenvolvimento não definido (interno/externo/misto)</td>
+          <td><span class="risk-pill alto">ALTO</span></td>
+          <td>12</td>
+          <td>R$ 15k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-006</td>
+          <td>Scope creep — requisitos adicionais sem aprovação formal</td>
+          <td><span class="risk-pill alto">ALTO</span></td>
+          <td>12</td>
+          <td>R$ 12k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-007</td>
+          <td>Dados históricos da plataforma SaaS não exportáveis no formato esperado</td>
+          <td><span class="risk-pill alto">ALTO</span></td>
+          <td>9</td>
+          <td>R$ 9k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-008</td>
+          <td>Baixa adoção pelos gestores de área no fluxo de aprovação pós go-live</td>
+          <td><span class="risk-pill alto">ALTO</span></td>
+          <td>12</td>
+          <td>R$ 24k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-009</td>
+          <td>Retrabalho intenso no UAT — não-conformidades acima da capacidade de correção</td>
+          <td><span class="risk-pill alto">ALTO</span></td>
+          <td>12</td>
+          <td>R$ 12k</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-010</td>
+          <td>Processo de inovação do grupo não documentado — retrabalho em M3 e M4</td>
+          <td><span class="risk-pill alto">ALTO</span></td>
+          <td>9</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-011</td>
+          <td>Falha de conformidade com LGPD nos dados de colaboradores</td>
+          <td><span class="risk-pill medio">MÉDIO</span></td>
+          <td>8</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td class="risk-id">RSK-012</td>
+          <td>Fornecedor SaaS interrompe serviço antes do go-live da plataforma própria</td>
+          <td><span class="risk-pill medio">MÉDIO</span></td>
+          <td>8</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="background:#ef444410;border:1px solid #ef444430;border-radius:8px;padding:10px 14px;font-size:0.7rem;color:var(--text2);margin-bottom:28px;">
+    ⚠️ <strong style="color:var(--red)">VME Total (CRÍTICOS + ALTOS): R$ 260.000</strong> — Reserva de contingência aprovada: R$ 17.000 · Reserva adicional recomendada: +R$ 10.000 = R$ 27.000 total
+  </div>
+
+  <!-- Agentes -->
+  <div class="section-title">Agentes VMO Autônomo — Pipeline Concluído · Score 92,25/100 · APROVADO</div>
+  <div class="agent-grid">
+    <div class="agent-card">
+      <div class="agent-icon">📥</div>
+      <div><div class="agent-name">Iara Inbound</div><div class="agent-role">Coleta de Demanda</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">🔍</div>
+      <div><div class="agent-name">Felipe Filtro</div><div class="agent-role">Qualificação · 67/100 · Aprovado c/ Condições</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">📋</div>
+      <div><div class="agent-name">Diana Documento</div><div class="agent-role">TAP · PM Canvas · Plano Geral</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">⚙️</div>
+      <div><div class="agent-name">Rafael Requisito</div><div class="agent-role">ERF · 31 RF + 13 RNF</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">📅</div>
+      <div><div class="agent-name">Carlos Cronograma</div><div class="agent-role">WBS · 55 pacotes · 9 marcos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">⚠️</div>
+      <div><div class="agent-name">Pedro Perigo</div><div class="agent-role">Plano de Riscos · 12 riscos · VME R$260k</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">📊</div>
+      <div><div class="agent-name">Marcela Métrica</div><div class="agent-role">KPIs · EVM + 5 Key Results</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">📤</div>
+      <div><div class="agent-name">Fábio Fornecedor</div><div class="agent-role">Mini-RFP · Work Request</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">📝</div>
+      <div><div class="agent-name">Sara Status</div><div class="agent-role">Status Report SR-001 · PSAT-001</div><div class="agent-status-tag done">✓ Concluído</div></div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon">✅</div>
+      <div><div class="agent-name">Vera Veredito</div><div class="agent-role">Revisão de Qualidade · APROVADO</div><div class="agent-status-tag done">✓ Aprovado 92,25/100</div></div>
+    </div>
+  </div>
+
+  <!-- Próximos Passos -->
+  <div class="section-title">Próximos Passos</div>
+  <div class="next-steps">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-action">Identificar e formalizar Sponsor (Diretor+) — resolução de CB-01</div>
+        <div class="step-meta">
+          <span class="step-owner">Responsável: Jadson</span>
+          <span class="step-date">Prazo: 13/06/2026</span>
+        </div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-action">Submeter BAC R$ 100.000 para aprovação formal — resolução de CB-02</div>
+        <div class="step-meta">
+          <span class="step-owner">Responsável: Sponsor designado</span>
+          <span class="step-date">Prazo: 20/06/2026</span>
+          <span>Depende de CB-01</span>
+        </div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-action">Realizar reunião de Kick-off com sponsor, equipe VMO e stakeholders</div>
+        <div class="step-meta">
+          <span class="step-owner">Responsável: Jadson + Sponsor</span>
+          <span class="step-date">Prazo: 27/06/2026</span>
+          <span>Depende de CB-01 + CB-02</span>
+        </div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-action">Coletar respostas da Pesquisa de Satisfação PSAT-001 — Fase de Iniciação</div>
+        <div class="step-meta">
+          <span class="step-owner">Responsável: Jadson</span>
+          <span class="step-date">Prazo: 30/05/2026</span>
+        </div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-action">Emitir SR-002 após resolução das CBs ou em 14/06/2026</div>
+        <div class="step-meta">
+          <span class="step-owner">Responsável: Sara Status / VMO</span>
+          <span class="step-date">Prazo: 14/06/2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Opensquad · VMO Consultoria<br>
+  Atualizado em: 17/05/2026 às 18:30 · PROJ-2026-006 · Plataforma de Gestão de Ideias e Inovação
+</footer>
+
+</body>
+</html>
