@@ -5,7 +5,7 @@ inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base
 outputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md
 ---
 
-# Step 08: Plano de Riscos
+# Step 09: Plano de Riscos
 
 ## Context Loading
 

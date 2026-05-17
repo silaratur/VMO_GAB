@@ -5,7 +5,7 @@ inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base
 outputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md
 ---
 
-# Step 07: Criar Cronograma
+# Step 08: Criar Cronograma
 
 ## Context Loading
 

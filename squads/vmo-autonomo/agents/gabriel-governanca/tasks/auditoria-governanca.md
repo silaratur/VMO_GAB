@@ -10,7 +10,7 @@ input:
   - cronograma: "projects/{project}/03-planejamento/cronograma.md"
   - plano_riscos: "projects/{project}/03-planejamento/plano-riscos.md"
   - kpis: "projects/{project}/03-planejamento/kpis.md"
-  - work_request: "projects/{project}/03-planejamento/work-request.md"
+  - work_request: "projects/{project}/02-iniciacao/work-request.md"
   - status_report: "projects/{project}/04-monitoramento/status-report-*.md (mais recente)"
   - revisao_vera: "projects/{project}/05-encerramento/revisao-final.md"
 output:
@@ -65,7 +65,7 @@ Verifica se todos os entregáveis obrigatórios existem e têm conteúdo:
 - `03-planejamento/cronograma.md` — existe com WBS + marcos + caminho crítico?
 - `03-planejamento/plano-riscos.md` — existe com mínimo 5 riscos e reserva calculada?
 - `03-planejamento/kpis.md` — existe com EVM (CPI, SPI, EAC, VAC)?
-- `03-planejamento/work-request.md` — existe e está completo?
+- `02-iniciacao/work-request.md` — existe e está completo?
 - `04-monitoramento/status-report-*.md` — existe ao menos um?
 - `05-encerramento/revisao-final.md` — existe com score ≥ 85?
 

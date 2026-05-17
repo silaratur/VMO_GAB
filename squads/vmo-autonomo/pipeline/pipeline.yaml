@@ -47,31 +47,31 @@ steps:
     execution: subagent
 
   - step: 7
+    name: "Criar Work Request (Mini-RFP)"
+    file: steps/step-07-criar-work-request.md
+    type: agent
+    agent: fabio-fornecedor
+    execution: subagent
+
+  - step: 8
     name: "Criar Cronograma"
-    file: steps/step-07-criar-cronograma.md
+    file: steps/step-08-criar-cronograma.md
     type: agent
     agent: carlos-cronograma
     execution: inline
 
-  - step: 8
+  - step: 9
     name: "Plano de Riscos"
-    file: steps/step-08-plano-riscos.md
+    file: steps/step-09-plano-riscos.md
     type: agent
     agent: pedro-perigo
     execution: inline
 
-  - step: 9
+  - step: 10
     name: "Framework de KPIs"
-    file: steps/step-09-framework-kpis.md
+    file: steps/step-10-framework-kpis.md
     type: agent
     agent: marcela-metrica
-    execution: subagent
-
-  - step: 10
-    name: "Criar Work Request"
-    file: steps/step-10-criar-work-request.md
-    type: agent
-    agent: fabio-fornecedor
     execution: subagent
 
   - step: 11

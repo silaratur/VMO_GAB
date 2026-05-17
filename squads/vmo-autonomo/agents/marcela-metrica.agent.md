@@ -79,5 +79,5 @@ Marcela é objetiva e visual. Seus outputs combinam tabelas de métricas com an�
 
 - **Reads from**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md`; `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md`; `squads/vmo-autonomo/pipeline/data/quality-criteria.md`
 - **Writes to**: `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md`
-- **Triggers**: Step 9 do pipeline (subagent)
+- **Triggers**: Step 10 do pipeline (subagent)
 - **Depends on**: TAP (com critérios de sucesso), Cronograma (com baseline de prazo) e Plano Geral (com baseline de custo)

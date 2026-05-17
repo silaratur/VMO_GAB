@@ -6,7 +6,7 @@ outputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md
 model_tier: fast
 ---
 
-# Step 09: Framework de KPIs
+# Step 10: Framework de KPIs
 
 ## Context Loading
 

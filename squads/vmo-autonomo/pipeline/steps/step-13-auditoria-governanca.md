@@ -17,7 +17,7 @@ Load these files before executing:
 - `squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md` — baseline de prazo
 - `squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md` — riscos e reserva
 - `squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md` — BAC e KPIs (consistência com TAP)
-- `squads/vmo-autonomo/projects/{project}/03-planejamento/work-request.md` — WR (se existir)
+- `squads/vmo-autonomo/projects/{project}/02-iniciacao/work-request.md` — Mini-RFP emitido para fornecedores
 - `squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md` — último status report
 - `squads/vmo-autonomo/projects/{project}/05-encerramento/revisao-final.md` — veredicto da Vera
 
