@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 18mm 22mm 18mm;
+    @bottom-center {
+      content: "PROJ-2026-004 — Plataforma Interna de Gestão de Ideias de Inovação  |  Página " counter(page) " de " counter(pages);
+      font-size: 8pt;
+      color: #888;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── CABEÇALHO ── */
+  .header {
+    border-bottom: 3px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header-left h1 {
+    font-size: 17pt;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 0 0 2px 0;
+    letter-spacing: -0.3px;
+  }
+  .header-left h2 {
+    font-size: 11pt;
+    font-weight: 400;
+    color: #444;
+    margin: 0;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 8pt;
+    color: #666;
+    line-height: 1.6;
+  }
+  .badge-wr {
+    display: inline-block;
+    background: #1a3c5e;
+    color: white;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── ALERTA SPONSOR ── */
+  .alert-sponsor {
+    background: #fff3cd;
+    border-left: 4px solid #f0ad4e;
+    padding: 8px 12px;
+    margin-bottom: 18px;
+    border-radius: 0 4px 4px 0;
+    font-size: 8.5pt;
+  }
+  .alert-sponsor strong { color: #856404; }
+
+  /* ── SEÇÕES ── */
+  h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 1.5px solid #d0dae6;
+    padding-bottom: 4px;
+    margin: 22px 0 10px 0;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #2c5282;
+    margin: 14px 0 6px 0;
+    page-break-after: avoid;
+  }
+
+  /* ── TABELAS ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+  }
+  th {
+    background: #1a3c5e;
+    color: white;
+    padding: 6px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 8pt;
+  }
+  td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f7f9fc; }
+  tr:last-child td { border-bottom: 2px solid #d0dae6; }
+
+  /* Tabela de identificação */
+  .id-table td:first-child {
+    font-weight: 600;
+    color: #2d3748;
+    width: 38%;
+    background: #f0f4f8;
+  }
+
+  /* Checklist groups */
+  .checklist-table th { background: #2c5282; }
+  .checklist-table td:first-child { width: 5%; text-align: center; font-weight: 700; color: #2c5282; }
+  .checklist-table td:nth-child(2) { width: 55%; }
+  .checklist-table td:nth-child(3),
+  .checklist-table td:nth-child(4),
+  .checklist-table td:nth-child(5) { width: 8%; text-align: center; }
+
+  .group-header td {
+    background: #ebf0f7 !important;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 8.5pt;
+    padding: 5px 8px;
+  }
+
+  /* Pagamentos */
+  .payment-table tr:last-child td {
+    font-weight: 700;
+    background: #ebf0f7;
+    border-top: 2px solid #1a3c5e;
+  }
+
+  /* Cronograma */
+  .deadline-cell { color: #c53030; font-weight: 700; }
+
+  /* Listas */
+  ul, ol {
+    margin: 6px 0 10px 0;
+    padding-left: 18px;
+  }
+  li { margin-bottom: 3px; }
+
+  p { margin: 0 0 8px 0; }
+
+  .legenda {
+    font-size: 8pt;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  /* ── RODAPÉ DO DOCUMENTO ── */
+  .doc-footer {
+    margin-top: 28px;
+    padding-top: 10px;
+    border-top: 1.5px solid #d0dae6;
+    font-size: 8pt;
+    color: #666;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Quebra de página */
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<!-- CABEÇALHO -->
+<div class="header">
+  <div class="header-left">
+    <div class="badge-wr">WORK REQUEST — MINI-RFP</div>
+    <h1>Plataforma Interna de Gestão de Ideias de Inovação</h1>
+    <h2>Grupo Águia Branca — PROJ-2026-004</h2>
+  </div>
+  <div class="header-right">
+    <strong>VMO Consultoria</strong><br>
+    Elaborado por: Fábio Fornecedor<br>
+    Versão: 1.0<br>
+    Emissão: 2026-05-18<br>
+    Validade: 2026-07-17
+  </div>
+</div>
+
+<!-- ALERTA SPONSOR -->
+<div class="alert-sponsor">
+  <strong>⚠ Condição Bloqueante CB-01:</strong> O sponsor executivo do projeto consta como "A DEFINIR" no TAP. A assinatura contratual com o fornecedor selecionado está condicionada à identificação formal de um Diretor ou superior como sponsor até <strong>13/06/2026</strong>. Ver Premissa P08 na Seção 5.
+</div>
+
+<!-- 1. IDENTIFICAÇÃO -->
+<h3>1. Identificação do Projeto</h3>
+<table class="id-table">
+  <tr><td>Código do Projeto</td><td>PROJ-2026-004</td></tr>
+  <tr><td>Nome do Projeto</td><td>Plataforma Interna de Gestão de Ideias de Inovação</td></tr>
+  <tr><td>Cliente</td><td>Grupo Águia Branca (holding + VixPar + VAB + divisões)</td></tr>
+  <tr><td>Solicitante</td><td>Jadson — Área de Inovação, Grupo Águia Branca</td></tr>
+  <tr><td>Sponsor</td><td><strong style="color:#c53030">A DEFINIR</strong> — condição bloqueante CB-01 (prazo: 13/06/2026)</td></tr>
+  <tr><td>Gestão do Projeto</td><td>VMO Consultoria</td></tr>
+  <tr><td>Tipo de Solução</td><td>Desenvolvimento web sob medida (plataforma proprietária)</td></tr>
+  <tr><td>Usuários Alvo</td><td>10.000+ colaboradores (holding, VixPar, VAB e demais divisões)</td></tr>
+  <tr><td>Prazo Limite de Entrega</td><td><strong>30/11/2026</strong></td></tr>
+  <tr><td>Orçamento Total</td><td><strong>R$ 90.000,00</strong></td></tr>
+  <tr><td>Validade da Proposta</td><td>60 dias a partir de 2026-05-18 (vence em 2026-07-17)</td></tr>
+</table>
+
+<!-- 2. CONTEXTO -->
+<h3>2. Contexto e Justificativa</h3>
+<p>O Grupo Águia Branca, conglomerado com atuação em transporte de passageiros, logística e demais divisões de negócio, possui uma base de mais de 10.000 colaboradores distribuídos entre a holding e suas empresas coligadas (VixPar, VAB e outras). A Área de Inovação do grupo, liderada pelo solicitante Jadson, identificou a necessidade de estruturar um canal formal e escalável para captura, avaliação e acompanhamento de ideias geradas pelos próprios colaboradores.</p>
+<p>Atualmente, o processo de gestão de ideias carece de uma plataforma proprietária que una: (a) o registro estruturado de oportunidades de melhoria, (b) o fluxo de aprovação hierárquico, (c) o acompanhamento de projetos derivados e (d) a mensuração dos ganhos efetivos obtidos. Soluções SaaS de mercado como Exago, Qmarkets e Brightidea custam entre R$ 50.000 e R$ 150.000 por ano em licenciamento, sem contar customizações, e não oferecem a flexibilidade de integração futura com os sistemas legados do grupo nem o controle total sobre os dados corporativos.</p>
+<p>A construção de uma plataforma proprietária representa um investimento de R$ 90.000 com retorno sobre investimento potencial já no primeiro ano, tanto pela economia em licenças quanto pela geração de valor a partir das ideias implementadas. O prazo de 30/11/2026 está alinhado ao ciclo de planejamento estratégico do grupo para 2027, permitindo que a plataforma esteja operacional antes do início do próximo exercício.</p>
+
+<!-- 3. OBJETIVO -->
+<h3>3. Objetivo da Contratação</h3>
+<p>Contratar empresa especializada em desenvolvimento web para projetar, construir, testar, implantar e documentar uma <strong>Plataforma Interna de Gestão de Ideias de Inovação</strong> de uso exclusivo do Grupo Águia Branca, contemplando:</p>
+<ul>
+  <li>Portal web responsivo acessível a todos os 10.000+ colaboradores do grupo, sem limitação de licença por usuário;</li>
+  <li>Fluxo completo de ciclo de vida de uma ideia: cadastro → avaliação pelo gestor → aprovação → acompanhamento como projeto → registro de ganhos;</li>
+  <li>Módulo de campanhas e desafios de inovação administrável pelo time de inovação;</li>
+  <li>Controle de acesso granular por papéis (colaborador, gestor, time de inovação, administrador);</li>
+  <li>Entrega dentro do prazo de 30/11/2026 e do orçamento de R$ 90.000,00;</li>
+  <li>Propriedade intelectual total transferida ao Grupo Águia Branca ao final do contrato.</li>
+</ul>
+
+<!-- 4. ESCOPO -->
+<h3>4. Escopo da Contratação</h3>
+<h4>4.1 Escopo Incluso — Requisitos Funcionais Must Have</h4>
+<p>A proposta do fornecedor deve endereçar <strong>todos os 13 RFs</strong> abaixo sem exceção.</p>
+
+<table>
+  <tr><th style="width:8%">ID</th><th style="width:27%">Requisito Funcional</th><th>Descrição</th></tr>
+  <tr><td>RF001</td><td>Cadastro de usuário</td><td>Cadastro por convite (link tokenizado) ou auto-registro com validação de domínio de e-mail corporativo (@grupoaguiabranca.com.br e domínios afiliados).</td></tr>
+  <tr><td>RF002</td><td>Login e autenticação segura</td><td>Autenticação com credenciais locais (e-mail + senha) e suporte a MFA opcional. Sessões com timeout configurável.</td></tr>
+  <tr><td>RF003</td><td>Portal web responsivo de ideias</td><td>Interface acessível em desktop e mobile via browser. Formulário com: descrição do problema, ganhos esperados e benefícios. Possibilidade de anexar arquivos.</td></tr>
+  <tr><td>RF004</td><td>Módulo de campanhas e desafios</td><td>Painel administrativo para criar, publicar, encerrar e arquivar campanhas temáticas com prazo definido. Ideias associáveis a campanhas vigentes ou submetidas livremente.</td></tr>
+  <tr><td>RF005</td><td>Fluxo de aprovação de ideias</td><td>Workflow pelo gestor direto. Estados: Rascunho → Submetida → Em Análise → Aprovada / Reprovada / Devolvida. Notificações automáticas por e-mail.</td></tr>
+  <tr><td>RF006</td><td>Mini gestão de projetos</td><td>Para ideias aprovadas: projeto vinculado com responsável, equipe, prazo, marcos, % avanço e status. Visão Kanban ou lista.</td></tr>
+  <tr><td>RF007</td><td>Mensuração e registro de ganhos</td><td>Registro de ganhos obtidos após implementação: valor financeiro, tipo (custo, receita, qualidade, segurança), data de apuração e evidências.</td></tr>
+  <tr><td>RF008</td><td>Controle de acesso por papel</td><td>4 papéis: Colaborador, Gestor, Time de Inovação, Administrador — com permissões específicas por papel.</td></tr>
+  <tr><td>RF009</td><td>Capacidade 10.000+ usuários</td><td>Arquitetura para suportar todos os colaboradores sem custo adicional/usuário. Testes de carga validando ≥ 500 usuários simultâneos.</td></tr>
+  <tr><td>RF010</td><td>Testes de aceitação (UAT)</td><td>Ciclo formal de UAT — mínimo 2 semanas, conduzido pelo time de inovação. Critério de conclusão: zero defeitos críticos em aberto.</td></tr>
+  <tr><td>RF011</td><td>Documentação técnica e manuais</td><td>Documentação técnica (arquitetura, stack, modelo de dados, APIs, deploy) e manuais por papel, em português brasileiro.</td></tr>
+  <tr><td>RF012</td><td>Implantação em produção</td><td>Deploy na infraestrutura do TI do Grupo. Inclui scripts de migração e procedimento de rollback documentado.</td></tr>
+  <tr><td>RF013</td><td>Treinamento do time</td><td>Sessão presencial ou remota (mín. 4h) para time de inovação e administradores. Material de apoio (slides/vídeo) entregue ao cliente.</td></tr>
+</table>
+
+<h4>4.2 Escopo Excluso</h4>
+<table>
+  <tr><th style="width:8%">#</th><th style="width:35%">Item Excluído</th><th>Justificativa</th></tr>
+  <tr><td>EX01</td><td>Integração com sistemas legados (ERP, RH)</td><td>Reservado para fase futura. Incluir nesta fase aumentaria risco técnico e prazo.</td></tr>
+  <tr><td>EX02</td><td>Aplicativo mobile nativo (iOS/Android)</td><td>Interface web responsiva (RF003) atende mobile via browser. Apps nativos são escopo adicional.</td></tr>
+  <tr><td>EX03</td><td>Migração de dados históricos da plataforma atual</td><td>Responsabilidade do time de inovação do Grupo. Fornecedor não possui acesso a dados de terceiros.</td></tr>
+  <tr><td>EX04</td><td>Suporte técnico além da garantia de 90 dias</td><td>Manutenção evolutiva pós-garantia a ser negociada separadamente.</td></tr>
+  <tr><td>EX05</td><td>Hospedagem e infraestrutura de produção</td><td>Responsabilidade exclusiva da área de TI do Grupo Águia Branca.</td></tr>
+</table>
+
+<!-- 5. PREMISSAS -->
+<h3>5. Premissas e Responsabilidades do Grupo Águia Branca</h3>
+<table>
+  <tr><th style="width:5%">#</th><th style="width:60%">Premissa / Responsabilidade</th><th>Prazo</th></tr>
+  <tr><td>P01</td><td>Infraestrutura de hospedagem provisionada e acessível ao fornecedor (SO, BD, servidor de aplicação)</td><td>Até 31/10/2026</td></tr>
+  <tr><td>P02</td><td>Lista formal de domínios de e-mail corporativos das divisões, entregue no kick-off</td><td>Data do kick-off</td></tr>
+  <tr><td>P03</td><td>Pontos focais do time de inovação para UAT — disponibilidade mín. 20h/semana durante testes</td><td>2 sem. antes do UAT</td></tr>
+  <tr><td>P04</td><td>Ambiente de staging equivalente ao de produção, com acesso ao fornecedor</td><td>Início dos testes</td></tr>
+  <tr><td>P05</td><td>Treinamento de usuários finais nas divisões — responsabilidade das próprias divisões com material do fornecedor</td><td>Após go-live</td></tr>
+  <tr><td>P06</td><td>Representante técnico de TI designado para apoio na implantação em produção</td><td>Fase de implantação</td></tr>
+  <tr><td>P07</td><td>Disponibilidade de Jadson para aprovação de artefatos e decisões de produto — SLA de resposta de 3 dias úteis</td><td>Todo o projeto</td></tr>
+  <tr><td><strong>P08</strong></td><td><strong>Definição e comunicação formal do Sponsor ao GP VMO — condição para habilitação do TAP e início contratual</strong></td><td><strong style="color:#c53030">13/06/2026</strong></td></tr>
+</table>
+
+<!-- 6. CRONOGRAMA -->
+<h3>6. Cronograma Esperado</h3>
+<p>Início contratual base: <strong>2026-08-01</strong>. Prazo final: <strong class="deadline-cell">30/11/2026</strong>. Duração total: ~17 semanas.</p>
+<table>
+  <tr><th>Marco</th><th>Entregável Principal</th><th>Prazo Esperado</th><th>Duração</th></tr>
+  <tr><td>M0 — Kick-off</td><td>Plano de projeto aprovado; lista de domínios; staging</td><td>2026-08-08</td><td>1 sem.</td></tr>
+  <tr><td>M1 — Arquitetura e Design</td><td>Doc. de arquitetura + protótipos aprovados</td><td>2026-08-29</td><td>3 sem.</td></tr>
+  <tr><td>M2 — Autenticação e Usuários</td><td>RF001 + RF002 + RF008 funcionais</td><td>2026-09-19</td><td>3 sem.</td></tr>
+  <tr><td>M3 — Portal de Ideias e Campanhas</td><td>RF003 + RF004 funcionais</td><td>2026-10-10</td><td>3 sem.</td></tr>
+  <tr><td>M4 — Aprovação e Gestão de Projetos</td><td>RF005 + RF006 + RF007 funcionais + testes integração</td><td>2026-10-31</td><td>3 sem.</td></tr>
+  <tr><td>M5 — Testes de Carga e UAT</td><td>RF009 validado (≥500 usu. simultâneos); UAT concluído</td><td>2026-11-14</td><td>2 sem.</td></tr>
+  <tr><td>M6 — Implantação e Treinamento</td><td>RF011 + RF012 + RF013; plataforma em produção; go-live</td><td class="deadline-cell">2026-11-28</td><td>2 sem.</td></tr>
+  <tr><td>M7 — Aceite Final</td><td>Termo de Aceite assinado; código-fonte entregue; garantia inicia</td><td class="deadline-cell">2026-11-30</td><td>2 dias</td></tr>
+</table>
+
+<!-- 7. ENTREGÁVEIS -->
+<div class="page-break"></div>
+<h3>7. Entregáveis Obrigatórios</h3>
+<p>Critério de aceite <strong>binário</strong>: OK ou NOK (bloqueador de pagamento).</p>
+<table>
+  <tr><th style="width:6%">#</th><th style="width:40%">Entregável</th><th style="width:12%">Marco</th><th>Critério de Aceite</th></tr>
+  <tr><td>E01</td><td>Plano de Projeto (cronograma, RACI, plano de comunicação)</td><td>M0</td><td>Aprovado pelo GP VMO e solicitante via e-mail</td></tr>
+  <tr><td>E02</td><td>Documento de Arquitetura Técnica</td><td>M1</td><td>Aprovado pelo GP VMO e representante de TI</td></tr>
+  <tr><td>E03</td><td>Protótipos de interface (wireframes ou mockups)</td><td>M1</td><td>Aprovado pelo time de inovação</td></tr>
+  <tr><td>E04</td><td>Módulo autenticação e usuários (RF001+RF002+RF008)</td><td>M2</td><td>Demonstração ao vivo; zero defeitos críticos</td></tr>
+  <tr><td>E05</td><td>Portal de ideias e campanhas (RF003+RF004)</td><td>M3</td><td>Demonstração ao vivo; zero defeitos críticos</td></tr>
+  <tr><td>E06</td><td>Fluxo de aprovação, gestão de projetos e ganhos (RF005+RF006+RF007)</td><td>M4</td><td>Demonstração ao vivo; zero defeitos críticos</td></tr>
+  <tr><td>E07</td><td>Relatório de testes de carga (≥500 usuários simultâneos)</td><td>M5</td><td>Relatório assinado; evidência de execução</td></tr>
+  <tr><td>E08</td><td>Relatório de UAT aprovado pelo time de inovação</td><td>M5</td><td>Assinado pelo ponto focal; zero defeitos críticos</td></tr>
+  <tr><td>E09</td><td>Documentação técnica e manuais por papel (RF011)</td><td>M6</td><td>PDF + editável; aprovado pelo GP VMO</td></tr>
+  <tr><td>E10</td><td>Plataforma implantada em produção (RF012)</td><td>M6</td><td>URL funcionando; checklist de go-live aprovado pelo TI</td></tr>
+  <tr><td>E11</td><td>Treinamento realizado com lista de presença e material (RF013)</td><td>M6</td><td>Lista de presença assinada; material enviado</td></tr>
+  <tr><td>E12</td><td>Código-fonte versionado em repositório Git privado do cliente</td><td>M7</td><td>Repositório acessível; histórico de commits; aprovado pelo TI</td></tr>
+  <tr><td>E13</td><td>Termo de Aceite Final assinado pelas partes</td><td>M7</td><td>Assinado pelo Sponsor e GP VMO</td></tr>
+</table>
+
+<!-- 8. GOVERNANÇA -->
+<h3>8. Governança e Comunicação</h3>
+<h4>8.1 Estrutura de Governança</h4>
+<table>
+  <tr><th>Papel</th><th>Responsável</th><th>Escopo de Decisão</th></tr>
+  <tr><td>Sponsor do Projeto</td><td><strong style="color:#c53030">A DEFINIR (CB-01)</strong></td><td>Aprovação de mudanças de escopo, orçamento e prazo; aceite final</td></tr>
+  <tr><td>Solicitante / Product Owner</td><td>Jadson — Área de Inovação</td><td>Validação de requisitos, aprovação de protótipos, condução do UAT</td></tr>
+  <tr><td>Gestor do Projeto</td><td>VMO Consultoria</td><td>Gestão de escopo, prazo, custo, riscos e comunicação</td></tr>
+  <tr><td>Representante de TI do Grupo</td><td>A designar</td><td>Aprovação de arquitetura e implantação</td></tr>
+  <tr><td>GP do Fornecedor</td><td>A designar pelo fornecedor</td><td>Execução técnica e entrega de artefatos</td></tr>
+</table>
+
+<h4>8.2 Rituais de Comunicação</h4>
+<table>
+  <tr><th>Ritual</th><th>Frequência</th><th>Participantes</th></tr>
+  <tr><td>Reunião de Status</td><td>Semanal (segunda-feira)</td><td>GP VMO + GP Fornecedor + Jadson</td></tr>
+  <tr><td>Checkpoint de Marco</td><td>A cada entrega de marco</td><td>GP VMO + GP Fornecedor + Solicitante + TI (quando aplicável)</td></tr>
+  <tr><td>Reunião de Riscos</td><td>Quinzenal ou sob demanda</td><td>GP VMO + GP Fornecedor</td></tr>
+  <tr><td>Relatório de Status</td><td>Quinzenal</td><td>GP VMO → Sponsor + Solicitante</td></tr>
+</table>
+
+<h4>8.3 Gestão de Mudanças</h4>
+<p>Toda alteração de escopo, prazo ou orçamento segue o processo formal de <strong>Change Request (CR)</strong>: (1) Registro por e-mail ao GP VMO; (2) análise de impacto em até 5 dias úteis; (3) aprovação formal pelo Sponsor; (4) refletido no plano e contrato via aditivo se houver impacto financeiro.</p>
+
+<!-- 9. CONDIÇÕES COMERCIAIS -->
+<h3>9. Condições Comerciais</h3>
+<h4>9.1 Cronograma de Pagamentos por Marco</h4>
+<table class="payment-table">
+  <tr><th>Marco</th><th>Evento Gatilho</th><th>Valor</th><th>% Total</th></tr>
+  <tr><td>M0 — Kick-off</td><td>Assinatura do contrato + realização do kick-off</td><td>R$ 18.000,00</td><td>20%</td></tr>
+  <tr><td>M2 — Autenticação</td><td>Aceite formal de E04 pelo GP VMO</td><td>R$ 13.500,00</td><td>15%</td></tr>
+  <tr><td>M3 — Portal de Ideias</td><td>Aceite formal de E05 pelo GP VMO</td><td>R$ 13.500,00</td><td>15%</td></tr>
+  <tr><td>M4 — Aprovação e Projetos</td><td>Aceite formal de E06 pelo GP VMO</td><td>R$ 13.500,00</td><td>15%</td></tr>
+  <tr><td>M5 — UAT Concluído</td><td>Aceite formal de E07 + E08</td><td>R$ 13.500,00</td><td>15%</td></tr>
+  <tr><td>M7 — Aceite Final</td><td>Assinatura do Termo de Aceite + entrega do código-fonte</td><td>R$ 18.000,00</td><td>20%</td></tr>
+  <tr><td><strong>TOTAL</strong></td><td></td><td><strong>R$ 90.000,00</strong></td><td><strong>100%</strong></td></tr>
+</table>
+
+<h4>9.2 Condições de Faturamento</h4>
+<ul>
+  <li>NFS-e emitida contra o CNPJ do Grupo Águia Branca, com descritivo do marco correspondente;</li>
+  <li>Prazo de pagamento: <strong>15 dias úteis</strong> após aprovação e recebimento da NFS-e;</li>
+  <li>Retenções legais (ISS, PIS, COFINS, CSLL, IR) aplicadas conforme legislação vigente;</li>
+  <li>Reajustes via CR e aditivo contratual.</li>
+</ul>
+
+<h4>9.3 Penalidades</h4>
+<table>
+  <tr><th>Evento</th><th>Penalidade</th></tr>
+  <tr><td>Atraso de marco sem justificativa formal aceita</td><td>Multa de 0,5%/dia sobre o valor total, limitada a 10%</td></tr>
+  <tr><td>Artefato com defeitos críticos recusados no aceite</td><td>Prazo adicional de 10 dias úteis; retenção da parcela até resolução</td></tr>
+  <tr><td>Abandono do projeto pelo fornecedor</td><td>Devolução de 100% dos valores pagos + multa de 10% sobre o total</td></tr>
+  <tr><td>Descumprimento de confidencialidade</td><td>Multa de R$ 50.000,00 por ocorrência, independentemente de outros danos</td></tr>
+</table>
+
+<h4>9.4 Garantia e Propriedade Intelectual</h4>
+<ul>
+  <li><strong>Garantia:</strong> 90 dias corridos a partir do Aceite Final — correção de defeitos funcionais sem custo adicional;</li>
+  <li><strong>Propriedade Intelectual:</strong> Transferida integralmente ao Grupo Águia Branca mediante quitação do contrato. O fornecedor não poderá reutilizar o código desenvolvido para este projeto a terceiros.</li>
+</ul>
+
+<!-- 10. CHECKLIST -->
+<div class="page-break"></div>
+<h3>10. Artefato Obrigatório — Checklist de Qualificação Técnica</h3>
+<p>O fornecedor deve responder <strong>integralmente</strong> a todos os <strong>10 grupos / 41 itens</strong>. A não resposta a qualquer item implica desclassificação automática. Entregar em planilha (.xlsx ou Google Sheets) além de incorporado à proposta em PDF.</p>
+<p class="legenda"><strong>Legenda:</strong> OK = Atende integralmente | NOK = Não atende | Obs. = Atende parcialmente ou com ressalvas (detalhar)</p>
+
+<table class="checklist-table">
+  <tr><th>#</th><th>Item de Verificação</th><th>OK</th><th>NOK</th><th>Observações</th></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 1 — Capacidade Técnica e Portfólio</td></tr>
+  <tr><td>1.1</td><td>Portfólio comprovado com ≥ 2 projetos web sob medida nos últimos 3 anos (portal corporativo, plataforma B2B ou SaaS)</td><td></td><td></td><td></td></tr>
+  <tr><td>1.2</td><td>Experiência com plataformas multiusuário com controle de acesso por papéis (RBAC)</td><td></td><td></td><td></td></tr>
+  <tr><td>1.3</td><td>Casos de uso com bases de 5.000+ usuários em produção</td><td></td><td></td><td></td></tr>
+  <tr><td>1.4</td><td>≥ 2 referências de clientes anteriores com projetos similares, com contato disponível</td><td></td><td></td><td></td></tr>
+  <tr><td>1.5</td><td>Equipe dedicada com: 1 arquiteto/tech lead, 2 devs full-stack, 1 designer UX/UI e 1 QA</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 2 — Stack Tecnológico e Arquitetura</td></tr>
+  <tr><td>2.1</td><td>Stack moderno e ativo (ex.: Django/Python, Node.js, Laravel; React/Vue.js/Angular)</td><td></td><td></td><td></td></tr>
+  <tr><td>2.2</td><td>Arquitetura em camadas (frontend, backend, BD) com separação de responsabilidades documentada</td><td></td><td></td><td></td></tr>
+  <tr><td>2.3</td><td>Banco de dados relacional (PostgreSQL, MySQL ou equiv.) com migrations automatizadas</td><td></td><td></td><td></td></tr>
+  <tr><td>2.4</td><td>Código versionado em Git com histórico de commits e branching strategy documentada</td><td></td><td></td><td></td></tr>
+  <tr><td>2.5</td><td>Solução responsiva — compatível com Chrome, Firefox, Edge, Safari e mobile via browser</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 3 — Segurança e Autenticação</td></tr>
+  <tr><td>3.1</td><td>Hash de senhas (bcrypt ou Argon2), política de senha forte e bloqueio por tentativas excessivas</td><td></td><td></td><td></td></tr>
+  <tr><td>3.2</td><td>Suporte a MFA/2FA como camada opcional para usuários</td><td></td><td></td><td></td></tr>
+  <tr><td>3.3</td><td>Controle de sessão com timeout configurável e invalidação segura de tokens</td><td></td><td></td><td></td></tr>
+  <tr><td>3.4</td><td>Práticas OWASP Top 10 com evidência (checklist ou relatório de análise)</td><td></td><td></td><td></td></tr>
+  <tr><td>3.5</td><td>Suporte a HTTPS/TLS obrigatório em produção</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 4 — Escalabilidade e Performance</td></tr>
+  <tr><td>4.1</td><td>Estratégia de arquitetura para suportar 10.000+ usuários cadastrados sem degradação</td><td></td><td></td><td></td></tr>
+  <tr><td>4.2</td><td>Testes de carga formais (Locust, k6, JMeter ou equiv.) validando ≥ 500 usuários simultâneos</td><td></td><td></td><td></td></tr>
+  <tr><td>4.3</td><td>Estratégia de cache (aplicação ou BD) para consultas de maior volume</td><td></td><td></td><td></td></tr>
+  <tr><td>4.4</td><td>Paginação e lazy loading nas listagens de ideias, projetos e relatórios</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 5 — Implantação e Infraestrutura</td></tr>
+  <tr><td>5.1</td><td>Capacidade de implantar em infraestrutura on-premise ou nuvem privada do cliente, sem dependência de plataforma do fornecedor</td><td></td><td></td><td></td></tr>
+  <tr><td>5.2</td><td>Scripts de deploy automatizado (Docker, Docker Compose ou equiv.) com instruções documentadas</td><td></td><td></td><td></td></tr>
+  <tr><td>5.3</td><td>Procedimento formal de rollback documentado e testado</td><td></td><td></td><td></td></tr>
+  <tr><td>5.4</td><td>Scripts de backup e restore do BD com instruções de operação</td><td></td><td></td><td></td></tr>
+  <tr><td>5.5</td><td>Cooperação com TI do Grupo na implantação em produção com transferência de conhecimento</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 6 — Qualidade e Testes</td></tr>
+  <tr><td>6.1</td><td>Testes automatizados (unitários e/ou integração) com cobertura mínima de 60% do código backend</td><td></td><td></td><td></td></tr>
+  <tr><td>6.2</td><td>Ciclo formal de UAT com gestão de defeitos em ferramenta rastreável (Jira, GitHub Issues ou equiv.)</td><td></td><td></td><td></td></tr>
+  <tr><td>6.3</td><td>Critério de saída do UAT: zero defeitos críticos em aberto na data de aceite</td><td></td><td></td><td></td></tr>
+  <tr><td>6.4</td><td>Testes de regressão após correção de defeitos antes de novo aceite</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 7 — Documentação</td></tr>
+  <tr><td>7.1</td><td>Documentação técnica em PT-BR: arquitetura, stack, modelo de dados, APIs e instruções de deploy</td><td></td><td></td><td></td></tr>
+  <tr><td>7.2</td><td>Manuais do usuário por papel (colaborador, gestor, time de inovação, administrador) em PT-BR</td><td></td><td></td><td></td></tr>
+  <tr><td>7.3</td><td>Material de treinamento (slides e/ou vídeo gravado) para uso posterior pelo cliente</td><td></td><td></td><td></td></tr>
+  <tr><td>7.4</td><td>Toda documentação em formato editável (Word/Google Docs ou Markdown) além de PDF</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 8 — Gestão de Projeto e Comunicação</td></tr>
+  <tr><td>8.1</td><td>GP dedicado como ponto de contato único com o GP VMO</td><td></td><td></td><td></td></tr>
+  <tr><td>8.2</td><td>Participação em reuniões de status semanais com GP VMO e solicitante</td><td></td><td></td><td></td></tr>
+  <tr><td>8.3</td><td>Relatório de progresso quinzenal com status de entregas, riscos e impedimentos</td><td></td><td></td><td></td></tr>
+  <tr><td>8.4</td><td>Ferramenta de gestão compartilhada (Jira, Trello, ClickUp ou equiv.) com acesso ao GP VMO e ao cliente</td><td></td><td></td><td></td></tr>
+  <tr><td>8.5</td><td>Processo formal de Change Request com análise de impacto documentada</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 9 — Aspectos Jurídicos e Contratuais</td></tr>
+  <tr><td>9.1</td><td>Aceita transferência total de propriedade intelectual ao Grupo Águia Branca após quitação</td><td></td><td></td><td></td></tr>
+  <tr><td>9.2</td><td>Aceita cláusula de confidencialidade (NDA) cobrindo todos os dados e informações do Grupo</td><td></td><td></td><td></td></tr>
+  <tr><td>9.3</td><td>Aceita o modelo de pagamento por marcos (Seção 9.1)</td><td></td><td></td><td></td></tr>
+  <tr><td>9.4</td><td>Aceita garantia de 90 dias após Aceite Final com correção sem custo adicional</td><td></td><td></td><td></td></tr>
+  <tr><td>9.5</td><td>CNPJ ativo e certidões negativas de débito disponíveis</td><td></td><td></td><td></td></tr>
+
+  <tr class="group-header"><td colspan="5">GRUPO 10 — Proposta Comercial e Prazo</td></tr>
+  <tr><td>10.1</td><td>Valor total da proposta dentro do orçamento de R$ 90.000,00</td><td></td><td></td><td></td></tr>
+  <tr><td>10.2</td><td>Cronograma detalhado com datas por marco, respeitando prazo final de 30/11/2026</td><td></td><td></td><td></td></tr>
+  <tr><td>10.3</td><td>Composição de preço detalhada por fase/módulo</td><td></td><td></td><td></td></tr>
+  <tr><td>10.4</td><td>Declara que o escopo do WR está integralmente contemplado sem custos não declarados</td><td></td><td></td><td></td></tr>
+  <tr><td>10.5</td><td>Proposta com validade mínima de 60 dias a partir da submissão</td><td></td><td></td><td></td></tr>
+  <tr><td>10.6</td><td>Plano de contingência para riscos críticos (saída de membros-chave, atrasos técnicos, incompatibilidade de infraestrutura)</td><td></td><td></td><td></td></tr>
+</table>
+
+<p style="margin-top:6px;font-size:8pt;font-weight:700;color:#1a3c5e;">TOTAL: 41 itens / 10 grupos — Respostas "OK" sem evidência serão desclassificadas na etapa de due diligence técnica.</p>
+
+<!-- 11. SUBMISSÃO -->
+<h3>11. Processo de Submissão</h3>
+<table class="id-table">
+  <tr><td>Prazo de Submissão</td><td><strong>2026-06-02</strong> (15 dias corridos a partir da emissão) — até 18h00 (Brasília)</td></tr>
+  <tr><td>Canal de Envio</td><td>E-mail ao GP VMO (endereço informado no convite formal)<br>Assunto: <code>[PROPOSTA] PROJ-2026-004 — [Nome da Empresa]</code></td></tr>
+  <tr><td>Arquivos Obrigatórios</td><td>(1) Proposta Técnica e Comercial em PDF não editável<br>(2) Checklist de Qualificação em Excel (.xlsx) ou Google Sheets</td></tr>
+  <tr><td>Critérios de Avaliação</td><td>Adequação técnica 35% | Portfólio 25% | Preço 25% | Prazo 15%<br>Fornecedores com &lt;70% nos critérios técnicos são eliminados antes da análise comercial</td></tr>
+  <tr><td>Resultado</td><td>Comunicado a todos os participantes em até 10 dias úteis após o prazo de submissão</td></tr>
+  <tr><td>Dúvidas sobre o WR</td><td>E-mail ao GP VMO — assunto: <code>[DUVIDA WR] PROJ-2026-004</code> — até 5 dias corridos antes do prazo</td></tr>
+</table>
+
+<!-- RODAPÉ -->
+<div class="doc-footer">
+  Este Work Request foi elaborado por VMO Consultoria — Fábio Fornecedor, com base nas informações fornecidas pelo solicitante Jadson (Área de Inovação, Grupo Águia Branca) e no benchmark de mercado de soluções similares. Todas as informações aqui contidas são confidenciais e de uso exclusivo dos fornecedores convidados a participar deste processo.<br>
+  <strong>Validade deste documento: 60 dias a partir de 2026-05-18 (vence em 2026-07-17).</strong> | Pipeline VMO Autônomo v2 — Step 7/14 ✓
+</div>
+
+</body>
+</html>
