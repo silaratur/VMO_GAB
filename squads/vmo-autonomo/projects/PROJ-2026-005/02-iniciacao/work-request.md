@@ -1,217 +1,164 @@
-# WORK REQUEST — MINI-RFP
-## VMO Consultoria | Gestão de Fornecedores e Projetos
+# WORK REQUEST — PROJ-2026-005
+## Auditor Fiscal — Módulo Nativo NBS
 
----
-
-| Campo | Informação |
-|---|---|
-| **WR Nº** | WR-2026-005 |
-| **Projeto** | PROJ-2026-005 |
-| **Data de Emissão** | 18/05/2026 |
-| **Prazo de Submissão** | 06/06/2026 |
-| **Status** | Aguardando Sponsor (CB-01) |
+**Versão:** 1.0 | **Data de Emissão:** 2026-05-18 | **Elaborado por:** VMO Consultoria — Fábio Fornecedor
+**Validade deste WR:** 60 dias a partir da data de emissão
 
 ---
 
 ## 1. IDENTIFICAÇÃO DO PROJETO
 
-| Campo | Informação |
+| Campo | Detalhe |
 |---|---|
 | **ID do Projeto** | PROJ-2026-005 |
 | **Nome do Projeto** | Auditor Fiscal — Módulo Nativo NBS em Substituição ao Fiscal Defender |
 | **Cliente** | Divisão Comércio — Grupo Águia Branca |
 | **Solicitante** | Sandro Siqueira — Coordenador de Contabilidade, Divisão Comércio |
-| **Sponsor** | A IDENTIFICAR — CB-01 (prazo limite: 25/05/2026) |
-| **Fornecedor Principal** | NBS (desenvolvimento como contrapartida contratual — custo zero) |
-| **Gestor VMO** | Fábio Fornecedor — Especialista em Gestão de Fornecedores |
-| **Tipo de Projeto** | Implementação de Módulo Nativo ERP + Migração de Sistema Legado |
-| **Categoria** | Compliance Fiscal / Automação Tributária |
-| **Envelope Orçamentário** | R$ 35.000 (serviços residuais) |
-| **Go-live Estimado** | Outubro/2026 (janela set–nov/2026) |
+| **Sponsor** | A designar pelo Grupo Águia Branca antes de 2026-06-06 |
+| **Gerente de Projeto** | A designar pelo PMO após aprovação do WR |
+| **Área Demandante** | Contabilidade — Divisão Comércio |
+| **Fornecedor Alvo** | NBS — fornecedora do ERP corporativo do Grupo Águia Branca |
+| **Tipo de Solução** | Desenvolvimento de módulo nativo no ERP NBS existente (evolução do produto) |
+| **Orçamento de Referência** | R$ 150.000 – R$ 400.000 (benchmark de mercado para módulos fiscais de complexidade equivalente; valor contratual a negociar com a NBS) |
+| **Prazo de Referência** | 6 a 12 meses após assinatura do contrato (benchmark de mercado para módulos fiscais desta complexidade) |
+| **Data de Emissão do WR** | 2026-05-18 |
+| **Prazo para Submissão de Proposta** | 2026-06-06 (15 dias úteis após emissão) |
+| **Kickoff Estimado** | A confirmar após assinatura do contrato |
 
-> **NOTA IMPORTANTE:** O desenvolvimento do módulo Auditor Fiscal é **contrapartida contratual da NBS** e portanto tem **custo zero** para o Grupo Águia Branca. Este Work Request cobre exclusivamente os **serviços residuais de implantação**: parametrização, migração de configurações, treinamento de usuários e suporte ao processo de rescisão do Fiscal Defender.
+> **Nota sobre o modelo de contratação:** Este Work Request é endereçado diretamente à NBS como fornecedora do ERP, solicitando o desenvolvimento do módulo Auditor Fiscal como evolução nativa da plataforma. O orçamento e o prazo serão definidos na negociação com a NBS, tendo como referência os benchmarks de mercado indicados acima.
 
 ---
 
 ## 2. CONTEXTO E JUSTIFICATIVA
 
-### 2.1 Situação Atual
+### 2.1 Problema de Negócio
 
-A Divisão Comércio do Grupo Águia Branca opera atualmente com o **Fiscal Defender** como solução de auditoria e validação de documentos fiscais eletrônicos. A ferramenta cobre processos críticos de compliance: validação de NF-e, auditoria de campos SPED/NFSE e controle de inconsistências em documentos tributários.
+A Divisão Comércio do Grupo Águia Branca opera atualmente com o **Fiscal Defender** como solução de auditoria e validação de documentos fiscais eletrônicos. A ferramenta cobre processos críticos de compliance: validação de NF-e, detecção de inconsistências entre campos CFOP, NCM e alíquotas declaradas, identificação de pagamentos indevidos ou duplicados, e detecção de possíveis fraudes.
 
-O contrato do Fiscal Defender representa um custo recorrente anual de **R$ 78.000**, desembolsado integralmente pela Divisão Comércio, sem perspectiva de redução tarifária nas renovações projetadas para os próximos ciclos.
+O Fiscal Defender é uma solução de terceiro que opera de forma desacoplada do ERP NBS: os dados de NF-e precisam ser exportados da base NBS para alimentar o sistema de auditoria externo, criando uma dependência de integração frágil e um custo recorrente de licenciamento. Esse modelo gera três riscos concretos:
 
-### 2.2 Oportunidade Identificada
+1. **Risco de Integração:** A sincronia entre a base NBS e o Fiscal Defender depende de processos de exportação que, quando falham, criam janelas de auditoria não coberta — NF-e registradas no ERP que permanecem sem auditoria por horas ou dias sem detecção imediata.
+2. **Risco de Conformidade:** A auditoria fiscal opera sobre uma cópia dos dados, não sobre a fonte. Divergências entre a base NBS e os dados auditados pelo Fiscal Defender não são raras e comprometem a confiabilidade dos resultados apresentados em auditorias internas e externas.
+3. **Risco Financeiro:** O contrato do Fiscal Defender representa custo recorrente anual que não possui perspectiva de redução tarifária, sendo renovado sistematicamente sem melhoria de cobertura funcional.
 
-No escopo do contrato vigente com a **NBS** — fornecedora do ERP utilizado pela Divisão Comércio —, foi identificada a obrigação contratual de entrega de um **módulo nativo de Auditor Fiscal**, capaz de replicar e superar as funcionalidades do Fiscal Defender dentro da própria plataforma ERP. Essa entrega constitui **contrapartida contratual já negociada**, sem ônus adicional para o Grupo.
+### 2.2 Justificativa da Contratação
 
-A migração para o módulo nativo NBS elimina a dependência de uma solução de terceiro, reduz o custo total de propriedade e consolida o ecossistema fiscal dentro de uma única plataforma integrada.
+A solução identificada é o desenvolvimento de um **módulo nativo de Auditor Fiscal diretamente no ERP NBS**, operando sobre a mesma base de dados do ERP sem qualquer integração ou exportação de dados. A NBS, como fornecedora do ERP, é a única entidade com acesso completo ao código-fonte, ao modelo de dados e à arquitetura da plataforma para desenvolver esse módulo com a profundidade técnica necessária.
 
-### 2.3 Justificativa Econômica
+O módulo nativo elimina todos os riscos de integração do modelo atual, consolida o ecossistema fiscal dentro de uma única plataforma gerida por um único fornecedor e transfere à NBS a responsabilidade de manter o módulo atualizado conforme a evolução da legislação tributária — que é parte do serviço de manutenção do ERP já contratado.
 
-| Item | Valor |
+### 2.3 ROI Esperado
+
+| Benefício | Impacto Estimado |
 |---|---|
-| Saving anual com eliminação do Fiscal Defender | **R$ 78.000/ano** |
-| Investimento nos serviços residuais (WR) | R$ 35.000 (único) |
-| Payback estimado | **< 6 meses** |
-| Saving acumulado em 3 anos (líquido) | **R$ 199.000** |
-
-### 2.4 Justificativa Estratégica e de Compliance
-
-- **Integração nativa:** módulo embedded no ERP NBS elimina integrações point-to-point frágeis e reduz risco operacional
-- **Atualização automática de legislação:** o fornecedor NBS assume responsabilidade pela adequação às normas SPED, NBS (Nomenclatura Brasileira de Serviços) e NF-e conforme evolução regulatória
-- **Governança fiscal:** log de auditoria nativo, controle de perfis de acesso e rastreabilidade completa de validações
-- **Continuidade de negócios:** eliminação de dependência de terceiro em processo crítico de compliance
+| Eliminação do custo de licença do Fiscal Defender | Saving recorrente anual (a confirmar com Sandro Siqueira) |
+| Eliminação de retrabalho com integração e sincronia de dados | Redução de horas da equipe de TI e Contabilidade |
+| Auditoria sobre dado nativo (sem janelas de não-cobertura) | Redução de risco de conformidade e de exposição a multas |
+| Consolidação de plataforma ERP (single vendor para o ciclo fiscal) | Redução de complexidade operacional e de risco de continuidade |
+| Manutenção legislativa automatizada pela NBS | Eliminação de dependência de terceiro em processo crítico de compliance |
 
 ---
 
 ## 3. OBJETIVO DA CONTRATAÇÃO
 
-Contratar os **serviços residuais de implantação, parametrização, migração de configurações e treinamento** necessários para que o módulo nativo **Auditor Fiscal NBS** — entregue pela NBS como contrapartida contratual sem custo — entre em operação plena na Divisão Comércio, substituindo integralmente o Fiscal Defender até outubro/2026, com:
-
-- 100% das funcionalidades operacionais do Fiscal Defender replicadas no novo módulo
-- Migração de todas as regras e configurações de validação ativas
-- Equipes de Contabilidade, Financeiro e Jurídico capacitadas para operação autônoma
-- Rescisão formal do contrato Fiscal Defender executada com segurança e sem penalidades
+Contratar a NBS para **desenvolver o módulo Auditor Fiscal como componente nativo do ERP NBS**, capaz de realizar auditoria automatizada e completa de NF-e diretamente sobre a base de dados do ERP, substituindo integralmente o Fiscal Defender nas funções de: ingestão de NF-e, auditoria de conformidade fiscal e tributária, detecção de inconsistências (CFOP, NCM, alíquotas declaradas vs. tabelas legais), identificação de pagamentos indevidos ou duplicados, detecção de possíveis fraudes, emissão de alertas de risco de multa, geração de relatórios operacionais e gerenciais, controle de acesso por perfil e trilha de auditoria completa de ações — tudo operando nativamente no ERP NBS, sem integração externa, sem exportação de dados e sem dependência de sistemas de terceiros.
 
 ---
 
 ## 4. ESCOPO DA CONTRATAÇÃO
 
-### 4.1 Serviços Inclusos
+### 4.1 Escopo Incluso
 
-> Os itens abaixo correspondem aos **serviços residuais** contratados via este WR. O desenvolvimento do módulo em si é obrigação da NBS (custo zero). A execução dos serviços listados está condicionada à entrega do módulo pela NBS no Marco 1 (31/07/2026).
+O módulo a ser desenvolvido pela NBS deverá atender integralmente aos seguintes requisitos funcionais (Must Have):
 
 | ID | Requisito | Descrição |
 |---|---|---|
-| **RF001** | Replicação funcional completa | Mapear, validar e parametrizar 100% das funcionalidades operacionais do Fiscal Defender no módulo Auditor Fiscal NBS, sem lacuna funcional. |
-| **RF002** | Auditoria automatizada de NF-e | Configurar validação automatizada de campos obrigatórios conforme exigências SPED/NFSE, garantindo cobertura integral das regras vigentes na Divisão Comércio. |
-| **RF003** | Validação de NBS (Nomenclatura Brasileira de Serviços) | Parametrizar validação de códigos NBS em documentos fiscais eletrônicos, conforme tabelas e regras vigentes de tributação de serviços. |
-| **RF004** | Alertas automáticos de inconsistências | Configurar régua de alertas e notificações automáticas para NF-e com inconsistências, irregularidades ou campos inválidos, com roteamento para os responsáveis. |
-| **RF005** | Integração nativa ERP NBS | Validar e garantir que a integração do Auditor Fiscal com os demais módulos do ERP NBS (Financeiro, Contábil, Fiscal) opera sem desenvolvimento adicional ou customização. |
-| **RF006** | Relatórios de auditoria | Configurar e homologar geração de relatórios de auditoria por período, por tipo de documento e por exceção, substituindo todos os relatórios equivalentes do Fiscal Defender. |
-| **RF007** | Perfis de acesso diferenciados | Criar e validar perfis de acesso para os papéis: contador, analista fiscal, auditoria e administrador, conforme política de segurança da informação do Grupo Águia Branca. |
-| **RF008** | Log de auditoria | Validar que o módulo registra log completo de todas as ações de validação realizadas pelo sistema e pelos usuários, com rastreabilidade e imutabilidade. |
-| **RF009** | Migração de configurações e regras | Executar a migração de todas as configurações e regras de validação ativas no Fiscal Defender para o módulo NBS, com validação de paridade pré-go-live. |
-| **RF010** | Treinamento de equipes | Conduzir programa de treinamento para as equipes de Contabilidade, Financeiro e Jurídico da Divisão Comércio, cobrindo operação, configuração e troubleshooting do Auditor Fiscal NBS. |
+| **RF-INF-01** | Ingestão automática de NF-e da base NBS | O módulo deve acessar, ler e processar NF-e já registradas na base de dados do ERP NBS sem exportação de dados para sistemas externos, sem criação de arquivo intermediário e sem nova entrada de dados pelo usuário. NF-e disponível na base NBS deve estar acessível ao módulo em até 5 minutos após o registro (modo de processamento contínuo). |
+| **RF-AUD-01** | Auditoria automatizada de conformidade fiscal e tributária | O módulo deve executar auditoria automatizada de cada NF-e processada, verificando conformidade com a legislação tributária aplicável (ICMS, IPI, PIS/COFINS, CST/CSOSN) e com as regras configuradas pela equipe de Contabilidade, sem necessidade de intervenção manual para cada documento. |
+| **RF-AUD-02** | Detecção de inconsistências entre NF-e (CFOP, NCM, alíquotas declaradas vs. tabelas legais) | O módulo deve calcular os valores tributários esperados para cada item da NF-e com base no NCM, CFOP, CST/CSOSN e alíquotas vigentes, comparando com os valores declarados pelo emitente e sinalizando divergências. Deve ainda verificar se o CFOP declarado é compatível com a natureza da operação registrada no ERP. |
+| **RF-AUD-03** | Identificação de pagamentos indevidos ou duplicados | O módulo deve identificar NF-e duplicadas (por cruzamento de chave de acesso, CNPJ emitente, número, série e valor), NF-e canceladas com pagamento pendente ou já realizado, e outros padrões que caracterizem risco de pagamento indevido, bloqueando o fluxo de pagamento e gerando alerta imediato ao Analista Financeiro. |
+| **RF-AUD-04** | Detecção de possíveis fraudes em NF-e | O módulo deve detectar sinais de fraude documental, incluindo: NF-e emitidas por fornecedores com CNPJ inapto, suspenso ou cancelado na base cadastral do ERP; NF-e com chave de acesso não autorizada pela SEFAZ (status diferente de "autorizado de uso"); e valores atípicos em relação ao histórico do fornecedor (critério configurável pelo Administrador). |
+| **RF-AUD-05** | Emissão de alertas de risco de multa por irregularidades fiscais | O módulo deve gerar alertas classificados por nível de criticidade (Alta, Média, Baixa) quando identificar NF-e com divergência tributária que configure risco de autuação fiscal, com tempo máximo de geração do alerta de 15 minutos após a conclusão do processamento da NF-e (modo de processamento contínuo). |
+| **RF-REL-01** | Relatórios operacionais acessíveis diretamente no ERP NBS | O módulo deve gerar relatório operacional listando todas as NF-e auditadas em intervalo de datas definido pelo usuário, contendo: chave de acesso, número, série, CNPJ emitente, data de emissão, valor total, status de auditoria, códigos de alerta e data do processamento — exportável em XLSX e PDF diretamente do ERP NBS, em até 60 segundos para lotes de até 10.000 NF-e. |
+| **RF-REL-02** | Relatórios gerenciais com visão consolidada da saúde fiscal | O módulo deve gerar relatório gerencial com indicadores de conformidade: total de NF-e processadas, percentual aprovadas sem ressalvas, percentual com alertas por categoria, valor total em risco e evolução mês a mês, para período selecionável de até 24 meses consecutivos — exportável em XLSX e PDF. |
+| **RF-INT-01** | Integração com Power BI para dashboards gerenciais (opcional) | O módulo deve expor os dados de resultados de auditoria, alertas e indicadores gerenciais por mecanismo compatível com Power BI Desktop e Power BI Service da Microsoft (API REST, OData endpoint ou view de banco de dados de leitura), permitindo construção de dashboards externos sem desenvolvimento adicional pelo cliente. Este requisito é opcional (Could Have) e deve ser contemplado na proposta com declaração explícita de atendimento ou não atendimento. |
+| **RF-SEG-01** | Controle de acesso por perfil | O módulo deve controlar o acesso às funcionalidades por perfil de usuário integrado ao mecanismo de autenticação do ERP NBS, com no mínimo os seguintes perfis segregados: Analista de Contabilidade, Supervisor de Contabilidade, Analista Financeiro, Analista Jurídico e Administrador do Sistema (TI / NBS). Cada perfil deve acessar exclusivamente as funcionalidades e dados para os quais tem permissão — vedada exposição de dados de funcionalidade restrita ao perfil não autorizado. |
+| **RF-RAT-01** | Trilha de auditoria completa de todas as ações realizadas no módulo | O módulo deve registrar em log imutável todas as ações de usuário que alteram dados ou configurações, incluindo: login do usuário, data/hora (fuso UTC-3, formato ISO 8601), tipo de ação, entidade afetada e valores anteriores e posteriores à alteração. O log não pode ser editado ou excluído por nenhum perfil de usuário, incluindo o Administrador. Período mínimo de retenção: 5 anos. |
 
-### 4.2 Serviços Explicitamente Excluídos
+### 4.2 Escopo Excluso
 
-Os itens a seguir estão **fora do escopo** deste Work Request e não devem ser contemplados nas propostas:
+Os seguintes itens estão **expressamente fora do escopo** deste Work Request, com justificativa:
 
-| # | Item Excluído | Observação |
+| # | Item Excluído | Justificativa |
 |---|---|---|
-| EX01 | Desenvolvimento de novas funcionalidades | Apenas replicação do Fiscal Defender. Qualquer nova feature deve ser tratada como projeto separado. |
-| EX02 | Integração com sistemas externos à plataforma NBS | O escopo se restringe à integração nativa entre módulos NBS. |
-| EX03 | Migração de dados históricos do Fiscal Defender | Apenas configurações e regras ativas são migradas. Histórico de auditoria permanece no Fiscal Defender até encerramento contratual. |
-| EX04 | Extensão da solução para outras divisões do Grupo | Escopo exclusivo da Divisão Comércio. Rollout para outras unidades é projeto futuro. |
-| EX05 | Suporte técnico pós go-live além do período contratual | O período de garantia encerra em 31/01/2027. Suporte além dessa data deve ser negociado em contrato separado de sustentação. |
+| 1 | **Emissão de NF-e** | O módulo Auditor Fiscal audita documentos fiscais já emitidos e registrados no ERP; a emissão de NF-e é funcionalidade existente em módulo separado do ERP NBS e não é substituída por este desenvolvimento. |
+| 2 | **Escrituração fiscal (SPED Fiscal, EFD-Contribuições e obrigações acessórias)** | A escrituração fiscal é processo separado do processo de auditoria de NF-e; o módulo Auditor Fiscal não substitui nem interfere com os módulos de obrigações acessórias do ERP NBS. |
+| 3 | **Transmissão de NF-e para a SEFAZ** | O módulo opera sobre NF-e já recebidas, processadas e com status de autorização SEFAZ já registrado na base NBS; a transmissão para a SEFAZ é responsabilidade do módulo de emissão do ERP NBS. |
+| 4 | **Auditoria de NF-e de outras divisões do Grupo Águia Branca além da Divisão Comércio** | O escopo desta fase está restrito à Divisão Comércio. Extensão do módulo para outras divisões do Grupo é projeto futuro e não deve ser contemplada nesta proposta. |
+| 5 | **Integração com sistemas fiscais externos além da base NBS** | A solução deve ser 100% nativa no ERP NBS. Qualquer integração com sistemas externos ao ERP (sistemas de terceiros, APIs de órgãos fiscais, middleware externo) está fora do escopo desta contratação. |
 
 ---
 
 ## 5. PREMISSAS E RESPONSABILIDADES DO GRUPO
 
-### 5.1 Premissas
+O cliente (Divisão Comércio / Grupo Águia Branca) se compromete a disponibilizar os seguintes recursos e condições durante toda a execução do projeto:
 
-Para execução do projeto dentro do prazo e orçamento previstos, as seguintes premissas devem ser verdadeiras no momento do kickoff:
+> **Nota sobre premissas deste projeto:** diferentemente de projetos com fornecedor externo, a NBS tem acesso próprio à sua base de código e infraestrutura. As premissas abaixo cobrem os insumos de negócio e validação que somente o cliente pode fornecer, necessários para que o desenvolvimento seja tecnicamente correto e funcionalmente validado.
 
-| # | Premissa | Impacto se não atendida |
-|---|---|---|
-| P01 | A NBS entrega o módulo Auditor Fiscal conforme compromisso contratual, **sem custo**, até 31/07/2026 | Atraso de todos os marcos subsequentes; replanejamento obrigatório |
-| P02 | Acesso ao ambiente ERP NBS da Divisão Comércio (produção e homologação) disponível para configuração e testes | Bloqueio imediato das atividades de parametrização |
-| P03 | Documentação completa das regras e configurações atuais do Fiscal Defender disponível antes do início da migração | Retrabalho e risco de lacuna funcional pós-migração |
-| P04 | Equipes de Contabilidade e Jurídico disponíveis para participação no UAT (User Acceptance Testing) no período de setembro/2026 | Atraso no go-live |
-| P05 | Prazo de rescisão do contrato Fiscal Defender é compatível com o go-live em outubro/2026 (aviso contratual dentro do prazo) | Custo duplicado de licença no período de sobreposição |
-| P06 | Sponsor formalmente designado (CB-01) até 25/05/2026 | Bloqueio na aprovação do WR e na emissão de Purchase Order |
-
-### 5.2 Responsabilidades do Grupo Águia Branca / Divisão Comércio
-
-| Responsabilidade | Área Responsável | Prazo |
-|---|---|---|
-| Designação formal do Sponsor | CB-01 (alta gestão) | 25/05/2026 |
-| Disponibilização de acesso ao ambiente ERP NBS | TI / Infraestrutura | Antes do kickoff |
-| Fornecimento da documentação do Fiscal Defender | Contabilidade — Sandro Siqueira | Até Marco 1 (31/07/2026) |
-| Aprovação do plano de treinamento | Contabilidade / RH | Até Marco 2 (31/08/2026) |
-| Participação e assinatura do UAT | Contabilidade, Financeiro, Jurídico | Marco 3 (set/2026) |
-| Emissão do aviso de rescisão ao Fiscal Defender | Contratos / Jurídico | A definir com base no contrato vigente |
-| Aprovação de marcos e liberação de pagamentos | Sponsor | Conforme cronograma |
-
-### 5.3 Responsabilidades da NBS (Fornecedor ERP)
-
-| Responsabilidade | Prazo Contratual |
+| # | Premissa / Responsabilidade do Grupo |
 |---|---|
-| Entrega do módulo Auditor Fiscal (contrapartida contratual) | 31/07/2026 |
-| Suporte técnico ao fornecedor contratado para implantação | Durante todo o projeto |
-| Atualização do módulo conforme evolução regulatória | Contínuo (suporte padrão NBS) |
+| 1 | **Designação formal do Sponsor** pelo Grupo Águia Branca antes do prazo de submissão da proposta (2026-06-06), para que haja aprovação formal do WR e emissão de Purchase Order |
+| 2 | **Participação de Sandro Siqueira** (Coordenador de Contabilidade) como ponto focal para validação de regras fiscais, aprovação de critérios de auditoria e homologação dos entregáveis funcionais ao longo de todo o projeto |
+| 3 | **Fornecimento de exemplos de NF-e reais (anonimizados)** para uso em ambiente de homologação, abrangendo os cenários de auditoria previstos no módulo (NF-e com inconsistências de alíquota, NF-e duplicadas, NF-e canceladas, CNPJ inapto, CFOP incompatível, etc.) |
+| 4 | **Disponibilização de ambiente de homologação NBS** para testes e validação do módulo antes da entrada em produção, com dados anonimizados e segregado do ambiente de produção |
+| 5 | **Fornecimento das tabelas fiscais de referência atualizadas** (CFOP, NCM, alíquotas de ICMS por UF, CST/CSOSN, exceções tributárias vigentes para as operações da Divisão Comércio) antes do início da configuração das regras de auditoria no módulo |
+| 6 | **Participação dos representantes das áreas Financeiro e Jurídico** da Divisão Comércio em sessões de levantamento de requisitos para os fluxos e relatórios específicos dessas áreas, e nos testes de aceitação (UAT) correspondentes |
+| 7 | **Homologação dos entregáveis** em até 10 dias úteis após entrega formal de cada marco, com aceite formal (SIM/NÃO) e justificativa escrita em caso de rejeição |
+| 8 | **Fornecimento da documentação completa do Fiscal Defender** (regras de auditoria configuradas, relatórios em uso, perfis de usuário, fluxos operacionais) para referência no desenvolvimento do módulo substituto — entregue à NBS até o início do desenvolvimento |
+| 9 | **Designação de representante de TI** com autorização para gestão de ambientes, acesso a dados de homologação e suporte à integração com Power BI (se RF-INT-01 for contemplado) |
+| 10 | **Aprovação formal de cada entregável** pelo GP designado, usando os critérios binários definidos na Seção 7 |
+
+> **Atenção:** O não cumprimento de qualquer premissa acima pelo cliente poderá implicar revisão de prazo proporcional ao tempo de bloqueio, sem penalidade à NBS, desde que formalmente comunicado via canal de governança (ver Seção 8).
 
 ---
 
 ## 6. CRONOGRAMA ESPERADO
 
-```
-LINHA DO TEMPO — PROJ-2026-005
-───────────────────────────────────────────────────────────────────
+> **Nota metodológica:** As datas abaixo são marcos de referência baseados em benchmark de mercado para módulos fiscais de complexidade equivalente. O cronograma detalhado será acordado entre as partes após aprovação da proposta técnica da NBS, com ajuste à capacidade da equipe NBS e às janelas de disponibilidade do cliente. Datas são estimativas, não compromisos contratuais desta fase.
 
- Mai/2026   Jun/2026   Jul/2026   Ago/2026   Set/2026   Out/2026   Nov/2026   Jan/2027
-    │           │           │           │           │           │           │           │
-    ├── CB-01 ──┤           │           │           │           │           │           │
-    │    25/05  │           │           │           │           │           │           │
-    │           ├── M0 ─────┤           │           │           │           │           │
-    │           │  Kickoff  │           │           │           │           │           │
-    │           │  15/06    │           │           │           │           │           │
-    │           │           ├── M1 ─────┤           │           │           │           │
-    │           │           │  Módulo   │           │           │           │           │
-    │           │           │  NBS      │           │           │           │           │
-    │           │           │  entregue │           │           │           │           │
-    │           │           │  31/07    │           │           │           │           │
-    │           │           │           ├── M2 ─────┤           │           │           │
-    │           │           │           │  Config + │           │           │           │
-    │           │           │           │  Migração │           │           │           │
-    │           │           │           │  31/08    │           │           │           │
-    │           │           │           │           ├── M3 ─────┤           │           │
-    │           │           │           │           │  Testes + │           │           │
-    │           │           │           │           │  UAT      │           │           │
-    │           │           │           │           │  30/09    │           │           │
-    │           │           │           │           │           ├── M4 ─────┤           │
-    │           │           │           │           │           │  Go-live  │           │
-    │           │           │           │           │           │  Treino   │           │
-    │           │           │           │           │           │  31/10    │           │
-    │           │           │           │           │           │           │           ├── Enc.
-    │           │           │           │           │           │           │           │  31/01/27
-```
+| Marco | Descrição | Referência de Prazo |
+|---|---|---|
+| **M0** | Emissão do Work Request | 2026-05-18 |
+| **M1** | Prazo para submissão de proposta da NBS | 2026-06-06 |
+| **M2** | Avaliação e aprovação da proposta técnica e comercial | 2026-06-13 |
+| **M3** | Assinatura do contrato / Início do prazo contratual | A confirmar |
+| **M4** | Kickoff do projeto com NBS | A confirmar (até 15 dias após M3) |
+| **M5** | Entrega do Documento de Arquitetura e Especificação Técnica do módulo | M3 + 45 dias (referência) |
+| **M6** | Desenvolvimento concluído em ambiente de desenvolvimento NBS | M3 + 4 a 6 meses (referência de mercado) |
+| **M7** | Homologação pelo cliente em ambiente de teste (UAT) | M6 + 30 a 45 dias |
+| **M8** | Go-live em produção + treinamento concluído | M7 + 30 dias |
+| **M9** | Encerramento formal e início do período de garantia | Após aceite do go-live |
 
-| Marco | Descrição | Data Prevista | % Pagamento |
-|---|---|---|---|
-| **CB-01** | Designação do Sponsor | 25/05/2026 | — |
-| **CB-02** | Aprovação do WR e emissão de PO | 06/06/2026 | — |
-| **M0 — Kickoff** | Reunião de início do projeto | 15/06/2026 (est.) | — |
-| **M1** | Módulo Auditor Fiscal entregue pela NBS | 31/07/2026 | 30% |
-| **M2** | Configuração completa + migração de regras homologada | 31/08/2026 | 30% |
-| **M3** | Testes integrados e UAT aprovado com aceite formal | 30/09/2026 | 25% |
-| **M4** | Go-live + treinamento concluído + rescisão Fiscal Defender iniciada | 31/10/2026 | 15% |
-| **Encerramento** | Fim do período de garantia | 31/01/2027 | — |
-
-> **Prazo de submissão das propostas:** 06/06/2026 às 18h00 (horário de Brasília)
+> **Referência de mercado:** Módulos fiscais para ERPs de porte médio têm prazo de desenvolvimento de 6 a 12 meses. Parceiros SAP com módulos similares (FISCOsolve, Synchro, Mastersaf) entregam módulos de auditoria fiscal nativa em 8 a 12 meses. A complexidade adicional das validações NBS (Nomenclatura Brasileira de Serviços) representa um fator de complexidade que deve ser declarado na proposta técnica da NBS.
 
 ---
 
 ## 7. ENTREGÁVEIS OBRIGATÓRIOS
 
-O fornecedor deve entregar obrigatoriamente os seguintes artefatos ao longo do projeto:
+Todos os entregáveis abaixo são obrigatórios. O critério de aceite é **binário**: o entregável está aceito (SIM) ou não está aceito (NÃO) — não existe aceite parcial.
 
-| # | Entregável | Marco | Responsável |
+| # | Entregável | Marco Associado | Critério de Aceite (Binário) |
 |---|---|---|---|
-| E01 | Plano de Projeto detalhado (cronograma, riscos, recursos) | M0 | Fornecedor |
-| E02 | Relatório de levantamento funcional (gap analysis Fiscal Defender × Auditor Fiscal NBS) | M1 | Fornecedor |
-| E03 | Documento de configurações parametrizadas (RF001 a RF008) | M2 | Fornecedor |
-| E04 | Relatório de migração de regras com rastreabilidade (RF009) | M2 | Fornecedor |
-| E05 | Plano de testes e roteiro de UAT | M2 | Fornecedor |
-| E06 | Relatório de testes integrados com evidências (logs, prints) | M3 | Fornecedor |
-| E07 | Termo de Aceite de UAT assinado pelos representantes do cliente | M3 | Cliente + Fornecedor |
-| E08 | Material de treinamento (apresentações, manuais, vídeos) | M4 | Fornecedor |
-| E09 | Relatório de execução do treinamento (frequência, avaliação de aprendizagem) | M4 | Fornecedor |
-| E10 | Checklist de go-live validado e aprovado | M4 | Fornecedor |
-| E11 | Termo de Encerramento de Projeto | Encerramento | Fornecedor + VMO |
+| **E1** | Proposta Técnica detalhada (arquitetura do módulo, abordagem de desenvolvimento, tecnologias utilizadas, integração com ERP NBS) | M1 | SIM: proposta cobre todos os RFs do Escopo Incluso com descrição técnica de implementação, identifica claramente o que está incluído e o que está fora do escopo, e é aprovada pelo GP e por Sandro Siqueira. NÃO: qualquer RF sem cobertura técnica descrita ou ausência de aprovação. |
+| **E2** | Proposta Comercial com cronograma de pagamentos por marcos e garantias contratuais | M1 | SIM: proposta apresenta valor total, detalhamento por fase, cronograma de pagamentos vinculado a marcos, prazo total de desenvolvimento e período de garantia mínimo de 90 dias — todos dentro das condições desta Seção e da Seção 9. NÃO: qualquer item ausente ou condição incompatível com este WR. |
+| **E3** | Documento de Arquitetura Técnica do Módulo (modelo de dados, integração com base NBS, mecanismo de acesso a NF-e, modelo de segurança) | M5 | SIM: documento aprovado pelo GP e pela equipe de TI do cliente, descrevendo arquitetura completa sem dependências externas ao ERP NBS, modelo de dados e estratégia de acesso nativo. NÃO: ausência de qualquer componente técnico ou não aprovação pelo cliente. |
+| **E4** | Módulo desenvolvido e disponível em ambiente de homologação, cobrindo todos os RFs Must Have (RF-INF-01, RF-AUD-01 a RF-AUD-05, RF-REL-01, RF-REL-02, RF-SEG-01, RF-RAT-01) | M6 | SIM: todos os 10 RFs Must Have verificáveis e funcionais em ambiente de homologação NBS. NÃO: qualquer RF Must Have pendente, não funcional ou não verificável no ambiente de homologação. |
+| **E5** | Roteiro de Testes (casos de teste cobrindo todos os RFs Must Have, com passos, dados de entrada, resultado esperado e campo de resultado) | M6 | SIM: roteiro com caso de teste para cada RF Must Have, com dados de teste baseados nos exemplos de NF-e fornecidos pelo cliente (Premissa 3), aprovado pelo GP e por Sandro Siqueira. NÃO: qualquer RF Must Have sem caso de teste ou roteiro não aprovado. |
+| **E6** | Relatório de Testes de Homologação (UAT) com evidências, assinado pelo cliente | M7 | SIM: todos os casos de teste do roteiro (E5) executados com resultado conforme, com evidências (prints ou logs), assinado pelo GP, por Sandro Siqueira e pelos representantes de Financeiro e Jurídico. NÃO: qualquer caso de teste reprovado, não executado ou ausência de assinatura de algum representante do cliente. |
+| **E7** | Documentação do usuário: manuais de operação por perfil (Contabilidade, Financeiro, Jurídico, Administrador) | M7 | SIM: manual de operação para cada um dos 5 perfis de usuário (RF-SEG-01), descrevendo todas as funcionalidades acessíveis ao perfil, com prints de telas da versão homologada, aprovado por Sandro Siqueira. NÃO: ausência de manual para qualquer perfil ou não aprovação pelo solicitante. |
+| **E8** | Módulo implantado e operacional em produção, com validação pós-go-live | M8 | SIM: módulo ativo em ambiente de produção NBS, com ao menos um lote real de NF-e processado e resultado de auditoria verificado por Sandro Siqueira, sem erros críticos. NÃO: qualquer falha de implantação em produção ou ausência de validação pelo cliente. |
+| **E9** | Registro de Treinamento das equipes de Contabilidade, Financeiro e Jurídico | M8 | SIM: ata de treinamento assinada pelos representantes das três áreas, comprovando sessão realizada para cada perfil, com material didático entregue. NÃO: ausência de ata assinada por qualquer área ou ausência de entrega do material didático. |
+| **E10** | Relatório de Encerramento do Projeto (resumo da solução implantada, evidências de go-live, conformidade com os RFs, lições aprendidas, term sheet de aceite final) | M9 | SIM: documento com todas as seções preenchidas, evidências de funcionamento em produção, lista de RFs atendidos com referência cruzada aos casos de teste, e term sheet de aceite assinado pelo Sponsor. NÃO: ausência de qualquer seção, de evidências ou da assinatura do Sponsor. |
 
 ---
 
@@ -219,209 +166,219 @@ O fornecedor deve entregar obrigatoriamente os seguintes artefatos ao longo do p
 
 ### 8.1 Estrutura de Governança
 
-| Papel | Responsável | Função |
+| Papel | Responsável | Atribuição |
 |---|---|---|
-| **Sponsor** | A identificar — CB-01 | Aprovação estratégica, desbloqueio de impedimentos, aprovação final de marcos |
-| **Gestor do Projeto (Cliente)** | Sandro Siqueira — Coordenador de Contabilidade | Acompanhamento operacional, ponto focal técnico, aceite de entregáveis |
-| **Gestor VMO** | Fábio Fornecedor | Gestão contratual do fornecedor, controle de marcos, interface entre partes |
-| **Gestor do Projeto (Fornecedor)** | A nomear na proposta | Execução do projeto, coordenação técnica, entrega de artefatos |
-| **Responsável NBS** | A nomear pela NBS | Entrega do módulo, suporte técnico à implantação |
+| **Sponsor** | A designar pelo Grupo Águia Branca | Aprovação final do go-live; escalação de bloqueios estratégicos; assinatura do term sheet de encerramento |
+| **Gerente de Projeto (GP)** | A designar pelo PMO | Gestão do projeto, aprovação formal de entregáveis, controle de prazo e orçamento, interface com a NBS |
+| **Ponto Focal Técnico-Funcional** | Sandro Siqueira — Coordenador de Contabilidade | Validação de regras fiscais, aprovação de critérios de auditoria, aceite funcional dos entregáveis |
+| **Gestor do Projeto (NBS)** | A indicar pela NBS na proposta | Coordenação do desenvolvimento, entrega dos artefatos, comunicação com o GP do cliente |
+| **Responsável Técnico NBS** | A indicar pela NBS na proposta | Arquitetura técnica do módulo, integração com a base NBS, suporte ao UAT |
+| **Analista de TI (Cliente)** | A designar pelo Grupo Águia Branca | Suporte ao acesso de ambientes, integração com Power BI (se aplicável), gestão do ambiente de homologação |
 
-### 8.2 Rituais de Acompanhamento
+### 8.2 Comunicação
 
-| Reunião | Frequência | Participantes | Objetivo |
-|---|---|---|---|
-| Reunião de Status | Quinzenal | Gestor Cliente + Gestor VMO + Gestor Fornecedor | Avanço de atividades, riscos, impedimentos |
-| Reunião de Marco | A cada entrega de marco | Sponsor + Gestores + NBS | Aceite formal, liberação de pagamento |
-| Reunião de UAT | Setembro/2026 | Equipes Contabilidade, Financeiro, Jurídico + Fornecedor | Validação funcional pelo usuário final |
-| Reunião de Go-live | Outubro/2026 | Todos os stakeholders | Checklist de prontidão, declaração de go-live |
+- **Reunião de Status Quinzenal:** a cada duas semanas, 45 minutos, formato a combinar no kickoff (presencial ou videoconferência).
+- **Canal oficial de comunicação:** e-mail corporativo, com GP em cópia em todas as mensagens técnicas e decisões relevantes.
+- **Comunicação de bloqueios:** bloqueios que impactem prazo ou escopo devem ser reportados ao GP em até 24 horas após identificação, com descrição do impacto e plano de mitigação sugerido.
+- **Aprovação de entregáveis:** o GP tem até **10 dias úteis** após a entrega formal para aceitar (SIM) ou rejeitar (NÃO) cada entregável, com justificativa escrita no caso de rejeição.
+- **Retrabalho:** em caso de rejeição de entregável, a NBS tem até **10 dias úteis** para corrigir e reapresentar, sem custo adicional, desde que a rejeição seja fundamentada em não conformidade com os critérios definidos neste WR.
+- **Relatório de status:** a NBS deve enviar relatório quinzenal de progresso ao GP até a véspera de cada reunião de status, contendo: atividades concluídas, atividades em andamento, próximas atividades, riscos identificados e eventuais bloqueios.
 
-### 8.3 Comunicação e Documentação
+### 8.3 Gestão de Mudanças
 
-- Toda comunicação formal deve ser registrada via e-mail ou plataforma de gestão de projetos definida no kickoff
-- Atas de reunião devem ser emitidas em até 24 horas após cada reunião e aprovadas em até 48 horas
-- Relatórios de status quinzenais devem ser entregues até toda segunda-feira da semana de reunião
-- Solicitações de mudança de escopo (Change Requests) devem ser submetidas formalmente à VMO e aprovadas pelo Sponsor antes de qualquer execução
-- O fornecedor deve designar um Gerente de Projeto com dedicação mínima de 50% ao projeto
+Qualquer alteração de escopo, prazo ou condições comerciais requer **Change Request (CR)** formal, submetido pela NBS ao GP com justificativa técnica e impacto declarado, aprovado pelo Sponsor antes da execução. CRs não aprovados formalmente não serão executados nem faturados.
 
 ---
 
 ## 9. CONDIÇÕES COMERCIAIS
 
-### 9.1 Envelope Orçamentário
+### 9.1 Orçamento de Referência
 
-| Item | Valor |
+| Item | Referência |
 |---|---|
-| **Envelope total disponível** | **R$ 35.000** |
-| Desenvolvimento do módulo Auditor Fiscal NBS | R$ 0 (contrapartida contratual NBS) |
-| Implantação e parametrização (RF001 a RF008) | A detalhar na proposta |
-| Migração de configurações (RF009) | A detalhar na proposta |
-| Treinamento (RF010) | A detalhar na proposta |
-| Gestão de rescisão Fiscal Defender | A detalhar na proposta (se aplicável) |
+| Custo de referência para módulos fiscais integrados em ERPs de porte médio | R$ 200.000 – R$ 500.000 |
+| **Envelope máximo aceitável para este projeto** | **R$ 400.000** |
+| Propostas acima do envelope máximo | Desclassificadas automaticamente |
 
-> Propostas que excedam o envelope de **R$ 35.000** serão automaticamente desclassificadas.
+> **Nota:** O envelope máximo de R$ 400.000 é o teto de referência de mercado para módulos fiscais desta complexidade. A VMO Consultoria espera que a proposta da NBS, como fornecedora do ERP com acesso direto à base de código, apresente proposta competitiva dentro desse envelope. Propostas com valor justificado tecnicamente entre R$ 150.000 e R$ 400.000 serão avaliadas na íntegra.
 
-### 9.2 Cronograma de Pagamentos
+### 9.2 Faturamento por Marcos
 
-O faturamento será realizado por marcos, conforme execução verificada e aceite formal da VMO e do cliente:
+O pagamento será realizado conforme entrega e aceite formal dos marcos abaixo. A proposta da NBS deve apresentar a distribuição de valores por marco, alinhada à seguinte referência:
 
-| Marco | Condição de Pagamento | % | Valor (referência) |
-|---|---|---|---|
-| **M1** — Módulo NBS entregue e validado | Aceite do relatório de levantamento funcional (E02) | 30% | R$ 10.500 |
-| **M2** — Configuração e migração homologadas | Aceite dos entregáveis E03 e E04 | 30% | R$ 10.500 |
-| **M3** — UAT aprovado | Aceite do Termo de UAT (E07) | 25% | R$ 8.750 |
-| **M4** — Go-live e treinamento concluídos | Aceite dos entregáveis E08, E09, E10 | 15% | R$ 5.250 |
-| **Total** | | **100%** | **R$ 35.000** |
+| Marco | Entregáveis Associados | % de Referência |
+|---|---|---|
+| **Marco 1** — Assinatura do contrato / kickoff | — | 10% |
+| **Marco 2** — Documento de Arquitetura Técnica aprovado | E3 | 15% |
+| **Marco 3** — Desenvolvimento concluído em homologação | E4, E5 | 35% |
+| **Marco 4** — Homologação (UAT) aprovada + Documentação de usuário | E6, E7 | 25% |
+| **Marco 5** — Go-live em produção + Treinamento + Encerramento | E8, E9, E10 | 15% |
+| **Total** | | **100%** |
 
-> Pagamentos realizados em até **15 dias corridos** após o aceite formal do marco correspondente.
+> A proposta da NBS pode sugerir distribuição alternativa de marcos e percentuais, desde que: (a) o percentual de go-live (Marco 5) seja no mínimo 15%; (b) nenhum marco único represente mais de 40% do valor total; e (c) a estrutura seja previamente aprovada pelo Sponsor do cliente.
 
-### 9.3 Condições Gerais
+> Faturamento condicionado ao aceite formal (critério SIM) de todos os entregáveis associados ao marco. Pagamentos realizados em até **15 dias corridos** após o aceite formal.
 
-- Preços devem ser apresentados em **Reais (BRL)**, fixos e sem reajuste durante o projeto
-- A proposta deve especificar claramente horas, perfis profissionais e cronograma físico-financeiro
-- Regime de contratação: **preço global por escopo** (não serão aceitas propostas por hora ou por produto sem preço global)
-- Impostos e encargos devem estar inclusos nos valores propostos
-- O fornecedor deve apresentar comprovação de experiência prévia em projetos de implantação NBS e/ou migração de ferramentas de auditoria fiscal
-- A VMO se reserva o direito de solicitar apresentação técnica da proposta antes da adjudicação
+### 9.3 Penalidades por Atraso
+
+- **Atraso imputável à NBS:** multa de 0,5% do valor total do contrato por semana de atraso em cada marco, limitada a 10% do valor total do contrato.
+- **Atraso imputável ao cliente:** prazo estendido proporcionalmente, sem penalidade à NBS, desde que o bloqueio seja formalmente comunicado e aceito pelo GP com evidências do bloqueio causado pelo cliente.
+
+### 9.4 Garantia de Funcionamento
+
+- A NBS garante o funcionamento do módulo em produção por **mínimo de 90 dias corridos** após o go-live (propostas com prazo inferior serão desclassificadas).
+- Falhas de funcionamento identificadas dentro do período de garantia serão corrigidas sem custo adicional, em prazo máximo de 10 dias úteis para falhas críticas (que impedem a operação) e 20 dias úteis para falhas não críticas.
+- Alterações de escopo ou novas funcionalidades solicitadas durante o período de garantia serão tratadas como novo Work Request.
+- Após o período de garantia, a manutenção evolutiva e corretiva do módulo segue o contrato de suporte e manutenção do ERP NBS vigente entre as partes.
+
+### 9.5 Manutenção Legislativa
+
+A proposta deve declarar expressamente o compromisso da NBS de manter o módulo atualizado conforme a evolução da legislação tributária brasileira, incluindo:
+- Atualização de tabelas fiscais (NCM, CFOP, alíquotas de ICMS por UF) dentro do ciclo normal de atualização do ERP NBS;
+- Compatibilidade do módulo com novas versões do ERP NBS em até 30 dias após o lançamento de versão que afete o módulo;
+- Incorporação de mudanças legislativas com vigência publicada com mais de 30 dias de antecedência, antes da data de vigência.
+
+### 9.6 Propriedade Intelectual
+
+Todos os artefatos de documentação entregues (manuais, roteiros de teste, relatórios de encerramento) são de propriedade exclusiva do Grupo Águia Branca / Divisão Comércio a partir do aceite formal. O módulo desenvolvido, sendo componente do ERP NBS, segue as condições de propriedade intelectual do contrato de fornecimento do ERP vigente — que devem ser declaradas expressamente pela NBS na proposta.
 
 ---
 
-## 10. ARTEFATO OBRIGATÓRIO — CHECKLIST DE CONFORMIDADE DA PROPOSTA
+## 10. ARTEFATO OBRIGATÓRIO — CONFORMIDADE DA PROPOSTA
 
-> **Instruções:** O fornecedor deve preencher o checklist abaixo e submeter como **anexo obrigatório** à proposta. Propostas sem o checklist preenchido serão desclassificadas. Para cada item, marque **OK** (atendido), **NOK** (não atendido) ou **N/A** (não aplicável), e inclua observações quando necessário.
+A proposta técnica e comercial da NBS só será considerada válida se acompanhada da tabela de conformidade abaixo, **completamente preenchida**. Propostas sem este artefato ou com itens em branco serão desclassificadas.
+
+**Instrução:** Para cada item, marque **OK** (atende plenamente), **NOK** (não atende) ou **Parcial** (atende com ressalva — obrigatório descrever em Observações).
 
 ---
 
-### GRUPO 1 — QUALIFICAÇÃO TÉCNICA DO FORNECEDOR (6 itens)
+### Grupo 1 — Qualificação da NBS como Fornecedora do Módulo (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 1.1 | Comprovação de ao menos 2 projetos de implantação de módulos NBS (Nomenclatura Brasileira de Serviços) concluídos nos últimos 3 anos | ☐ | ☐ | |
-| 1.2 | Comprovação de ao menos 1 projeto de migração de ferramenta de auditoria fiscal (Fiscal Defender ou similar) para plataforma ERP integrada | ☐ | ☐ | |
-| 1.3 | Equipe técnica com certificação ou habilitação formal na plataforma ERP NBS | ☐ | ☐ | |
-| 1.4 | Experiência documentada com projetos em empresas do segmento de Comércio ou Distribuição | ☐ | ☐ | |
-| 1.5 | Apresentação de referências de clientes (mínimo 2 contatos verificáveis) | ☐ | ☐ | |
-| 1.6 | Empresa regularmente constituída há mais de 3 anos, com comprovante de regularidade fiscal (CND Federal, Estadual e Municipal) | ☐ | ☐ | |
+| 1.1 | NBS declara que possui acesso completo ao código-fonte, modelo de dados e arquitetura do ERP para desenvolver o módulo como componente nativo, sem dependência de terceiros | | | |
+| 1.2 | NBS comprova experiência prévia no desenvolvimento de módulos fiscais nativos ou módulos de auditoria tributária sobre a plataforma ERP NBS (mínimo 1 módulo em produção com documentação de referência) | | | |
+| 1.3 | NBS apresenta equipe técnica designada para o projeto com experiência comprovada em desenvolvimento fiscal/tributário e conhecimento da legislação tributária brasileira aplicável (ICMS, IPI, PIS/COFINS, NCM, CFOP, CST/CSOSN) | | | |
+| 1.4 | NBS declara que o desenvolvimento deste módulo não impactará negativamente o roadmap nem a disponibilidade dos demais módulos do ERP em uso pelo Grupo Águia Branca durante o período de desenvolvimento | | | |
 
 ---
 
-### GRUPO 2 — COMPOSIÇÃO DA EQUIPE DO PROJETO (6 itens)
+### Grupo 2 — Entendimento do Escopo (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 2.1 | Gerente de Projeto nomeado com dedicação mínima de 50% ao projeto, com CV anexo | ☐ | ☐ | |
-| 2.2 | Consultor Funcional Fiscal com experiência comprovada em módulos de auditoria NF-e e SPED | ☐ | ☐ | |
-| 2.3 | Consultor Técnico NBS com experiência em parametrização e integração de módulos da plataforma | ☐ | ☐ | |
-| 2.4 | Instrutor de treinamento habilitado para capacitação em sistemas ERP (presencial ou remoto) | ☐ | ☐ | |
-| 2.5 | Plano de contingência de substituição de recursos críticos em caso de desligamento ou indisponibilidade | ☐ | ☐ | |
-| 2.6 | Compromisso formal de não substituição de recursos-chave sem aprovação prévia da VMO | ☐ | ☐ | |
+| 2.1 | Proposta demonstra entendimento técnico de todos os 11 requisitos do Escopo Incluso (RF-INF-01, RF-AUD-01 a RF-AUD-05, RF-REL-01, RF-REL-02, RF-INT-01, RF-SEG-01, RF-RAT-01), com descrição da abordagem de implementação de cada um | | | |
+| 2.2 | Proposta confirma que o módulo será desenvolvido como componente 100% nativo do ERP NBS, operando sobre a mesma base de dados do ERP, sem integração externa, sem exportação de dados e sem dependência de sistemas de terceiros para a operação de auditoria | | | |
+| 2.3 | Proposta identifica e declara o que está fora do escopo (alinhado à Seção 4.2), confirmando que emissão de NF-e, escrituração SPED, transmissão SEFAZ, extensão para outras divisões e integração com sistemas externos NBS estão fora do escopo desta contratação | | | |
+| 2.4 | Proposta declara posição sobre o RF-INT-01 (integração com Power BI), indicando se será atendido (OK), não atendido (NOK) ou atendido parcialmente (Parcial), com descrição técnica do mecanismo de integração proposto em caso de atendimento | | | |
 
 ---
 
-### GRUPO 3 — METODOLOGIA E GESTÃO DO PROJETO (2 itens)
+### Grupo 3 — Plano de Trabalho e Cronograma (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 3.1 | Metodologia de implantação documentada, com fases, atividades e responsáveis claramente definidos | ☐ | ☐ | |
-| 3.2 | Plano de gestão de riscos identificando ao menos 5 riscos do projeto com probabilidade, impacto e plano de mitigação | ☐ | ☐ | |
+| 3.1 | Proposta apresenta plano de trabalho com fases, atividades e marcos compatíveis com os marcos de referência da Seção 6 (Arquitetura, Desenvolvimento, Homologação, Go-live) | | | |
+| 3.2 | Prazo total de desenvolvimento declarado na proposta está dentro da referência de 6 a 12 meses após kickoff, com justificativa técnica para o prazo proposto | | | |
+| 3.3 | Proposta apresenta estimativa de esforço (horas ou dias por fase/atividade) e alocação da equipe, permitindo avaliação da viabilidade do prazo proposto | | | |
+| 3.4 | Plano de testes descrito, cobrindo os 10 RFs Must Have com estratégia de execução do UAT com a equipe do cliente (Contabilidade, Financeiro, Jurídico), e estratégia de implantação em produção com plano de operação paralela com o Fiscal Defender (mínimo 30 dias antes do desligamento) | | | |
 
 ---
 
-### GRUPO 4 — ESCOPO TÉCNICO E COBERTURA FUNCIONAL (3 itens)
+### Grupo 4 — Entregáveis (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 4.1 | Proposta técnica demonstra cobertura de todos os 10 requisitos funcionais (RF001 a RF010) com descrição do approach de execução de cada um | ☐ | ☐ | |
-| 4.2 | Plano de levantamento funcional (gap analysis) entre Fiscal Defender e Auditor Fiscal NBS incluído na proposta | ☐ | ☐ | |
-| 4.3 | Estratégia de migração de configurações e regras do Fiscal Defender detalhada, com garantia de paridade funcional pré-go-live | ☐ | ☐ | |
+| 4.1 | Proposta lista e descreve todos os 10 entregáveis obrigatórios (E1 a E10) com prazo estimado para cada um | | | |
+| 4.2 | Proposta apresenta índice ou estrutura do Documento de Arquitetura Técnica (E3), demonstrando que cobrirá modelo de dados, integração nativa com a base NBS, mecanismo de controle de acesso e trilha de auditoria imutável | | | |
+| 4.3 | Proposta apresenta estrutura do Roteiro de Testes (E5), demonstrando que cobrirá todos os 10 RFs Must Have com casos de teste verificáveis baseados em NF-e reais anonimizadas fornecidas pelo cliente | | | |
+| 4.4 | Proposta confirma entrega de manuais de operação por perfil (E7) para todos os 5 perfis definidos no RF-SEG-01, e emissão do Relatório de Encerramento (E10) com term sheet de aceite assinado pelo Sponsor | | | |
 
 ---
 
-### GRUPO 5 — CRONOGRAMA E MARCOS (3 itens)
+### Grupo 5 — Condições Comerciais (5 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 5.1 | Cronograma físico detalhado por atividade, compatível com os marcos M1 a M4 definidos no WR | ☐ | ☐ | |
-| 5.2 | Cronograma financeiro alinhado ao modelo de pagamento por marcos (30/30/25/15%) | ☐ | ☐ | |
-| 5.3 | Declaração formal de comprometimento com o go-live até 31/10/2026 | ☐ | ☐ | |
+| 5.1 | Valor total da proposta está dentro do envelope máximo de R$ 400.000 | | | |
+| 5.2 | Proposta apresenta composição de preço por marco, compatível com a estrutura de referência da Seção 9.2 (ou proposta alternativa justificada com os limites da Seção 9.2) | | | |
+| 5.3 | Proposta aceita as penalidades por atraso descritas na Seção 9.3 (0,5% por semana, limitado a 10% do contrato) | | | |
+| 5.4 | Proposta aceita o período de garantia mínimo de 90 dias corridos após go-live, com os prazos de correção definidos na Seção 9.4 | | | |
+| 5.5 | Proposta declara posição sobre manutenção legislativa (Seção 9.5), confirmando ou detalhando as condições de atualização de tabelas fiscais e compatibilidade com novas versões do ERP | | | |
 
 ---
 
-### GRUPO 6 — TREINAMENTO E CAPACITAÇÃO (9 itens)
+### Grupo 6 — Gestão de Riscos (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 6.1 | Plano de treinamento detalhado cobrindo os três públicos: Contabilidade, Financeiro e Jurídico | ☐ | ☐ | |
-| 6.2 | Carga horária de treinamento por perfil de usuário especificada | ☐ | ☐ | |
-| 6.3 | Modalidade de treinamento definida (presencial / remoto / híbrido) com justificativa | ☐ | ☐ | |
-| 6.4 | Material didático incluído no escopo (apresentações, manuais de usuário, guias rápidos) | ☐ | ☐ | |
-| 6.5 | Metodologia de avaliação de aprendizagem dos participantes descrita | ☐ | ☐ | |
-| 6.6 | Cobertura de treinamento para os perfis: contador, analista fiscal, auditoria e administrador (RF007) | ☐ | ☐ | |
-| 6.7 | Vídeo-aulas ou gravações das sessões incluídas como entregável (para uso interno e onboarding futuro) | ☐ | ☐ | |
-| 6.8 | Plano de suporte pós-treinamento durante o período de garantia (dúvidas operacionais) | ☐ | ☐ | |
-| 6.9 | Prazo máximo de entrega dos materiais de treinamento (mínimo 10 dias antes das sessões) | ☐ | ☐ | |
+| 6.1 | Proposta identifica os principais riscos técnicos do projeto, incluindo: risco de complexidade das regras NBS (Nomenclatura Brasileira de Serviços), risco de performance em lotes grandes de NF-e, risco de compatibilidade com versões futuras do ERP e risco de escopo de regras tributárias não mapeadas | | | |
+| 6.2 | Proposta descreve plano de mitigação para cada risco identificado, com responsável e prazo | | | |
+| 6.3 | Proposta declara dependências críticas do lado do cliente (alinhadas às premissas da Seção 5), identificando quais itens, se não fornecidos pelo cliente no prazo, impactarão o cronograma de desenvolvimento | | | |
+| 6.4 | Proposta descreve processo de escalonamento em caso de bloqueio crítico, incluindo o nível de escalação dentro da NBS e o prazo máximo para resposta ao GP do cliente | | | |
 
 ---
 
-### GRUPO 7 — TESTES E QUALIDADE (3 itens)
+### Grupo 7 — Premissas Aceitas (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 7.1 | Plano de testes integrados contemplando todos os módulos NBS integrados ao Auditor Fiscal | ☐ | ☐ | |
-| 7.2 | Roteiro de UAT com casos de teste baseados nos fluxos reais do Fiscal Defender, para validação pelo usuário final | ☐ | ☐ | |
-| 7.3 | Critérios de aceite do UAT claramente definidos, com percentual mínimo de casos de teste aprovados para liberação do go-live | ☐ | ☐ | |
+| 7.1 | NBS aceita que o cliente fornecerá exemplos de NF-e reais anonimizados para uso nos testes de homologação, cobrindo os cenários de auditoria previstos no módulo | | | |
+| 7.2 | NBS aceita que o cliente fornecerá as tabelas fiscais de referência atualizadas (CFOP, NCM, alíquotas por UF, CST/CSOSN) antes do início da configuração das regras de auditoria | | | |
+| 7.3 | NBS aceita que o cliente fornecerá ambiente de homologação disponível com dados anonimizados antes do início da fase de testes, e que eventuais indisponibilidades do ambiente imputáveis ao cliente serão formalmente comunicadas para extensão proporcional do prazo | | | |
+| 7.4 | NBS aceita que a documentação completa do Fiscal Defender (regras, relatórios, perfis, fluxos) será fornecida pelo cliente antes do início do desenvolvimento, e que informações adicionais não fornecidas no prazo poderão impactar o cronograma | | | |
 
 ---
 
-### GRUPO 8 — CONDIÇÕES COMERCIAIS E CONTRATUAIS (5 itens)
+### Grupo 8 — Governança e Comunicação (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 8.1 | Proposta comercial dentro do envelope de R$ 35.000 (propostas acima serão desclassificadas) | ☐ | ☐ | |
-| 8.2 | Preços apresentados em BRL, fixos, sem reajuste, com impostos inclusos | ☐ | ☐ | |
-| 8.3 | Detalhamento da composição de preço por entregável/marco (não apenas valor global) | ☐ | ☐ | |
-| 8.4 | Prazo de validade da proposta mínimo de 60 dias a partir da data de submissão | ☐ | ☐ | |
-| 8.5 | Declaração de aceite das condições gerais deste Work Request e disponibilidade para negociação contratual com a VMO | ☐ | ☐ | |
+| 8.1 | NBS aceita reunião de status quinzenal no formato definido pelo cliente (presencial ou videoconferência), com relatório de progresso entregue 1 dia útil antes de cada reunião | | | |
+| 8.2 | NBS aceita comunicar bloqueios que impactem prazo ou escopo em até 24 horas após a identificação, via canal oficial, com descrição do impacto e plano de mitigação sugerido | | | |
+| 8.3 | NBS aceita o processo de aprovação de entregáveis em até 10 dias úteis pelo GP do cliente, e o processo de retrabalho em até 10 dias úteis em caso de rejeição fundamentada | | | |
+| 8.4 | NBS aceita o processo de Change Request formal para qualquer alteração de escopo, prazo ou condições comerciais, com aprovação prévia do Sponsor do cliente antes da execução | | | |
 
 ---
 
-### GRUPO 9 — CONFORMIDADE DOCUMENTAL (4 itens)
+### Grupo 9 — Conformidade Técnica do Módulo (6 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 9.1 | Proposta técnica e proposta comercial apresentadas em documentos separados | ☐ | ☐ | |
-| 9.2 | Checklist de conformidade (este artefato) preenchido e assinado digitalmente pelo responsável legal da empresa | ☐ | ☐ | |
-| 9.3 | Documentos de regularidade fiscal anexos: CND Federal, CND Estadual, CND Municipal, FGTS e Trabalhista | ☐ | ☐ | |
-| 9.4 | Contrato social ou certificado da Junta Comercial atualizado (últimos 12 meses) | ☐ | ☐ | |
+| 9.1 | Proposta confirma que o módulo operará nativamente sobre a base de dados do ERP NBS, sem exportação de dados para sistemas externos durante o processo de auditoria | | | |
+| 9.2 | Proposta confirma que uma NF-e registrada na base NBS estará disponível para processamento pelo módulo em até 5 minutos após o registro (modo de processamento contínuo), conforme RF-INF-01 | | | |
+| 9.3 | Proposta confirma que o log de auditoria de ações (RF-RAT-01) será imutável e não poderá ser editado ou excluído por nenhum perfil de usuário, incluindo o Administrador, com retenção mínima de 5 anos | | | |
+| 9.4 | Proposta confirma que o controle de acesso por perfil (RF-SEG-01) será integrado ao mecanismo de autenticação existente do ERP NBS, sem sistema de autenticação paralelo, e que usuário com perfil inadequado receberá mensagem de acesso não autorizado sem exposição de dados da funcionalidade restrita | | | |
+| 9.5 | Proposta descreve como o módulo atenderá à conformidade com a LGPD para dados pessoais eventualmente presentes em NF-e (CPF de destinatários, transportadores), com segregação de acesso por perfil | | | |
+| 9.6 | Proposta confirma que o módulo não modificará registros originais de NF-e na base NBS, gravando os resultados de auditoria em estrutura de dados separada e vinculada à chave de acesso da NF-e | | | |
 
 ---
 
-### GRUPO 10 — SEGURANÇA, PRIVACIDADE E COMPLIANCE (4 itens)
+### Grupo 10 — Declarações da NBS (9 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 10.1 | Política de segurança da informação do fornecedor disponível para análise pelo cliente | ☐ | ☐ | |
-| 10.2 | Compromisso formal de confidencialidade (NDA) para acesso a dados fiscais e configurações do ERP do Grupo Águia Branca | ☐ | ☐ | |
-| 10.3 | Conformidade com a LGPD declarada, incluindo tratamento de dados pessoais acessados durante o projeto | ☐ | ☐ | |
-| 10.4 | Plano de descarte seguro de dados do cliente ao término do projeto | ☐ | ☐ | |
+| 10.1 | NBS declara não ter conflito de interesse com o Grupo Águia Branca / Divisão Comércio que impeça a prestação objetiva e imparcial dos serviços de desenvolvimento | | | |
+| 10.2 | NBS declara que todos os dados do cliente acessados durante o desenvolvimento e os testes serão tratados com confidencialidade e utilizados exclusivamente para fins deste projeto | | | |
+| 10.3 | NBS declara que os dados do cliente serão descartados ou devolvidos ao término do projeto, conforme política de segurança da informação acordada contratualmente | | | |
+| 10.4 | NBS declara ter lido e compreendido integralmente este Work Request, incluindo todos os requisitos, premissas, entregáveis, condições comerciais e critérios de aceite | | | |
+| 10.5 | NBS declara que a equipe técnica designada para o projeto estará disponível durante todo o período de desenvolvimento, e que eventuais substituições de membros-chave serão comunicadas ao GP com antecedência mínima de 15 dias e estarão sujeitas à aprovação do cliente | | | |
+| 10.6 | NBS declara capacidade de iniciar o projeto (kickoff) em até 15 dias úteis após a assinatura do contrato | | | |
+| 10.7 | NBS declara que o desenvolvimento deste módulo não introduzirá componentes de software de terceiros sem licença compatível com o uso comercial do Grupo Águia Branca | | | |
+| 10.8 | NBS declara as condições de propriedade intelectual aplicáveis ao módulo desenvolvido, incluindo se o cliente terá direito de uso perpétuo do módulo independentemente da continuidade do contrato de ERP | | | |
+| 10.9 | NBS declara que todos os 41 itens desta tabela foram avaliados e respondidos, e que a proposta submetida está em conformidade com os termos deste Work Request | | | |
 
 ---
 
-> **Resumo do Checklist:**
->
-> | Grupo | Itens | OK | NOK | N/A |
-> |---|---|---|---|---|
-> | 1 — Qualificação Técnica | 6 | | | |
-> | 2 — Composição da Equipe | 6 | | | |
-> | 3 — Metodologia e Gestão | 2 | | | |
-> | 4 — Escopo Técnico | 3 | | | |
-> | 5 — Cronograma e Marcos | 3 | | | |
-> | 6 — Treinamento e Capacitação | 9 | | | |
-> | 7 — Testes e Qualidade | 3 | | | |
-> | 8 — Condições Comerciais | 5 | | | |
-> | 9 — Conformidade Documental | 4 | | | |
-> | 10 — Segurança e Compliance | 4 | | | |
-> | **TOTAL** | **41** | | | |
+**Resumo de Conformidade (preencher pela NBS):**
+
+| | Quantidade |
+|---|---|
+| Itens OK | ___ / 41 |
+| Itens NOK | ___ / 41 |
+| Itens Parcial | ___ / 41 |
+
+> **Regra de desclassificação:** Propostas com qualquer item **NOK** nos Grupos 1, 2, 5 ou 10 serão automaticamente desclassificadas. Itens **Parcial** nos demais grupos serão avaliados pela VMO Consultoria com base nas observações declaradas.
 
 ---
 
@@ -429,55 +386,41 @@ O faturamento será realizado por marcos, conforme execução verificada e aceit
 
 ### 11.1 Prazo e Canal
 
-| Item | Informação |
-|---|---|
-| **Prazo limite de submissão** | **06/06/2026 às 18h00 (horário de Brasília)** |
-| **Canal de submissão** | E-mail para o Gestor VMO responsável |
-| **Assunto do e-mail** | `[PROPOSTA] PROJ-2026-005 — Auditor Fiscal NBS — [Nome do Fornecedor]` |
-| **Formato dos arquivos** | PDF (proposta técnica, proposta comercial, checklist) + XLS ou XLSX (cronograma detalhado) |
+- **Prazo final para envio:** **2026-06-06, até 18h00 (horário de Brasília)**
+- **Canal de envio:** e-mail para o GP designado pelo PMO, com cópia para o Sponsor e para Sandro Siqueira
+- **Assunto obrigatório do e-mail:** `[PROPOSTA] PROJ-2026-005 — Auditor Fiscal Módulo NBS — NBS`
 
-### 11.2 Documentos a Submeter
-
-O fornecedor deve enviar, dentro do prazo, os seguintes documentos:
+### 11.2 Documentos Obrigatórios na Proposta
 
 | # | Documento | Formato |
 |---|---|---|
-| D01 | Proposta Técnica (escopo, metodologia, equipe, cronograma) | PDF |
-| D02 | Proposta Comercial (preços por marco, composição de custos) | PDF |
-| D03 | Checklist de Conformidade (Artefato Obrigatório — Seção 10) preenchido e assinado | PDF |
-| D04 | Cronograma físico-financeiro detalhado | XLS/XLSX ou PDF |
-| D05 | Documentos de qualificação (regularidade fiscal, contrato social) | PDF |
-| D06 | CVs dos profissionais designados para o projeto | PDF |
-| D07 | Referências de clientes (nome, empresa, telefone, e-mail) | PDF ou no corpo da proposta técnica |
+| 1 | Proposta Técnica (arquitetura do módulo, abordagem por RF, tecnologias, plano de trabalho, equipe, cronograma) | PDF |
+| 2 | Proposta Comercial (valor por marco, composição de custos, condições de pagamento) | PDF |
+| 3 | Tabela de Conformidade (Seção 10) completamente preenchida e assinada pelo responsável técnico da NBS | PDF |
+| 4 | CVs dos profissionais técnicos designados para o projeto (líder técnico, arquiteto, especialista fiscal) | PDF |
+| 5 | Documentação de referência de módulo fiscal nativo ou equivalente desenvolvido pela NBS (mínimo 1 caso de referência) | PDF |
+| 6 | Cronograma físico-financeiro detalhado por fase e atividade | PDF ou XLSX |
+| 7 | Declaração de propriedade intelectual sobre o módulo a ser desenvolvido | PDF |
 
-### 11.3 Processo de Avaliação
+### 11.3 Critérios de Avaliação
 
-| Fase | Atividade | Prazo |
-|---|---|---|
-| Submissão | Recebimento das propostas | Até 06/06/2026 |
-| Triagem | Verificação de conformidade documental e checklist | 07–09/06/2026 |
-| Análise técnica | Avaliação das propostas técnicas pela VMO e cliente | 10–13/06/2026 |
-| Apresentação (se necessário) | Apresentação técnica das propostas finalistas | 14–15/06/2026 (est.) |
-| Adjudicação | Decisão e comunicação ao fornecedor selecionado | 16/06/2026 (est.) |
-| Negociação e contrato | Alinhamento contratual final | 17–20/06/2026 (est.) |
-| Kickoff | Início formal do projeto | 15/06/2026 (est.) |
-
-### 11.4 Critérios de Avaliação
-
-As propostas serão avaliadas segundo os seguintes critérios e pesos:
+A proposta da NBS será avaliada pelos seguintes critérios:
 
 | Critério | Peso |
 |---|---|
-| Qualificação técnica e experiência comprovada | 30% |
-| Qualidade e completude da proposta técnica | 25% |
-| Proposta comercial (valor e detalhamento) | 25% |
-| Perfil e experiência da equipe designada | 15% |
-| Conformidade documental (checklist 10/10 grupos) | 5% |
-| **Total** | **100%** |
+| Adequação técnica (cobertura dos RFs Must Have e qualidade da arquitetura proposta) | 35% |
+| Prazo total de desenvolvimento e qualidade do plano de trabalho | 25% |
+| Preço total (dentro do envelope máximo de R$ 400.000) | 20% |
+| Qualidade do plano de testes, homologação e estratégia de operação paralela | 10% |
+| Condições de manutenção legislativa e garantia pós go-live | 10% |
 
-### 11.5 Esclarecimentos
+### 11.4 Esclarecimentos
 
-Dúvidas sobre este Work Request devem ser encaminhadas até **30/05/2026** ao Gestor VMO responsável pelo e-mail, com assunto `[DÚVIDA] PROJ-2026-005 — [Nome do Fornecedor]`. As respostas serão consolidadas e enviadas a todos os fornecedores convidados até **02/06/2026**.
+Dúvidas sobre este Work Request devem ser enviadas por e-mail até **2026-05-30** para o GP designado pelo PMO, com cópia para Sandro Siqueira, com assunto `[DÚVIDA] PROJ-2026-005 — NBS`. As respostas serão consolidadas e enviadas em até 3 dias úteis após o recebimento.
+
+### 11.5 Sigilo e Confidencialidade
+
+Este documento é de uso restrito e destinado exclusivamente à NBS e aos stakeholders internos do Grupo Águia Branca / Divisão Comércio envolvidos na avaliação. Sua reprodução, distribuição ou uso para fins outros que não a elaboração da proposta é vedada sem autorização prévia da VMO Consultoria e do Grupo Águia Branca.
 
 ---
 
@@ -485,12 +428,12 @@ Dúvidas sobre este Work Request devem ser encaminhadas até **30/05/2026** ao G
 
 | Papel | Nome | Assinatura | Data |
 |---|---|---|---|
-| Elaboração | Fábio Fornecedor — VMO Consultoria | | 18/05/2026 |
-| Validação Técnica | Sandro Siqueira — Coordenador de Contabilidade | | |
-| Aprovação | Sponsor (CB-01 — A identificar) | | Até 25/05/2026 |
+| **Elaboração** | Fábio Fornecedor — VMO Consultoria | | 2026-05-18 |
+| **Validação Técnica e Funcional** | Sandro Siqueira — Coordenador de Contabilidade, Divisão Comércio | | |
+| **Aprovação** | Sponsor — Grupo Águia Branca (a designar) | | Até 2026-06-06 |
 
 ---
 
-> **VMO Consultoria | Gestão Estratégica de Fornecedores e Projetos**
-> Documento confidencial — uso restrito ao Grupo Águia Branca e fornecedores convidados.
-> Versão 1.0 | Emitido em 18/05/2026 | PROJ-2026-005
+*Work Request emitido pela VMO Consultoria em nome da Divisão Comércio — Grupo Águia Branca.*
+*Documento confidencial — uso restrito ao Grupo Águia Branca e à NBS.*
+*Versão 1.0 | Emitido em 2026-05-18 | PROJ-2026-005*
