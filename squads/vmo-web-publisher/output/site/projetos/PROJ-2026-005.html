@@ -3,1766 +3,492 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJ-2026-005 — Auditor Fiscal NBS | Portal VMO</title>
+<title>PROJ-2026-005 — Auditor Fiscal NBS</title>
 <style>
 :root {
-  --bg: #0f172a; --bg2: #1e293b; --bg3: #0d1526; --border: #334155;
+  --bg: #0f172a; --bg2: #1e293b; --border: #334155;
   --blue: #3b82f6; --green: #22c55e; --yellow: #eab308;
-  --red: #ef4444; --orange: #f97316; --purple: #a855f7; --gray: #64748b;
+  --red: #ef4444; --orange: #f97316; --gray: #64748b;
   --text: #f1f5f9; --text2: #94a3b8;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.6;
-}
-a { color: var(--blue); text-decoration: none; }
-a:hover { text-decoration: underline; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.back-link { font-size: 0.75rem; color: var(--blue); text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+.header-title { font-size: 0.72rem; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+.updated-at { font-size: 0.65rem; color: var(--text2); }
+.main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
 
-/* HEADER */
-.site-header {
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+/* ALERTA URGENTE */
+.urgente-banner {
+  background: #ef444410; border: 2px solid var(--red); border-radius: 12px;
+  padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: flex-start; gap: 16px;
+  animation: pulse-border 2s infinite;
 }
-.back-link {
-  color: var(--text2);
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-.back-link:hover { color: var(--text); text-decoration: none; }
-.header-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: center;
-}
-.header-meta {
-  font-size: 12px;
-  color: var(--text2);
-  text-align: right;
-  white-space: nowrap;
-}
+@keyframes pulse-border { 0%,100%{border-color:#ef4444;} 50%{border-color:#f97316;} }
+.urgente-icon { font-size: 2rem; flex-shrink: 0; }
+.urgente-content { flex: 1; }
+.urgente-title { font-size: 1rem; font-weight: 800; color: var(--red); margin-bottom: 6px; }
+.urgente-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+.urgente-prazo { display: inline-block; margin-top: 8px; padding: 4px 14px; border-radius: 99px; background: var(--red); color: white; font-size: 0.75rem; font-weight: 700; }
+.countdown { display: flex; gap: 12px; margin-top: 10px; }
+.countdown-item { text-align: center; background: #ef444420; border: 1px solid #ef444440; border-radius: 8px; padding: 8px 16px; }
+.countdown-num { font-size: 1.8rem; font-weight: 800; color: var(--red); }
+.countdown-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
 
-/* TABS */
-.tabs-nav {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  display: flex;
-  gap: 2px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+.hero {
+  background: var(--bg2); border: 1px solid var(--border); border-left: 5px solid var(--red);
+  border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
 }
-.tab-btn {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--text2);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 12px 16px;
-  white-space: nowrap;
-  transition: color .15s, border-color .15s;
-}
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active {
-  border-bottom-color: var(--blue);
-  color: var(--blue);
-}
+.hero-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 0.65rem; font-weight: 700; }
+.badge-red { background: #ef444420; color: var(--red); border: 1px solid #ef444440; }
+.badge-blue { background: #3b82f620; color: var(--blue); border: 1px solid #3b82f640; }
+.badge-green { background: #22c55e20; color: var(--green); border: 1px solid #22c55e40; }
+.badge-orange { background: #f9731620; color: var(--orange); border: 1px solid #f9731640; }
+.hero-code { font-size: 0.65rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.hero-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 14px; line-height: 1.3; }
+.hero-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+.meta-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.meta-value { font-size: 0.85rem; font-weight: 600; }
+.status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 99px; font-size: 0.75rem; font-weight: 700; }
+.urgente-badge { background: #ef444420; color: var(--red); border: 1px solid #ef444440; }
 
-/* CONTENT */
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.section-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+@media(max-width:700px) { .grid-2,.grid-3 { grid-template-columns: 1fr; } }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.card-title { font-size: 0.68rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
 
-/* CARDS */
-.card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-}
-.card-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text2);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  margin-bottom: 12px;
-}
+/* Semáforo */
+.semaphore-grid { display: flex; flex-direction: column; gap: 8px; }
+.sem-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 8px; }
+.sem-row.verde-bg { background: #22c55e0d; border: 1px solid #22c55e20; }
+.sem-row.amarelo-bg { background: #eab3080d; border: 1px solid #eab30820; }
+.sem-row.vermelho-bg { background: #ef44440d; border: 1px solid #ef444420; }
+.sem-icon { font-size: 1.1rem; flex-shrink: 0; }
+.sem-label { font-size: 0.8rem; font-weight: 600; flex: 1; }
+.sem-note { font-size: 0.68rem; color: var(--text2); }
 
-/* GRID UTILS */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-@media (max-width: 900px) { .grid-5 { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px) { .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; } }
+/* KPI */
+.kpi-card { text-align: center; padding: 16px; }
+.kpi-value { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; }
+.kpi-name { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.kpi-sub { font-size: 0.68rem; color: var(--text2); }
 
-/* HERO */
-.hero-card {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 28px;
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  margin-bottom: 20px;
-}
-.hero-body { flex: 1; }
-.hero-badge {
-  display: inline-block;
-  background: rgba(59,130,246,.15);
-  border: 1px solid rgba(59,130,246,.3);
-  color: var(--blue);
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  padding: 3px 10px;
-  margin-bottom: 10px;
-}
-.hero-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.hero-subtitle {
-  color: var(--text2);
-  font-size: 14px;
-  margin-bottom: 14px;
-}
-.hero-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--text2);
-}
-.hero-meta span { display: flex; align-items: center; gap: 5px; }
-.score-rings { display: flex; flex-direction: column; gap: 12px; align-items: center; }
-.score-ring {
-  width: 90px;
-  height: 90px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.score-ring svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
-.score-ring-inner { text-align: center; z-index: 1; }
-.score-ring-inner .val { font-size: 18px; font-weight: 700; }
-.score-ring-inner .lbl { font-size: 10px; color: var(--text2); }
+/* ROI */
+.roi-card { background: linear-gradient(135deg, #22c55e0a, #3b82f60a); border: 1px solid #22c55e30; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+.roi-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media(max-width:600px) { .roi-grid { grid-template-columns: 1fr; } }
+.roi-item { text-align: center; }
+.roi-val { font-size: 1.5rem; font-weight: 800; }
+.roi-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.roi-sub { font-size: 0.7rem; color: var(--text2); margin-top: 4px; }
 
-/* ALERT BOX */
-.alert {
-  border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 16px;
-  border-left: 4px solid;
-  display: flex;
-  gap: 12px;
-}
-.alert-red { background: rgba(239,68,68,.08); border-color: var(--red); }
-.alert-yellow { background: rgba(234,179,8,.08); border-color: var(--yellow); }
-.alert-icon { font-size: 20px; flex-shrink: 0; padding-top: 2px; }
-.alert-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-.alert-body ul { padding-left: 18px; }
-.alert-body li { margin-bottom: 6px; font-size: 13px; color: var(--text2); }
-.alert-body li strong { color: var(--text); }
+/* Pipeline v2 */
+.pipeline-card { background: #3b82f608; border: 1px solid #3b82f630; border-radius: 10px; padding: 18px; margin-bottom: 24px; }
+.pipeline-title { font-size: 0.75rem; font-weight: 700; color: var(--blue); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.pipeline-agent { font-size: 0.65rem; color: var(--text2); margin-bottom: 14px; }
+.audit-domain { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; background: #0f172a; }
+.audit-domain-ok { border: 1px solid #22c55e20; }
+.audit-domain-warn { border: 1px solid #eab30820; }
+.audit-domain-fail { border: 1px solid #ef444420; }
+.audit-domain-label { font-size: 0.78rem; font-weight: 600; flex: 1; }
+.audit-domain-status { font-size: 0.65rem; color: var(--text2); }
 
-/* METRIC CARDS */
-.metric-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.metric-card .m-label { font-size: 12px; color: var(--text2); font-weight: 500; }
-.metric-card .m-value { font-size: 24px; font-weight: 700; }
-.metric-card .m-sub { font-size: 12px; color: var(--text2); }
-.m-green .m-value { color: var(--green); }
-.m-blue .m-value { color: var(--blue); }
-.m-yellow .m-value { color: var(--yellow); }
-.m-purple .m-value { color: var(--purple); }
-.m-red .m-value { color: var(--red); }
+/* NC Table */
+.nc-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.nc-table th { text-align: left; padding: 8px 10px; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); border-bottom: 1px solid var(--border); }
+.nc-table td { padding: 10px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+.nc-critica { background: #ef444412; color: var(--red); border: 1px solid #ef444430; padding: 2px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; }
+.nc-mod { background: #eab30812; color: var(--yellow); border: 1px solid #eab30830; padding: 2px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; }
 
-/* TABLES */
-.table-wrap { overflow-x: auto; }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-th {
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-  color: var(--text2);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  padding: 10px 12px;
-  text-align: left;
-  white-space: nowrap;
-}
-td {
-  border-bottom: 1px solid rgba(51,65,85,.5);
-  padding: 10px 12px;
-  color: var(--text);
-  vertical-align: top;
-}
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(30,41,59,.6); }
+/* Entregáveis */
+.entregavel-list { display: flex; flex-direction: column; gap: 6px; }
+.entregavel-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: #0f172a; border: 1px solid var(--border); font-size: 0.8rem; }
+.entregavel-icon { font-size: 1rem; flex-shrink: 0; }
+.entregavel-name { flex: 1; }
+.entregavel-status { font-size: 0.65rem; color: var(--green); font-weight: 600; }
+.entregavel-new { font-size: 0.55rem; padding: 2px 6px; background: #3b82f620; color: var(--blue); border-radius: 4px; margin-left: 4px; font-weight: 700; }
 
-/* PILLS / BADGES */
-.pill {
-  display: inline-block;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  letter-spacing: .04em;
-}
-.pill-green { background: rgba(34,197,94,.15); color: var(--green); border: 1px solid rgba(34,197,94,.3); }
-.pill-blue { background: rgba(59,130,246,.15); color: var(--blue); border: 1px solid rgba(59,130,246,.3); }
-.pill-yellow { background: rgba(234,179,8,.15); color: var(--yellow); border: 1px solid rgba(234,179,8,.3); }
-.pill-red { background: rgba(239,68,68,.15); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
-.pill-purple { background: rgba(168,85,247,.15); color: var(--purple); border: 1px solid rgba(168,85,247,.3); }
-.pill-gray { background: rgba(100,116,139,.15); color: var(--gray); border: 1px solid rgba(100,116,139,.3); }
-.pill-orange { background: rgba(249,115,22,.15); color: var(--orange); border: 1px solid rgba(249,115,22,.3); }
+/* Riscos */
+.risk-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.risk-table th { text-align: left; padding: 8px 10px; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); border-bottom: 1px solid var(--border); }
+.risk-table td { padding: 10px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+.risk-tag { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+.r-critico { background: #ef444420; color: var(--red); }
+.r-alto { background: #f9731620; color: var(--orange); }
+.r-medio { background: #eab30820; color: var(--yellow); }
+.r-rsk01 { background: #ef444430; color: var(--red); border: 1px solid var(--red); font-weight: 800; }
 
-/* SEMAPHORE */
-.semaphore {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-.sem-dot {
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.sem-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
-.sem-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
-.sem-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+/* Módulos */
+.modulo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+@media(max-width:700px) { .modulo-grid { grid-template-columns: 1fr; } }
+.modulo-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.modulo-num { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.modulo-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; }
+.modulo-desc { font-size: 0.7rem; color: var(--text2); line-height: 1.5; }
 
-/* STATUS CARD */
-.status-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-}
-.status-card .s-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.status-card .s-icon { font-size: 20px; }
-.status-card .s-title { font-size: 15px; font-weight: 600; }
-.status-card .s-desc { font-size: 13px; color: var(--text2); }
-
-/* DOWNLOAD SECTION */
-.download-section {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-.download-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; }
-.download-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.btn-dl {
-  background: rgba(59,130,246,.1);
-  border: 1px solid rgba(59,130,246,.3);
-  border-radius: 6px;
-  color: var(--blue);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 12px;
-  padding: 7px 14px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: background .15s, border-color .15s;
-}
-.btn-dl:hover { background: rgba(59,130,246,.2); border-color: rgba(59,130,246,.5); text-decoration: none; }
-.btn-dl.primary {
-  background: rgba(34,197,94,.1);
-  border-color: rgba(34,197,94,.3);
-  color: var(--green);
-}
-.btn-dl.primary:hover { background: rgba(34,197,94,.2); border-color: rgba(34,197,94,.5); }
-
-/* MODULE CARDS */
-.module-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-}
-.module-card .mod-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-.module-card .mod-title { font-size: 14px; font-weight: 600; }
-.module-card .mod-count {
-  font-size: 12px;
-  color: var(--text2);
-  background: var(--bg3);
-  border-radius: 4px;
-  padding: 2px 8px;
-  border: 1px solid var(--border);
-}
-.module-card .mod-rfs { font-size: 12px; color: var(--text2); margin-bottom: 10px; }
-.mod-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-
-/* TIMELINE */
-.timeline { display: flex; flex-direction: column; gap: 0; }
-.tl-item {
-  display: grid;
-  grid-template-columns: 180px 24px 1fr;
-  gap: 0 16px;
-  padding-bottom: 0;
-}
-.tl-date { font-size: 12px; color: var(--text2); text-align: right; padding: 12px 0; }
-.tl-line { display: flex; flex-direction: column; align-items: center; }
-.tl-dot {
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  border: 2px solid;
-  flex-shrink: 0;
-  margin-top: 14px;
-}
-.tl-dot.done { background: var(--green); border-color: var(--green); }
-.tl-dot.active { background: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
-.tl-dot.pending { background: transparent; border-color: var(--border); }
-.tl-connector {
-  width: 2px;
-  flex: 1;
-  background: var(--border);
-  min-height: 20px;
-}
-.tl-body {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin: 8px 0;
-}
-.tl-body.active { border-color: var(--yellow); background: rgba(234,179,8,.05); }
-.tl-body.done { border-color: rgba(34,197,94,.3); }
-.tl-phase { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-.tl-details { font-size: 12px; color: var(--text2); }
-.tl-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-.tl-bar-fill { height: 100%; border-radius: 2px; }
-
-/* RISK CARDS */
-.risk-critical {
-  background: rgba(239,68,68,.06);
-  border: 1px solid rgba(239,68,68,.3);
-  border-radius: 10px;
-  padding: 18px;
-}
-.risk-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-.risk-id { font-size: 11px; font-weight: 700; color: var(--red); letter-spacing: .08em; }
-.risk-score {
-  background: var(--red);
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 6px;
-  padding: 3px 10px;
-}
-.risk-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-.risk-pi { font-size: 12px; color: var(--text2); }
-
-/* PIPELINE */
-.agent-item {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: relative;
-}
-.agent-item::before {
-  content: '';
-  position: absolute;
-  left: -1px;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  border-radius: 3px 0 0 3px;
-}
-.agent-item.done::before { background: var(--green); }
-.agent-item.active::before { background: var(--yellow); }
-.agent-icon { font-size: 22px; flex-shrink: 0; }
-.agent-body { flex: 1; }
-.agent-name { font-size: 14px; font-weight: 600; }
-.agent-output { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: monospace; }
-.agent-status-tag {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-  flex-shrink: 0;
-}
-.agent-status-tag.done { background: rgba(34,197,94,.15); color: var(--green); border: 1px solid rgba(34,197,94,.3); }
-.agent-status-tag.active { background: rgba(234,179,8,.15); color: var(--yellow); border: 1px solid rgba(234,179,8,.3); }
-
-/* MOSOCOW DIST */
-.moscow-bar { display: flex; gap: 8px; align-items: center; margin: 12px 0; }
-.moscow-seg { height: 10px; border-radius: 5px; flex-shrink: 0; }
-.moscow-label { font-size: 12px; color: var(--text2); }
-
-/* MATRIX */
-.matrix-grid {
-  display: grid;
-  grid-template-columns: 30px repeat(5, 1fr);
-  gap: 3px;
-  font-size: 11px;
-}
-.matrix-cell {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 6px 4px;
-  text-align: center;
-  min-height: 44px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-}
-.matrix-cell.header { background: transparent; border: none; color: var(--text2); font-weight: 600; }
-.matrix-cell.c1 { background: rgba(34,197,94,.08); }
-.matrix-cell.c2 { background: rgba(234,179,8,.08); }
-.matrix-cell.c3 { background: rgba(249,115,22,.1); }
-.matrix-cell.c4 { background: rgba(239,68,68,.1); }
-.matrix-cell.c5 { background: rgba(239,68,68,.18); }
-.matrix-code { font-size: 10px; font-weight: 700; color: var(--text); }
-
-/* SECTION */
-.section { margin-bottom: 28px; }
-.section-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* EVM CARDS */
-.evm-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px;
-  text-align: center;
-}
-.evm-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-.evm-value { font-size: 20px; font-weight: 700; }
-.evm-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
+.footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); font-size: 0.65rem; color: var(--text2); margin-top: 16px; }
+.footer strong { color: var(--blue); }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="site-header">
-  <a href="../index.html" class="back-link">&#8592; Portal VMO</a>
-  <div class="header-title">PROJ-2026-005 — Auditor Fiscal NBS</div>
-  <div class="header-meta">Atualizado em 17/05/2026 às 23:56<br>Run: 2026-05-17-235628</div>
+<header class="header">
+  <a href="../index.html" class="back-link">← Dashboard Portfólio</a>
+  <div class="header-title">PROJ-2026-005 · Divisão Comércio GAB · ERP Module NBS</div>
+  <div class="updated-at">Atualizado em: 18/05/2026 às 00:00</div>
 </header>
 
-<!-- TABS NAV -->
-<nav class="tabs-nav" role="tablist">
-  <button class="tab-btn active" onclick="showTab('visao-geral')" role="tab">&#127968; Visão Geral</button>
-  <button class="tab-btn" onclick="showTab('tap')" role="tab">&#128203; TAP</button>
-  <button class="tab-btn" onclick="showTab('requisitos')" role="tab">&#9881;&#65039; Requisitos</button>
-  <button class="tab-btn" onclick="showTab('cronograma')" role="tab">&#128197; Cronograma</button>
-  <button class="tab-btn" onclick="showTab('riscos')" role="tab">&#9888;&#65039; Riscos</button>
-  <button class="tab-btn" onclick="showTab('kpis')" role="tab">&#128202; KPIs</button>
-  <button class="tab-btn" onclick="showTab('status')" role="tab">&#128312; Status</button>
-  <button class="tab-btn" onclick="showTab('pipeline')" role="tab">&#9881; Pipeline</button>
-</nav>
+<main class="main">
 
-<!-- ==================== ABA 1: VISÃO GERAL ==================== -->
-<div id="visao-geral" class="tab-content active">
-<div class="main">
-
-  <!-- DOWNLOADS -->
-  <div class="download-section">
-    <h3>&#11015;&#65039; Downloads</h3>
-    <div class="download-grid">
-      <a href="./docs/PROJ-2026-005-pacote-completo.docx" class="btn-dl primary">&#128196; PROJ-2026-005-pacote-completo.docx</a>
-      <a href="./docs/PROJ-2026-005-pacote-completo.md" class="btn-dl primary">&#128196; PROJ-2026-005-pacote-completo.md</a>
-      <a href="./docs/PROJ-2026-005/01-demanda-coletada.md" class="btn-dl">01-demanda-coletada.md</a>
-      <a href="./docs/PROJ-2026-005/02-qualificacao.md" class="btn-dl">02-qualificacao.md</a>
-      <a href="./docs/PROJ-2026-005/03-documentacao-base.md" class="btn-dl">03-documentacao-base.md</a>
-      <a href="./docs/PROJ-2026-005/04-requisitos.md" class="btn-dl">04-requisitos.md</a>
-      <a href="./docs/PROJ-2026-005/05-cronograma.md" class="btn-dl">05-cronograma.md</a>
-      <a href="./docs/PROJ-2026-005/06-plano-riscos.md" class="btn-dl">06-plano-riscos.md</a>
-      <a href="./docs/PROJ-2026-005/07-kpis.md" class="btn-dl">07-kpis.md</a>
-      <a href="./docs/PROJ-2026-005/08-status-report-inicial.md" class="btn-dl">08-status-report-inicial.md</a>
-      <a href="./docs/PROJ-2026-005/09-revisao-final.md" class="btn-dl">09-revisao-final.md</a>
+  <!-- ALERTA URGENTE CB-01 -->
+  <div class="urgente-banner">
+    <div class="urgente-icon">🚨</div>
+    <div class="urgente-content">
+      <div class="urgente-title">CB-01 — AÇÃO URGENTE REQUERIDA</div>
+      <div class="urgente-desc">
+        O sponsor executivo do projeto não foi identificado. A Condição Bloqueante CB-01 vence em
+        <strong style="color:var(--red)">25/05/2026</strong> — prazo crítico em 7 dias.
+        <br>Sandro Siqueira deve escalar imediatamente para a alta gestão da Divisão Comércio.
+        <br><strong>Candidatos:</strong> Diretor da Divisão Comércio ou CFO do Grupo Águia Branca.
+      </div>
+      <div class="countdown">
+        <div class="countdown-item"><div class="countdown-num">7</div><div class="countdown-label">Dias</div></div>
+        <div class="countdown-item"><div class="countdown-num">0</div><div class="countdown-label">Horas</div></div>
+        <div class="countdown-item"><div class="countdown-num">RSK-01</div><div class="countdown-label">Score 25/25</div></div>
+      </div>
+      <span class="urgente-prazo">Prazo CB-01: 25/05/2026</span>
     </div>
   </div>
 
   <!-- HERO -->
-  <div class="hero-card" style="margin-bottom:20px;">
-    <div class="hero-body">
-      <div class="hero-badge">PROJ-2026-005</div>
-      <div class="hero-title">Auditor Fiscal — Módulo Nativo NBS</div>
-      <div class="hero-subtitle">Substituição do Fiscal Defender pelo módulo nativo NBS · Divisão Comércio, Grupo Águia Branca</div>
-      <div class="hero-meta">
-        <span>&#128100; <strong>Sandro Siqueira</strong> (Coord. Contabilidade)</span>
-        <span>&#128197; Instrução: 15/05/2026</span>
-        <span>&#9989; Aprovado por Marcelo Silveira (GP VMO)</span>
-        <span>&#128640; Go-live: 30/10/2026</span>
-      </div>
+  <div class="hero">
+    <div class="hero-badges">
+      <span class="badge badge-red">🚨 NC-CRÍTICA ATIVA</span>
+      <span class="badge badge-blue">Pipeline v2 ✅</span>
+      <span class="badge badge-green">Score 91/100</span>
+      <span class="badge badge-orange">CB-01 Vence 25/05</span>
     </div>
-    <div class="score-rings">
-      <div class="score-ring">
-        <svg width="90" height="90" viewBox="0 0 90 90">
-          <circle cx="45" cy="45" r="38" fill="none" stroke="#1e293b" stroke-width="8"/>
-          <circle cx="45" cy="45" r="38" fill="none" stroke="#22c55e" stroke-width="8"
-            stroke-dasharray="238.76" stroke-dashoffset="23.88" stroke-linecap="round"/>
-        </svg>
-        <div class="score-ring-inner">
-          <div class="val" style="color:var(--green)">91</div>
-          <div class="lbl">Revisão Vera</div>
-        </div>
+    <div class="hero-code">PROJ-2026-005 · Divisão Comércio, Grupo Águia Branca · Run: 2026-05-15 + v2: 2026-05-18</div>
+    <div class="hero-title">Auditor Fiscal — Módulo Nativo NBS em Substituição ao Fiscal Defender</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="meta-label">Status</div>
+        <div><span class="status-badge urgente-badge">🚨 Bloqueado — Sponsor</span></div>
       </div>
-      <div class="score-ring">
-        <svg width="90" height="90" viewBox="0 0 90 90">
-          <circle cx="45" cy="45" r="38" fill="none" stroke="#1e293b" stroke-width="8"/>
-          <circle cx="45" cy="45" r="38" fill="none" stroke="#eab308" stroke-width="8"
-            stroke-dasharray="238.76" stroke-dashoffset="95.5" stroke-linecap="round"/>
-        </svg>
-        <div class="score-ring-inner">
-          <div class="val" style="color:var(--yellow)">18/30</div>
-          <div class="lbl">Qualificação</div>
-        </div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Sponsor</div>
+        <div class="meta-value" style="color:var(--red)">⚠ A IDENTIFICAR — CB-01</div>
       </div>
-    </div>
-  </div>
-
-  <!-- ALERT BLOQUEANTES -->
-  <div class="alert alert-red">
-    <div class="alert-icon">&#128721;</div>
-    <div class="alert-body">
-      <h4 style="color:var(--red)">Condições Bloqueantes — Ação Imediata Requerida</h4>
-      <ul>
-        <li><strong>CB-01 — Sponsor executivo não identificado:</strong> Sem sponsor, o projeto não pode ser formalmente iniciado. Prazo limite: <strong>25/05/2026</strong>. Responsável: Sandro Siqueira.</li>
-        <li><strong>CB-02 — Acordo NBS sem verificação documental:</strong> A premissa de desenvolvimento gratuito (contrapartida contratual) precisa ser confirmada por escrito. Prazo limite: <strong>30/05/2026</strong>. Responsável: Sandro Siqueira + Jurídico.</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- MÉTRICAS -->
-  <div class="section">
-    <div class="section-title">Métricas Chave</div>
-    <div class="grid-5">
-      <div class="metric-card m-green">
-        <div class="m-label">Saving Anual</div>
-        <div class="m-value">R$78K</div>
-        <div class="m-sub">Cancelamento Fiscal Defender</div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Fornecedor</div>
+        <div class="meta-value">NBS (módulo nativo ERP)</div>
       </div>
-      <div class="metric-card m-blue">
-        <div class="m-label">Orçamento Residual</div>
-        <div class="m-value">R$35K</div>
-        <div class="m-sub">Impl. + treinamento + rescisão</div>
+      <div class="hero-meta-item">
+        <div class="meta-label">BAC (custo VMO)</div>
+        <div class="meta-value">R$ 35.000</div>
       </div>
-      <div class="metric-card m-yellow">
-        <div class="m-label">Payback</div>
-        <div class="m-value">5,4m</div>
-        <div class="m-sub">ROI 3 anos: ~469%</div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Saving Anual</div>
+        <div class="meta-value" style="color:var(--green)">R$ 78.000/ano</div>
       </div>
-      <div class="metric-card m-purple">
-        <div class="m-label">Go-live</div>
-        <div class="m-value" style="font-size:16px;">30/10/2026</div>
-        <div class="m-sub">Custo dev: R$0 (contrapartida)</div>
-      </div>
-      <div class="metric-card m-green">
-        <div class="m-label">Score Vera</div>
-        <div class="m-value">91/100</div>
-        <div class="m-sub">APROVADO · 27 RFs · 18 riscos</div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Go-live Alvo</div>
+        <div class="meta-value">30/10/2026</div>
       </div>
     </div>
   </div>
 
-  <!-- CONTEXTO -->
-  <div class="section">
-    <div class="section-title">Contexto do Projeto</div>
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-title">Necessidade de Negócio</div>
-        <p style="font-size:13px;color:var(--text2);">O Grupo Águia Branca paga <strong style="color:var(--text);">R$78.000/ano</strong> pelo Fiscal Defender (ferramenta externa de auditoria fiscal). O contrato NBS prevê, como contrapartida, o desenvolvimento gratuito de um módulo nativo equivalente. A substituição elimina o custo e consolida a plataforma tecnológica no ERP já utilizado.</p>
+  <!-- ROI -->
+  <div class="roi-card" style="margin-bottom:24px">
+    <div class="section-title" style="margin-bottom:16px">Análise de ROI — Módulo Nativo NBS</div>
+    <div class="roi-grid">
+      <div class="roi-item">
+        <div class="roi-val" style="color:var(--blue)">R$ 35.000</div>
+        <div class="roi-label">Investimento VMO</div>
+        <div class="roi-sub">Contrapartida contratual NBS<br>(dev sem custo adicional)</div>
       </div>
-      <div class="card">
-        <div class="card-title">Solução Proposta</div>
-        <p style="font-size:13px;color:var(--text2);">Módulo <strong style="color:var(--text);">Auditor Fiscal nativo ao ERP NBS</strong>, operando sobre a mesma base de dados transacional, sem necessidade de integração ou sincronização externa. Contempla ingestão de NF-e, motor de auditoria, gestão de alertas, relatórios, configuração de regras e administração RBAC.</p>
+      <div class="roi-item">
+        <div class="roi-val" style="color:var(--green)">R$ 78.000</div>
+        <div class="roi-label">Saving Anual</div>
+        <div class="roi-sub">Eliminação do Fiscal Defender<br>R$ 390.000 em 5 anos</div>
       </div>
-      <div class="card">
-        <div class="card-title">Principais Benefícios</div>
-        <ul style="font-size:13px;color:var(--text2);padding-left:18px;">
-          <li><strong style="color:var(--green);">Saving</strong> R$78.000/ano a partir do go-live</li>
-          <li>Eliminação de integração externa e risco de dados</li>
-          <li>Usabilidade superior (mesmo ambiente ERP)</li>
-          <li>Conformidade fiscal e LGPD centralizada</li>
-          <li>Consolidação tecnológica — menos fornecedores</li>
-        </ul>
+      <div class="roi-item">
+        <div class="roi-val" style="color:var(--yellow)">&lt; 6 meses</div>
+        <div class="roi-label">Payback</div>
+        <div class="roi-sub">Retorno antes do go-live<br>ROI = 2.229%</div>
       </div>
     </div>
   </div>
 
-  <!-- DOCUMENTOS -->
-  <div class="section">
-    <div class="section-title">Documentos Produzidos</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>#</th><th>Documento</th><th>Agente</th><th>Linhas</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>01</td><td>Demanda Coletada</td><td>Iara Inbound</td><td>—</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>02</td><td>Qualificação (18/30)</td><td>Felipe Filtro</td><td>—</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>03</td><td>Documentação Base (TAP)</td><td>Diana Documento</td><td>638</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>04</td><td>Requisitos (27 RFs + 12 RNFs)</td><td>Rafael Requisito</td><td>724</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>05</td><td>Cronograma (77 pacotes WBS)</td><td>Carlos Cronograma</td><td>597</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>06</td><td>Plano de Riscos (18 riscos)</td><td>Pedro Perigo</td><td>745</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>07</td><td>KPIs e Métricas</td><td>Marcela Métrica</td><td>224</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>08</td><td>Status Report Inicial</td><td>Sara Status</td><td>193</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>09</td><td>Revisão Final (Score 91/100)</td><td>Vera Veredito</td><td>259</td><td><span class="pill pill-green">Concluído</span></td></tr>
-          </tbody>
-        </table>
+  <!-- SEMÁFORO -->
+  <div class="section-title">Semáforo de Dimensões</div>
+  <div class="card" style="margin-bottom:24px">
+    <div class="semaphore-grid">
+      <div class="sem-row vermelho-bg">
+        <div class="sem-icon">🔴</div>
+        <div class="sem-label">Governança</div>
+        <div class="sem-note">CB-01 URGENTE — Sponsor executivo não identificado. Prazo: 25/05/2026 (7 dias)</div>
+      </div>
+      <div class="sem-row verde-bg">
+        <div class="sem-icon">🟢</div>
+        <div class="sem-label">Qualidade</div>
+        <div class="sem-note">Score 91/100 — Aprovado pela Vera Veredito. Plano de riscos exemplar (RSK-01 score 25/25)</div>
+      </div>
+      <div class="sem-row verde-bg">
+        <div class="sem-icon">🟢</div>
+        <div class="sem-label">ROI</div>
+        <div class="sem-note">Saving R$78k/ano · Payback &lt; 6 meses · ROI 2.229% · R$390k em 5 anos</div>
+      </div>
+      <div class="sem-row amarelo-bg">
+        <div class="sem-icon">🟡</div>
+        <div class="sem-label">Prazo</div>
+        <div class="sem-note">A confirmar com NBS — benchmark aponta go-live 30/10/2026 (6-12 meses de desenvolvimento)</div>
+      </div>
+      <div class="sem-row verde-bg">
+        <div class="sem-icon">🟢</div>
+        <div class="sem-label">Documentação</div>
+        <div class="sem-note">11/11 artefatos presentes · Pipeline v2 completo · Auditoria Gabriel executada</div>
       </div>
     </div>
   </div>
 
-</div>
-</div>
+  <!-- PIPELINE V2 -->
+  <div class="section-title">Pipeline v2 — Novos Artefatos (2026-05-18)</div>
+  <div class="grid-2">
 
-<!-- ==================== ABA 2: TAP ==================== -->
-<div id="tap" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Objetivo SMART</div>
-    <div class="card">
-      <p style="font-size:14px;line-height:1.8;">
-        Substituir <strong>100%</strong> das funcionalidades do Fiscal Defender pelo módulo <strong>Auditor Fiscal nativo NBS</strong>, com go-live até <strong>30/10/2026</strong>, confirmação de saving de <strong>R$78.000/ano</strong> e aprovação de <strong>≥80% dos usuários</strong> no UAT, com orçamento residual de até <strong>R$35.000</strong>.
-      </p>
-    </div>
-  </div>
-
-  <div class="alert alert-yellow">
-    <div class="alert-icon">&#9888;&#65039;</div>
-    <div class="alert-body">
-      <h4 style="color:var(--yellow)">CB-01 — Sponsor Executivo = A IDENTIFICAR</h4>
-      <p style="font-size:13px;color:var(--text2);">O projeto não possui sponsor executivo formalmente designado. Prazo para resolução: <strong style="color:var(--text);">25/05/2026</strong>. Sem sponsor, o kick-off está bloqueado.</p>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Ficha do Projeto</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
-          <tbody>
-            <tr><td>Tipo</td><td>Nova Solução (substituição tecnológica)</td></tr>
-            <tr><td>Divisão</td><td>Comércio — Grupo Águia Branca</td></tr>
-            <tr><td>Solicitante</td><td>Sandro Siqueira (Coordenador de Contabilidade)</td></tr>
-            <tr><td>Sponsor</td><td><span style="color:var(--red);font-weight:600;">A IDENTIFICAR (CB-01)</span></td></tr>
-            <tr><td>GP VMO</td><td>Marcelo Silveira</td></tr>
-            <tr><td>Orçamento</td><td>R$35.000 residuais + R$0 desenvolvimento (contrapartida NBS)</td></tr>
-            <tr><td>Go-live</td><td>30/10/2026</td></tr>
-            <tr><td>Data Instrução</td><td>15/05/2026</td></tr>
-            <tr><td>Score Qualificação</td><td>18/30 (60%) — APROVADO COM CONDIÇÕES</td></tr>
-            <tr><td>Score Revisão Vera</td><td>91/100 — APROVADO</td></tr>
-          </tbody>
-        </table>
+    <!-- WORK REQUEST -->
+    <div class="pipeline-card">
+      <div class="pipeline-title">📤 Work Request — Mini-RFP</div>
+      <div class="pipeline-agent">Fábio Fornecedor · 2026-05-18 · Destinado à NBS</div>
+      <table style="width:100%;font-size:0.78rem;border-collapse:collapse">
+        <tr><td style="color:var(--text2);padding:4px 0;width:40%">Destinatário</td><td style="font-weight:600">NBS — fornecedor do ERP</td></tr>
+        <tr><td style="color:var(--text2);padding:4px 0">Envelope ref.</td><td style="font-weight:600">R$ 150.000 – R$ 400.000</td></tr>
+        <tr><td style="color:var(--text2);padding:4px 0">Prazo submissão</td><td style="font-weight:600">2026-06-06 (15 dias)</td></tr>
+        <tr><td style="color:var(--text2);padding:4px 0">RFs Must Have</td><td style="font-weight:600">11 requisitos funcionais</td></tr>
+        <tr><td style="color:var(--text2);padding:4px 0">Artefato obrig.</td><td style="font-weight:600;color:var(--green)">✅ 10 grupos / 41 itens</td></tr>
+      </table>
+      <div style="margin-top:14px;font-size:0.7rem;color:var(--text2)">
+        <strong style="color:var(--text)">Cronograma WR (9 marcos):</strong><br>
+        M0 Assinatura → M1 Kick-off → M3 Dev Core (NF-e + motor auditoria) → M5 Relatórios → M7 UAT → M8 Go-live 30/10/2026 → M9 Garantia 90d
+      </div>
+      <div style="margin-top:10px;font-size:0.7rem">
+        <span style="background:#22c55e20;color:var(--green);padding:2px 8px;border-radius:4px;margin-right:6px;font-size:0.65rem">✅ Ingestão NF-e nativa</span>
+        <span style="background:#22c55e20;color:var(--green);padding:2px 8px;border-radius:4px;margin-right:6px;font-size:0.65rem">✅ Motor de auditoria</span>
+        <span style="background:#22c55e20;color:var(--green);padding:2px 8px;border-radius:4px;font-size:0.65rem">✅ Alertas fiscais</span>
+        <br style="margin:4px 0">
+        <span style="background:#ef444420;color:var(--red);padding:2px 8px;border-radius:4px;margin-right:6px;margin-top:4px;display:inline-block;font-size:0.65rem">✗ Emissão NF-e</span>
+        <span style="background:#ef444420;color:var(--red);padding:2px 8px;border-radius:4px;margin-right:6px;font-size:0.65rem">✗ SPED</span>
+        <span style="background:#ef444420;color:var(--red);padding:2px 8px;border-radius:4px;font-size:0.65rem">✗ Outras divisões</span>
       </div>
     </div>
-  </div>
 
-  <div class="grid-2" style="margin-bottom:24px;">
-    <div class="section" style="margin-bottom:0;">
-      <div class="section-title">Escopo Dentro</div>
-      <div class="card">
-        <ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:2;">
-          <li>Módulo Auditor Fiscal nativo NBS (M1–M6)</li>
-          <li>UAT com 3 áreas de negócio</li>
-          <li>Treinamento de usuários chave e equipe fiscal</li>
-          <li>Descontinuação formal do Fiscal Defender</li>
-          <li>Migração de regras de auditoria existentes</li>
-          <li>Documentação técnica e operacional</li>
-        </ul>
+    <!-- AUDITORIA GOVERNANÇA -->
+    <div class="pipeline-card" style="border-color:#ef444430">
+      <div class="pipeline-title" style="color:var(--red)">🏛️ Auditoria de Governança — REPROVADO ❌</div>
+      <div class="pipeline-agent">Gabriel Governança · 2026-05-18</div>
+      <div class="audit-domain audit-domain-fail">
+        <div>🔴</div>
+        <div>
+          <div class="audit-domain-label">D1 — Sponsor e Autorização</div>
+          <div class="audit-domain-status" style="color:var(--red)">NC-CRÍTICA: "A IDENTIFICAR" — CB-01 vence 25/05/2026</div>
+        </div>
       </div>
-    </div>
-    <div class="section" style="margin-bottom:0;">
-      <div class="section-title">Escopo Fora</div>
-      <div class="card">
-        <ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:2;">
-          <li>Outras divisões do Grupo Águia Branca</li>
-          <li>Integrações SAP/BI além do NBS</li>
-          <li>Desenvolvimento interno pela equipe GAB</li>
-          <li>Auditoria de outros tributos não fiscais</li>
-          <li>Expansão para filiais fora do escopo contratual</li>
-        </ul>
+      <div class="audit-domain audit-domain-warn">
+        <div>🟡</div>
+        <div>
+          <div class="audit-domain-label">D2 — Rastreabilidade Cross-Document</div>
+          <div class="audit-domain-status">NC-MOD-01: Prazo NBS não confirmado formalmente (benchmark usado)</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Critérios de Sucesso</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Critério</th><th>Meta</th></tr></thead>
-          <tbody>
-            <tr><td>CS-01</td><td>100% das NF-e auditadas pelo módulo nativo</td><td>100% D+30 go-live</td></tr>
-            <tr><td>CS-02</td><td>Saving confirmado com cancelamento do Fiscal Defender</td><td>R$78.000/ano comprovados</td></tr>
-            <tr><td>CS-03</td><td>SLA de disponibilidade do módulo</td><td>≥99,5% em produção</td></tr>
-            <tr><td>CS-04</td><td>Satisfação dos usuários no UAT</td><td>CSAT ≥ 8/10</td></tr>
-            <tr><td>CS-05</td><td>Zero incidentes críticos após go-live</td><td>Sev.1 = 0 em D+30</td></tr>
-          </tbody>
-        </table>
+      <div class="audit-domain audit-domain-ok">
+        <div>🟢</div>
+        <div>
+          <div class="audit-domain-label">D3 — Conformidade Políticas VMO</div>
+          <div class="audit-domain-status">8/9 políticas conformes · Score 91/100 ✅ · WR emitido ✅</div>
+        </div>
+      </div>
+      <div class="audit-domain audit-domain-ok">
+        <div>🟢</div>
+        <div>
+          <div class="audit-domain-label">D4 — Completude da Documentação</div>
+          <div class="audit-domain-status">11/11 documentos presentes e com conteúdo ✅</div>
+        </div>
+      </div>
+      <div class="audit-domain audit-domain-warn">
+        <div>🟡</div>
+        <div>
+          <div class="audit-domain-label">D5 — Riscos de Governança</div>
+          <div class="audit-domain-status">RSK-01 (25/25) materializado · RSK-02 monitoramento diário</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:0.72rem;color:var(--text2)">
+        Aprovado <strong style="color:var(--text)">com ciência de NC-CRÍTICA</strong> por Marcelo Silveira (18/05/2026). Execução suspensa até resolução da CB-01.
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">Premissas</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Premissa</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>P-01</td><td>Acordo NBS para desenvolvimento gratuito está formalizado em contrato</td><td><span class="pill pill-red">A CONFIRMAR (CB-02)</span></td></tr>
-            <tr><td>P-02</td><td>Infraestrutura NBS disponível e sem restrições técnicas</td><td><span class="pill pill-yellow">A Verificar</span></td></tr>
-            <tr><td>P-03</td><td>Equipe Fiscal Defender cooperará com migração de regras</td><td><span class="pill pill-yellow">A Verificar</span></td></tr>
-            <tr><td>P-04</td><td>Usuários-chave disponíveis para UAT (set/out 2026)</td><td><span class="pill pill-blue">Pendente</span></td></tr>
-            <tr><td>P-05</td><td>Sponsor executivo será designado até 25/05/2026</td><td><span class="pill pill-red">Pendente (CB-01)</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <!-- NC TABLE -->
+  <div class="section-title">Não-Conformidades Registradas</div>
+  <div class="card" style="margin-bottom:24px">
+    <table class="nc-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Domínio</th>
+          <th>Descrição</th>
+          <th>Tipo</th>
+          <th>Ação Corretiva</th>
+          <th>Prazo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#ef444408">
+          <td><strong>NC-001</strong></td>
+          <td>D1 — Sponsor</td>
+          <td>Sponsor executivo "A IDENTIFICAR". Política VMO exige Diretor+. CB-01 aberta.</td>
+          <td><span class="nc-critica">NC-CRÍTICA</span></td>
+          <td>Identificar Diretor Div. Comércio ou CFO do Grupo. Formalizar antes do kickoff.</td>
+          <td style="color:var(--red);font-weight:700">25/05/2026</td>
+        </tr>
+        <tr>
+          <td><strong>NC-MOD-01</strong></td>
+          <td>D2 — Rastreab.</td>
+          <td>Prazo de entrega não confirmado pela NBS — cronograma baseado em benchmark de mercado.</td>
+          <td><span class="nc-mod">NC-MODERADA</span></td>
+          <td>Obter confirmação formal de prazo da NBS na proposta de resposta ao WR.</td>
+          <td>Com WR (06/06)</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="section">
-    <div class="section-title">Restrições</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Restrição</th></tr></thead>
-          <tbody>
-            <tr><td>R-01</td><td>Go-live mandatório até 30/10/2026 para viabilizar cancelamento do Fiscal Defender em jan/2027</td></tr>
-            <tr><td>R-02</td><td>Orçamento máximo de R$35.000 para itens residuais (sem desenvolvimento)</td></tr>
-            <tr><td>R-03</td><td>Solução deve ser 100% nativa NBS — sem middleware externo</td></tr>
-            <tr><td>R-04</td><td>LGPD: dados fiscais não podem sair do ambiente NBS/GAB</td></tr>
-            <tr><td>R-05</td><td>Continuidade operacional garantida durante transição (sem downtime fiscal)</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  <div class="grid-2">
 
-  <div class="section">
-    <div class="section-title">Stakeholders</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Nome</th><th>Papel</th><th>Influência</th><th>Interesse</th></tr></thead>
-          <tbody>
-            <tr><td>Sandro Siqueira</td><td>Solicitante / Coord. Contabilidade</td><td><span class="pill pill-yellow">Alta</span></td><td><span class="pill pill-green">Alto</span></td></tr>
-            <tr><td><em style="color:var(--red);">A IDENTIFICAR</em></td><td>Sponsor Executivo (CB-01)</td><td><span class="pill pill-red">Alta</span></td><td>—</td></tr>
-            <tr><td>Marcelo Silveira</td><td>Gerente de Projetos VMO</td><td><span class="pill pill-yellow">Alta</span></td><td><span class="pill pill-green">Alto</span></td></tr>
-            <tr><td>Equipe Fiscal / Contábil</td><td>Usuários finais principais</td><td><span class="pill pill-blue">Média</span></td><td><span class="pill pill-green">Alto</span></td></tr>
-            <tr><td>NBS (Fornecedor ERP)</td><td>Desenvolvedor do módulo</td><td><span class="pill pill-yellow">Alta</span></td><td><span class="pill pill-blue">Médio</span></td></tr>
-            <tr><td>TI GAB</td><td>Infraestrutura e homologação técnica</td><td><span class="pill pill-blue">Média</span></td><td><span class="pill pill-blue">Médio</span></td></tr>
-            <tr><td>Jurídico GAB</td><td>Verificação contratual NBS (CB-02)</td><td><span class="pill pill-blue">Média</span></td><td><span class="pill pill-blue">Médio</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Aprovação do TAP</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Papel</th><th>Nome</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>Gerente de Projetos VMO</td><td>Marcelo Silveira</td><td><span class="pill pill-green">&#9989; Aprovado</span></td></tr>
-            <tr><td>Solicitante</td><td>Sandro Siqueira</td><td><span class="pill pill-yellow">&#9203; Pendente</span></td></tr>
-            <tr><td>Sponsor Executivo</td><td><em style="color:var(--red);">A IDENTIFICAR</em></td><td><span class="pill pill-red">&#128721; Bloqueado (CB-01)</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-<!-- ==================== ABA 3: REQUISITOS ==================== -->
-<div id="requisitos" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Módulos Funcionais — 27 RFs</div>
-    <div class="grid-3">
-
-      <div class="module-card">
-        <div class="mod-header">
-          <div class="mod-title">M1 — Ingestão de NF-e</div>
-          <div class="mod-count">4 RFs</div>
-        </div>
-        <div class="mod-rfs">RF-001 a RF-004</div>
-        <div class="mod-pills">
-          <span class="pill pill-red">Must ×4</span>
-        </div>
-        <ul style="font-size:12px;color:var(--text2);padding-left:16px;margin-top:10px;line-height:1.8;">
-          <li>RF-001: Importação automática NF-e XML (SEFAZ)</li>
-          <li>RF-002: Validação de assinatura digital</li>
-          <li>RF-003: Processamento em lote (1K NF-e ≤10min)</li>
-          <li>RF-004: Reprocessamento manual de NF-e com erro</li>
-        </ul>
-      </div>
-
-      <div class="module-card">
-        <div class="mod-header">
-          <div class="mod-title">M2 — Motor de Auditoria</div>
-          <div class="mod-count">6 RFs</div>
-        </div>
-        <div class="mod-rfs">RF-005 a RF-010</div>
-        <div class="mod-pills">
-          <span class="pill pill-red">Must ×5</span>
-          <span class="pill pill-yellow">Should ×1</span>
-        </div>
-        <ul style="font-size:12px;color:var(--text2);padding-left:16px;margin-top:10px;line-height:1.8;">
-          <li>RF-005: Conferência de valores tributários (ICMS, PIS, COFINS)</li>
-          <li>RF-006: Cruzamento NF-e × pedido de compra</li>
-          <li>RF-007: Verificação de CFOP e NCM</li>
-          <li>RF-008: Detecção de duplicidade de NF-e</li>
-          <li>RF-009: Auditoria de benefícios fiscais estaduais</li>
-          <li>RF-010: Score de risco por fornecedor</li>
-        </ul>
-      </div>
-
-      <div class="module-card">
-        <div class="mod-header">
-          <div class="mod-title">M3 — Gestão de Alertas</div>
-          <div class="mod-count">5 RFs</div>
-        </div>
-        <div class="mod-rfs">RF-011 a RF-015</div>
-        <div class="mod-pills">
-          <span class="pill pill-red">Must ×3</span>
-          <span class="pill pill-yellow">Should ×2</span>
-        </div>
-        <ul style="font-size:12px;color:var(--text2);padding-left:16px;margin-top:10px;line-height:1.8;">
-          <li>RF-011: Geração automática de alertas de divergência</li>
-          <li>RF-012: Priorização por severidade (Crítico/Alto/Médio/Baixo)</li>
-          <li>RF-013: Fluxo de aprovação e resolução de alertas</li>
-          <li>RF-014: Notificação por e-mail/push para responsáveis</li>
-          <li>RF-015: SLA de resolução por faixa de severidade</li>
-        </ul>
-      </div>
-
-      <div class="module-card">
-        <div class="mod-header">
-          <div class="mod-title">M4 — Relatórios e Dashboards</div>
-          <div class="mod-count">5 RFs</div>
-        </div>
-        <div class="mod-rfs">RF-016 a RF-020</div>
-        <div class="mod-pills">
-          <span class="pill pill-red">Must ×2</span>
-          <span class="pill pill-yellow">Should ×2</span>
-          <span class="pill pill-green">Could ×1</span>
-        </div>
-        <ul style="font-size:12px;color:var(--text2);padding-left:16px;margin-top:10px;line-height:1.8;">
-          <li>RF-016: Dashboard gerencial em tempo real</li>
-          <li>RF-017: Relatório SPED/EFD automático</li>
-          <li>RF-018: Relatório de economias e conformidade</li>
-          <li>RF-019: Exportação para Excel/PDF</li>
-          <li>RF-020: Drill-down por período/CNPJ/NCM</li>
-        </ul>
-      </div>
-
-      <div class="module-card">
-        <div class="mod-header">
-          <div class="mod-title">M5 — Configuração e Regras</div>
-          <div class="mod-count">4 RFs</div>
-        </div>
-        <div class="mod-rfs">RF-021 a RF-024</div>
-        <div class="mod-pills">
-          <span class="pill pill-red">Must ×2</span>
-          <span class="pill pill-yellow">Should ×1</span>
-          <span class="pill pill-green">Could ×1</span>
-        </div>
-        <ul style="font-size:12px;color:var(--text2);padding-left:16px;margin-top:10px;line-height:1.8;">
-          <li>RF-021: Editor de regras de auditoria (no-code)</li>
-          <li>RF-022: Tabela de alíquotas por UF e NCM configurável</li>
-          <li>RF-023: Calendário fiscal e alertas de vencimento</li>
-          <li>RF-024: Versionamento de regras com rollback</li>
-        </ul>
-      </div>
-
-      <div class="module-card">
-        <div class="mod-header">
-          <div class="mod-title">M6 — Administração e Segurança</div>
-          <div class="mod-count">3 RFs</div>
-        </div>
-        <div class="mod-rfs">RF-025 a RF-027</div>
-        <div class="mod-pills">
-          <span class="pill pill-red">Must ×2</span>
-          <span class="pill pill-yellow">Should ×1</span>
-        </div>
-        <ul style="font-size:12px;color:var(--text2);padding-left:16px;margin-top:10px;line-height:1.8;">
-          <li>RF-025: Controle de acesso RBAC por perfil/empresa</li>
-          <li>RF-026: Log de auditoria de todas as ações (LGPD)</li>
-          <li>RF-027: Gestão de usuários integrada ao Active Directory</li>
-        </ul>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Distribuição MoSCoW</div>
-    <div class="card">
-      <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div style="width:120px;height:10px;background:var(--red);border-radius:5px;"></div>
-          <span style="font-size:13px;">Must — <strong>18</strong> RFs (67%)</span>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div style="width:80px;height:10px;background:var(--yellow);border-radius:5px;"></div>
-          <span style="font-size:13px;">Should — <strong>13</strong> RFs (48% relativo)</span>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div style="width:30px;height:10px;background:var(--green);border-radius:5px;"></div>
-          <span style="font-size:13px;">Could — <strong>4</strong> RFs (15%)</span>
-        </div>
-      </div>
-      <div class="moscow-bar" style="margin-top:16px;">
-        <div class="moscow-seg" style="width:54%;background:var(--red);height:16px;border-radius:5px 0 0 5px;"></div>
-        <div class="moscow-seg" style="width:34%;background:var(--yellow);height:16px;border-radius:0;"></div>
-        <div class="moscow-seg" style="width:12%;background:var(--green);height:16px;border-radius:0 5px 5px 0;"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-top:4px;">
-        <span>Must 54%</span><span>Should 34%</span><span>Could 12%</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Requisitos Não-Funcionais (Top 5)</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Categoria</th><th>Requisito</th><th>Meta</th><th>Prioridade</th></tr></thead>
-          <tbody>
-            <tr><td>RNF-01</td><td>Arquitetura</td><td>Módulo 100% nativo NBS — sem integração externa</td><td>Zero dependências externas</td><td><span class="pill pill-red">Must</span></td></tr>
-            <tr><td>RNF-02</td><td>Performance</td><td>Processamento de lote de NF-e</td><td>1.000 NF-e em ≤10 minutos</td><td><span class="pill pill-red">Must</span></td></tr>
-            <tr><td>RNF-03</td><td>Disponibilidade</td><td>SLA do módulo em produção</td><td>≥99,5% uptime mensal</td><td><span class="pill pill-red">Must</span></td></tr>
-            <tr><td>RNF-04</td><td>Segurança</td><td>Controle de acesso baseado em perfis</td><td>RBAC completo (6 perfis)</td><td><span class="pill pill-red">Must</span></td></tr>
-            <tr><td>RNF-05</td><td>Conformidade</td><td>LGPD — dados fiscais no ambiente GAB</td><td>Zero transferência para terceiros</td><td><span class="pill pill-red">Must</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-<!-- ==================== ABA 4: CRONOGRAMA ==================== -->
-<div id="cronograma" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Timeline de Fases</div>
-    <div class="timeline">
-
-      <div class="tl-item">
-        <div class="tl-date">15/05 – 30/05/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot active"></div>
-          <div class="tl-connector"></div>
-        </div>
-        <div class="tl-body active">
-          <div class="tl-phase">F0 — Sanação de Bloqueantes <span class="pill pill-yellow" style="margin-left:8px;">ATUAL</span></div>
-          <div class="tl-details">Aguardando resolução de CB-01 (sponsor, 25/05) e CB-02 (verificação NBS, 30/05). Sem estas ações, o kick-off não pode ocorrer.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:30%;background:var(--yellow);"></div></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">01/06 – 14/06/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot pending"></div>
-          <div class="tl-connector"></div>
-        </div>
-        <div class="tl-body">
-          <div class="tl-phase">F1 — Kick-off e Alinhamento NBS</div>
-          <div class="tl-details">Reunião de kick-off com sponsor, Sandro e NBS. Validação de escopo, acordos técnicos, designação de equipe NBS e cronograma detalhado. Marco: M-01.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:0%;background:var(--blue);"></div></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">15/06 – 15/07/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot pending"></div>
-          <div class="tl-connector"></div>
-        </div>
-        <div class="tl-body">
-          <div class="tl-phase">F2 — Levantamento Detalhado</div>
-          <div class="tl-details">Mapeamento das regras fiscais atuais do Fiscal Defender. Workshop com equipe fiscal (3 sessões). Especificação técnica detalhada entregue à NBS. Marco: M-03.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:0%;background:var(--blue);"></div></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">16/07 – 19/09/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot pending"></div>
-          <div class="tl-connector"></div>
-        </div>
-        <div class="tl-body">
-          <div class="tl-phase">F3 — Desenvolvimento NBS <span class="pill pill-purple" style="margin-left:8px;">Buffer 15%</span></div>
-          <div class="tl-details">Desenvolvimento dos 6 módulos pela equipe NBS. Entregas parciais quinzenais. Reviews técnicas obrigatórias a cada sprint. 77 pacotes WBS. Marco: M-05 a M-07.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:0%;background:var(--purple);"></div></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">20/09 – 17/10/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot pending"></div>
-          <div class="tl-connector"></div>
-        </div>
-        <div class="tl-body">
-          <div class="tl-phase">F4 — Homologação UAT <span class="pill pill-purple" style="margin-left:8px;">Buffer 15%</span></div>
-          <div class="tl-details">UAT com 3 áreas: Contabilidade, Fiscal e Compras. Cobertura mínima 90% dos RFs Must. Critério de aceite: zero defeitos Sev.1, Sev.2 ≤3. Marco: M-09.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:0%;background:var(--orange);"></div></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">18/10 – 14/11/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot pending"></div>
-          <div class="tl-connector"></div>
-        </div>
-        <div class="tl-body">
-          <div class="tl-phase">F5 — Go-live e Transição</div>
-          <div class="tl-details">Go-live em 30/10/2026. Operação paralela por 15 dias. Hypercare NBS (suporte dedicado). Notificação formal de rescisão ao Fiscal Defender. Marco: M-10, M-11.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:0%;background:var(--green);"></div></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">15/11 – 16/12/2026</div>
-        <div class="tl-line">
-          <div class="tl-dot pending"></div>
-          <div class="tl-connector" style="display:none;"></div>
-        </div>
-        <div class="tl-body">
-          <div class="tl-phase">F6 — Encerramento</div>
-          <div class="tl-details">Cancelamento formal do Fiscal Defender. Lições aprendidas. Relatório de ROI. Fechamento do projeto. Marco: M-12.</div>
-          <div class="tl-bar"><div class="tl-bar-fill" style="width:0%;background:var(--gray);"></div></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Marcos Críticos (M-01 a M-12)</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Marco</th><th>Descrição</th><th>Data</th><th>Critério de Conclusão</th></tr></thead>
-          <tbody>
-            <tr><td>M-01</td><td>Kick-off realizado</td><td>01/06/2026</td><td>Ata assinada, sponsor presente, equipe NBS designada</td></tr>
-            <tr><td>M-02</td><td>Contrato NBS verificado</td><td>06/06/2026</td><td>Documento contratual validado pelo jurídico GAB</td></tr>
-            <tr><td>M-03</td><td>Especificação técnica aprovada</td><td>15/07/2026</td><td>Sign-off de Sandro, NBS e TI GAB</td></tr>
-            <tr><td>M-04</td><td>Ambiente de dev/homolog provisionado</td><td>30/06/2026</td><td>Ambiente NBS disponível e validado pela TI</td></tr>
-            <tr><td>M-05</td><td>M1+M2 entregues (Ingestão + Motor)</td><td>15/08/2026</td><td>Demo funcional aprovada com casos de teste</td></tr>
-            <tr><td>M-06</td><td>M3+M4 entregues (Alertas + Relatórios)</td><td>31/08/2026</td><td>Demo funcional aprovada</td></tr>
-            <tr><td>M-07</td><td>M5+M6 entregues (Config + Segurança)</td><td>19/09/2026</td><td>100% módulos desenvolvidos e integrados</td></tr>
-            <tr><td>M-08</td><td>Início UAT</td><td>20/09/2026</td><td>Plano UAT aprovado, usuários confirmados</td></tr>
-            <tr><td>M-09</td><td>UAT aprovado</td><td>17/10/2026</td><td>CSAT ≥8/10, zero Sev.1, Sev.2 ≤3</td></tr>
-            <tr><td>M-10</td><td>Go-live Auditor Fiscal NBS</td><td>30/10/2026</td><td>Módulo em produção, 100% NF-e processadas</td></tr>
-            <tr><td>M-11</td><td>Descontinuação Fiscal Defender</td><td>14/11/2026</td><td>Rescisão notificada, operação paralela encerrada</td></tr>
-            <tr><td>M-12</td><td>Encerramento formal do projeto</td><td>16/12/2026</td><td>Relatório final aprovado, saving confirmado</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Caminho Crítico</div>
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;">
-        <span class="pill pill-red">CB-01 (25/05)</span>
-        <span style="color:var(--text2);">→</span>
-        <span class="pill pill-red">CB-02 (30/05)</span>
-        <span style="color:var(--text2);">→</span>
-        <span class="pill pill-blue">Kick-off (01/06)</span>
-        <span style="color:var(--text2);">→</span>
-        <span class="pill pill-purple">Desenvolvimento (jul–set)</span>
-        <span style="color:var(--text2);">→</span>
-        <span class="pill pill-orange">UAT (set–out)</span>
-        <span style="color:var(--text2);">→</span>
-        <span class="pill pill-green">Go-live (30/10)</span>
-      </div>
-      <div class="alert alert-yellow" style="margin-top:16px;margin-bottom:0;">
-        <div class="alert-icon">&#9888;&#65039;</div>
-        <div class="alert-body">
-          <h4 style="color:var(--yellow);">Cenário Pessimista</h4>
-          <p style="font-size:13px;color:var(--text2);">Se todos os riscos de prazo acumularem, o go-live pode deslocar para <strong style="color:var(--text);">fevereiro/2027</strong>, inviabilizando o cancelamento do Fiscal Defender em jan/2027 e atrasando o saving em um ciclo completo (~R$78K adicionais).</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-<!-- ==================== ABA 5: RISCOS ==================== -->
-<div id="riscos" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Riscos Críticos</div>
-    <div class="grid-2">
-
-      <div class="risk-critical">
-        <div class="risk-header">
-          <div class="risk-id">RSK-01</div>
-          <div class="risk-score">25 CRÍTICO</div>
-        </div>
-        <div class="risk-title">Sponsor executivo não identificado</div>
-        <div class="risk-pi">P: 5 (Quase certo) × I: 5 (Catastrófico)</div>
-        <p style="font-size:12px;color:var(--text2);margin-top:8px;">Sem sponsor, o projeto não tem autoridade para aprovações, recursos e decisões estratégicas. Bloqueia kick-off.</p>
-        <div style="margin-top:10px;font-size:12px;"><strong>Mitigação:</strong> <span style="color:var(--text2);">Escalada imediata para diretoria Divisão Comércio. Prazo: 25/05/2026 (CB-01).</span></div>
-      </div>
-
-      <div class="risk-critical">
-        <div class="risk-header">
-          <div class="risk-id">RSK-02</div>
-          <div class="risk-score">20 CRÍTICO</div>
-        </div>
-        <div class="risk-title">Acordo NBS sem verificação documental</div>
-        <div class="risk-pi">P: 4 (Provável) × I: 5 (Catastrófico)</div>
-        <p style="font-size:12px;color:var(--text2);margin-top:8px;">Se o desenvolvimento não for gratuito, o custo estimado é ~R$80K, anulando o saving de R$78K e tornando o business case negativo.</p>
-        <div style="margin-top:10px;font-size:12px;"><strong>Mitigação:</strong> <span style="color:var(--text2);">Revisão contratual pelo jurídico GAB. Prazo: 30/05/2026 (CB-02).</span></div>
-      </div>
-
-      <div class="risk-critical">
-        <div class="risk-header">
-          <div class="risk-id">RSK-03</div>
-          <div class="risk-score">16 CRÍTICO</div>
-        </div>
-        <div class="risk-title">Atrasos no desenvolvimento NBS</div>
-        <div class="risk-pi">P: 4 (Provável) × I: 4 (Grave)</div>
-        <p style="font-size:12px;color:var(--text2);margin-top:8px;">Dependência crítica de equipe externa. Atrasos impactam UAT e go-live. Janela até fev/2027 (cenário pessimista).</p>
-        <div style="margin-top:10px;font-size:12px;"><strong>Mitigação:</strong> <span style="color:var(--text2);">Buffer 15% nas fases F3 e F4. Reviews quinzenais. SLA contratual NBS com penalidades.</span></div>
-      </div>
-
-      <div class="risk-critical">
-        <div class="risk-header">
-          <div class="risk-id">RSK-04</div>
-          <div class="risk-score">15 CRÍTICO</div>
-        </div>
-        <div class="risk-title">Descontinuidade prematura do Fiscal Defender</div>
-        <div class="risk-pi">P: 3 (Possível) × I: 5 (Catastrófico)</div>
-        <p style="font-size:12px;color:var(--text2);margin-top:8px;">Se o Fiscal Defender for descontinuado antes do go-live do módulo NBS, a operação fiscal fica sem cobertura.</p>
-        <div style="margin-top:10px;font-size:12px;"><strong>Mitigação:</strong> <span style="color:var(--text2);">Cláusula de continuidade no contrato. Operação paralela garantida até D+15 do go-live.</span></div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Registro Completo de Riscos (18 riscos)</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Descrição</th><th>P</th><th>I</th><th>Score</th><th>Classificação</th><th>Estratégia</th></tr></thead>
-          <tbody>
-            <tr><td>RSK-01</td><td>Sponsor não identificado</td><td>5</td><td>5</td><td><span style="color:var(--red);font-weight:700;">25</span></td><td><span class="pill pill-red">Crítico</span></td><td>Mitigar (CB-01)</td></tr>
-            <tr><td>RSK-02</td><td>Acordo NBS sem verificação documental</td><td>4</td><td>5</td><td><span style="color:var(--red);font-weight:700;">20</span></td><td><span class="pill pill-red">Crítico</span></td><td>Mitigar (CB-02)</td></tr>
-            <tr><td>RSK-03</td><td>Atrasos no desenvolvimento NBS</td><td>4</td><td>4</td><td><span style="color:var(--red);font-weight:700;">16</span></td><td><span class="pill pill-red">Crítico</span></td><td>Mitigar (buffer)</td></tr>
-            <tr><td>RSK-04</td><td>Descontinuidade prematura Fiscal Defender</td><td>3</td><td>5</td><td><span style="color:var(--red);font-weight:700;">15</span></td><td><span class="pill pill-red">Crítico</span></td><td>Mitigar (contrato)</td></tr>
-            <tr><td>RSK-05</td><td>Resistência de usuários à mudança</td><td>3</td><td>4</td><td><span style="color:var(--orange);font-weight:700;">12</span></td><td><span class="pill pill-orange">Alto</span></td><td>Mitigar (treinamento)</td></tr>
-            <tr><td>RSK-06</td><td>Cobertura funcional incompleta vs Fiscal Defender</td><td>3</td><td>4</td><td><span style="color:var(--orange);font-weight:700;">12</span></td><td><span class="pill pill-orange">Alto</span></td><td>Mitigar (gap analysis)</td></tr>
-            <tr><td>RSK-07</td><td>Problemas de performance em volume alto</td><td>3</td><td>4</td><td><span style="color:var(--orange);font-weight:700;">12</span></td><td><span class="pill pill-orange">Alto</span></td><td>Mitigar (stress test)</td></tr>
-            <tr><td>RSK-08</td><td>Mudanças regulatórias fiscais durante desenvolvimento</td><td>3</td><td>3</td><td><span style="color:var(--orange);font-weight:700;">9</span></td><td><span class="pill pill-orange">Alto</span></td><td>Aceitar + monitorar</td></tr>
-            <tr><td>RSK-09</td><td>Indisponibilidade de usuários-chave no UAT</td><td>3</td><td>3</td><td><span style="color:var(--orange);font-weight:700;">9</span></td><td><span class="pill pill-orange">Alto</span></td><td>Mitigar (agenda)</td></tr>
-            <tr><td>RSK-10</td><td>Turnover na equipe NBS durante projeto</td><td>2</td><td>4</td><td><span style="color:var(--yellow);font-weight:700;">8</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Aceitar + cláusula</td></tr>
-            <tr><td>RSK-11</td><td>Divergência de dados na migração de regras</td><td>2</td><td>4</td><td><span style="color:var(--yellow);font-weight:700;">8</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Mitigar (validação)</td></tr>
-            <tr><td>RSK-12</td><td>Orçamento residual insuficiente (>R$35K)</td><td>2</td><td>4</td><td><span style="color:var(--yellow);font-weight:700;">8</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Mitigar (controle)</td></tr>
-            <tr><td>RSK-13</td><td>Falha na integração SEFAZ/SERPRO</td><td>2</td><td>3</td><td><span style="color:var(--yellow);font-weight:700;">6</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Aceitar + contingência</td></tr>
-            <tr><td>RSK-14</td><td>Indisponibilidade de infraestrutura NBS</td><td>2</td><td>3</td><td><span style="color:var(--yellow);font-weight:700;">6</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Mitigar (SLA)</td></tr>
-            <tr><td>RSK-15</td><td>Escopo expandido (scope creep)</td><td>3</td><td>2</td><td><span style="color:var(--yellow);font-weight:700;">6</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Mitigar (change control)</td></tr>
-            <tr><td>RSK-16</td><td>Conformidade LGPD não atendida</td><td>1</td><td>5</td><td><span style="color:var(--yellow);font-weight:700;">5</span></td><td><span class="pill pill-yellow">Médio</span></td><td>Mitigar (DPO)</td></tr>
-            <tr><td>RSK-17</td><td>Problemas de usabilidade no módulo</td><td>2</td><td>2</td><td><span style="color:var(--green);font-weight:700;">4</span></td><td><span class="pill pill-green">Baixo</span></td><td>Aceitar + UAT</td></tr>
-            <tr><td>RSK-18</td><td>Comunicação inadequada com stakeholders</td><td>2</td><td>2</td><td><span style="color:var(--green);font-weight:700;">4</span></td><td><span class="pill pill-green">Baixo</span></td><td>Aceitar + plano comms</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid-2" style="margin-bottom:24px;">
-    <div class="section" style="margin-bottom:0;">
-      <div class="section-title">Matriz de Probabilidade × Impacto</div>
-      <div class="card">
-        <div class="matrix-grid">
-          <div class="matrix-cell header"></div>
-          <div class="matrix-cell header">I1</div>
-          <div class="matrix-cell header">I2</div>
-          <div class="matrix-cell header">I3</div>
-          <div class="matrix-cell header">I4</div>
-          <div class="matrix-cell header">I5</div>
-
-          <div class="matrix-cell header" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;">P5</div>
-          <div class="matrix-cell c3"></div>
-          <div class="matrix-cell c3"></div>
-          <div class="matrix-cell c4"></div>
-          <div class="matrix-cell c4"></div>
-          <div class="matrix-cell c5"><div class="matrix-code">RSK-01</div></div>
-
-          <div class="matrix-cell header" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;">P4</div>
-          <div class="matrix-cell c2"></div>
-          <div class="matrix-cell c3"></div>
-          <div class="matrix-cell c3"></div>
-          <div class="matrix-cell c4"><div class="matrix-code">RSK-03</div></div>
-          <div class="matrix-cell c4"><div class="matrix-code">RSK-02</div></div>
-
-          <div class="matrix-cell header" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;">P3</div>
-          <div class="matrix-cell c2"></div>
-          <div class="matrix-cell c2"><div class="matrix-code">RSK-15</div></div>
-          <div class="matrix-cell c3"><div class="matrix-code" style="font-size:9px;">08,09</div></div>
-          <div class="matrix-cell c3"><div class="matrix-code" style="font-size:9px;">05,06,07</div></div>
-          <div class="matrix-cell c4"><div class="matrix-code">RSK-04</div></div>
-
-          <div class="matrix-cell header" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;">P2</div>
-          <div class="matrix-cell c1"></div>
-          <div class="matrix-cell c2"><div class="matrix-code" style="font-size:9px;">17,18</div></div>
-          <div class="matrix-cell c2"><div class="matrix-code" style="font-size:9px;">13,14</div></div>
-          <div class="matrix-cell c3"><div class="matrix-code" style="font-size:9px;">10,11,12</div></div>
-          <div class="matrix-cell c3"><div class="matrix-code">RSK-16</div></div>
-
-          <div class="matrix-cell header" style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;">P1</div>
-          <div class="matrix-cell c1"></div>
-          <div class="matrix-cell c1"></div>
-          <div class="matrix-cell c1"></div>
-          <div class="matrix-cell c2"></div>
-          <div class="matrix-cell c2"></div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--text2);">
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(34,197,94,.2);display:inline-block;"></span> Baixo</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(234,179,8,.2);display:inline-block;"></span> Médio</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(249,115,22,.2);display:inline-block;"></span> Alto</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(239,68,68,.3);display:inline-block;"></span> Crítico</span>
-        </div>
+    <!-- ENTREGÁVEIS -->
+    <div>
+      <div class="section-title">Entregáveis — Pipeline v2 Completo</div>
+      <div class="entregavel-list">
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Demanda Coletada (via Fireflies)</div><div class="entregavel-status">Iara Inbound</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Qualificação (18/30 · 60%)</div><div class="entregavel-status">Felipe Filtro</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">TAP + PM Canvas + Plano Geral</div><div class="entregavel-status">Diana Documento</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">ERF — 11 RF Must Have · 6 módulos</div><div class="entregavel-status">Rafael Requisito</div></div>
+        <div class="entregavel-item" style="border-color:#3b82f640"><div class="entregavel-icon">✅</div><div class="entregavel-name">Work Request — Mini-RFP NBS<span class="entregavel-new">v2 NOVO</span></div><div class="entregavel-status">Fábio Fornecedor</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Cronograma (go-live 30/10/2026)</div><div class="entregavel-status">Carlos Cronograma</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Plano de Riscos — 18 riscos · RSK-01 25/25</div><div class="entregavel-status">Pedro Perigo</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">KPIs + EVM (BAC R$35k · Saving R$78k/ano)</div><div class="entregavel-status">Marcela Métrica</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Status Report Inicial</div><div class="entregavel-status">Sara Status</div></div>
+        <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Revisão de Qualidade (91/100)</div><div class="entregavel-status">Vera Veredito</div></div>
+        <div class="entregavel-item" style="border-color:#3b82f640"><div class="entregavel-icon">✅</div><div class="entregavel-name">Auditoria de Governança<span class="entregavel-new">v2 NOVO</span></div><div class="entregavel-status" style="color:var(--red)">REPROVADO NC-CRÍTICA</div></div>
+        <div class="entregavel-item" style="border-color:#22c55e40"><div class="entregavel-icon">✅</div><div class="entregavel-name">Aprovação Final — com ciência NC<span class="entregavel-new">v2 NOVO</span></div><div class="entregavel-status">Marcelo Silveira</div></div>
       </div>
     </div>
 
-    <div class="section" style="margin-bottom:0;">
-      <div class="section-title">Exposição Financeira</div>
-      <div class="card">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <!-- RSK-01 DESTAQUE + KPIs -->
+    <div>
+      <div class="section-title">RSK-01 — Risco Exemplar (Score Máximo)</div>
+      <div class="card" style="border-color:#ef444440;background:#ef444408;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="font-size:2rem">⚠️</div>
           <div>
-            <div style="font-size:12px;color:var(--text2);">Valor Monetário Esperado (VME)</div>
-            <div style="font-size:28px;font-weight:700;color:var(--red);">R$145.400</div>
-          </div>
-          <div>
-            <div style="font-size:12px;color:var(--text2);">Reserva de Contingência Recomendada</div>
-            <div style="font-size:28px;font-weight:700;color:var(--orange);">R$163.400</div>
+            <div style="font-size:0.85rem;font-weight:700;color:var(--red)">RSK-01 — Sponsor Executivo Ausente</div>
+            <div style="font-size:0.7rem;color:var(--text2)">Score: 25/25 · Probabilidade: 5/5 · Impacto: 5/5</div>
           </div>
         </div>
-        <div class="alert alert-red" style="margin-bottom:0;">
-          <div class="alert-icon">&#128721;</div>
-          <div class="alert-body">
-            <h4 style="color:var(--red);">Cenário Colapso do Business Case</h4>
-            <p style="font-size:13px;color:var(--text2);">Se RSK-02 se materializar (acordo NBS não confirmado), o custo de desenvolvimento estimado de <strong style="color:var(--text);">~R$80K</strong> supera o saving de <strong style="color:var(--text);">R$78K</strong>, tornando o ROI negativo e inviabilizando o projeto.</p>
-          </div>
+        <div style="font-size:0.78rem;line-height:1.6;color:var(--text2)">
+          Este risco foi <strong style="color:var(--text)">previsto com score máximo</strong> no plano de riscos do Pedro Perigo e está sendo <strong style="color:var(--orange)">monitorado diariamente</strong>. A materialização do RSK-01 significa que a CB-01 está ativa — exatamente como previsto.
+        </div>
+        <div style="margin-top:10px;font-size:0.72rem;color:var(--green)">
+          ✅ Mitigação planejada: escalar para alta gestão da Divisão Comércio. Prazo: 25/05/2026.
+        </div>
+      </div>
+
+      <div class="section-title">KPIs Baseline (EVM)</div>
+      <div class="grid-3" style="margin-bottom:0">
+        <div class="card kpi-card">
+          <div class="kpi-name">BAC</div>
+          <div class="kpi-value" style="color:var(--blue);font-size:1.1rem">R$&nbsp;35k</div>
+          <div class="kpi-sub">Custo VMO</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="kpi-name">CPI</div>
+          <div class="kpi-value" style="color:var(--green)">1,00</div>
+          <div class="kpi-sub">Baseline</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="kpi-name">SPI</div>
+          <div class="kpi-value" style="color:var(--green)">1,00</div>
+          <div class="kpi-sub">Baseline</div>
         </div>
       </div>
     </div>
   </div>
 
-</div>
-</div>
+  <!-- MÓDULOS -->
+  <div class="section-title">Módulos da Solução — Auditor Fiscal NBS (6 módulos · 11 RF)</div>
+  <div class="modulo-grid">
+    <div class="modulo-card">
+      <div class="modulo-num">M1 · RF-INF-01</div>
+      <div class="modulo-name">Ingestão de NF-e</div>
+      <div class="modulo-desc">Ingestão automática das NF-e já presentes na base NBS. Sem nova entrada de dados — 100% nativo.</div>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-num">M2 · RF-AUD-01/02</div>
+      <div class="modulo-name">Motor de Auditoria</div>
+      <div class="modulo-desc">Auditoria automatizada de conformidade fiscal. Detecção de inconsistências (CFOP, NCM, alíquotas vs. tabelas legais).</div>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-num">M3 · RF-AUD-03/04</div>
+      <div class="modulo-name">Detecção de Fraudes</div>
+      <div class="modulo-desc">Identificação de pagamentos indevidos, duplicados e possíveis fraudes (fornecedores inativos, CNPJs suspensos, valores atípicos).</div>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-num">M4 · RF-AUD-05</div>
+      <div class="modulo-name">Alertas de Risco Fiscal</div>
+      <div class="modulo-desc">Emissão de alertas de risco de multa por irregularidades fiscais com priorização por criticidade.</div>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-num">M5 · RF-REL-01/02</div>
+      <div class="modulo-name">Relatórios e Dashboards</div>
+      <div class="modulo-desc">Relatórios operacionais acessíveis no ERP NBS + relatórios gerenciais (potencial integração Power BI).</div>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-num">M6 · RF-SEG-01 / RF-RAT-01</div>
+      <div class="modulo-name">Segurança e Trilha</div>
+      <div class="modulo-desc">Controle de acesso por perfil (contabilidade, auditoria, gestão, TI) + trilha completa de auditoria de todas as ações.</div>
+    </div>
+  </div>
 
-<!-- ==================== ABA 6: KPIs ==================== -->
-<div id="kpis" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Earned Value Management (EVM)</div>
-    <div class="grid-4">
-      <div class="evm-card">
-        <div class="evm-label">BAC (Budget at Completion)</div>
-        <div class="evm-value" style="color:var(--blue);">R$35.000</div>
-        <div class="evm-sub">Orçamento total residual</div>
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="section-title">Próximos Passos</div>
+  <div class="card" style="margin-bottom:24px">
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:0.82rem">
+      <div style="display:flex;gap:12px;align-items:center;padding:10px;border-radius:8px;background:#ef444408;border:1px solid #ef444430">
+        <span style="font-size:1.2rem">🔴</span>
+        <div><strong style="color:var(--red)">BLOQUEANTE até 25/05/2026:</strong> Sandro Siqueira escala para alta gestão da Divisão Comércio → identificar Diretor ou CFO como sponsor executivo</div>
       </div>
-      <div class="evm-card">
-        <div class="evm-label">CPI Threshold</div>
-        <div class="evm-value" style="color:var(--green);">≥ 0,90</div>
-        <div class="evm-sub">Alerta se CPI &lt; 0,90</div>
+      <div style="display:flex;gap:12px;align-items:center;padding:10px;border-radius:8px;background:#eab30808;border:1px solid #eab30830">
+        <span style="font-size:1.2rem">🟡</span>
+        <div>Após CB-01 resolvida: atualizar TAP com nome/cargo do sponsor → enviar WR à NBS → aguardar proposta (prazo: 06/06/2026)</div>
       </div>
-      <div class="evm-card">
-        <div class="evm-label">SPI Threshold</div>
-        <div class="evm-value" style="color:var(--yellow);">≥ 0,85</div>
-        <div class="evm-sub">Alerta se SPI &lt; 0,85</div>
-      </div>
-      <div class="evm-card">
-        <div class="evm-label">Fase Atual</div>
-        <div class="evm-value" style="color:var(--purple);">F0</div>
-        <div class="evm-sub">Sanação de bloqueantes</div>
+      <div style="display:flex;gap:12px;align-items:center;padding:10px;border-radius:8px;background:#22c55e08;border:1px solid #22c55e30">
+        <span style="font-size:1.2rem">🟢</span>
+        <div>Com proposta NBS recebida: confirmar prazo formal de entrega (NC-MOD-01) → aprovar → kickoff → desenvolvimento (go-live alvo: 30/10/2026)</div>
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">Curva S — PV Planejado por Fase</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Fase</th><th>Período</th><th>PV Fase</th><th>PV Acumulado</th><th>% BAC</th><th>Descrição</th></tr></thead>
-          <tbody>
-            <tr><td>F0</td><td>Mai–Mai 2026</td><td>R$0</td><td>R$0</td><td>0%</td><td>Sanação bloqueantes (sem custo)</td></tr>
-            <tr><td>F1</td><td>Jun 2026</td><td>R$2.000</td><td>R$2.000</td><td>6%</td><td>Kick-off + alinhamentos</td></tr>
-            <tr><td>F2</td><td>Jun–Jul 2026</td><td>R$5.000</td><td>R$7.000</td><td>20%</td><td>Levantamento detalhado</td></tr>
-            <tr><td>F3</td><td>Jul–Set 2026</td><td>R$10.500</td><td>R$17.500</td><td>50%</td><td>Desenvolvimento NBS (principal)</td></tr>
-            <tr><td>F4</td><td>Set–Out 2026</td><td>R$8.500</td><td>R$26.000</td><td>74%</td><td>Homologação UAT</td></tr>
-            <tr><td>F5</td><td>Out–Nov 2026</td><td>R$5.500</td><td>R$31.500</td><td>90%</td><td>Go-live + transição</td></tr>
-            <tr><td>F6</td><td>Nov–Dez 2026</td><td>R$3.500</td><td>R$35.000</td><td>100%</td><td>Encerramento</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+</main>
 
-  <div class="section">
-    <div class="section-title">KPIs de Execução (Top 5)</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>KPI</th><th>Descrição</th><th>Meta</th><th>Frequência</th><th>Owner</th></tr></thead>
-          <tbody>
-            <tr><td>KPI-E01</td><td>SPI — Schedule Performance Index</td><td>≥ 0,85</td><td>Quinzenal</td><td>GP VMO</td></tr>
-            <tr><td>KPI-E02</td><td>CPI — Cost Performance Index</td><td>≥ 0,90</td><td>Mensal</td><td>GP VMO</td></tr>
-            <tr><td>KPI-E03</td><td>% RFs entregues em DEV</td><td>100% até M-07</td><td>Sprint</td><td>NBS</td></tr>
-            <tr><td>KPI-E04</td><td>Defeitos por sprint (Sev.1)</td><td>0 críticos abertos</td><td>Sprint</td><td>TI GAB</td></tr>
-            <tr><td>KPI-E05</td><td>Resolução de bloqueantes (CB)</td><td>100% até 30/05</td><td>Semanal</td><td>Sandro S.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">KPIs de Transição (D+0 a D+90)</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>KPI</th><th>Descrição</th><th>Meta</th><th>Prazo Medição</th></tr></thead>
-          <tbody>
-            <tr><td>KPI-T01</td><td>Taxa de adoção do módulo (usuários ativos)</td><td>≥ 95% dos usuários habilitados</td><td>D+30</td></tr>
-            <tr><td>KPI-T02</td><td>CSAT dos usuários (pesquisa pós-go-live)</td><td>≥ 8/10</td><td>D+30</td></tr>
-            <tr><td>KPI-T03</td><td>SLA de disponibilidade em produção</td><td>≥ 99,5% uptime</td><td>D+30, D+60, D+90</td></tr>
-            <tr><td>KPI-T04</td><td>Cancelamento formal do Fiscal Defender</td><td>Contrato rescindido</td><td>D+30 (nov/2026)</td></tr>
-            <tr><td>KPI-T05</td><td>Incidentes críticos (Sev.1)</td><td>Zero em produção</td><td>D+30</td></tr>
-            <tr><td>KPI-T06</td><td>NF-e processadas sem erro</td><td>≥ 99,8%</td><td>D+7, D+30</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">KRs Pós Go-live (OKRs)</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>KR</th><th>Resultado-Chave</th><th>Meta</th><th>Prazo</th></tr></thead>
-          <tbody>
-            <tr><td>KR-01</td><td>Saving anual confirmado e documentado</td><td>R$78.000/ano</td><td>Jan/2027</td></tr>
-            <tr><td>KR-02</td><td>100% das NF-e auditadas pelo módulo nativo</td><td>Zero bypass externo</td><td>Dez/2026</td></tr>
-            <tr><td>KR-03</td><td>Conformidade fiscal sem autuações</td><td>Zero autuações pós-migração</td><td>Mar/2027</td></tr>
-            <tr><td>KR-04</td><td>Satisfação dos usuários (CSAT pesquisa D+90)</td><td>≥ 8,5/10</td><td>Jan/2027</td></tr>
-            <tr><td>KR-05</td><td>Redução de integrações externas</td><td>Fiscal Defender cancelado (contratos encerrados)</td><td>Dez/2026</td></tr>
-            <tr><td>KR-06</td><td>ROI acumulado em 3 anos</td><td>≥ 469%</td><td>Dez/2028</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-<!-- ==================== ABA 7: STATUS ==================== -->
-<div id="status" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Painel de Semáforos</div>
-    <div class="grid-3">
-
-      <div class="status-card">
-        <div class="s-header">
-          <div class="s-icon">&#128994;</div>
-          <div>
-            <div class="s-title">Escopo</div>
-            <div class="semaphore"><div class="sem-dot sem-green"></div><span style="color:var(--green);">VERDE</span></div>
-          </div>
-        </div>
-        <div class="s-desc">27 RFs definidos e distribuídos em 6 módulos. Escopo bem delimitado com fora-de-escopo explícito. Nenhuma mudança registrada.</div>
-      </div>
-
-      <div class="status-card">
-        <div class="s-header">
-          <div class="s-icon">&#128994;</div>
-          <div>
-            <div class="s-title">Custo</div>
-            <div class="semaphore"><div class="sem-dot sem-green"></div><span style="color:var(--green);">VERDE</span></div>
-          </div>
-        </div>
-        <div class="s-desc">Orçamento R$35K dentro do planejado. Desenvolvimento R$0 (contrapartida NBS pendente confirmar CB-02). Business case positivo se CB-02 resolvido.</div>
-      </div>
-
-      <div class="status-card">
-        <div class="s-header">
-          <div class="s-icon">&#128994;</div>
-          <div>
-            <div class="s-title">Qualidade</div>
-            <div class="semaphore"><div class="sem-dot sem-green"></div><span style="color:var(--green);">VERDE</span></div>
-          </div>
-        </div>
-        <div class="s-desc">Instrução pontuada em 91/100 pela Vera Veredito. Todos os 9 documentos de instrução entregues e concluídos. Excelência de processo.</div>
-      </div>
-
-      <div class="status-card" style="border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.04);">
-        <div class="s-header">
-          <div class="s-icon">&#128993;</div>
-          <div>
-            <div class="s-title">Prazo</div>
-            <div class="semaphore"><div class="sem-dot sem-yellow"></div><span style="color:var(--yellow);">AMARELO</span></div>
-          </div>
-        </div>
-        <div class="s-desc">Go-live 30/10/2026 está definido. CB-01 e CB-02 ameaçam o cronograma — atraso na resolução comprime as fases F1-F4. Monitorar até 30/05.</div>
-      </div>
-
-      <div class="status-card" style="border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.04);">
-        <div class="s-header">
-          <div class="s-icon">&#128308;</div>
-          <div>
-            <div class="s-title">Riscos</div>
-            <div class="semaphore"><div class="sem-dot sem-red"></div><span style="color:var(--red);">VERMELHO</span></div>
-          </div>
-        </div>
-        <div class="s-desc">4 riscos críticos ativos. VME total de R$145.400 supera o orçamento residual. RSK-02 pode inviabilizar o business case inteiro.</div>
-      </div>
-
-      <div class="status-card" style="border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.04);">
-        <div class="s-header">
-          <div class="s-icon">&#128308;</div>
-          <div>
-            <div class="s-title">Governança</div>
-            <div class="semaphore"><div class="sem-dot sem-red"></div><span style="color:var(--red);">VERMELHO</span></div>
-          </div>
-        </div>
-        <div class="s-desc">Sponsor executivo não identificado (CB-01). Sem sponsor, não há autoridade formal para aprovações, budget e decisões estratégicas. Prazo: 25/05.</div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Itens Pendentes Críticos</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Item</th><th>Responsável</th><th>Prazo</th><th>Consequência se não resolvido</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><span class="pill pill-red">CB-01</span></td>
-              <td>Identificar e formalizar sponsor executivo</td>
-              <td>Sandro Siqueira + Diretoria</td>
-              <td style="color:var(--red);font-weight:600;">25/05/2026</td>
-              <td>Kick-off bloqueado; projeto não pode ser formalmente iniciado</td>
-            </tr>
-            <tr>
-              <td><span class="pill pill-red">CB-02</span></td>
-              <td>Verificação documental do acordo NBS (dev gratuito)</td>
-              <td>Sandro Siqueira + Jurídico GAB</td>
-              <td style="color:var(--red);font-weight:600;">30/05/2026</td>
-              <td>Business case colapsa (custo dev ~R$80K supera saving R$78K)</td>
-            </tr>
-            <tr>
-              <td><span class="pill pill-yellow">P-05</span></td>
-              <td>Designação da equipe técnica NBS</td>
-              <td>NBS (Fornecedor)</td>
-              <td>01/06/2026</td>
-              <td>Kick-off sem representante técnico NBS; risco F3</td>
-            </tr>
-            <tr>
-              <td><span class="pill pill-yellow">P-04</span></td>
-              <td>Confirmação disponibilidade usuários UAT</td>
-              <td>Sandro Siqueira</td>
-              <td>15/07/2026</td>
-              <td>UAT atrasado; comprime buffer e ameaça go-live</td>
-            </tr>
-            <tr>
-              <td><span class="pill pill-blue">TAP</span></td>
-              <td>Assinatura do TAP pelo solicitante</td>
-              <td>Sandro Siqueira</td>
-              <td>Após CB-01</td>
-              <td>Formalização do projeto pendente</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Próximas Atividades — 15/05 a 30/05/2026</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Data</th><th>Atividade</th><th>Responsável</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>15/05/2026</td><td>Notificação formal dos bloqueantes CB-01 e CB-02</td><td>Marcelo Silveira (GP VMO)</td><td><span class="pill pill-green">Concluído</span></td></tr>
-            <tr><td>16/05/2026</td><td>Reunião de alerta com Sandro Siqueira sobre prazos CB</td><td>GP VMO + Sandro</td><td><span class="pill pill-yellow">Agendado</span></td></tr>
-            <tr><td>20/05/2026</td><td>Acionar Jurídico GAB para análise contratual NBS</td><td>Sandro Siqueira</td><td><span class="pill pill-yellow">Pendente</span></td></tr>
-            <tr><td>25/05/2026</td><td>Prazo limite CB-01: Sponsor identificado</td><td>Diretoria / Sandro</td><td><span class="pill pill-red">Prazo Crítico</span></td></tr>
-            <tr><td>28/05/2026</td><td>Review de status CB-01/CB-02 com Marcelo Silveira</td><td>GP VMO</td><td><span class="pill pill-yellow">Pendente</span></td></tr>
-            <tr><td>30/05/2026</td><td>Prazo limite CB-02: Acordo NBS verificado</td><td>Jurídico + Sandro</td><td><span class="pill pill-red">Prazo Crítico</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-<!-- ==================== ABA 8: PIPELINE ==================== -->
-<div id="pipeline" class="tab-content">
-<div class="main">
-
-  <div class="section">
-    <div class="section-title">Agentes do Pipeline — Run 2026-05-15-150000</div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#128229;</div>
-        <div class="agent-body">
-          <div class="agent-name">Iara Inbound</div>
-          <div class="agent-output">&#128196; demanda-coletada.md — Coleta e estruturação da demanda de Sandro Siqueira (Coord. Contabilidade)</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#128269;</div>
-        <div class="agent-body">
-          <div class="agent-name">Felipe Filtro</div>
-          <div class="agent-output">&#128196; qualificacao.md — Score 18/30 (60%) — APROVADO COM CONDIÇÕES · CB-01 e CB-02 identificados</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#128203;</div>
-        <div class="agent-body">
-          <div class="agent-name">Diana Documento</div>
-          <div class="agent-output">&#128196; documentacao-base.md — 638 linhas · TAP completo, stakeholders, premissas, restrições, critérios de sucesso</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#9881;&#65039;</div>
-        <div class="agent-body">
-          <div class="agent-name">Rafael Requisito</div>
-          <div class="agent-output">&#128196; requisitos.md — 724 linhas · 27 RFs em 6 módulos + 12 RNFs · Distribuição MoSCoW completa</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#128197;</div>
-        <div class="agent-body">
-          <div class="agent-name">Carlos Cronograma</div>
-          <div class="agent-output">&#128196; cronograma.md — 597 linhas · 7 fases · 77 pacotes WBS · 12 marcos · Caminho crítico mapeado</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#9888;&#65039;</div>
-        <div class="agent-body">
-          <div class="agent-name">Pedro Perigo</div>
-          <div class="agent-output">&#128196; plano-riscos.md — 745 linhas · 18 riscos catalogados · 4 críticos · VME R$145,4K · Matriz 5×5</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#128202;</div>
-        <div class="agent-body">
-          <div class="agent-name">Marcela Métrica</div>
-          <div class="agent-output">&#128196; kpis.md — 224 linhas · EVM configurado · Curva S por fase · KPIs execução + transição + KRs pós go-live</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#128221;</div>
-        <div class="agent-body">
-          <div class="agent-name">Sara Status</div>
-          <div class="agent-output">&#128196; status-report-inicial.md — 193 linhas · Semáforos: Escopo/Custo/Qualidade &#128994; · Prazo &#128993; · Riscos/Governança &#128308;</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-      <div class="agent-item done">
-        <div class="agent-icon">&#9989;</div>
-        <div class="agent-body">
-          <div class="agent-name">Vera Veredito</div>
-          <div class="agent-output">&#128196; revisao-final.md — 259 linhas · <strong style="color:var(--green);">Score 91/100 — APROVADO</strong> · Instrução validada · Condições bloqueantes formalizadas</div>
-        </div>
-        <span class="agent-status-tag done">&#9989; Concluído</span>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Estatísticas do Run</div>
-    <div class="grid-4">
-      <div class="metric-card m-blue">
-        <div class="m-label">Agentes Executados</div>
-        <div class="m-value">9/9</div>
-        <div class="m-sub">100% pipeline concluído</div>
-      </div>
-      <div class="metric-card m-green">
-        <div class="m-label">Documentos Gerados</div>
-        <div class="m-value">9 docs</div>
-        <div class="m-sub">3.380 linhas totais</div>
-      </div>
-      <div class="metric-card m-purple">
-        <div class="m-label">Score Final</div>
-        <div class="m-value">91/100</div>
-        <div class="m-sub">Vera Veredito — APROVADO</div>
-      </div>
-      <div class="metric-card m-yellow">
-        <div class="m-label">Ações Bloqueantes</div>
-        <div class="m-value">2 CBs</div>
-        <div class="m-sub">CB-01: 25/05 · CB-02: 30/05</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Artefatos Produzidos</div>
-    <div class="card" style="padding:0;">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Agente</th><th>Arquivo</th><th>Linhas</th><th>Conteúdo Principal</th></tr></thead>
-          <tbody>
-            <tr><td>Iara Inbound</td><td>01-demanda-coletada.md</td><td>—</td><td>Demanda estruturada, contexto do solicitante, necessidade de negócio</td></tr>
-            <tr><td>Felipe Filtro</td><td>02-qualificacao.md</td><td>—</td><td>Score 18/30, critérios de qualificação, identificação CB-01/CB-02</td></tr>
-            <tr><td>Diana Documento</td><td>03-documentacao-base.md</td><td>638</td><td>TAP, objetivos SMART, escopo, stakeholders, premissas, restrições</td></tr>
-            <tr><td>Rafael Requisito</td><td>04-requisitos.md</td><td>724</td><td>27 RFs (M1–M6), 12 RNFs, MoSCoW, critérios de aceite</td></tr>
-            <tr><td>Carlos Cronograma</td><td>05-cronograma.md</td><td>597</td><td>7 fases, 12 marcos, 77 pacotes WBS, caminho crítico, buffer 15%</td></tr>
-            <tr><td>Pedro Perigo</td><td>06-plano-riscos.md</td><td>745</td><td>18 riscos, matriz 5×5, estratégias, VME R$145.400, contingência</td></tr>
-            <tr><td>Marcela Métrica</td><td>07-kpis.md</td><td>224</td><td>EVM, curva S, KPIs execução, transição e pós go-live, OKRs</td></tr>
-            <tr><td>Sara Status</td><td>08-status-report-inicial.md</td><td>193</td><td>Semáforos, pendências críticas, próximas atividades</td></tr>
-            <tr><td>Vera Veredito</td><td>09-revisao-final.md</td><td>259</td><td>Score 91/100, validação completa, condições bloqueantes formalizadas</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-
-<script>
-function showTab(id) {
-  document.querySelectorAll('.tab-content').forEach(function(el) {
-    el.classList.remove('active');
-  });
-  document.querySelectorAll('.tab-btn').forEach(function(btn) {
-    btn.classList.remove('active');
-  });
-  var content = document.getElementById(id);
-  if (content) content.classList.add('active');
-  var btns = document.querySelectorAll('.tab-btn');
-  btns.forEach(function(btn) {
-    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf("'" + id + "'") !== -1) {
-      btn.classList.add('active');
-    }
-  });
-}
-</script>
+<footer class="footer">
+  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Pipeline VMO Autônomo v2 · VMO Consultoria<br>
+  Atualizado em: 18/05/2026 às 00:00 · Run #4 VMO Web Publisher · 12 agentes executados
+</footer>
 
 </body>
 </html>
