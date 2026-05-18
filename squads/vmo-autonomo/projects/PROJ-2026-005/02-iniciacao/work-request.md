@@ -296,15 +296,14 @@ A proposta técnica e comercial da NBS só será considerada válida se acompanh
 
 ---
 
-### Grupo 5 — Condições Comerciais (5 itens)
+### Grupo 5 — Condições Comerciais (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 5.1 | Valor total da proposta está dentro do envelope máximo de R$ 400.000 | | | |
-| 5.2 | Proposta apresenta composição de preço por marco, compatível com a estrutura de referência da Seção 9.2 (ou proposta alternativa justificada com os limites da Seção 9.2) | | | |
-| 5.3 | Proposta aceita as penalidades por atraso descritas na Seção 9.3 (0,5% por semana, limitado a 10% do contrato) | | | |
-| 5.4 | Proposta aceita o período de garantia mínimo de 90 dias corridos após go-live, com os prazos de correção definidos na Seção 9.4 | | | |
-| 5.5 | Proposta declara posição sobre manutenção legislativa (Seção 9.5), confirmando ou detalhando as condições de atualização de tabelas fiscais e compatibilidade com novas versões do ERP | | | |
+| 5.1 | Valor total da proposta está dentro do envelope máximo de R$ 400.000 (propostas acima serão desclassificadas automaticamente) | | | |
+| 5.2 | Proposta apresenta composição de preço por marco, compatível com a estrutura de referência da Seção 9.2, e declara prazo de validade da oferta mínimo de 60 dias a partir da data de submissão | | | |
+| 5.3 | Proposta aceita as penalidades por atraso da Seção 9.3 (0,5% por semana, limitado a 10% do contrato) e o período de garantia mínimo de 90 dias corridos após go-live com os prazos de correção da Seção 9.4 | | | |
+| 5.4 | Proposta declara posição sobre manutenção legislativa (Seção 9.5), confirmando as condições de atualização de tabelas fiscais, compatibilidade com novas versões do ERP e responsabilidade pela adequação às mudanças regulatórias | | | |
 
 ---
 
@@ -341,32 +340,26 @@ A proposta técnica e comercial da NBS só será considerada válida se acompanh
 
 ---
 
-### Grupo 9 — Conformidade Técnica do Módulo (6 itens)
+### Grupo 9 — Conformidade Técnica do Módulo (4 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
-| 9.1 | Proposta confirma que o módulo operará nativamente sobre a base de dados do ERP NBS, sem exportação de dados para sistemas externos durante o processo de auditoria | | | |
-| 9.2 | Proposta confirma que uma NF-e registrada na base NBS estará disponível para processamento pelo módulo em até 5 minutos após o registro (modo de processamento contínuo), conforme RF-INF-01 | | | |
-| 9.3 | Proposta confirma que o log de auditoria de ações (RF-RAT-01) será imutável e não poderá ser editado ou excluído por nenhum perfil de usuário, incluindo o Administrador, com retenção mínima de 5 anos | | | |
-| 9.4 | Proposta confirma que o controle de acesso por perfil (RF-SEG-01) será integrado ao mecanismo de autenticação existente do ERP NBS, sem sistema de autenticação paralelo, e que usuário com perfil inadequado receberá mensagem de acesso não autorizado sem exposição de dados da funcionalidade restrita | | | |
-| 9.5 | Proposta descreve como o módulo atenderá à conformidade com a LGPD para dados pessoais eventualmente presentes em NF-e (CPF de destinatários, transportadores), com segregação de acesso por perfil | | | |
-| 9.6 | Proposta confirma que o módulo não modificará registros originais de NF-e na base NBS, gravando os resultados de auditoria em estrutura de dados separada e vinculada à chave de acesso da NF-e | | | |
+| 9.1 | Proposta confirma que o módulo operará nativamente sobre a base de dados do ERP NBS, sem exportação de dados para sistemas externos durante o processo de auditoria, e que uma NF-e registrada na base NBS estará disponível para processamento em até 5 minutos após o registro (RF-INF-01) | | | |
+| 9.2 | Proposta confirma que o log de auditoria de ações (RF-RAT-01) será imutável, não poderá ser editado ou excluído por nenhum perfil de usuário (incluindo o Administrador), e terá retenção mínima de 5 anos | | | |
+| 9.3 | Proposta confirma que o controle de acesso por perfil (RF-SEG-01) será integrado ao mecanismo de autenticação existente do ERP NBS, com segregação plena entre os 5 perfis definidos, e que usuário com perfil inadequado não terá exposição de dados de funcionalidade restrita | | | |
+| 9.4 | Proposta confirma que o módulo não modificará registros originais de NF-e na base NBS (resultados gravados em estrutura separada) e descreve como atenderá à LGPD para dados pessoais eventualmente presentes em NF-e (CPF de destinatários, transportadores), com segregação de acesso por perfil | | | |
 
 ---
 
-### Grupo 10 — Declarações da NBS (9 itens)
+### Grupo 10 — Declarações da NBS (5 itens)
 
 | # | Item | OK | NOK | Observações |
 |---|---|---|---|---|
 | 10.1 | NBS declara não ter conflito de interesse com o Grupo Águia Branca / Divisão Comércio que impeça a prestação objetiva e imparcial dos serviços de desenvolvimento | | | |
-| 10.2 | NBS declara que todos os dados do cliente acessados durante o desenvolvimento e os testes serão tratados com confidencialidade e utilizados exclusivamente para fins deste projeto | | | |
-| 10.3 | NBS declara que os dados do cliente serão descartados ou devolvidos ao término do projeto, conforme política de segurança da informação acordada contratualmente | | | |
-| 10.4 | NBS declara ter lido e compreendido integralmente este Work Request, incluindo todos os requisitos, premissas, entregáveis, condições comerciais e critérios de aceite | | | |
-| 10.5 | NBS declara que a equipe técnica designada para o projeto estará disponível durante todo o período de desenvolvimento, e que eventuais substituições de membros-chave serão comunicadas ao GP com antecedência mínima de 15 dias e estarão sujeitas à aprovação do cliente | | | |
-| 10.6 | NBS declara capacidade de iniciar o projeto (kickoff) em até 15 dias úteis após a assinatura do contrato | | | |
-| 10.7 | NBS declara que o desenvolvimento deste módulo não introduzirá componentes de software de terceiros sem licença compatível com o uso comercial do Grupo Águia Branca | | | |
-| 10.8 | NBS declara as condições de propriedade intelectual aplicáveis ao módulo desenvolvido, incluindo se o cliente terá direito de uso perpétuo do módulo independentemente da continuidade do contrato de ERP | | | |
-| 10.9 | NBS declara que todos os 41 itens desta tabela foram avaliados e respondidos, e que a proposta submetida está em conformidade com os termos deste Work Request | | | |
+| 10.2 | NBS declara que todos os dados do cliente acessados durante o desenvolvimento e os testes serão tratados com confidencialidade, utilizados exclusivamente para fins deste projeto, e descartados ou devolvidos ao término, conforme política de segurança acordada contratualmente | | | |
+| 10.3 | NBS declara ter lido e compreendido integralmente este Work Request, incluindo todos os requisitos, premissas, entregáveis, condições comerciais e critérios de aceite | | | |
+| 10.4 | NBS declara que a equipe técnica designada estará disponível durante todo o desenvolvimento (substituições de membros-chave exigem comunicação ao GP com 15 dias de antecedência e aprovação do cliente), e que o projeto poderá iniciar em até 15 dias úteis após a assinatura do contrato | | | |
+| 10.5 | NBS declara as condições de propriedade intelectual do módulo desenvolvido (incluindo direito de uso perpétuo do cliente independente da continuidade do contrato de ERP), que nenhum componente de software de terceiros sem licença comercial compatível será introduzido, e que todos os 41 itens desta tabela foram avaliados e respondidos | | | |
 
 ---
 
