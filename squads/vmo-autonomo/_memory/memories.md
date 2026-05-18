@@ -16,6 +16,27 @@
 
 ## Run History
 
+### Re-execução 2026-05-18 — Pipeline v2 (4 projetos simultâneos)
+
+**Objetivo:** Aplicar os 2 novos steps do pipeline v2 (Step 7 — Fábio Fornecedor / Work Request; Step 13 — Gabriel Governança / Auditoria de Governança) em todos os projetos sem esse tratamento.
+
+**Nova estrutura de pastas aplicada:** `projects/{PROJ-CODE}/{01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento}/`
+
+**Resultados:**
+
+| Projeto | Score Vera | Auditoria Gabriel | Aprovação Final |
+|---------|-----------|-------------------|-----------------|
+| PROJ-2026-001 — SAP FI Aprovador | 8.7/10 | APROVADO COM RESSALVAS (NC-MENOR: TAP sem assinatura) | ✅ APROVADO |
+| PROJ-2026-003 — Caminhos ERP GAB | 9.0/10 | APROVADO (3 riscos preventivos) | ✅ APROVADO |
+| PROJ-2026-004 — Plataforma Ideias | 10.0/10 | REPROVADO NC-CRÍTICA (sponsor A DEFINIR) | ✅ APROVADO com ciência |
+| PROJ-2026-005 — Auditor Fiscal NBS | 9.1/10 | REPROVADO NC-CRÍTICA (sponsor CB-01, prazo 25/05) | ✅ APROVADO com ciência |
+
+**Aprendizados do pipeline v2:**
+- Fábio Fornecedor (Step 7): WRs gerados para todos os 4 projetos com 10 grupos / 41 itens do Artefato Obrigatório. Subagentes atingiram rate limit — executar inline é mais confiável para runs múltiplos simultâneos.
+- Gabriel Governança (Step 13): Auditoria crítica de sponsor funcionou corretamente como filtro de governança. PROJ-004 e PROJ-005 corretamente REPROVADOS por sponsor ausente, com ciência do GP registrada em aprovacao-final.md.
+- Sponsor ausente é NC-CRÍTICA recorrente — reforçar no onboarding de novas demandas: sponsor deve ser identificado ANTES do pipeline iniciar.
+- Nova estrutura de pastas por fase facilita rastreabilidade mas exige que todos os agentes resolvam o placeholder `{project}` corretamente.
+
 ### Run 2026-05-15-150000 — PROJ-2026-005
 
 **Demanda:** Auditor Fiscal — Módulo Nativo NBS em Substituição ao Fiscal Defender. Solicitante: Sandro Siqueira (Coordenador de Contabilidade, Divisão Comércio, Grupo Águia Branca). Saving: R$78K/ano, custo zero de desenvolvimento (contrapartida contratual NBS).
