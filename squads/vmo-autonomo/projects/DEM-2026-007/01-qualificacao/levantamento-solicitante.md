@@ -1,12 +1,14 @@
 # Questionário de Levantamento — DEM-2026-007
 **Ticket #6700943 — Importação Automática DDA no SAP (VAB Matriz)**
+**Projeto: Controladoria do Futuro**
 Data de envio: 2026-05-20
-Destinatário: Lucas Medeiros Pereira (VAB Matriz)
+Destinatários: Lucas Medeiros Pereira / Noemia Tambara Cardoso Malini (VAB Matriz)
 
 ---
 
-A análise inicial da sua solicitação foi concluída. Para que possamos dar continuidade
-e gerar o escopo técnico definitivo, precisamos das informações abaixo. Por favor,
+A demanda foi qualificada como **Melhoria Evolutiva — APROVADA COM CONDIÇÕES**.
+Aprovações gerenciais já obtidas: Gladston Campos (08/04) e Walace Bacelar (06/05).
+Para iniciar o levantamento técnico, precisamos das informações abaixo. Por favor,
 responda até **27/05/2026**.
 
 ---
