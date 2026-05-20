@@ -26,7 +26,7 @@ def md_to_pdf(md_path: Path) -> Path:
 
     text = md_path.read_text(encoding="utf-8")
 
-    # Extract title (first H1) and subtitle (second line after H1 if not heading)
+    # Extract title (first H1) and meta lines immediately after it
     lines = text.split("\n")
     doc_title = ""
     doc_subtitle = ""
@@ -34,7 +34,6 @@ def md_to_pdf(md_path: Path) -> Path:
     for i, line in enumerate(lines):
         if line.startswith("# ") and not doc_title:
             doc_title = line[2:].strip()
-            # Look for subtitle/meta on next non-empty lines
             for j in range(i + 1, min(i + 4, len(lines))):
                 l = lines[j].strip()
                 if l and not l.startswith("#") and not l.startswith("---"):
@@ -46,7 +45,10 @@ def md_to_pdf(md_path: Path) -> Path:
                         break
             break
 
-    extensions = ["tables", "fenced_code", "nl2br", "attr_list"]
+    # NOTE: do NOT use nl2br — it converts every soft newline in markdown to <br>,
+    # breaking paragraph text mid-sentence. Standard markdown already merges
+    # consecutive lines into one paragraph.
+    extensions = ["tables", "fenced_code", "sane_lists"]
     html_body = md_lib.markdown(text, extensions=extensions)
 
     # Build formal header block
@@ -109,9 +111,12 @@ def md_to_pdf(md_path: Path) -> Path:
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             font-size: 10.5pt;
-            line-height: 1.55;
+            line-height: 1.6;
             color: #1a1a1a;
             background: #ffffff;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* ── Document header block (first page) ── */
@@ -207,42 +212,56 @@ def md_to_pdf(md_path: Path) -> Path:
         }
 
         /* ── Paragraphs ── */
-        p { margin: 0 0 7pt 0; }
+        p {
+            margin: 0 0 8pt 0;
+            text-align: justify;
+        }
 
         /* ── Tables ── */
         table {
             border-collapse: collapse;
             width: 100%;
-            margin: 10pt 0 14pt 0;
-            font-size: 9.5pt;
-            page-break-inside: auto;
+            margin: 10pt 0 16pt 0;
+            font-size: 9pt;
+            table-layout: fixed;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         thead { display: table-header-group; }
         th {
             background-color: #1a3a5c;
             color: #ffffff;
             font-weight: bold;
-            padding: 6pt 8pt;
+            padding: 6pt 7pt;
             border: 1pt solid #1a3a5c;
             text-align: left;
             vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         td {
-            padding: 5pt 8pt;
+            padding: 5pt 7pt;
             border: 0.5pt solid #c8d4e3;
             vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         tr:nth-child(even) td { background-color: #f0f5fb; }
         tr:nth-child(odd) td { background-color: #ffffff; }
-        tr:hover td { background-color: #e4edf8; }
 
         /* ── Lists ── */
         ul, ol {
-            margin: 4pt 0 8pt 18pt;
+            margin: 4pt 0 10pt 20pt;
             padding: 0;
         }
-        li { margin-bottom: 3pt; }
-        li > ul, li > ol { margin-top: 2pt; }
+        ul { list-style-type: disc; }
+        ul ul { list-style-type: circle; margin-top: 2pt; }
+        ol { list-style-type: decimal; }
+        li {
+            margin-bottom: 4pt;
+            line-height: 1.55;
+        }
+        li > ul, li > ol { margin-top: 2pt; margin-bottom: 2pt; }
 
         /* ── Code ── */
         code {
