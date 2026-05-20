@@ -2,25 +2,51 @@
 task: "Coletar Demanda"
 order: 1
 input:
-  - materiais_fornecidos: "Arquivos, e-mails, atas de reunião, formulários ou mensagens fornecidos pelo usuário"
-  - canal_entrada: "Descrição do canal de origem (e-mail, Teams, formulário, reunião)"
+  - canal_entrada: "Canal detectado: ticket, e-mail, PDF, .msg, transcrição, texto direto ou materiais-demanda.md"
+  - materiais_disponiveis: "Qualquer arquivo, texto ou referência fornecida pelo usuário ou disponível no contexto"
 output:
   - demanda_estruturada: "Dados da demanda organizados em campos padronizados"
+  - canal_documentado: "Canal de entrada identificado e fontes listadas"
   - lacunas_identificadas: "Lista de campos sem informação com ação requerida"
   - fonte_por_campo: "Rastreabilidade de origem para cada informação coletada"
 ---
 
 # Coletar Demanda
 
-Lê todos os materiais fornecidos pelo usuário (e-mails, documentos, atas, mensagens) e extrai as informações da demanda em um formato estruturado e rastreável. É o primeiro passo do pipeline — a qualidade desta coleta determina a de todos os documentos subsequentes.
+Lê todos os materiais disponíveis em QUALQUER canal de entrada e extrai as informações
+da demanda em formato estruturado e rastreável. É o primeiro passo do pipeline —
+a qualidade desta coleta determina a de todos os documentos subsequentes.
+
+## Canais Suportados
+
+| Canal | Como detectar | Como extrair |
+|-------|--------------|--------------|
+| Ticket de service desk (PDF) | Arquivo .pdf no contexto | Ler com Read tool; extrair campos do formulário |
+| E-mail (.msg) | Arquivo .msg no contexto | Extrair remetente, destinatários, assunto, corpo |
+| E-mail (texto) | Texto colado ou em materiais-demanda.md | Extrair cabeçalho e corpo |
+| PDF genérico | Arquivo .pdf | Ler e extrair dados relevantes |
+| Transcrição Fireflies | Referência a reunião ou ID Fireflies | Usar skill fireflies_get_transcript |
+| Texto direto | Conteúdo na conversa | Extrair diretamente |
+| materiais-demanda.md | Arquivo em squads/.../output/ | Ler e processar normalmente |
+| Múltiplos | Combinação dos acima | Consolidar com rastreabilidade por fonte |
 
 ## Process
 
-1. **Inventariar os materiais fornecidos**: Listar todos os arquivos, e-mails e mensagens disponíveis com data e tipo de cada fonte.
-2. **Ler e extrair dados por campo**: Para cada campo obrigatório (solicitante, necessidade, benefício, urgência, prazo, orçamento estimado, stakeholders), localizar e extrair a informação nos materiais.
-3. **Registrar a fonte de cada informação**: Para cada dado extraído, anotar de qual documento ou conversa ele veio (ex: "E-mail Ana Ferreira, 2026-04-08").
-4. **Identificar lacunas**: Campos sem informação disponível são marcados como "[NÃO INFORMADO — requer esclarecimento]" com sugestão de pergunta ao solicitante.
-5. **Verificar consistências**: Se o mesmo campo aparece com valores diferentes em fontes distintas, registrar ambos como inconsistência para resolução.
+1. **Inventariar fontes disponíveis**: Listar todos os materiais detectados com canal, tipo e data.
+   Se nenhuma fonte for encontrada, parar e solicitar ao usuário antes de avançar.
+
+2. **Extrair por campo e por fonte**: Para cada campo obrigatório abaixo, localizar a informação
+   em cada fonte disponível. Registrar qual fonte forneceu cada dado.
+
+3. **Detectar inconsistências entre fontes**: Se o mesmo campo aparecer com valores diferentes
+   em fontes distintas, registrar AMBOS como inconsistência com flag `⚠️ INCONSISTÊNCIA`.
+
+4. **Identificar lacunas**: Campos sem informação em NENHUMA fonte são marcados
+   `[NÃO INFORMADO — requer esclarecimento]` com pergunta específica ao solicitante.
+
+5. **Registrar contexto implícito**: Além dos campos formais, registrar qualquer informação
+   contextual relevante (conflitos políticos mencionados, urgências entre-linhas, restrições
+   não declaradas). Fonte sempre documentada.
 
 ## Output Format
 
@@ -28,117 +54,83 @@ Lê todos os materiais fornecidos pelo usuário (e-mails, documentos, atas, mens
 # Demanda Coletada
 Data da Coleta: YYYY-MM-DD
 Coletado por: Iara Inbound
+Canal de Entrada: [ticket / e-mail / pdf / fireflies / direto / múltiplos — especificar]
 
 ## Fontes Consultadas
-| # | Tipo | Descrição | Data |
-|---|------|-----------|------|
-| 1 | E-mail | ... | YYYY-MM-DD |
+| # | Canal | Tipo | Descrição | Data |
+|---|-------|------|-----------|------|
+| 1 | ticket | PDF | Ticket #NNNN — Sistema X — Solicitação Y | YYYY-MM-DD |
+| 2 | e-mail | .msg | De: Fulano → Para: PMO — Assunto Z | YYYY-MM-DD |
 
 ## Dados da Demanda
 
 **Solicitante**
 - Nome: [nome ou NÃO INFORMADO]
 - Cargo: [cargo ou NÃO INFORMADO]
-- Área: [área ou NÃO INFORMADO]
+- Área/Divisão: [área ou NÃO INFORMADO]
+- Contato: [e-mail/telefone ou NÃO INFORMADO]
 - Fonte: [referência à fonte]
 
 **Necessidade de Negócio**
-[descrição do problema real, não da solução]
+[descrição do problema real, não da solução — o QUE está errado ou faltando]
 Fonte: [referência]
 
 **Pedido Específico**
-[o que foi solicitado concretamente]
+[o que foi solicitado concretamente — a solução proposta pelo solicitante]
 Fonte: [referência]
 
 **Benefício Esperado**
-[benefício descrito ou estimado]
+[benefício descrito ou estimado — quantificado se disponível]
 Fonte: [referência]
 
 **Urgência e Prazo**
-- Prazo desejado: [data ou NÃO INFORMADO]
+- Prazo desejado: [data concreta ou NÃO INFORMADO]
 - Urgência declarada: [alta/média/baixa ou NÃO INFORMADO]
-- Origem do prazo: [por que essa data? ou NÃO INFORMADO]
+- Origem do prazo: [motivação real — evento, contrato, lei — ou NÃO INFORMADO]
+- SLA do ticket (se aplicável): [prazo do ticket e status — em atraso, no prazo]
+Fonte: [referência]
+
+**Aprovações e Autorizações Identificadas**
+[listar qualquer aprovação já concedida — mesmo informal via e-mail]
+- [Nome, cargo, data, conteúdo da aprovação, condicional/incondicional]
 Fonte: [referência]
 
 **Contexto Organizacional**
-- Área executora provável: [área ou NÃO INFORMADO]
-- Projetos relacionados: [projetos ou NÃO INFORMADO]
-- Restrições conhecidas: [restrições ou NÃO INFORMADO]
+- Divisão/empresa: [unidade de negócio]
+- Área executora provável: [área de TI ou negócio]
+- Projetos relacionados ou precedentes: [exemplos conhecidos no grupo]
+- Restrições conhecidas: [prazo, orçamento, tecnologia, política]
+- Stakeholders identificados: [nomes e papéis mencionados em qualquer fonte]
+Fonte: [referência]
+
+**Contexto Implícito** (informações entre-linhas ou subentendidas)
+[registrar qualquer contexto que não foi declarado explicitamente mas é relevante]
 Fonte: [referência]
 
 ## Lacunas Identificadas
-| Campo | Status | Pergunta para Esclarecimento |
-|-------|--------|------------------------------|
-| [campo] | NÃO INFORMADO | [pergunta específica] |
-```
+| # | Campo | Status | Pergunta para Esclarecimento |
+|---|-------|--------|------------------------------|
+| 1 | [campo] | NÃO INFORMADO | [pergunta específica e direta] |
 
-## Output Example
-
-```markdown
-# Demanda Coletada
-Data da Coleta: 2026-04-10
-Coletado por: Iara Inbound
-
-## Fontes Consultadas
-| # | Tipo | Descrição | Data |
-|---|------|-----------|------|
-| 1 | E-mail | Ana Ferreira → PMO, assunto "Solicitação de projeto rastreamento" | 2026-04-08 |
-| 2 | Ata de Reunião | Reunião Supply Chain Q1 Review | 2026-04-05 |
-
-## Dados da Demanda
-
-**Solicitante**
-- Nome: Ana Carolina Ferreira
-- Cargo: Diretora de Operações
-- Área: Supply Chain
-- Fonte: E-mail #1
-
-**Necessidade de Negócio**
-Falta de visibilidade em tempo real sobre o status de entrega dos fornecedores Tier 1
-resultou em 3 rupturas de fornecimento no Q1/2026. A área não sabe quando um
-atraso está ocorrendo até que a mercadoria deveria ter chegado e não chegou.
-Fonte: E-mail #1 + Ata de Reunião #2
-
-**Pedido Específico**
-Implementar sistema de rastreamento em tempo real integrado ao SAP, com
-alertas automáticos para atrasos e dashboard de acompanhamento.
-Fonte: E-mail #1
-
-**Benefício Esperado**
-Redução de incidentes de ruptura. Custo dos incidentes de Q1: R$ 135.000.
-Benefício estimado pela solicitante: "pelo menos metade desse valor em economia".
-Fonte: E-mail #1
-
-**Urgência e Prazo**
-- Prazo desejado: "antes do segundo semestre" (= antes de 01/07/2026)
-- Urgência declarada: alta
-- Origem do prazo: Próxima reunião de avaliação de fornecedores é em julho
-Fonte: E-mail #1
-
-**Contexto Organizacional**
-- Área executora provável: TI — Sistemas Corporativos
-- Projetos relacionados: Atualização do SAP em andamento (fonte: Ata #2)
-- Restrições conhecidas: Sistema deve integrar com SAP atual sem substituí-lo
-Fonte: E-mail #1, Ata #2
-
-## Lacunas Identificadas
-| Campo | Status | Pergunta para Esclarecimento |
-|-------|--------|------------------------------|
-| Orçamento disponível | NÃO INFORMADO | Há orçamento aprovado ou precisa passar por aprovação? |
-| Sponsor formal | NÃO INFORMADO | Quem seria o sponsor executivo do projeto? |
-| Equipe executora disponível | NÃO INFORMADO | TI tem disponibilidade? Há conflito com o projeto SAP? |
+## Resumo para Confirmação
+[3-5 linhas resumindo a demanda para validação com o solicitante antes de avançar]
 ```
 
 ## Quality Criteria
 
-- [ ] Todas as fontes consultadas listadas com data e tipo
-- [ ] Cada campo tem referência à fonte de origem
-- [ ] Lacunas documentadas explicitamente com pergunta de esclarecimento
-- [ ] Necessidade de negócio distinguida do pedido técnico
-- [ ] Inconsistências entre fontes sinalizadas com flag
+- [ ] Canal de entrada identificado e documentado
+- [ ] Todas as fontes consultadas listadas com canal, tipo e data
+- [ ] Cada campo tem referência explícita à fonte de origem
+- [ ] Aprovações e autorizações já existentes documentadas (se houver)
+- [ ] Lacunas documentadas com pergunta específica de esclarecimento
+- [ ] Necessidade de negócio distinguida do pedido técnico (problema vs. solução)
+- [ ] Inconsistências entre fontes sinalizadas com flag ⚠️
+- [ ] Contexto implícito registrado quando identificado
 
 ## Veto Conditions
 
 Rejeitar e refazer se qualquer uma das condições for verdadeira:
-1. O campo "Necessidade de Negócio" está vazio ou apenas repete o pedido técnico sem explicar o problema subjacente
+1. O campo "Necessidade de Negócio" está vazio ou apenas repete o pedido técnico
 2. Nenhum campo tem rastreabilidade de fonte documentada
+3. Canal de entrada não foi identificado
+4. Havia múltiplas fontes disponíveis mas apenas uma foi consultada
