@@ -1,7 +1,11 @@
 # Gate de Governança — Fase 02: Qualificação
 Projeto: DEM-2026-007
-Data: 2026-05-20
+Data: 2026-05-20 (v2 — requalificação)
 Auditor: Gabriel Governança
+
+Histórico:
+- v1 (2026-05-20): PASS sobre qualificação v1 (44/100 EM ESPERA)
+- v2 (2026-05-20): PASS sobre qualificação v2 (49/100 EM ESPERA). Novas CBs tratadas corretamente.
 
 ## Veredicto: PASS
 
@@ -9,63 +13,63 @@ Auditor: Gabriel Governança
 
 | # | Critério | Status | Observação |
 |---|----------|--------|------------|
-| G1.1 | 10 critérios pontuados | ✅ PASS | Critérios 1–10 presentes com notas: 6/5/4/3/4/3/5/4/5/5 — total 44/100 |
-| G1.2 | Justificativas presentes | ✅ PASS | Cada critério tem justificativa substantiva com declaração de evidência |
-| G1.3 | Classificação declarada | ✅ PASS | "MELHORIA EVOLUTIVA → Sustentação ERP FI" com justificativa técnica |
-| G1.4 | Decisão declarada | ✅ PASS | "EM ESPERA" com fundamentação explícita |
-| G2.1 | Decisão coerente com pontuação | ✅ PASS | 44/100 (44%) < 50% → EM ESPERA justificado pela regra "claims de risco não respondidos comprometem critérios"; alternativa REPROVADO seria válida mas EM ESPERA é mais precisa e acionável |
-| G3.1 | CB-Sponsor documentada | ⚠️ ABERTA | Gladston Campos (Gerência — não Diretor+) aprovou. Walace Bacelar (Holding) tem autorização condicional. Nenhum sponsor Diretor+ confirmado. Felipe não registrou CB-Sponsor explícita — monitorar na iniciação |
-| G3.2 | CB-Orçamento documentada | ✅ ABERTA | CB-3 documenta a contradição autorização Holding (custo zero) vs. expectativa <R$10K; cobre a dimensão orçamentária |
-| G3.3 | CB-Escopo documentada | ✅ ABERTA | CB-2 exige especificação dos "ajustes necessários" + estimativa de esforço por fase — equivalente a CB-Escopo mínimo |
-| G4.1 | Dados consistentes com intake | ✅ PASS | Stakeholders, fontes e contexto batem integralmente com demanda-coletada.md |
-| G4.2 | Sem informações inventadas | ✅ PASS | Todas as afirmações rastreáveis às Fontes 1, 2 e 3 do intake |
-| G4.3 | Lacunas da Iara tratadas | ✅ PASS | Todas as 10 lacunas (L1–L10) foram endereçadas nos critérios ou nas perguntas P-1 a P-6 |
-| G5.1 | Time sustentação indicado (melhoria) | ✅ PASS | "Sustentação ERP FI" declarado explicitamente |
-| G5.2 | Próximos passos com responsável e prazo | ⚠️ PARCIAL | 6 ações com responsável e prazo em dias corridos — prazo para resubmissão da qualificação é "após todas as CBs" sem data fixa; aceitável, mas recomenda-se datar a reunião de follow-up |
+| G1.1 | 10 critérios pontuados | ✅ PASS | Critérios 1–10: 6/6/4/3/5/6/5/4/5/5 = 49/100 |
+| G1.2 | Justificativas presentes | ✅ PASS | Justificativas atualizadas com raciocínio das CBs resolvidas |
+| G1.3 | Classificação declarada | ✅ PASS | "MELHORIA EVOLUTIVA → Sustentação ERP FI" (provisória, pendente CB-2) |
+| G1.4 | Decisão declarada | ✅ PASS | "EM ESPERA" com fundamentação explícita sobre o 1 ponto de diferença |
+| G2.1 | Decisão coerente com pontuação | ✅ PASS | 49/100 (49%) < 50% → EM ESPERA correto; 1 ponto do limiar com CB-2 como variável determinante |
+| G3.1 | CB-Sponsor documentada | ✅ ABERTA | Registrada explicitamente: "Gladston Campos é Gerente — decisões de escopo/custo podem não ter alçada suficiente. A resolver antes do kick-off." |
+| G3.2 | CB-Orçamento documentada | ✅ ABERTA | CB-3 convertida em Condição de Kick-off obrigatória — formalização de custos e re-autorização Holding antes do kickoff |
+| G3.3 | CB-Escopo documentada | ✅ ABERTA | CB-2 documentada como item de descoberta técnica na fase de requisitos (Step 8) |
+| G4.1 | Dados consistentes com intake | ✅ PASS | Stakeholders, fontes e contexto batem com demanda-coletada.md |
+| G4.2 | Sem informações inventadas | ✅ PASS | Todos os dados rastreáveis às fontes 1, 2 e 3 |
+| G4.3 | Lacunas da Iara tratadas | ✅ PASS | L1–L10 endereçadas; CB-4 corretamente eliminada (processo normal, não lacuna) |
+| G5.1 | Time sustentação indicado (melhoria) | ✅ PASS | "Sustentação ERP FI" mantido |
+| G5.2 | Próximos passos com responsável e prazo | ✅ PASS | 5 ações com responsável, prazo e fase do pipeline |
 
-**Resultado: 11/13 itens ✅ — 2 observações (⚠️), nenhum bloqueio (❌)**
-
----
-
-### Condições Bloqueantes Registradas (para monitoramento)
-
-| CB | Descrição | Status | Prazo para Resolução |
-|----|-----------|--------|----------------------|
-| CB-1 | Documentação técnica DDA Div. Logística | ABERTA | 7 dias corridos |
-| CB-2 (= CB-Escopo) | Especificação dos ajustes + estimativa de esforço por fase | ABERTA | 10 dias após CB-4 |
-| CB-3 (= CB-Orçamento) | Resolução da contradição autorização Holding: custo zero confirmado ou nova autorização | ABERTA | 5 dias corridos |
-| CB-4 | Designação responsável técnico DTI por Gladston Campos | ABERTA | 2 dias corridos — urgente |
-| CB-Sponsor | Sponsor com nível Diretor+ não identificado — Gladston é Gerente; Walace tem autorização condicional. Risco de decisões de escopo/custo sem alçada suficiente | NÃO REGISTRADA POR FELIPE | A registrar na iniciação — não bloqueia este gate (1 NC-MOD < limiar de 3) |
+**Resultado: 13/13 ✅ — nenhuma observação bloqueante**
 
 ---
 
-### Observações de Governança
+### Registro Governança — Mudanças da v1 para v2
 
-**OBS-G1 — CB-Sponsor ausente no parecer:**
-O nível de sponsor identificado (Gladston Campos — Gerência) é inferior ao mínimo VMO (Diretor+).
-Walace Bacelar (Holding) tem autorização explicitamente condicional, o que fragiliza sua posição
-como sponsor para decisões de escopo e custo. Felipe não registrou CB-Sponsor formal. Esta omissão
-não bloqueia este gate (única NC-MOD, abaixo do limiar de 3), mas deve ser incluída como CB
-obrigatória na fase de iniciação antes do kick-off. Responsável: Gabriel Governança no Gate
-de Kick-off, ou Felipe na requalificação.
+**Melhoria registrada: CB-4 eliminada corretamente**
+A v1 penalizou o projeto pela ausência de designação de recurso técnico DTI. A v2 corrige: a
+designação de recurso técnico em projetos de sustentação ERP é processo padrão que ocorre após
+aceitação formal da demanda — não é esperada nem exigível na fase de qualificação. A eliminação
+desta CB é tecnicamente correta e não representa flexibilização de critérios.
 
-**OBS-G2 — Prazo de resubmissão sem data calendário:**
-A tabela de próximos passos da qualificação tem prazos em "dias corridos" para as ações individuais
-(2 a 10 dias). A requalificação está marcada para "após todas as CBs" — recomenda-se que no
-follow-up do checkpoint, o usuário fixe uma data-alvo para o retorno das respostas e reagendamento
-da qualificação. A ausência de data firme prolonga o estado EM ESPERA indefinidamente.
+**Melhoria registrada: CB-3 convertida em Gate de Kick-off**
+A v2 tratou corretamente a contradição de autorização Holding (custo zero vs. expectativa real)
+como Condição de Kick-off obrigatória. Este é o tratamento de governança adequado: não bloqueia
+a documentação, bloqueia a execução. Gabriel confirma que o kickoff gate para esta CB será
+verificado no Step adequado antes de qualquer início de trabalho.
+
+**Pendência de governança mantida: CB-Sponsor**
+Gladston Campos (Gerente) permanece como único aprovador local. A ausência de sponsor Diretor+
+é uma condição de governança que deve ser resolvida antes do gate de kick-off. Felipe registrou
+explicitamente. Gabriel irá verificar esta CB no gate de kick-off (task: pre-kickoff-gate.md).
+
+---
+
+### Condições Bloqueantes Registradas (monitoramento)
+
+| CB | Descrição | Status | Quando Verificar |
+|----|-----------|--------|-----------------|
+| CB-2 | Natureza dos ajustes técnicos + esforço por fase | ABERTA → Step 8 | Requisitos (Rafael Requisito) |
+| CB-3 (Gate KO) | Formalização de custos + re-autorização Holding | ABERTA → Gate Kick-off | Antes do kick-off |
+| CB-Sponsor | Sponsor Diretor+ identificado ou escalada formal | ABERTA → Iniciação | Gate de Kick-off |
 
 ---
 
 ### Encaminhamento
 
-**PASS → Checkpoint Step 6: Aprovar Qualificação**
+**PASS → Checkpoint Step 6: Aprovar Qualificação (v2)**
 
-O parecer de Felipe Filtro cumpre todos os requisitos de governança formal: 10 critérios pontuados
-com justificativa e evidência declarada, decisão coerente com pontuação, classificação com time
-de sustentação indicado, CBs obrigatórias documentadas (escopo e orçamento), lacunas da Iara
-integralmente tratadas, próximos passos com responsável e prazo.
+A qualificação v2 cumpre todos os requisitos de governança formal. A decisão EM ESPERA é
+coerente, as CBs estão corretamente reclassificadas (CB-4 eliminada, CB-3 como kickoff gate,
+CB-2 como fase de requisitos), e a recomendação de avançar para documentação com condições
+explícitas é processualmente correta para este tipo de demanda.
 
-A demanda segue para o **Checkpoint Step 6** em status **EM ESPERA** — não para aprovação de
-início, mas para validação do usuário sobre o parecer e definição de como proceder com as
-4 Condições Bloqueantes e as 6 Perguntas em Aberto.
+O pacote segue para o **Checkpoint Step 6** onde o usuário decide se avança para as fases
+de documentação (Steps 7–13) com CB-2 aberta para resolução pelo Rafael Requisito.
