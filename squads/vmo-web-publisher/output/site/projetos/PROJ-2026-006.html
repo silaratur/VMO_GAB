@@ -3,801 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJ-2026-006 — Plataforma Própria de Gestão de Ideias e Inovação</title>
+<title>PROJ-2026-006 — Plataforma Própria de Gestão de Ideias</title>
 <style>
-:root {
-  --bg: #0f172a;
-  --bg2: #1e293b;
-  --border: #334155;
-  --blue: #3b82f6;
-  --green: #22c55e;
-  --yellow: #eab308;
-  --red: #ef4444;
-  --orange: #f97316;
-  --purple: #a855f7;
-  --gray: #64748b;
-  --text: #f1f5f9;
-  --text2: #94a3b8;
-  --glow-blue: 0 0 16px #3b82f655;
-  --glow-green: 0 0 12px #22c55e55;
-  --glow-yellow: 0 0 12px #eab30855;
-  --glow-purple: 0 0 12px #a855f755;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-.header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 28px; background: var(--bg2); border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
-}
-.brand-logo { font-size: 1.15rem; font-weight: 700; color: var(--blue); letter-spacing: 1px; }
-.brand-logo span { color: var(--green); }
-.brand-sub { font-size: 0.65rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
-.header-right { display: flex; align-items: center; gap: 20px; }
-.back-link {
-  font-size: 0.72rem; color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 5px;
-  padding: 6px 12px; border: 1px solid #3b82f640; border-radius: 6px; transition: background .2s;
-}
-.back-link:hover { background: #3b82f614; }
-.updated-at { font-size: 0.65rem; color: var(--text2); }
-
-.main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
-
-/* Hero */
-.project-hero {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
-  padding: 28px; margin-bottom: 28px; border-left: 5px solid var(--yellow);
-}
-.project-meta { font-size: 0.62rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-.project-title { font-size: 1.55rem; font-weight: 800; margin-bottom: 12px; line-height: 1.3; }
-.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-.tag {
-  font-size: 0.62rem; padding: 3px 11px; border-radius: 99px; border: 1px solid; font-weight: 600;
-}
-.tag.atencao { border-color: var(--yellow); color: var(--yellow); }
-.tag.blue { border-color: var(--blue); color: var(--blue); }
-.tag.gray { border-color: var(--gray); color: var(--text2); }
-.tag.green { border-color: var(--green); color: var(--green); }
-.tag.red { border-color: var(--red); color: var(--red); }
-.tag.purple { border-color: var(--purple); color: var(--purple); }
-.tag.star {
-  border-color: var(--purple); color: var(--purple);
-  background: #a855f710;
-  text-shadow: var(--glow-purple);
-  animation: pulse-star 2.5s ease-in-out infinite;
-}
-@keyframes pulse-star {
-  0%, 100% { box-shadow: 0 0 0px #a855f740; }
-  50% { box-shadow: 0 0 10px #a855f770; }
-}
-
-.hero-status-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.status-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 6px 16px; border-radius: 99px; font-size: 0.8rem; font-weight: 700;
-}
-.status-badge.atencao { background: #eab30814; color: var(--yellow); border: 1px solid #eab30840; }
-.status-badge.verde { background: #22c55e14; color: var(--green); border: 1px solid #22c55e40; }
-.status-badge.critico { background: #ef444414; color: var(--red); border: 1px solid #ef444440; }
-.status-badge.purple { background: #a855f714; color: var(--purple); border: 1px solid #a855f740; }
-
-/* Section title */
-.section-title {
-  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2);
-  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-}
-.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* Bloqueante banner */
-.bloqueante-banner {
-  background: #eab30810; border: 1px solid #eab30840; border-radius: 12px; border-left: 5px solid var(--yellow);
-  padding: 18px 20px; margin-bottom: 28px; display: flex; align-items: flex-start; gap: 16px;
-}
-.bloqueante-icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
-.bloqueante-body { flex: 1; }
-.bloqueante-title { font-size: 1rem; font-weight: 700; color: var(--yellow); margin-bottom: 6px; }
-.bloqueante-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.6; }
-.bloqueante-desc strong { color: var(--text); }
-
-/* Pipeline v2 artefatos */
-.pipeline-header {
-  background: linear-gradient(135deg, #a855f710 0%, #3b82f610 100%);
-  border: 1px solid #a855f740; border-radius: 12px; padding: 18px 22px; margin-bottom: 20px;
-  display: flex; align-items: center; gap: 16px;
-}
-.pipeline-header-icon { font-size: 2.2rem; flex-shrink: 0; }
-.pipeline-header-body { flex: 1; }
-.pipeline-header-title { font-size: 1rem; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
-.pipeline-header-sub { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
-
-.artefatos-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 28px;
-}
-@media(max-width:900px) { .artefatos-grid { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:540px) { .artefatos-grid { grid-template-columns: 1fr; } }
-
-.artefato-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px;
-}
-.artefato-card.destaque { border-color: #a855f740; background: #a855f708; }
-.artefato-num {
-  font-size: 0.6rem; font-weight: 700; color: var(--text2); background: #334155;
-  width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 1px;
-}
-.artefato-num.done { background: #22c55e20; color: var(--green); }
-.artefato-num.destaque-num { background: #a855f720; color: var(--purple); }
-.artefato-inner { flex: 1; }
-.artefato-nome { font-size: 0.82rem; font-weight: 600; margin-bottom: 3px; }
-.artefato-detalhe { font-size: 0.62rem; color: var(--text2); line-height: 1.4; }
-.artefato-status { font-size: 0.6rem; color: var(--green); font-weight: 600; margin-top: 4px; }
-.artefato-status.warn { color: var(--yellow); }
-.artefato-status.purple { color: var(--purple); }
-
-/* Semáforo */
-.semaforo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 28px; }
-@media(max-width:900px) { .semaforo-grid { grid-template-columns: repeat(3,1fr); } }
-@media(max-width:540px) { .semaforo-grid { grid-template-columns: repeat(2,1fr); } }
-
-.sema-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  padding: 18px 12px; text-align: center;
-}
-.sema-icon { font-size: 1.4rem; margin-bottom: 8px; }
-.sema-dim { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-.sema-status { font-size: 0.75rem; font-weight: 700; }
-.sema-status.atencao { color: var(--yellow); }
-.sema-status.verde { color: var(--green); }
-.sema-status.critico { color: var(--red); }
-.sema-status.na { color: var(--gray); }
-.sema-detail { font-size: 0.6rem; color: var(--text2); margin-top: 4px; line-height: 1.4; }
-
-/* KPIs */
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
-@media(max-width:900px) { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:480px) { .kpi-grid { grid-template-columns: 1fr; } }
-
-.kpi-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
-  padding: 18px 14px; text-align: center; position: relative; overflow: hidden;
-}
-.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.kpi-card.blue::before { background: var(--blue); }
-.kpi-card.green::before { background: var(--green); }
-.kpi-card.yellow::before { background: var(--yellow); }
-.kpi-card.gray::before { background: var(--gray); }
-.kpi-card.purple::before { background: var(--purple); }
-.kpi-value { font-size: 1.9rem; font-weight: 800; line-height: 1; margin-bottom: 5px; }
-.kpi-value.blue { color: var(--blue); text-shadow: var(--glow-blue); }
-.kpi-value.green { color: var(--green); text-shadow: var(--glow-green); }
-.kpi-value.yellow { color: var(--yellow); text-shadow: var(--glow-yellow); }
-.kpi-value.purple { color: var(--purple); text-shadow: var(--glow-purple); }
-.kpi-value.sm { font-size: 1.2rem; }
-.kpi-label { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-.kpi-sub { font-size: 0.58rem; color: var(--text2); }
-
-/* Cronograma */
-.timeline { margin-bottom: 28px; }
-.milestone-row {
-  display: flex; align-items: flex-start; gap: 14px; padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-.milestone-row:last-child { border-bottom: none; }
-.milestone-dot {
-  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
-  justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;
-}
-.milestone-dot.future { background: #334155; color: var(--text2); }
-.milestone-dot.critical { background: #eab30814; border: 2px solid var(--yellow); color: var(--yellow); }
-.milestone-label { font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; }
-.milestone-date { font-size: 0.65rem; color: var(--blue); font-weight: 600; margin-bottom: 3px; }
-.milestone-desc { font-size: 0.65rem; color: var(--text2); line-height: 1.4; }
-
-/* Riscos */
-.risk-summary-row {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px;
-}
-@media(max-width:600px) { .risk-summary-row { grid-template-columns: repeat(2,1fr); } }
-
-.risk-count-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  padding: 14px; text-align: center;
-}
-.risk-count { font-size: 1.8rem; font-weight: 800; }
-.risk-count.critico { color: var(--red); }
-.risk-count.alto { color: var(--orange); }
-.risk-count.medio { color: var(--yellow); }
-.risk-count.baixo { color: var(--green); }
-.risk-level { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-
-.risk-table { width: 100%; border-collapse: collapse; }
-.risk-table th { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-.risk-table td { font-size: 0.75rem; padding: 10px; border-bottom: 1px solid #1e293b; vertical-align: top; }
-.risk-table tr:last-child td { border-bottom: none; }
-.risk-table tr:hover td { background: #1e293b; }
-.risk-id { font-size: 0.6rem; color: var(--text2); }
-.risk-pill { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
-.risk-pill.critico { background: #ef444418; color: var(--red); }
-.risk-pill.alto { background: #f9731618; color: var(--orange); }
-.risk-pill.medio { background: #eab30818; color: var(--yellow); }
-.risk-pill.baixo { background: #22c55e18; color: var(--green); }
-
-/* Agentes */
-.agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 28px; }
-@media(max-width:600px) { .agent-grid { grid-template-columns: repeat(2,1fr); } }
-.agent-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-}
-.agent-card.destaque { border-color: #a855f740; background: #a855f708; }
-.agent-icon { font-size: 1.5rem; flex-shrink: 0; }
-.agent-name { font-size: 0.8rem; font-weight: 600; }
-.agent-role { font-size: 0.62rem; color: var(--text2); margin-top: 2px; }
-.agent-status-tag {
-  display: inline-block; margin-top: 6px;
-  font-size: 0.6rem; padding: 2px 8px; border-radius: 99px; font-weight: 600;
-}
-.done { background: #22c55e14; color: var(--green); }
-.done-purple { background: #a855f714; color: var(--purple); }
-.warn-tag { background: #eab30814; color: var(--yellow); }
-
-/* Próximos Passos */
-.next-steps { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 28px; }
-.step-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
-.step-item:last-child { border-bottom: none; }
-.step-num { background: #3b82f620; color: var(--blue); border: 1px solid #3b82f640; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-.step-num.urgent { background: #eab30820; color: var(--yellow); border-color: #eab30840; }
-.step-action { font-size: 0.82rem; font-weight: 600; margin-bottom: 3px; }
-.step-meta { font-size: 0.62rem; color: var(--text2); display: flex; gap: 12px; flex-wrap: wrap; }
-.step-owner { color: var(--blue); }
-.step-date { color: var(--yellow); font-weight: 600; }
-
-.footer {
-  text-align: center; padding: 24px; border-top: 1px solid var(--border);
-  font-size: 0.65rem; color: var(--text2); margin-top: 8px;
-}
-.footer strong { color: var(--blue); }
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.header-right{font-size:.65rem;color:var(--text2);}
+.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
+.proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--yellow);}
+.proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
+.badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
+.badge-atencao{background:#eab30822;color:var(--yellow);border:1px solid #eab30855;}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
+.meta-box.alert{border-color:#ef444488;}
+.meta-box.alert .meta-box-value{color:var(--red);}
+.section-title{font-size:.65rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:768px){.grid2{grid-template-columns:1fr;}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.sem-table{width:100%;border-collapse:collapse;}
+.sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
+.sem-table tr:last-child td{border-bottom:none;}
+.sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
+.dot-g{background:var(--green);}
+.dot-y{background:var(--yellow);}
+.dot-r{background:var(--red);}
+.dot-gray{background:var(--gray);}
+.progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
+.progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.fill{height:100%;border-radius:4px;}
+.fill-yellow{background:var(--yellow);}
+.risk-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.risk-row:last-child{border-bottom:none;}
+.risk-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;}
+.r-critico{background:#ef444433;color:var(--red);}
+.r-alto{background:#ef444422;color:var(--red);}
+.milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.milestone-row:last-child{border-bottom:none;}
+.ms-date{color:var(--blue);font-weight:700;min-width:90px;}
+.ms-label{color:var(--text);flex:1;}
+.ms-check{font-size:.7rem;white-space:nowrap;}
+.ms-block{color:var(--red);font-weight:700;}
+.ms-pend{color:var(--text2);}
+.qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.qa-row:last-child{border-bottom:none;}
+.score-ok{font-weight:700;color:var(--green);}
+.score-cond{font-weight:700;color:var(--yellow);}
+.bloqueante-box{background:#ef444411;border:1px solid #ef444433;border-radius:10px;padding:16px;margin-bottom:16px;}
+.bloqueante-title{font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.bloqueante-item{font-size:.8rem;color:var(--text);margin-bottom:6px;}
+.bloqueante-item span{color:var(--text2);font-size:.72rem;}
+.dep-note{font-size:.72rem;color:var(--yellow);margin-top:4px;}
+footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
 </style>
 </head>
 <body>
-
 <header class="header">
-  <div>
-    <div class="brand-logo">VMO<span>GAB</span></div>
-    <div class="brand-sub">Value Management Office — Grupo Águia Branca</div>
-  </div>
-  <div class="header-right">
-    <a href="../index.html" class="back-link">← Todos os Projetos</a>
-    <div class="updated-at">Atualizado em: 18/05/2026 às 00:00</div>
-  </div>
+  <a href="../index.html" class="back">← Dashboard</a>
+  <div class="header-right">Atualizado em: 22/05/2026</div>
 </header>
-
 <main class="main">
 
-  <!-- Hero -->
-  <div class="project-hero">
-    <div class="project-meta">PROJ-2026-006 · Plataforma Web Proprietária · Grupo Águia Branca — Área de Inovação</div>
-    <div class="project-title">Plataforma Própria de Gestão de Ideias e Inovação</div>
-    <div class="hero-tags">
-      <span class="tag atencao">🟡 Atenção</span>
-      <span class="tag star">⭐ Primeiro run com pipeline v2</span>
-      <span class="tag purple">Pipeline v2 Completo — 12/12 artefatos</span>
-      <span class="tag green">Score Vera: 92,25/100</span>
-      <span class="tag red">⚠️ CB-01 — Sponsor a definir</span>
-      <span class="tag gray">GP: Marcelo Silveira</span>
-      <span class="tag gray">Orçamento: R$ 35.000</span>
+  <div class="proj-hero">
+    <div class="proj-hero-top">
+      <div>
+        <div class="proj-id-label">PROJ-2026-006</div>
+        <div class="proj-title">Plataforma Própria de Gestão de Ideias e Inovação</div>
+      </div>
+      <span class="badge badge-atencao">🟡 Atenção</span>
     </div>
-    <div class="hero-status-row">
-      <span class="status-badge atencao">🟡 ATENÇÃO — Pipeline v2 Completo</span>
-      <span class="status-badge purple">⭐ 1º Projeto: Fábio + Gabriel ativos</span>
-      <span style="font-size:0.72rem;color:var(--text2)">Pipeline v2 concluído em 16/05/2026 · Re-executado em 18/05/2026 · APROVADO c/ NC-CRÍTICA</span>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">GAB Área de Inovação</div></div>
+      <div class="meta-box alert"><div class="meta-box-label">Sponsor</div><div class="meta-box-value">⚠️ A designar (Jadson)</div></div>
+      <div class="meta-box"><div class="meta-box-label">BAC</div><div class="meta-box-value">R$ 100.000</div></div>
+      <div class="meta-box"><div class="meta-box-label">Go-live</div><div class="meta-box-value">07/12/2026</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">21/30 (70%) ✅</div></div>
+      <div class="meta-box"><div class="meta-box-label">Score Qualidade</div><div class="meta-box-value">92,25 / 100</div></div>
+      <div class="meta-box"><div class="meta-box-label">Aprovação Final</div><div class="meta-box-value">✅ 2026-05-16</div></div>
+      <div class="meta-box alert"><div class="meta-box-label">CB-01 Prazo</div><div class="meta-box-value">13/06/2026</div></div>
     </div>
   </div>
 
-  <!-- Bloqueante destaque -->
-  <div class="bloqueante-banner">
-    <div class="bloqueante-icon">⚠️</div>
-    <div class="bloqueante-body">
-      <div class="bloqueante-title">CB-01 ATIVA — Sponsor Executivo: A DEFINIR</div>
-      <div class="bloqueante-desc">
-        O projeto foi <strong>aprovado com NC-CRÍTICA</strong> pela Auditoria de Governança (Gabriel Governança) e pela Aprovação Final (Marcelo Silveira).
-        A ausência de Sponsor executivo (Diretor+) é condição bloqueante ativa. Sem resolução da CB-01, o kick-off formal não pode ocorrer.<br>
-        <strong>Marco institucional crítico:</strong> Prêmio Inovação de janeiro/2027 — o prazo de go-live em 31/12/2026 não pode ser perdido.
-      </div>
-    </div>
+  <div class="bloqueante-box">
+    <div class="bloqueante-title">⛔ 2 Condições Bloqueantes Ativas</div>
+    <div class="bloqueante-item"><strong>CB-01:</strong> Sponsor de nível Diretor+ não identificado.<br><span>Responsável: Jadson | Prazo: 13/06/2026 | Bloqueia: CB-02, kick-off, governança</span></div>
+    <div class="bloqueante-item" style="margin-top:8px;"><strong>CB-02:</strong> Orçamento (R$ 100.000) não aprovado formalmente.<br><span>Responsável: Sponsor a designar | Prazo: 20/06/2026 | Depende de CB-01</span></div>
+    <div class="dep-note">⚠️ CB-02 depende de CB-01. Sequência: CB-01 (até 13/06) → CB-02 (até 20/06) → Kick-off (24/06)</div>
   </div>
 
-  <!-- Pipeline v2 -->
-  <div class="section-title">Pipeline v2 — Status dos 12 Artefatos (Completo)</div>
-
-  <div class="pipeline-header">
-    <div class="pipeline-header-icon">🚀</div>
-    <div class="pipeline-header-body">
-      <div class="pipeline-header-title">⭐ Primeiro Projeto com Pipeline v2 Completo — Fábio Fornecedor + Gabriel Governança</div>
-      <div class="pipeline-header-sub">
-        PROJ-2026-006 foi o <strong>primeiro projeto</strong> do VMO a ser executado com o pipeline v2 completo, incluindo os dois novos agentes:
-        <strong>Fábio Fornecedor</strong> (Work Request / Mini-RFP — 10 grupos / 41 itens) e <strong>Gabriel Governança</strong> (Auditoria de Governança).
-        Pipeline executado pela primeira vez em 16/05/2026 e re-executado em 18/05/2026.
-        Aprovação Final emitida por <strong>Marcelo Silveira</strong> com ciência de NC-CRÍTICA (sponsor ausente).
-      </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Semáforo de Dimensões</div>
+      <table class="sem-table">
+        <tr><td class="dim">Cronograma</td><td><span class="dot dot-y"></span>ATENÇÃO — Kick-off em risco se CB-01 até 13/06</td></tr>
+        <tr><td class="dim">Custo</td><td><span class="dot dot-y"></span>ATENÇÃO — BAC R$ 100k sem aprovação formal</td></tr>
+        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>VERDE — 31 RF + 13 RNF documentados</td></tr>
+        <tr><td class="dim">Riscos</td><td><span class="dot dot-r"></span>CRÍTICO — 4 riscos críticos; VME R$ 260.000</td></tr>
+        <tr><td class="dim">Satisfação</td><td><span class="dot dot-gray"></span>N/A — Pré-execução</td></tr>
+      </table>
     </div>
-  </div>
-
-  <div class="artefatos-grid">
-    <div class="artefato-card">
-      <div class="artefato-num done">1</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Demanda Coletada</div>
-        <div class="artefato-detalhe">Iara Inbound · Coleta e triagem da demanda original da Área de Inovação GAB</div>
-        <div class="artefato-status">✅ Concluído</div>
+    <div class="card">
+      <div class="section-title">Revisão de Qualidade</div>
+      <div class="qa-row"><span>Score Consolidado</span><span class="score-ok">92,25 / 100</span></div>
+      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">APROVADO ✅</span></div>
+      <div class="qa-row"><span>Work Request</span><span class="score-ok">8,5 / 10</span></div>
+      <div class="qa-row"><span>Aprovação Final</span><span class="score-ok">✅ Aprovado 2026-05-16</span></div>
+      <br>
+      <div class="section-title">Progresso</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Instrução VMO (8/8 docs)</span><span>100%</span></div>
+        <div class="progress-bar"><div class="fill fill-yellow" style="width:100%"></div></div>
       </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">2</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Qualificação</div>
-        <div class="artefato-detalhe">Felipe Filtro · Aprovada com condições · Score de qualificação verificado</div>
-        <div class="artefato-status">✅ Aprovada com condições</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">3</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">TAP — Termo de Abertura do Projeto</div>
-        <div class="artefato-detalhe">Diana Documento · Sponsor: A DEFINIR — CB-01 registrada no documento</div>
-        <div class="artefato-status warn">✅ Emitido — Sponsor A DEFINIR (CB-01)</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">4</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">ERF — Especificação de Requisitos</div>
-        <div class="artefato-detalhe">Rafael Requisito · Requisitos funcionais e não-funcionais completos</div>
-        <div class="artefato-status">✅ Completo</div>
-      </div>
-    </div>
-    <div class="artefato-card destaque">
-      <div class="artefato-num destaque-num">5</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Work Request — Mini-RFP</div>
-        <div class="artefato-detalhe">Fábio Fornecedor · 10 grupos / 41 itens · Agente novo pipeline v2</div>
-        <div class="artefato-status purple">✅ Emitido — Pipeline v2 (novo agente)</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">6</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Cronograma</div>
-        <div class="artefato-detalhe">Carlos Cronograma · Go-live 31/12/2026 · Marco: Prêmio Inovação jan/2027</div>
-        <div class="artefato-status">✅ Completo</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">7</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Plano de Riscos</div>
-        <div class="artefato-detalhe">Pedro Perigo · Riscos identificados e mapeados · VME calculado</div>
-        <div class="artefato-status">✅ Completo</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">8</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">KPIs e EVM</div>
-        <div class="artefato-detalhe">Marcela Métrica · Indicadores de desempenho e valor agregado definidos</div>
-        <div class="artefato-status">✅ Completo</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">9</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Status Report Inicial</div>
-        <div class="artefato-detalhe">Sara Status · SR-001 emitido · Situação inicial registrada</div>
-        <div class="artefato-status">✅ Emitido</div>
-      </div>
-    </div>
-    <div class="artefato-card">
-      <div class="artefato-num done">10</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Revisão de Qualidade — Vera</div>
-        <div class="artefato-detalhe">Vera Veredito · Score 9,225/10 (92,25/100) · Documentação: excelente</div>
-        <div class="artefato-status">✅ APROVADO — 92,25/100</div>
-      </div>
-    </div>
-    <div class="artefato-card destaque">
-      <div class="artefato-num destaque-num">11</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Auditoria de Governança — Gabriel</div>
-        <div class="artefato-detalhe">Gabriel Governança · Agente novo pipeline v2 · NC-CRÍTICA: sponsor ausente (CB-01) · Documentação técnica: excelente</div>
-        <div class="artefato-status warn">✅ Executado — NC-CRÍTICA presente (pipeline v2)</div>
-      </div>
-    </div>
-    <div class="artefato-card destaque">
-      <div class="artefato-num destaque-num">12</div>
-      <div class="artefato-inner">
-        <div class="artefato-nome">Aprovação Final — Marcelo Silveira</div>
-        <div class="artefato-detalhe">GP Marcelo Silveira · Aprovação emitida com ciência explícita da NC-CRÍTICA (CB-01 ativa)</div>
-        <div class="artefato-status purple">✅ Aprovado — com ciência de NC-CRÍTICA (pipeline v2)</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Execução — Aguardando CBs</span><span>0%</span></div>
+        <div class="progress-bar"><div class="fill" style="width:0%;background:var(--gray)"></div></div>
       </div>
     </div>
   </div>
 
-  <!-- Semáforo -->
-  <div class="section-title">Semáforo de Saúde do Projeto</div>
-  <div class="semaforo-grid">
-    <div class="sema-card">
-      <div class="sema-icon">🏛️</div>
-      <div class="sema-dim">Governança</div>
-      <div class="sema-status atencao">🟡 ATENÇÃO</div>
-      <div class="sema-detail">CB-01 ativa. Sponsor a definir. NC-CRÍTICA registrada por Gabriel. Aprovação com ciência.</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Cronograma de Kick-off</div>
+      <div class="milestone-row"><div class="ms-date">13/06/2026</div><div class="ms-label"><strong>CB-01 — Sponsor identificado</strong></div><div class="ms-check ms-block">⚠️ BLOQUEANTE</div></div>
+      <div class="milestone-row"><div class="ms-date">20/06/2026</div><div class="ms-label">CB-02 — Orçamento R$ 100k aprovado</div><div class="ms-check ms-block">⚠️ Dep. CB-01</div></div>
+      <div class="milestone-row"><div class="ms-date">24/06/2026</div><div class="ms-label">Kick-off com sponsor e equipe VMO</div><div class="ms-check ms-pend">🔲 Aguarda CBs</div></div>
+      <div class="milestone-row"><div class="ms-date">07/12/2026</div><div class="ms-label"><strong>Go-live em produção</strong></div><div class="ms-check ms-block">🎯 Meta</div></div>
     </div>
-    <div class="sema-card">
-      <div class="sema-icon">⭐</div>
-      <div class="sema-dim">Qualidade</div>
-      <div class="sema-status verde">🟢 VERDE</div>
-      <div class="sema-detail">Score Vera: 92,25/100. Documentação técnica classificada como excelente.</div>
-    </div>
-    <div class="sema-card">
-      <div class="sema-icon">📁</div>
-      <div class="sema-dim">Documentação</div>
-      <div class="sema-status verde">🟢 VERDE</div>
-      <div class="sema-detail">12/12 artefatos completos. Pipeline v2 completo. Primeiro projeto a atingir esse status.</div>
-    </div>
-    <div class="sema-card">
-      <div class="sema-icon">📅</div>
-      <div class="sema-dim">Cronograma</div>
-      <div class="sema-status atencao">🟡 ATENÇÃO</div>
-      <div class="sema-detail">Go-live 31/12/2026. Prêmio Inovação jan/2027. Kick-off travado por CB-01.</div>
-    </div>
-    <div class="sema-card">
-      <div class="sema-icon">📋</div>
-      <div class="sema-dim">Escopo</div>
-      <div class="sema-status verde">🟢 VERDE</div>
-      <div class="sema-detail">Bem definido. ERF completo. Requisitos funcionais e não-funcionais documentados.</div>
-    </div>
-  </div>
-
-  <!-- KPIs -->
-  <div class="section-title">Parâmetros do Projeto</div>
-  <div class="kpi-grid">
-    <div class="kpi-card yellow">
-      <div class="kpi-label">Orçamento (BAC)</div>
-      <div class="kpi-value yellow sm">R$ 35k</div>
-      <div class="kpi-sub">Prazo: 31/12/2026</div>
-    </div>
-    <div class="kpi-card purple">
-      <div class="kpi-label">Score Vera</div>
-      <div class="kpi-value purple sm">92,25</div>
-      <div class="kpi-sub">9,225/10 · Documentação excelente</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-label">Pipeline v2</div>
-      <div class="kpi-value green">12</div>
-      <div class="kpi-sub">12 artefatos completos · Pipeline completo</div>
-    </div>
-    <div class="kpi-card blue">
-      <div class="kpi-label">Work Request</div>
-      <div class="kpi-value blue sm">41</div>
-      <div class="kpi-sub">Fábio Fornecedor · 10 grupos / 41 itens</div>
-    </div>
-    <div class="kpi-card yellow">
-      <div class="kpi-label">Status Consolidado</div>
-      <div class="kpi-value yellow sm">🟡</div>
-      <div class="kpi-sub">Atenção — CB-01 ativa</div>
-    </div>
-    <div class="kpi-card blue">
-      <div class="kpi-label">Go-Live</div>
-      <div class="kpi-value blue sm">31/12</div>
-      <div class="kpi-sub">2026 · Marco: Prêmio Inovação jan/2027</div>
-    </div>
-    <div class="kpi-card gray">
-      <div class="kpi-label">Primeiro Run v2</div>
-      <div class="kpi-value" style="color:var(--gray)">16/05</div>
-      <div class="kpi-sub">2026 · Re-executado em 18/05/2026</div>
-    </div>
-    <div class="kpi-card gray">
-      <div class="kpi-label">Sponsor</div>
-      <div class="kpi-value sm" style="color:var(--yellow);font-size:1rem;">A DEFINIR</div>
-      <div class="kpi-sub">CB-01 ativa — condição bloqueante</div>
-    </div>
-  </div>
-
-  <!-- Cronograma / Marcos -->
-  <div class="section-title">Cronograma — Marcos Principais</div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:6px 20px;margin-bottom:28px;">
-    <div class="milestone-row">
-      <div class="milestone-dot critical">CB</div>
-      <div>
-        <div class="milestone-label" style="color:var(--yellow)">Resolução da CB-01 — Identificar Sponsor</div>
-        <div class="milestone-date">Urgente — sem data definida</div>
-        <div class="milestone-desc">Desbloqueio necessário para iniciar o kick-off formal. Marco institucional jan/2027 em risco se não resolvido.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot critical">M0</div>
-      <div>
-        <div class="milestone-label">Kick-off Formal</div>
-        <div class="milestone-date">Condicionado à CB-01</div>
-        <div class="milestone-desc">Ata assinada por GP e sponsor. Kick-off travado enquanto CB-01 não for resolvida.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot future">M1</div>
-      <div>
-        <div class="milestone-label">Especificação e Protótipo Aprovados</div>
-        <div class="milestone-date">A definir (pós kick-off)</div>
-        <div class="milestone-desc">ERF v2 com sign-off + protótipo validado por usuários-chave da Área de Inovação.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot future">M2</div>
-      <div>
-        <div class="milestone-label">Módulos de Cadastro e Campanhas</div>
-        <div class="milestone-date">A definir (pós kick-off)</div>
-        <div class="milestone-desc">Desenvolvimento e testes dos módulos base da plataforma.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot future">M3</div>
-      <div>
-        <div class="milestone-label">Fluxo de Aprovação e Gestão</div>
-        <div class="milestone-date">A definir (pós kick-off)</div>
-        <div class="milestone-desc">Motor de workflow + módulos de gestão. Componente de maior complexidade técnica.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot future">M4</div>
-      <div>
-        <div class="milestone-label">Mensuração de Ganhos e Dashboards</div>
-        <div class="milestone-date">A definir (pós kick-off)</div>
-        <div class="milestone-desc">Dashboards por perfil + KPIs de inovação. Módulos M5 e M6.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot future">M5</div>
-      <div>
-        <div class="milestone-label">Testes Integrados e UAT Concluídos</div>
-        <div class="milestone-date">A definir (pós kick-off)</div>
-        <div class="milestone-desc">Sign-off UAT formal. Zero bugs críticos e severos abertos.</div>
-      </div>
-    </div>
-    <div class="milestone-row">
-      <div class="milestone-dot future" style="background:#22c55e20;border:2px solid var(--green);color:var(--green)">GO</div>
-      <div>
-        <div class="milestone-label" style="color:var(--green)">GO-LIVE em Produção — Prazo máximo: 31/12/2026 🚀</div>
-        <div class="milestone-date" style="color:var(--green)">31/12/2026</div>
-        <div class="milestone-desc">Marco institucional: Prêmio Inovação de janeiro/2027. Prazo inegociável. Plataforma própria ativa.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Riscos -->
-  <div class="section-title">Registro de Riscos</div>
-  <div class="risk-summary-row">
-    <div class="risk-count-card">
-      <div class="risk-count critico">1</div>
-      <div class="risk-level">Crítico</div>
-    </div>
-    <div class="risk-count-card">
-      <div class="risk-count alto">2</div>
-      <div class="risk-level">Altos</div>
-    </div>
-    <div class="risk-count-card">
-      <div class="risk-count medio">1</div>
-      <div class="risk-level">Médio</div>
-    </div>
-    <div class="risk-count-card">
-      <div class="risk-count baixo">—</div>
-      <div class="risk-level">Baixos</div>
-    </div>
-  </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;">
-    <table class="risk-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Risco</th>
-          <th>Nível</th>
-          <th>Impacto</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="risk-id">RSK-001</td>
-          <td>Sponsor executivo (Diretor+) não identificado — CB-01 ativa, bloqueia kick-off e autorização formal</td>
-          <td><span class="risk-pill critico">CRÍTICO</span></td>
-          <td>Kick-off travado</td>
-        </tr>
-        <tr>
-          <td class="risk-id">RSK-002</td>
-          <td>Atraso acumulado ameaça go-live 31/12/2026 e Prêmio Inovação jan/2027</td>
-          <td><span class="risk-pill alto">ALTO</span></td>
-          <td>Marco institucional perdido</td>
-        </tr>
-        <tr>
-          <td class="risk-id">RSK-003</td>
-          <td>Escopo crescente sem aprovação formal durante desenvolvimento</td>
-          <td><span class="risk-pill alto">ALTO</span></td>
-          <td>Estouro de prazo e orçamento</td>
-        </tr>
-        <tr>
-          <td class="risk-id">RSK-004</td>
-          <td>Baixa adoção da plataforma pelos colaboradores pós go-live</td>
-          <td><span class="risk-pill medio">MÉDIO</span></td>
-          <td>ROI comprometido</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div style="background:#eab30810;border:1px solid #eab30830;border-radius:8px;padding:10px 14px;font-size:0.7rem;color:var(--text2);margin-bottom:28px;">
-    ⚠️ <strong style="color:var(--yellow)">RSK-001 é a prioridade máxima</strong> — Resolução da CB-01 (sponsor) desbloqueia todos os demais passos do projeto e protege o marco institucional do Prêmio Inovação jan/2027.
-  </div>
-
-  <!-- Agentes Pipeline v2 -->
-  <div class="section-title">Agentes VMO — Pipeline v2 Completo · Score 92,25/100 · APROVADO</div>
-  <div class="agent-grid">
-    <div class="agent-card">
-      <div class="agent-icon">📥</div>
-      <div>
-        <div class="agent-name">Iara Inbound</div>
-        <div class="agent-role">Coleta de Demanda</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">🔍</div>
-      <div>
-        <div class="agent-name">Felipe Filtro</div>
-        <div class="agent-role">Qualificação · Aprovado com condições</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">📋</div>
-      <div>
-        <div class="agent-name">Diana Documento</div>
-        <div class="agent-role">TAP · PM Canvas · Plano Geral</div>
-        <div class="agent-status-tag warn-tag">✓ Emitido — Sponsor A DEFINIR</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">⚙️</div>
-      <div>
-        <div class="agent-name">Rafael Requisito</div>
-        <div class="agent-role">ERF — Requisitos Funcionais Completos</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">📅</div>
-      <div>
-        <div class="agent-name">Carlos Cronograma</div>
-        <div class="agent-role">WBS · Marcos · Go-live 31/12/2026</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">⚠️</div>
-      <div>
-        <div class="agent-name">Pedro Perigo</div>
-        <div class="agent-role">Plano de Riscos · RSK-001 prioritário</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">📊</div>
-      <div>
-        <div class="agent-name">Marcela Métrica</div>
-        <div class="agent-role">KPIs · EVM · Indicadores de inovação</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card destaque">
-      <div class="agent-icon">📤</div>
-      <div>
-        <div class="agent-name">Fábio Fornecedor</div>
-        <div class="agent-role">Work Request · Mini-RFP · 10 grupos / 41 itens</div>
-        <div class="agent-status-tag done-purple">⭐ Pipeline v2 — Novo agente</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">📝</div>
-      <div>
-        <div class="agent-name">Sara Status</div>
-        <div class="agent-role">Status Report SR-001 emitido</div>
-        <div class="agent-status-tag done">✓ Concluído</div>
-      </div>
-    </div>
-    <div class="agent-card">
-      <div class="agent-icon">✅</div>
-      <div>
-        <div class="agent-name">Vera Veredito</div>
-        <div class="agent-role">Revisão de Qualidade · Score 9,225/10</div>
-        <div class="agent-status-tag done">✓ APROVADO — 92,25/100</div>
-      </div>
-    </div>
-    <div class="agent-card destaque">
-      <div class="agent-icon">🏛️</div>
-      <div>
-        <div class="agent-name">Gabriel Governança</div>
-        <div class="agent-role">Auditoria · NC-CRÍTICA: CB-01 (sponsor)</div>
-        <div class="agent-status-tag done-purple">⭐ Pipeline v2 — Novo agente</div>
-      </div>
-    </div>
-    <div class="agent-card destaque">
-      <div class="agent-icon">🎯</div>
-      <div>
-        <div class="agent-name">Marcelo Silveira</div>
-        <div class="agent-role">Aprovação Final — GP · Ciência de NC-CRÍTICA</div>
-        <div class="agent-status-tag done-purple">⭐ Pipeline v2 — Aprovação Final</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Próximos Passos -->
-  <div class="section-title">Próximos Passos</div>
-  <div class="next-steps">
-    <div class="step-item">
-      <div class="step-num urgent">1</div>
-      <div>
-        <div class="step-action">⚠️ Identificar e formalizar Sponsor Executivo (Diretor+) — resolução de CB-01</div>
-        <div class="step-meta">
-          <span class="step-owner">Responsável: Área de Inovação GAB</span>
-          <span class="step-date">Urgente — sem prazo definido · Bloqueante para todos os passos seguintes</span>
-        </div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">2</div>
-      <div>
-        <div class="step-action">Realizar Kick-off Formal com Sponsor, equipe VMO e stakeholders da Inovação</div>
-        <div class="step-meta">
-          <span class="step-owner">Responsável: Marcelo Silveira (GP) + Sponsor</span>
-          <span class="step-date">Depende de CB-01</span>
-        </div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">3</div>
-      <div>
-        <div class="step-action">Selecionar fornecedor / time de desenvolvimento com base no Work Request (Fábio)</div>
-        <div class="step-meta">
-          <span class="step-owner">Responsável: Sponsor + Marcelo Silveira</span>
-          <span class="step-date">Pós kick-off · Mini-RFP: 10 grupos / 41 itens prontos</span>
-        </div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">4</div>
-      <div>
-        <div class="step-action">Iniciar desenvolvimento dos módulos garantindo go-live até 31/12/2026</div>
-        <div class="step-meta">
-          <span class="step-owner">Responsável: Time de desenvolvimento contratado</span>
-          <span class="step-date">Marco inegociável: Prêmio Inovação jan/2027</span>
-        </div>
-      </div>
-    </div>
-    <div class="step-item">
-      <div class="step-num">5</div>
-      <div>
-        <div class="step-action">Emitir SR-002 após resolução da CB-01 ou definição de prazo</div>
-        <div class="step-meta">
-          <span class="step-owner">Responsável: Sara Status / VMO</span>
-          <span class="step-date">Pós resolução de CB-01</span>
-        </div>
-      </div>
+    <div class="card">
+      <div class="section-title">Riscos Críticos (VME R$ 260.000)</div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-001 — Sponsor ausente (maior urgência)</span></div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-002 — Orçamento não aprovado</span></div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-003 — Scope creep na execução</span></div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-004 — Resistência organizacional</span></div>
+      <br>
+      <div class="section-title">Próximos Passos</div>
+      <div class="risk-row">🔴 <strong>Jadson: identificar Diretor+ como sponsor até 13/06</strong></div>
+      <div class="risk-row">📌 Enviar WR-2026-006 a fornecedores (prazo: 06/06/2026)</div>
+      <div class="risk-row">📌 Agendar kick-off para 24/06 (condicional)</div>
     </div>
   </div>
 
 </main>
-
-<footer class="footer">
-  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Opensquad · VMO Consultoria<br>
-  Atualizado em: 18/05/2026 às 00:00 · PROJ-2026-006 · Plataforma Própria de Gestão de Ideias e Inovação<br>
-  ⭐ Primeiro projeto com Pipeline v2 completo (Fábio Fornecedor + Gabriel Governança) · Executado em 16/05/2026 · Re-executado em 18/05/2026
-</footer>
-
+<footer>VMO Autônomo — Lucas Layout | PROJ-2026-006 | Run 2026-05-22</footer>
 </body>
 </html>
