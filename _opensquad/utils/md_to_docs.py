@@ -223,7 +223,7 @@ def md_to_pdf(md_path: Path) -> Path:
             width: 100%;
             margin: 10pt 0 16pt 0;
             font-size: 9pt;
-            table-layout: fixed;
+            table-layout: auto;
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
@@ -403,30 +403,78 @@ def md_to_docx(md_path: Path) -> Path:
             cells = [c.strip() for c in row.strip().strip("|").split("|")]
             parsed.append(cells)
         col_count = max(len(r) for r in parsed)
+        for r in parsed:
+            while len(r) < col_count:
+                r.append("")
+
+        # ── Column widths (15.7 cm usable = 8901 twips after margins 2.8+2.5cm) ──
+        # When first column contains short IDs (#, P-1, R-01, CS-01…), keep it
+        # narrow (~1.8 cm) and distribute the rest across remaining columns.
+        TOTAL_TWIPS = 8901
+        first_col_max = max(len(r[0]) for r in parsed) if parsed else 0
+        if col_count >= 2 and first_col_max <= 8:
+            first_w   = 1020                                     # ≈ 1.8 cm
+            rest_w    = (TOTAL_TWIPS - first_w) // (col_count - 1)
+            col_twips = [first_w] + [rest_w] * (col_count - 1)
+        else:
+            col_twips = [TOTAL_TWIPS // col_count] * col_count
+
         tbl = doc.add_table(rows=len(parsed), cols=col_count)
         tbl.style = "Table Grid"
+
+        # Apply total table width and column grid widths via direct XML
+        tblPr = tbl._tbl.find(qn("w:tblPr"))
+        if tblPr is not None:
+            for old in tblPr.findall(qn("w:tblW")):
+                tblPr.remove(old)
+            tblW_el = OxmlElement("w:tblW")
+            tblW_el.set(qn("w:w"), str(sum(col_twips)))
+            tblW_el.set(qn("w:type"), "dxa")
+            tblPr.append(tblW_el)
+            for old in tblPr.findall(qn("w:tblLayout")):
+                tblPr.remove(old)
+            layout_el = OxmlElement("w:tblLayout")
+            layout_el.set(qn("w:type"), "fixed")
+            tblPr.append(layout_el)
+
+        tblGrid = tbl._tbl.find(qn("w:tblGrid"))
+        if tblGrid is not None:
+            for gc in tblGrid.findall(qn("w:gridCol")):
+                tblGrid.remove(gc)
+            for w in col_twips:
+                gc = OxmlElement("w:gridCol")
+                gc.set(qn("w:w"), str(w))
+                tblGrid.append(gc)
+
         for r_idx, row in enumerate(parsed):
             for c_idx in range(col_count):
-                cell_text = row[c_idx] if c_idx < len(row) else ""
+                cell_text = row[c_idx]
                 clean = re.sub(r'\*\*([^*]+)\*\*', r'\1', cell_text)
                 clean = re.sub(r'`([^`]+)`', r'\1', clean)
                 cell = tbl.cell(r_idx, c_idx)
-                p = cell.paragraphs[0]
+                tc   = cell._tc
+                tcPr = tc.get_or_add_tcPr()
+
+                # Explicit cell width (overrides grid default)
+                for old in tcPr.findall(qn("w:tcW")):
+                    tcPr.remove(old)
+                tcW_el = OxmlElement("w:tcW")
+                tcW_el.set(qn("w:w"), str(col_twips[c_idx]))
+                tcW_el.set(qn("w:type"), "dxa")
+                tcPr.append(tcW_el)
+
+                p   = cell.paragraphs[0]
                 run = p.add_run(clean)
                 run.font.size = Pt(9.5)
                 if r_idx == 0:
                     run.bold = True
                     run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
-                    tc = cell._tc
-                    tcPr = tc.get_or_add_tcPr()
                     shd = OxmlElement("w:shd")
                     shd.set(qn("w:val"), "clear")
                     shd.set(qn("w:color"), "auto")
                     shd.set(qn("w:fill"), HEADER_BG_HEX)
                     tcPr.append(shd)
                 elif r_idx % 2 == 0:
-                    tc = cell._tc
-                    tcPr = tc.get_or_add_tcPr()
                     shd = OxmlElement("w:shd")
                     shd.set(qn("w:val"), "clear")
                     shd.set(qn("w:color"), "auto")

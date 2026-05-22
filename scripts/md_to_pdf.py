@@ -123,10 +123,16 @@ def md_to_pdf(md_path, pdf_path, title):
         if not data:
             table_buf = []
             return
-        # uniform col width
         ncols = max(len(r) for r in data)
         avail = 170*mm
-        col_widths = [avail / ncols] * ncols
+        # Narrow first column when it contains short IDs (#, P-1, R-01, CS-01…)
+        first_col_max = max(len(r[0]) for r in data if r) if data else 0
+        if ncols >= 2 and first_col_max <= 8:
+            first_w   = min(18*mm, avail * 0.12)
+            rest_w    = (avail - first_w) / (ncols - 1)
+            col_widths = [first_w] + [rest_w] * (ncols - 1)
+        else:
+            col_widths = [avail / ncols] * ncols
         # pad rows
         for r in data:
             while len(r) < ncols:
