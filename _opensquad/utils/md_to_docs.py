@@ -18,6 +18,73 @@ import argparse
 from pathlib import Path
 
 
+# ── Helpers ──────────────────────────────────────────────────────────────────
+
+def _smart_table_columns(html: str) -> str:
+    """
+    Post-process markdown-generated HTML tables.
+
+    When the first column contains short IDs (≤ 8 chars: #, P-1, R-01, CS-01…):
+      • Inject a <colgroup> so the ID column gets ~10 % and remaining columns
+        share the rest — table-layout:fixed then uses those widths.
+      • Add white-space:nowrap to every first-column <th>/<td> so values like
+        'P-1' are never split at the hyphen.
+
+    Tables whose first column has longer content are left unchanged.
+    """
+    def process_table(m: re.Match) -> str:
+        tbl = m.group(0)
+
+        # First-column texts (strips inner HTML tags)
+        first_cells = re.findall(
+            r'<tr[^>]*>\s*<(?:th|td)[^>]*>(.*?)</(?:th|td)>',
+            tbl, re.DOTALL | re.IGNORECASE,
+        )
+        first_texts = [re.sub(r'<[^>]+>', '', c).strip() for c in first_cells]
+        max_len = max((len(t) for t in first_texts), default=0)
+
+        # Column count from the first <tr>
+        first_row = re.search(r'<tr[^>]*>(.*?)</tr>', tbl, re.DOTALL | re.IGNORECASE)
+        col_n = (
+            len(re.findall(r'<(?:th|td)[\s>]', first_row.group(1), re.IGNORECASE))
+            if first_row else 0
+        )
+
+        if max_len > 8 or col_n < 2:
+            return tbl
+
+        # Proportional widths: narrow ID column + equal share for the rest
+        first_pct = max(8, min(13, max_len * 2 + 4))
+        rest_pct  = round((100 - first_pct) / (col_n - 1), 1)
+        colgroup  = (
+            '<colgroup>'
+            + f'<col style="width:{first_pct}%">'
+            + f'<col style="width:{rest_pct}%">' * (col_n - 1)
+            + '</colgroup>'
+        )
+        tbl = re.sub(r'(<table[^>]*>)', lambda mm: mm.group(1) + colgroup, tbl, count=1)
+
+        # white-space:nowrap on every first-column cell (prevents P-1 → P- / 1)
+        def nowrap_first_cell(row_m: re.Match) -> str:
+            def patch(cell_m: re.Match) -> str:
+                tag, attrs, body = cell_m.group(1), cell_m.group(2), cell_m.group(3)
+                if 'white-space' not in attrs:
+                    s = re.search(r'style=["\']([^"\']*)["\']', attrs)
+                    if s:
+                        attrs = attrs[:s.start(1)] + s.group(1) + ';white-space:nowrap' + attrs[s.end(1):]
+                    else:
+                        attrs = attrs + ' style="white-space:nowrap"'
+                return f'<{tag}{attrs}>{body}</{tag}>'
+            return re.sub(
+                r'<(th|td)([^>]*)>(.*?)</\1>',
+                patch, row_m.group(0), count=1, flags=re.DOTALL | re.IGNORECASE,
+            )
+        tbl = re.sub(r'<tr[^>]*>.*?</tr>', nowrap_first_cell, tbl, flags=re.DOTALL | re.IGNORECASE)
+        return tbl
+
+    return re.sub(r'<table[^>]*>.*?</table>', process_table, html, flags=re.DOTALL | re.IGNORECASE)
+
+
 # ── PDF ───────────────────────────────────────────────────────────────────────
 
 def md_to_pdf(md_path: Path) -> Path:
@@ -50,6 +117,7 @@ def md_to_pdf(md_path: Path) -> Path:
     # consecutive lines into one paragraph.
     extensions = ["tables", "fenced_code", "sane_lists"]
     html_body = md_lib.markdown(text, extensions=extensions)
+    html_body = _smart_table_columns(html_body)
 
     # Build formal header block
     header_html = f"""
@@ -223,7 +291,7 @@ def md_to_pdf(md_path: Path) -> Path:
             width: 100%;
             margin: 10pt 0 16pt 0;
             font-size: 9pt;
-            table-layout: auto;
+            table-layout: fixed;
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
