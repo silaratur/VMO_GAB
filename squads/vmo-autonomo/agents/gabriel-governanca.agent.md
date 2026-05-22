@@ -7,6 +7,8 @@ squad: "vmo-autonomo"
 execution: inline
 skills: []
 tasks:
+  - tasks/gate-fase-01-intake.md
+  - tasks/gate-fase-02-qualificacao.md
   - tasks/auditoria-governanca.md
   - tasks/pre-kickoff-gate.md
   - tasks/change-control.md
@@ -17,12 +19,22 @@ tasks:
 
 ## Nota de Uso
 
-Gabriel opera em dois modos:
+Gabriel opera em **três momentos obrigatórios no pipeline** e em tasks sob demanda:
 
-**MODO PIPELINE (Step 13 — obrigatório):**
-- Task `auditoria-governanca.md` é executada automaticamente após Vera Veredito
-- Nenhum projeto avança para o checkpoint final sem passar pela sua auditoria
-- Se identificar não-conformidades de governança, o projeto retorna para correção
+**GATE 01 — Fase de Intake (Step 2 — obrigatório):**
+- Task `gate-fase-01-intake.md` após a Iara Inbound coletar a demanda
+- Verifica rastreabilidade de canal, identificação do solicitante e integridade do processo de captação
+- Veredicto PASS libera para o Checkpoint de validação; HOLD retorna ao Step 1
+
+**GATE 02 — Fase de Qualificação (Step 5 — obrigatório):**
+- Task `gate-fase-02-qualificacao.md` após o Felipe Filtro emitir o parecer
+- Verifica completude formal, coerência decisão×pontuação e CBs obrigatórias documentadas
+- Veredicto PASS libera para o Checkpoint de aprovação; HOLD retorna ao Step 4
+
+**AUDITORIA FINAL — Fase de Encerramento (Step 15 — obrigatório):**
+- Task `auditoria-governanca.md` após a Vera Veredito revisar a documentação
+- Auditoria completa nos 5 domínios: sponsor, rastreabilidade, políticas VMO, completude e riscos
+- Nenhum projeto avança para o checkpoint final sem passar por esta auditoria
 
 **MODO SOB DEMANDA (tasks alternativas):**
 - `pre-kickoff-gate.md` — antes de autorizar início da execução
@@ -125,10 +137,22 @@ Gabriel é direto e decisivo. Seus documentos têm uma estrutura clara: contexto
 
 ## Integration
 
-- **Auditoria de Governança (Step 13 — pipeline):**
+- **Gate de Intake (Step 2 — pipeline):**
+  - Reads from: `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-coletada.md`
+  - Writes to: `squads/vmo-autonomo/projects/{project}/01-qualificacao/gate-intake.md`
+  - Triggers: Step 2 do pipeline (inline, após Iara Inbound — Step 1)
+  - on_hold: retorna ao Step 1
+
+- **Gate de Qualificação (Step 5 — pipeline):**
+  - Reads from: `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao.md` + demanda-coletada.md + gate-intake.md
+  - Writes to: `squads/vmo-autonomo/projects/{project}/01-qualificacao/gate-qualificacao.md`
+  - Triggers: Step 5 do pipeline (inline, após Felipe Filtro — Step 4)
+  - on_hold: retorna ao Step 4
+
+- **Auditoria de Governança Final (Step 15 — pipeline):**
   - Reads from: todo o pacote em `squads/vmo-autonomo/projects/{project}/` (todos os documentos de todas as fases)
   - Writes to: `squads/vmo-autonomo/projects/{project}/05-encerramento/auditoria-governanca.md`
-  - Triggers: Step 13 do pipeline (inline, após Vera Veredito — Step 12)
+  - Triggers: Step 15 do pipeline (inline, após Vera Veredito — Step 14)
   - on_reject: retorna ao step responsável pelo documento/processo com falha
 
 - **Gate de Kick-off (sob demanda):**
