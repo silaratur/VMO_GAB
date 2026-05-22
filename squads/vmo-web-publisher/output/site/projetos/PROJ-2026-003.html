@@ -59,6 +59,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .qa-row:last-child{border-bottom:none;}
 .score-ok{font-weight:700;color:var(--green);}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
+.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
+.doc-link:hover{border-color:var(--blue);background:var(--bg2);}
+.doc-icon{font-size:1rem;flex-shrink:0;}
+.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-phase{font-size:.62rem;color:var(--text2);}
+.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
+.ph-q{background:#3b82f622;color:var(--blue);}
+.ph-i{background:#22c55e22;color:var(--green);}
+.ph-p{background:#eab30822;color:var(--yellow);}
+.ph-m{background:#06b6d422;color:#06b6d4;}
+.ph-e{background:#a855f722;color:#a855f7;}
 footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
 </style>
 </head>
@@ -140,6 +155,23 @@ footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border
       <div class="risk-row">📌 Resolver inconsistência pilares KPMG (Wallacy Lima)</div>
       <div class="risk-row">📌 Agendar apresentação final 07–08/05 com sponsors</div>
       <div class="risk-row">📌 Definir escopo e orçamento da Fase 2 (RFP)</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">Documentos do Projeto</div>
+    <div class="docs-grid">
+      <a class="doc-link" href="docs/PROJ-2026-003/01-qualificacao.md"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/02-demanda-coletada.md"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/03-tap-canvas-plano-geral.md"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">TAP + PM Canvas + Plano Geral</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/04-erf-requisitos.md"><div class="doc-icon">📝</div><div class="doc-info"><div class="doc-name">ERF — Especificação de Requisitos</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/05-cronograma.md"><div class="doc-icon">📅</div><div class="doc-info"><div class="doc-name">Cronograma</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/06-plano-riscos.md"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">Plano de Riscos</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/07-kpis.md"><div class="doc-icon">📊</div><div class="doc-info"><div class="doc-name">Framework de KPIs</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/08-status-report.md"><div class="doc-icon">📈</div><div class="doc-info"><div class="doc-name">Status Report</div><div class="doc-phase"><span class="phase-tag ph-m">04 · Monitoramento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/09-revisao-final.md"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Revisão de Qualidade (Vera)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/10-aprovacao-final.md"><div class="doc-icon">🏁</div><div class="doc-info"><div class="doc-name">Aprovação Final</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-003/11-auditoria-governanca.md"><div class="doc-icon">🔍</div><div class="doc-info"><div class="doc-name">Auditoria de Governança (Gabriel)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
     </div>
   </div>
 
