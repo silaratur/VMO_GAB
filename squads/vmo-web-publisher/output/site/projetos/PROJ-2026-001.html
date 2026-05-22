@@ -25,14 +25,22 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 
 .main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
 
+/* Hero */
 .hero {
   background: var(--bg2); border: 1px solid var(--border); border-left: 5px solid var(--green);
   border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
 }
-.hero-code { font-size: 0.65rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.hero-top-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+.hero-code { font-size: 0.65rem; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; }
+.hero-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 99px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;
+}
+.badge-pipeline { background: #3b82f614; color: var(--blue); border: 1px solid #3b82f640; }
+.badge-score { background: #22c55e14; color: var(--green); border: 1px solid #22c55e40; }
 .hero-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 14px; line-height: 1.3; }
 .hero-meta { display: flex; gap: 24px; flex-wrap: wrap; }
-.hero-meta-item { }
 .meta-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
 .meta-value { font-size: 0.85rem; font-weight: 600; }
 .status-badge {
@@ -97,10 +105,87 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
   padding: 8px 12px; border-radius: 8px;
   background: #0f172a; border: 1px solid var(--border); font-size: 0.8rem;
 }
+.entregavel-item.novo { border-color: #3b82f640; background: #3b82f608; }
 .entregavel-icon { font-size: 1rem; flex-shrink: 0; }
 .entregavel-name { flex: 1; }
 .entregavel-status { font-size: 0.65rem; color: var(--green); font-weight: 600; }
 .entregavel-pending { font-size: 0.65rem; color: var(--yellow); font-weight: 600; }
+.entregavel-new-tag {
+  font-size: 0.55rem; padding: 1px 6px; border-radius: 99px;
+  background: #3b82f620; color: var(--blue); border: 1px solid #3b82f640;
+  font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0;
+}
+
+/* Pipeline v2 — Cards */
+.pipeline-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:750px) { .pipeline-grid { grid-template-columns: 1fr; } }
+
+.pv2-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px;
+}
+.pv2-card.wr { border-top: 3px solid var(--blue); }
+.pv2-card.audit { border-top: 3px solid var(--yellow); }
+
+.pv2-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.pv2-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.pv2-title.blue { color: var(--blue); }
+.pv2-title.yellow { color: var(--yellow); }
+.pv2-veredicto {
+  font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+  background: #eab30814; color: var(--yellow); border: 1px solid #eab30840;
+}
+.pv2-veredicto.aprovado { background: #22c55e14; color: var(--green); border-color: #22c55e40; }
+
+.pv2-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid #1e293b30; font-size: 0.78rem; }
+.pv2-row:last-child { border-bottom: none; }
+.pv2-key { color: var(--text2); font-size: 0.72rem; }
+.pv2-val { font-weight: 600; text-align: right; }
+
+/* Domínios D1-D5 */
+.dominio-list { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+.dominio-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; font-size: 0.78rem;
+}
+.dominio-item.ok { background: #22c55e0d; border: 1px solid #22c55e20; }
+.dominio-item.warn { background: #eab3080d; border: 1px solid #eab30820; }
+.dominio-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+.dominio-code { font-weight: 700; font-size: 0.72rem; flex-shrink: 0; min-width: 26px; }
+.dominio-label { flex: 1; }
+.dominio-detail { font-size: 0.68rem; color: var(--text2); margin-top: 1px; }
+
+/* NC table */
+.nc-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.nc-table th { text-align: left; padding: 8px 10px; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); border-bottom: 1px solid var(--border); }
+.nc-table td { padding: 9px 10px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+.nc-table tr:last-child td { border-bottom: none; }
+.nc-tag { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+.nc-menor { background: #eab30818; color: var(--yellow); }
+.nc-maior { background: #ef444418; color: var(--red); }
+
+/* Pendências */
+.pendencia-list { display: flex; flex-direction: column; gap: 8px; }
+.pendencia-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 8px;
+  background: #eab3080a; border: 1px solid #eab30830; font-size: 0.8rem;
+}
+.pendencia-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* WR Cronograma */
+.marcos-list { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+.marco-item { display: flex; gap: 10px; align-items: baseline; font-size: 0.76rem; padding: 5px 0; border-bottom: 1px solid #1e293b30; }
+.marco-item:last-child { border-bottom: none; }
+.marco-id { font-weight: 700; color: var(--blue); min-width: 28px; font-size: 0.68rem; }
+.marco-label { flex: 1; color: var(--text2); }
+.marco-date { font-size: 0.68rem; color: var(--text); font-weight: 600; }
+
+/* WR Escopo */
+.escopo-block { margin-top: 10px; }
+.escopo-subtitle { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; margin-top: 12px; }
+.escopo-tag { display: inline-block; font-size: 0.68rem; padding: 3px 10px; border-radius: 6px; margin: 2px; }
+.escopo-in { background: #22c55e10; color: var(--green); border: 1px solid #22c55e30; }
+.escopo-out { background: #ef444410; color: var(--red); border: 1px solid #ef444430; }
 
 .footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); font-size: 0.65rem; color: var(--text2); margin-top: 16px; }
 .footer strong { color: var(--blue); }
@@ -111,18 +196,29 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 <header class="header">
   <a href="../index.html" class="back-link">← Dashboard Portfólio</a>
   <div class="header-title">PROJ-2026-001 · VIX Manutenção · SAP FI</div>
-  <div class="updated-at">Atualizado em: 14/05/2026 às 20:00</div>
+  <div class="updated-at">Atualizado em: 18/05/2026 às 00:00</div>
 </header>
 
 <main class="main">
 
+  <!-- HERO -->
   <div class="hero">
-    <div class="hero-code">PROJ-2026-001 · VIX Manutenção · Run: 2026-04-03</div>
+    <div class="hero-top-row">
+      <div class="hero-code">PROJ-2026-001 · VIX Manutenção · Run original: 2026-04-03</div>
+      <div class="hero-badges">
+        <span class="badge badge-pipeline">Pipeline v2 ✅</span>
+        <span class="badge badge-score">Vera 8.7/10</span>
+      </div>
+    </div>
     <div class="hero-title">Inclusão de Aprovador SAP FI — Lançamentos Pré-Editados</div>
     <div class="hero-meta">
       <div class="hero-meta-item">
         <div class="meta-label">Status Consolidado</div>
         <div><span class="status-badge verde">🟢 Verde</span></div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Sponsor</div>
+        <div class="meta-value">Andre Chieppe</div>
       </div>
       <div class="hero-meta-item">
         <div class="meta-label">BAC Aprovado</div>
@@ -140,13 +236,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
         <div class="meta-label">Gerente de Projeto</div>
         <div class="meta-value">A designar (pós TAP)</div>
       </div>
-      <div class="hero-meta-item">
-        <div class="meta-label">Qualificação</div>
-        <div class="meta-value">22/30 pts (73%) — Aprovado c/ condições</div>
-      </div>
     </div>
   </div>
 
+  <!-- SEMÁFORO -->
   <div class="section-title">Semáforo de Dimensões</div>
   <div class="card" style="margin-bottom:24px">
     <div class="semaphore-grid">
@@ -163,51 +256,225 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       <div class="sem-row verde-bg">
         <div class="sem-icon">🟢</div>
         <div class="sem-label">Escopo</div>
-        <div class="sem-note">Sem mudanças de escopo — parametrização ZFI0057 e SBWP confirmadas</div>
+        <div class="sem-note">Parametrização ZFI0057 + SBWP confirmada — sem mudanças de escopo</div>
       </div>
       <div class="sem-row amarelo-bg">
         <div class="sem-icon">🟡</div>
         <div class="sem-label">Riscos</div>
-        <div class="sem-note">3 riscos ALTO identificados — planos de mitigação em planejamento (preventivo)</div>
+        <div class="sem-note">3 riscos ALTO identificados — planos de mitigação ativos</div>
       </div>
       <div class="sem-row verde-bg">
         <div class="sem-icon">🟢</div>
         <div class="sem-label">Qualidade</div>
-        <div class="sem-note">Documentação de iniciação completa e validada pelo VMO Autônomo</div>
+        <div class="sem-note">Documentação completa — score 8.7/10 aprovado pela Vera Veredito</div>
       </div>
     </div>
   </div>
 
+  <!-- PIPELINE v2 — NOVOS ARTEFATOS -->
+  <div class="section-title">Pipeline v2 — Novos Artefatos</div>
+  <div class="pipeline-grid">
+
+    <!-- Work Request -->
+    <div class="pv2-card wr">
+      <div class="pv2-header">
+        <div class="pv2-title blue">Work Request — Mini-RFP</div>
+        <span class="pv2-veredicto aprovado">Fábio Fornecedor</span>
+      </div>
+
+      <div class="pv2-row">
+        <span class="pv2-key">Emissão</span>
+        <span class="pv2-val">18/05/2026</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Orçamento de referência</span>
+        <span class="pv2-val" style="color:var(--green)">R$ 8.640 (teto máximo)</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Prazo de submissão</span>
+        <span class="pv2-val">2026-06-06 (15 dias)</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">RFs Must Have</span>
+        <span class="pv2-val">RF001–RF014 (14 requisitos)</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Artefato Obrigatório</span>
+        <span class="pv2-val" style="color:var(--green)">10 grupos / 41 itens ✅</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Kick-off previsto</span>
+        <span class="pv2-val">2026-06-15</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Go-live estimado</span>
+        <span class="pv2-val">2026-09-30</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Cronograma WR</span>
+        <span class="pv2-val">10 marcos (M0–M9)</span>
+      </div>
+
+      <div class="escopo-block">
+        <div class="escopo-subtitle">Escopo incluso</div>
+        <span class="escopo-tag escopo-in">Parametrização ZFI0057</span>
+        <span class="escopo-tag escopo-in">SBWP</span>
+        <span class="escopo-tag escopo-in">Sem ABAP</span>
+        <div class="escopo-subtitle">Escopo excluso</div>
+        <span class="escopo-tag escopo-out">Outros lançamentos SAP</span>
+        <span class="escopo-tag escopo-out">Desenvolvimento ABAP</span>
+        <span class="escopo-tag escopo-out">Outros módulos SAP</span>
+      </div>
+
+      <div style="margin-top:14px">
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px">Cronograma — Marcos (M0–M9)</div>
+        <div class="marcos-list">
+          <div class="marco-item"><span class="marco-id">M0</span><span class="marco-label">Assinatura TAP</span><span class="marco-date">Pendente</span></div>
+          <div class="marco-item"><span class="marco-id">M1</span><span class="marco-label">Prazo submissão proposta</span><span class="marco-date">2026-06-06</span></div>
+          <div class="marco-item"><span class="marco-id">M2</span><span class="marco-label">Kick-off de execução</span><span class="marco-date">2026-06-15</span></div>
+          <div class="marco-item"><span class="marco-id">M3</span><span class="marco-label">Análise e levantamento SAP</span><span class="marco-date">Du 1–10</span></div>
+          <div class="marco-item"><span class="marco-id">M4</span><span class="marco-label">Parametrização em DEV</span><span class="marco-date">Du 11–25</span></div>
+          <div class="marco-item"><span class="marco-id">M5</span><span class="marco-label">Testes em QAS</span><span class="marco-date">Du 26–40</span></div>
+          <div class="marco-item"><span class="marco-id">M6</span><span class="marco-label">Treinamento usuários-chave</span><span class="marco-date">Du 41–48</span></div>
+          <div class="marco-item"><span class="marco-id">M7</span><span class="marco-label">Homologação com sponsor</span><span class="marco-date">Du 49–54</span></div>
+          <div class="marco-item"><span class="marco-id">M8</span><span class="marco-label">Transporte para PRD / Go-live</span><span class="marco-date">Du 55–58</span></div>
+          <div class="marco-item"><span class="marco-id">M9</span><span class="marco-label">Encerramento e lições aprendidas</span><span class="marco-date">2026-09-30</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auditoria de Governança -->
+    <div class="pv2-card audit">
+      <div class="pv2-header">
+        <div class="pv2-title yellow">Auditoria de Governança</div>
+        <span class="pv2-veredicto">⚠️ Aprovado c/ ressalvas</span>
+      </div>
+
+      <div class="pv2-row">
+        <span class="pv2-key">Auditor</span>
+        <span class="pv2-val">Gabriel Governança</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Aprovador final</span>
+        <span class="pv2-val">Marcelo Silveira — VMO</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Data de aprovação</span>
+        <span class="pv2-val">18/05/2026</span>
+      </div>
+      <div class="pv2-row">
+        <span class="pv2-key">Documentos verificados</span>
+        <span class="pv2-val" style="color:var(--green)">11/11 ✅</span>
+      </div>
+
+      <div style="margin-top:14px">
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:6px">Domínios de Governança (D1–D5)</div>
+        <div class="dominio-list">
+          <div class="dominio-item ok">
+            <span class="dominio-icon">✅</span>
+            <span class="dominio-code">D1</span>
+            <div>
+              <div class="dominio-label">Sponsor</div>
+              <div class="dominio-detail">Andre Chieppe — Diretor Financeiro (cargo Diretor+ confirmado ✅)</div>
+            </div>
+          </div>
+          <div class="dominio-item ok">
+            <span class="dominio-icon">✅</span>
+            <span class="dominio-code">D2</span>
+            <div>
+              <div class="dominio-label">Rastreabilidade</div>
+              <div class="dominio-detail">100% consistente — orçamento R$8.640, prazo 60du, escopo ZFI0057+SBWP</div>
+            </div>
+          </div>
+          <div class="dominio-item ok">
+            <span class="dominio-icon">✅</span>
+            <span class="dominio-code">D3</span>
+            <div>
+              <div class="dominio-label">Políticas VMO</div>
+              <div class="dominio-detail">Score 8.7/10 aprovado, WR emitido, artefato obrigatório completo</div>
+            </div>
+          </div>
+          <div class="dominio-item ok">
+            <span class="dominio-icon">✅</span>
+            <span class="dominio-code">D4</span>
+            <div>
+              <div class="dominio-label">Completude documental</div>
+              <div class="dominio-detail">11/11 documentos de iniciação presentes e válidos</div>
+            </div>
+          </div>
+          <div class="dominio-item warn">
+            <span class="dominio-icon">⚠️</span>
+            <span class="dominio-code">D5</span>
+            <div>
+              <div class="dominio-label">Riscos de Governança</div>
+              <div class="dominio-detail">RG-01 ativo — TAP sem assinatura do sponsor (Andre Chieppe)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NC Table -->
+      <div style="margin-top:18px">
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px">Não-Conformidades</div>
+        <table class="nc-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Ação Corretiva</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:700;white-space:nowrap">NC-001</td>
+              <td><span class="nc-tag nc-menor">NC-MENOR</span></td>
+              <td>Assinatura formal do TAP pendente (Andre Chieppe)</td>
+              <td style="color:var(--text2);font-size:0.72rem">Obter assinatura antes do kickoff de execução</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Aprovação Final -->
+      <div style="margin-top:16px;padding:12px;border-radius:8px;background:#22c55e0a;border:1px solid #22c55e25;">
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:6px">Aprovação Final — VMO</div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--green)">✅ APROVADO COM RESSALVAS</div>
+        <div style="font-size:0.72rem;color:var(--text2);margin-top:4px">Marcelo Silveira — VMO Consultoria · 18/05/2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESSO + KPIs -->
   <div class="grid-2">
     <div>
-      <div class="section-title">Progresso da Iniciação</div>
-      <div class="card progress-big">
-        <div class="progress-header">
-          <div class="progress-pct-big">0%</div>
-          <div class="progress-label">Pré-execução</div>
+      <div class="section-title">Entregáveis de Iniciação</div>
+      <div class="card">
+        <div class="progress-header" style="margin-bottom:16px">
+          <div class="progress-pct-big">12/12</div>
+          <div class="progress-label">Iniciação concluída (ressalvas ativas)</div>
         </div>
-        <div class="progress-bar-big"><div class="progress-fill-big" style="width:0%"></div></div>
-        <div style="margin-top:16px">
-          <div class="section-title" style="margin-bottom:12px">Entregáveis de Iniciação</div>
-          <div class="entregavel-list">
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">TAP — Termo de Abertura</div><div class="entregavel-status">Redigido</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">PM Canvas</div><div class="entregavel-status">Redigido</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Plano Geral do Projeto</div><div class="entregavel-status">Redigido</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">ERF — Especificação de Requisitos</div><div class="entregavel-status">Redigida</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Cronograma (60 du)</div><div class="entregavel-status">Redigido</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Plano de Riscos</div><div class="entregavel-status">Redigido</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Framework de KPIs (EVM)</div><div class="entregavel-status">Redigido</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">⏳</div><div class="entregavel-name">Assinatura do TAP — Sponsor (Dir. Financeiro)</div><div class="entregavel-pending">Pendente</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">⏳</div><div class="entregavel-name">Designação do Gerente de Projeto</div><div class="entregavel-pending">Aguarda TAP</div></div>
-            <div class="entregavel-item"><div class="entregavel-icon">⏳</div><div class="entregavel-name">Kickoff do Projeto</div><div class="entregavel-pending">Planejado Du 3–5</div></div>
-          </div>
+        <div class="progress-bar-big" style="margin-bottom:18px"><div class="progress-fill-big" style="width:100%"></div></div>
+        <div class="entregavel-list">
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">TAP — Termo de Abertura</div><div class="entregavel-status">Redigido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">PM Canvas</div><div class="entregavel-status">Redigido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Plano Geral do Projeto</div><div class="entregavel-status">Redigido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">ERF — Especificação de Requisitos (14 RF + 8 RNF)</div><div class="entregavel-status">Redigida</div></div>
+          <div class="entregavel-item novo"><div class="entregavel-icon">✅</div><div class="entregavel-name">Work Request — Mini-RFP</div><div class="entregavel-status">Emitido</div><span class="entregavel-new-tag">v2 NOVO</span></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Cronograma (60 du)</div><div class="entregavel-status">Redigido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Plano de Riscos (7 riscos mapeados)</div><div class="entregavel-status">Redigido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Framework de KPIs (EVM: BAC R$8.640, CPI/SPI 1.00)</div><div class="entregavel-status">Redigido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Status Report Inicial</div><div class="entregavel-status">Emitido</div></div>
+          <div class="entregavel-item"><div class="entregavel-icon">✅</div><div class="entregavel-name">Revisão de Qualidade Vera (8.7/10)</div><div class="entregavel-status">Aprovado</div></div>
+          <div class="entregavel-item novo"><div class="entregavel-icon">✅</div><div class="entregavel-name">Auditoria de Governança Gabriel</div><div class="entregavel-status">Aprovado c/ ressalvas</div><span class="entregavel-new-tag">v2 NOVO</span></div>
+          <div class="entregavel-item novo"><div class="entregavel-icon">✅</div><div class="entregavel-name">Aprovação Final — Marcelo Silveira</div><div class="entregavel-status">Aprovado c/ ressalvas</div><span class="entregavel-new-tag">v2 NOVO</span></div>
         </div>
       </div>
     </div>
 
     <div>
       <div class="section-title">KPIs (Baseline — EVM)</div>
-      <div class="grid-3" style="margin-bottom:12px">
+      <div class="grid-3" style="margin-bottom:16px">
         <div class="card kpi-card">
           <div class="kpi-name">BAC</div>
           <div class="kpi-value" style="color:var(--blue);font-size:1.2rem">R$&nbsp;8.640</div>
@@ -226,24 +493,48 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <div class="kpi-badge">Meta ≥ 0,95</div>
         </div>
       </div>
+
+      <div class="section-title">Pendências Ativas</div>
+      <div class="pendencia-list" style="margin-bottom:16px">
+        <div class="pendencia-item">
+          <div class="pendencia-icon">⏳</div>
+          <div>
+            <div style="font-size:0.8rem;font-weight:600">Assinatura do TAP — Sponsor (Andre Chieppe)</div>
+            <div style="font-size:0.68rem;color:var(--yellow);margin-top:2px">NC-001 NC-MENOR ativa — antes do kickoff de execução</div>
+          </div>
+        </div>
+        <div class="pendencia-item">
+          <div class="pendencia-icon">⏳</div>
+          <div>
+            <div style="font-size:0.8rem;font-weight:600">Designação do Gerente de Projeto</div>
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:2px">Aguarda assinatura do TAP pelo sponsor</div>
+          </div>
+        </div>
+        <div class="pendencia-item">
+          <div class="pendencia-icon">⏳</div>
+          <div>
+            <div style="font-size:0.8rem;font-weight:600">Kickoff do Projeto</div>
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:2px">Planejado Du 3–5 após TAP assinado</div>
+          </div>
+        </div>
+      </div>
+
       <div class="section-title">Sobre o Projeto</div>
       <div class="card">
         <p style="font-size:0.82rem;line-height:1.7;color:var(--text2)">
-          Demanda originada pela <strong style="color:var(--text)">VIX Manutenção</strong> em 23/02/2026. Consiste na inclusão do
-          <strong style="color:var(--text)">Diretor Financeiro</strong> como aprovador obrigatório no fluxo de lançamentos pré-editados do
+          Demanda originada pela <strong style="color:var(--text)">VIX Manutenção</strong>. Consiste na inclusão do
+          <strong style="color:var(--text)">Diretor Financeiro</strong> (Andre Chieppe) como aprovador obrigatório no fluxo de lançamentos pré-editados do
           <strong style="color:var(--text)">SAP FI</strong>, via parametrização das transações
-          <strong style="color:var(--text)">ZFI0057</strong> e <strong style="color:var(--text)">SBWP</strong>.
+          <strong style="color:var(--text)">ZFI0057</strong> e <strong style="color:var(--text)">SBWP</strong>, sem desenvolvimento ABAP.
         </p>
         <p style="font-size:0.82rem;line-height:1.7;color:var(--text2);margin-top:10px">
-          <strong style="color:var(--yellow)">⚠ Pendência crítica:</strong> confirmação do nome completo do Diretor Financeiro para assinatura do TAP e início formal do projeto.
-        </p>
-        <p style="font-size:0.82rem;line-height:1.7;color:var(--text2);margin-top:10px">
-          <strong style="color:var(--text)">Objetivo:</strong> elevar o nível de governança financeira e reduzir o risco de fraude no processo de aprovação de lançamentos.
+          <strong style="color:var(--text)">Objetivo:</strong> elevar o nível de governança financeira e reduzir risco de fraude no processo de aprovação de lançamentos contábeis.
         </p>
       </div>
     </div>
   </div>
 
+  <!-- REGISTRO DE RISCOS -->
   <div class="section-title">Registro de Riscos</div>
   <div class="card" style="margin-bottom:24px">
     <table class="risk-table">
@@ -262,7 +553,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <td>R01</td>
           <td><span class="risk-tag r-alto">ALTO</span></td>
           <td>Técnico</td>
-          <td>Parametrização via ZFI0057 revela limitação que exige desenvolvimento ABAP</td>
+          <td>Parametrização ZFI0057 revela limitação técnica exigindo ABAP</td>
           <td>10</td>
           <td>Mitigar</td>
         </tr>
@@ -270,7 +561,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <td>R02</td>
           <td><span class="risk-tag r-alto">ALTO</span></td>
           <td>Prazo</td>
-          <td>Indisponibilidade do ambiente QAS na janela planejada para testes integrados</td>
+          <td>Indisponibilidade do ambiente QAS para testes integrados</td>
           <td>12</td>
           <td>Mitigar</td>
         </tr>
@@ -278,7 +569,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <td>R03</td>
           <td><span class="risk-tag r-alto">ALTO</span></td>
           <td>Stakeholders</td>
-          <td>Indisponibilidade ou resistência do Diretor Financeiro para treinamento e validação</td>
+          <td>Indisponibilidade/resistência do Diretor Financeiro para treinamento</td>
           <td>12</td>
           <td>Mitigar</td>
         </tr>
@@ -286,7 +577,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <td>R04</td>
           <td><span class="risk-tag r-medio">MÉDIO</span></td>
           <td>Prazo</td>
-          <td>Processo de change management (janelas de transporte PRD) incompatível com cronograma</td>
+          <td>Change management SAP (janelas de transporte PRD) incompatível com cronograma</td>
           <td>9</td>
           <td>Mitigar</td>
         </tr>
@@ -294,7 +585,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <td>R05</td>
           <td><span class="risk-tag r-medio">MÉDIO</span></td>
           <td>Técnico</td>
-          <td>Identificação de outros aprovadores no fluxo atual impactados pela parametrização</td>
+          <td>Outros aprovadores do fluxo impactados pela parametrização</td>
           <td>6</td>
           <td>Mitigar</td>
         </tr>
@@ -321,8 +612,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 </main>
 
 <footer class="footer">
-  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Opensquad v0.1.14 · VMO Consultoria<br>
-  Atualizado em: 14/05/2026 às 20:00 · Dados do run: 2026-04-03
+  Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Pipeline v2 · Opensquad v0.1.14 · VMO Consultoria<br>
+  Atualizado em: 18/05/2026 às 00:00 · Run original: 2026-04-03 · Aprovação final: Marcelo Silveira
 </footer>
 
 </body>

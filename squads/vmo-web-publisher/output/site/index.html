@@ -171,7 +171,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
   </div>
   <div class="header-right">
     <div class="live-badge"><div class="pulse"></div>PORTFÓLIO ATIVO</div>
-    <div class="updated-at">Atualizado em: 17/05/2026 às 18:30</div>
+    <div class="updated-at">Atualizado em: 18/05/2026 às 00:00</div>
   </div>
 </header>
 
@@ -190,19 +190,19 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       <div class="metric-label">Budget Total (BAC)</div>
     </div>
     <div class="metric-card green">
-      <div class="metric-icon">🟢</div>
-      <div class="metric-value green">1</div>
-      <div class="metric-label">Projetos Verde</div>
+      <div class="metric-icon">✅</div>
+      <div class="metric-value green">2</div>
+      <div class="metric-label">Pipeline v2 Aprovado</div>
     </div>
     <div class="metric-card yellow">
       <div class="metric-icon">🟡</div>
-      <div class="metric-value yellow">2</div>
+      <div class="metric-value yellow">1</div>
       <div class="metric-label">Em Atenção</div>
     </div>
-    <div class="metric-card" style="border-top:3px solid var(--purple);">
-      <div class="metric-icon">💡</div>
-      <div class="metric-value" style="color:var(--purple)">2</div>
-      <div class="metric-label">Em Instrução</div>
+    <div class="metric-card" style="border-top:3px solid var(--red);">
+      <div class="metric-icon">🚨</div>
+      <div class="metric-value" style="color:var(--red)">2</div>
+      <div class="metric-label">NC-CRÍTICA (Sponsor)</div>
     </div>
   </div>
 
@@ -215,12 +215,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <div class="project-code">PROJ-2026-001 · SAP FI · VIX Manutenção</div>
           <div class="project-name">Inclusão de Aprovador SAP FI — Lançamentos Pré-Editados</div>
           <div class="project-tags">
-            <span class="tag phase">Iniciação</span>
-            <span class="tag gp">GP: A designar</span>
+            <span class="tag phase">Pipeline v2 ✅</span>
+            <span class="tag gp">Sponsor: Andre Chieppe</span>
+            <span class="tag score">Score 8,7/10</span>
           </div>
         </div>
         <div class="col-center">
-          <span class="status-badge verde">🟢 Verde</span>
+          <span class="status-badge verde">🟢 Aprovado</span>
         </div>
         <div class="col-right">
           <div class="bac-value">R$ 8.640</div>
@@ -229,7 +230,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
         <div>
           <div class="progress-pct">0%</div>
           <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%"></div></div>
-          <div class="progress-sub">Pré-execução · Aguarda assinatura do TAP<br>Prazo: 60 du após assinatura</div>
+          <div class="progress-sub">Pré-execução · ⚠ Assinatura TAP pendente (NC-MENOR)<br>Prazo: 60 du após assinatura · WR + Auditoria ✅</div>
         </div>
         <div class="risks-col">
           <span class="risk-pill alto">3 ALTO</span>
@@ -239,64 +240,92 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       </div>
     </a>
 
-    <a href="projetos/PROJ-2026-004.html" class="project-card" style="border-left-color:var(--purple)">
+    <a href="projetos/PROJ-2026-003.html" class="project-card verde">
+      <div class="project-inner">
+        <div>
+          <div class="project-code">PROJ-2026-003 · ERP Selection · Holding GAB + VixPar + VAB</div>
+          <div class="project-name">Caminhos Estratégicos do ERP GAB — Assessment de Plataforma</div>
+          <div class="project-tags">
+            <span class="tag phase">Pipeline v2 ✅</span>
+            <span class="tag gp">GP: Marcelo Silveira + KPMG</span>
+            <span class="tag score">Score 9,0/10</span>
+          </div>
+        </div>
+        <div class="col-center">
+          <span class="status-badge verde">🟢 Aprovado</span>
+        </div>
+        <div class="col-right">
+          <div class="bac-value">R$ 1.010.000</div>
+          <div class="bac-label">KPMG R$930K + Overhead R$80K</div>
+        </div>
+        <div>
+          <div class="progress-pct">100%</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:100%"></div></div>
+          <div class="progress-sub">Fase 1 concluída (08/05/2026) · 3 Sponsors ✅ · WR + Auditoria ✅<br>Fase 2 (RFP) em planejamento · Shortlist: 2 plataformas candidatas</div>
+        </div>
+        <div class="risks-col">
+          <span class="risk-pill alto">3 ALTO</span>
+          <span class="risk-pill medio">2 MÉD</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="projetos/PROJ-2026-004.html" class="project-card" style="border-left-color:var(--red)">
       <div class="project-inner">
         <div>
           <div class="project-code">PROJ-2026-004 · Plataforma Web · Grupo Águia Branca</div>
           <div class="project-name">Plataforma Interna de Gestão de Ideias de Inovação</div>
           <div class="project-tags">
-            <span class="tag phase">Instrução Concluída</span>
+            <span class="tag phase">Pipeline v2 ✅</span>
             <span class="tag gp">Solicitante: Jadson</span>
             <span class="tag score">Qualidade 100/100</span>
           </div>
         </div>
         <div class="col-center">
-          <span class="status-badge" style="background:#a855f720;color:var(--purple);border:1px solid #a855f740">💡 Instrução</span>
+          <span class="status-badge" style="background:#ef444420;color:var(--red);border:1px solid #ef444440">🚨 NC-CRÍTICA</span>
         </div>
         <div class="col-right">
           <div class="bac-value">R$ 90.000</div>
-          <div class="bac-label">Orçamento teto (pendente aprovação)</div>
+          <div class="bac-label">Payback: 1 ano · Saving R$85K/ano</div>
         </div>
         <div>
           <div class="progress-pct">0%</div>
-          <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%;background:var(--purple)"></div></div>
-          <div class="progress-sub">Aguarda sponsor + orçamento até 13/06/2026<br>Go-live previsto: 28/11/2026 · 37 RFs · 6 módulos</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%;background:var(--red)"></div></div>
+          <div class="progress-sub">🚨 Sponsor A DEFINIR — bloqueante para execução<br>Go-live alvo: 30/11/2026 · 13 RF · 6 módulos · WR + Auditoria ✅</div>
         </div>
         <div class="risks-col">
-          <span class="risk-pill critico">3 CRÍT</span>
+          <span class="risk-pill critico">NC-CRÍTICA</span>
           <span class="risk-pill alto">3 ALTO</span>
-          <span class="risk-pill medio">6 MÉD</span>
         </div>
       </div>
     </a>
 
-    <a href="projetos/PROJ-2026-005.html" class="project-card" style="border-left-color:var(--blue)">
+    <a href="projetos/PROJ-2026-005.html" class="project-card" style="border-left-color:var(--red)">
       <div class="project-inner">
         <div>
           <div class="project-code">PROJ-2026-005 · ERP Module · Grupo Águia Branca — Divisão Comércio</div>
           <div class="project-name">Auditor Fiscal — Módulo Nativo NBS em Substituição ao Fiscal Defender</div>
           <div class="project-tags">
-            <span class="tag phase">Instrução Concluída</span>
+            <span class="tag phase">Pipeline v2 ✅</span>
             <span class="tag gp">Solicitante: Sandro Siqueira</span>
             <span class="tag score">Qualidade 91/100</span>
           </div>
         </div>
         <div class="col-center">
-          <span class="status-badge" style="background:#a855f720;color:var(--purple);border:1px solid #a855f740">💡 Instrução</span>
+          <span class="status-badge" style="background:#ef444420;color:var(--red);border:1px solid #ef444440">🚨 URGENTE</span>
         </div>
         <div class="col-right">
           <div class="bac-value">R$ 35.000</div>
-          <div class="bac-label">Residuais · Dev R$0 (NBS)</div>
+          <div class="bac-label">Saving R$78K/ano · Dev R$0 (NBS)</div>
         </div>
         <div>
           <div class="progress-pct">0%</div>
-          <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%;background:var(--blue)"></div></div>
-          <div class="progress-sub">Aguarda sponsor (CB-01) + acordo NBS (CB-02) até 30/05/2026<br>Go-live previsto: 30/10/2026 · 27 RFs · 6 módulos · Saving R$78K/ano</div>
+          <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%;background:var(--red)"></div></div>
+          <div class="progress-sub">🚨 CB-01: Sponsor até 25/05/2026 (7 dias!) · RSK-01 score 25/25<br>Go-live alvo: 30/10/2026 · 11 RF · 6 módulos · WR + Auditoria ✅</div>
         </div>
         <div class="risks-col">
-          <span class="risk-pill critico">4 CRÍT</span>
+          <span class="risk-pill critico">CB-01 URGENTE</span>
           <span class="risk-pill alto">6 ALTO</span>
-          <span class="risk-pill medio">8 MÉD</span>
         </div>
       </div>
     </a>
@@ -307,7 +336,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
           <div class="project-code">PROJ-2026-006 · Plataforma Web · Grupo Águia Branca — Área de Inovação</div>
           <div class="project-name">Plataforma Própria de Gestão de Ideias e Inovação</div>
           <div class="project-tags">
-            <span class="tag phase">Instrução Concluída</span>
+            <span class="tag phase">⭐ 1º Pipeline v2</span>
             <span class="tag gp">Solicitante: Jadson</span>
             <span class="tag score">Score 92,25/100</span>
           </div>
@@ -317,97 +346,65 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
         </div>
         <div class="col-right">
           <div class="bac-value">R$ 100.000</div>
-          <div class="bac-label">Aprovação pendente (CB-02)</div>
+          <div class="bac-label">Saving R$85K/ano · CB-01 ativa</div>
         </div>
         <div>
           <div class="progress-pct">0%</div>
           <div class="progress-bar-wrap"><div class="progress-fill" style="width:0%"></div></div>
-          <div class="progress-sub">Aguarda sponsor (CB-01) até 13/06/2026<br>Go-live previsto: 07/12/2026 · 31 RFs · 6 módulos · Saving R$85K/ano</div>
+          <div class="progress-sub">⚠ Sponsor A DEFINIR · Prêmio Inovação jan/2027 (marco crítico)<br>Go-live alvo: 31/12/2026 · 31 RF · 6 módulos · Primeiro run completo pipeline v2</div>
         </div>
         <div class="risks-col">
-          <span class="risk-pill critico">4 CRÍT</span>
+          <span class="risk-pill critico">NC-CRÍTICA</span>
           <span class="risk-pill alto">5 ALTO</span>
-          <span class="risk-pill medio">2 MÉD</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="projetos/PROJ-2026-003.html" class="project-card atencao">
-      <div class="project-inner">
-        <div>
-          <div class="project-code">PROJ-2026-003 · ERP Selection · Holding GAB + VixPar + VAB</div>
-          <div class="project-name">Caminhos Estratégicos do ERP GAB — Fase 1 (Software Selection)</div>
-          <div class="project-tags">
-            <span class="tag phase">Execução — S5+</span>
-            <span class="tag gp">GP: Marcelo Silveira</span>
-            <span class="tag score">Score Iniciação 9,0/10</span>
-          </div>
-        </div>
-        <div class="col-center">
-          <span class="status-badge atencao">🟡 Atenção</span>
-        </div>
-        <div class="col-right">
-          <div class="bac-value">R$ 1.010.000</div>
-          <div class="bac-label">KPMG R$930K + Overhead R$80K</div>
-        </div>
-        <div>
-          <div class="progress-pct">45%</div>
-          <div class="progress-bar-wrap"><div class="progress-fill" style="width:45%"></div></div>
-          <div class="progress-sub">M4/M7 concluídos · Deadline: 08/05/2026<br>R-001 CRÍTICO ativo · 4 issues abertas</div>
-        </div>
-        <div class="risks-col">
-          <span class="risk-pill critico">1 CRÍT</span>
-          <span class="risk-pill alto">4 ALTO</span>
-          <span class="risk-pill medio">2 MÉD</span>
         </div>
       </div>
     </a>
   </div>
 
   <div class="issues-section">
-    <div class="section-title">Issues Abertas — PROJ-2026-003</div>
+    <div class="section-title">Alertas Ativos — Portfólio</div>
     <div class="issues-grid">
-      <div class="issue-card">
-        <div class="issue-id">I-001 · PROJ-2026-003</div>
-        <div class="issue-title">Kick Off Executivo sem data confirmada</div>
+      <div class="issue-card" style="border-left:3px solid var(--red)">
+        <div class="issue-id" style="color:var(--red)">🚨 NC-CRÍTICA · PROJ-2026-005</div>
+        <div class="issue-title">Sponsor Executivo — CB-01 vence em 25/05/2026</div>
         <div class="issue-meta">
-          <span class="issue-impact">⚠ Sponsors não formalmente alinhados</span>
-          <span>Resp: Marcelo Silveira</span>
-          <span>Prazo: 15/05/2026</span>
+          <span class="issue-impact" style="color:var(--red)">URGENTE: 7 dias restantes</span>
+          <span>Resp: Sandro Siqueira → Alta Gestão Div. Comércio</span>
+          <span>Prazo: 25/05/2026</span>
         </div>
       </div>
-      <div class="issue-card">
-        <div class="issue-id">I-002 · PROJ-2026-003</div>
-        <div class="issue-title">Inconsistência 5 vs. 6 pilares KPMG</div>
+      <div class="issue-card" style="border-left:3px solid var(--red)">
+        <div class="issue-id" style="color:var(--red)">🚨 NC-CRÍTICA · PROJ-2026-004</div>
+        <div class="issue-title">Sponsor Executivo — A DEFINIR (bloqueante execução)</div>
         <div class="issue-meta">
-          <span class="issue-impact">⚠ Score Model metodologia incoerente</span>
-          <span>Resp: Marcelo → Wallacy Lima</span>
-          <span>Prazo: 16/05/2026</span>
+          <span class="issue-impact" style="color:var(--orange)">Candidato: Diretor Inovação ou VP GAB</span>
+          <span>Resp: Jadson → Alta Gestão GAB</span>
+          <span>Antes do kickoff</span>
         </div>
       </div>
-      <div class="issue-card">
-        <div class="issue-id">I-003 · PROJ-2026-003</div>
-        <div class="issue-title">Contatos dos 3 sponsors não registrados</div>
+      <div class="issue-card" style="border-left:3px solid var(--yellow)">
+        <div class="issue-id" style="color:var(--yellow)">⚠️ NC-MENOR · PROJ-2026-001</div>
+        <div class="issue-title">Assinatura formal do TAP pendente (Andre Chieppe)</div>
         <div class="issue-meta">
-          <span class="issue-impact">⚠ Comunicação formal bloqueada</span>
-          <span>Resp: Marcelo Silveira</span>
-          <span>Prazo: 15/05/2026</span>
+          <span class="issue-impact">Não bloqueia instrução, bloqueia execução</span>
+          <span>Resp: PMO VMO</span>
+          <span>Antes do kickoff</span>
         </div>
       </div>
-      <div class="issue-card">
-        <div class="issue-id">I-004 · PROJ-2026-003</div>
-        <div class="issue-title">Titularização do GP interno não confirmada</div>
+      <div class="issue-card" style="border-left:3px solid var(--yellow)">
+        <div class="issue-id" style="color:var(--yellow)">⚠️ NC-CRÍTICA · PROJ-2026-006</div>
+        <div class="issue-title">Sponsor A DEFINIR — Prêmio Inovação jan/2027 em risco</div>
         <div class="issue-meta">
-          <span class="issue-impact">⚠ Risco R-004 ativo</span>
-          <span>Resp: Sponsor Décio Chieppe</span>
-          <span>Prazo: Semana corrente</span>
+          <span class="issue-impact">Marco institucional não pode ser perdido</span>
+          <span>Resp: Jadson → Alta Gestão GAB</span>
+          <span>Urgente — prazo apertado</span>
         </div>
       </div>
     </div>
   </div>
 
   <div class="agents-section">
-    <div class="section-title">Agentes VMO Autônomo — Run 2026-05-14 · Score 9,0/10 · APROVADO</div>
+    <div class="section-title">Pipeline VMO Autônomo v2 — 12 Agentes · Run 2026-05-18</div>
     <div class="agent-grid">
       <div class="agent-card">
         <div class="agent-icon">📥</div>
@@ -423,19 +420,23 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       </div>
       <div class="agent-card">
         <div class="agent-icon">⚙️</div>
-        <div><div class="agent-name">Rafael Requisito</div><div class="agent-role">ERF — 39 requisitos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+        <div><div class="agent-name">Rafael Requisito</div><div class="agent-role">ERF — Requisitos funcionais</div><div class="agent-status-tag done">✓ Concluído</div></div>
+      </div>
+      <div class="agent-card" style="border:1px solid #3b82f640;background:#3b82f608">
+        <div class="agent-icon">📤</div>
+        <div><div class="agent-name">Fábio Fornecedor</div><div class="agent-role">Work Request — Mini-RFP</div><div class="agent-status-tag done" style="background:#3b82f620;color:var(--blue)">✓ v2 NOVO</div></div>
       </div>
       <div class="agent-card">
         <div class="agent-icon">📅</div>
-        <div><div class="agent-name">Carlos Cronograma</div><div class="agent-role">WBS · Cronograma · 7 marcos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+        <div><div class="agent-name">Carlos Cronograma</div><div class="agent-role">WBS · Cronograma · Marcos</div><div class="agent-status-tag done">✓ Concluído</div></div>
       </div>
       <div class="agent-card">
         <div class="agent-icon">⚠️</div>
-        <div><div class="agent-name">Pedro Perigo</div><div class="agent-role">Plano de Riscos — 10 riscos</div><div class="agent-status-tag done">✓ Concluído</div></div>
+        <div><div class="agent-name">Pedro Perigo</div><div class="agent-role">Plano de Riscos</div><div class="agent-status-tag done">✓ Concluído</div></div>
       </div>
       <div class="agent-card">
         <div class="agent-icon">📊</div>
-        <div><div class="agent-name">Marcela Métrica</div><div class="agent-role">Framework KPIs · EVM + 17 KRs</div><div class="agent-status-tag done">✓ Concluído</div></div>
+        <div><div class="agent-name">Marcela Métrica</div><div class="agent-role">KPIs · EVM · Curva S</div><div class="agent-status-tag done">✓ Concluído</div></div>
       </div>
       <div class="agent-card">
         <div class="agent-icon">📝</div>
@@ -443,7 +444,15 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
       </div>
       <div class="agent-card">
         <div class="agent-icon">✅</div>
-        <div><div class="agent-name">Vera Veredito</div><div class="agent-role">Revisão de Qualidade</div><div class="agent-status-tag done">✓ Aprovado 9,0/10</div></div>
+        <div><div class="agent-name">Vera Veredito</div><div class="agent-role">Revisão de Qualidade</div><div class="agent-status-tag done">✓ Scores: 8,7–10,0/10</div></div>
+      </div>
+      <div class="agent-card" style="border:1px solid #3b82f640;background:#3b82f608">
+        <div class="agent-icon">🏛️</div>
+        <div><div class="agent-name">Gabriel Governança</div><div class="agent-role">Auditoria de Governança</div><div class="agent-status-tag done" style="background:#3b82f620;color:var(--blue)">✓ v2 NOVO</div></div>
+      </div>
+      <div class="agent-card" style="border:1px solid #22c55e40;background:#22c55e08">
+        <div class="agent-icon">🌐</div>
+        <div><div class="agent-name">Lucas Layout</div><div class="agent-role">VMO Web Publisher</div><div class="agent-status-tag done" style="background:#22c55e20;color:var(--green)">✓ Run #4</div></div>
       </div>
     </div>
   </div>
@@ -452,7 +461,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 
 <footer class="footer">
   Gerado por <strong>Lucas Layout — VMO Web Publisher</strong> · Opensquad · VMO Consultoria<br>
-  Atualizado em: 17/05/2026 às 18:30 · 5 projetos · PROJ-2026-006 adicionado
+  Atualizado em: 18/05/2026 às 00:00 · 5 projetos ativos · Run #4 VMO Web Publisher
 </footer>
 
 </body>
