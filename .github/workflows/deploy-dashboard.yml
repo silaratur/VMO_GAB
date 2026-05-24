@@ -75,9 +75,8 @@ jobs:
             exit 1
           fi
 
-      - name: Atualizar configuração nginx
+      - name: Recarregar nginx (sem sobrescrever config — preserva SSL do certbot)
         run: |
-          cp infra/nginx-vmo-portfolio.conf /etc/nginx/sites-available/vmo-portfolio
           nginx -t && systemctl reload nginx
           echo "✅ nginx recarregado"
 
