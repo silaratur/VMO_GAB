@@ -1,29 +1,23 @@
 {
   "squad": "vmo-autonomo",
-  "status": "completed",
-  "project": "PROJ-2026-006",
-  "demand": "DEM-2026-006",
-  "step": { "current": 13, "total": 13, "label": "Concluído" },
+  "project": "PROJ-2026-007",
+  "demand": "DEM-2026-007",
+  "status": "running",
+  "step": { "current": 1, "total": 16, "label": "Coletar Demanda" },
   "agents": [
-    { "id": "iara-inbound",     "name": "Iara Inbound",     "icon": "📥", "status": "done", "desk": { "col": 1, "row": 1 } },
-    { "id": "felipe-filtro",    "name": "Felipe Filtro",    "icon": "🔍", "status": "done", "desk": { "col": 2, "row": 1 } },
-    { "id": "diana-documento",  "name": "Diana Documento",  "icon": "📋", "status": "done", "desk": { "col": 3, "row": 1 } },
-    { "id": "rafael-requisito", "name": "Rafael Requisito", "icon": "⚙️", "status": "done", "desk": { "col": 1, "row": 2 } },
-    { "id": "carlos-cronograma","name": "Carlos Cronograma","icon": "📅", "status": "done", "desk": { "col": 2, "row": 2 } },
-    { "id": "pedro-perigo",     "name": "Pedro Perigo",     "icon": "⚠️", "status": "done", "desk": { "col": 3, "row": 2 } },
-    { "id": "marcela-metrica",  "name": "Marcela Métrica",  "icon": "📊", "status": "done", "desk": { "col": 1, "row": 3 } },
-    { "id": "fabio-fornecedor", "name": "Fábio Fornecedor", "icon": "📤", "status": "done", "desk": { "col": 2, "row": 3 } },
-    { "id": "sara-status",      "name": "Sara Status",      "icon": "📝", "status": "done", "desk": { "col": 3, "row": 3 } },
-    { "id": "vera-veredito",    "name": "Vera Veredito",    "icon": "✅", "status": "done", "desk": { "col": 1, "row": 4 } }
+    { "id": "iara-inbound",      "name": "Iara Inbound",      "icon": "📥", "status": "working", "desk": { "col": 1, "row": 1 } },
+    { "id": "gabriel-governanca","name": "Gabriel Governança", "icon": "🛡️", "status": "idle",    "desk": { "col": 2, "row": 1 } },
+    { "id": "felipe-filtro",     "name": "Felipe Filtro",     "icon": "🔍", "status": "idle",    "desk": { "col": 3, "row": 1 } },
+    { "id": "diana-documento",   "name": "Diana Documento",   "icon": "📋", "status": "idle",    "desk": { "col": 1, "row": 2 } },
+    { "id": "rafael-requisito",  "name": "Rafael Requisito",  "icon": "⚙️", "status": "idle",    "desk": { "col": 2, "row": 2 } },
+    { "id": "carlos-cronograma", "name": "Carlos Cronograma", "icon": "📅", "status": "idle",    "desk": { "col": 3, "row": 2 } },
+    { "id": "pedro-perigo",      "name": "Pedro Perigo",      "icon": "⚠️", "status": "idle",    "desk": { "col": 1, "row": 3 } },
+    { "id": "marcela-metrica",   "name": "Marcela Métrica",   "icon": "📊", "status": "idle",    "desk": { "col": 2, "row": 3 } },
+    { "id": "fabio-fornecedor",  "name": "Fábio Fornecedor",  "icon": "📤", "status": "idle",    "desk": { "col": 3, "row": 3 } },
+    { "id": "sara-status",       "name": "Sara Status",       "icon": "📝", "status": "idle",    "desk": { "col": 1, "row": 4 } },
+    { "id": "vera-veredito",     "name": "Vera Veredito",     "icon": "✅", "status": "idle",    "desk": { "col": 2, "row": 4 } }
   ],
-  "handoff": {
-    "from": "vera-veredito",
-    "to": "checkpoint-13",
-    "score": "92,25/100",
-    "veredito": "APROVADO",
-    "completedAt": "2026-05-16T15:20:00.000Z"
-  },
-  "startedAt": "2026-05-16T12:00:00.000Z",
-  "completedAt": "2026-05-16T15:20:00.000Z",
-  "updatedAt": "2026-05-16T15:20:00.000Z"
+  "handoff": null,
+  "startedAt": "2026-05-24T00:00:00.000Z",
+  "updatedAt": "2026-05-24T00:00:00.000Z"
 }
