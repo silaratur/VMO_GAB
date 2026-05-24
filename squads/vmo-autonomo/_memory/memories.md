@@ -8,6 +8,10 @@
 
 ## Proibições Explícitas
 
+- **Nunca validar demanda sem aprovações obrigatórias (regra GP — 2026-05-24):** Toda demanda, independente da origem ou criticidade declarada, só pode ser considerada VALIDADA se possuir: (1) aprovação formal em nível de Diretoria da área solicitante; (2) aprovação do Gerente de TI da divisão solicitante. Sem ambas, a demanda retorna ao solicitante para complementação — independente de urgência declarada, prazo de SLA ou pressão política.
+
+- **Nunca aceitar citação de alta patente sem evidência documental (regra GP — 2026-05-24):** Toda vez que uma demanda citar CEO, Diretor Executivo, VP ou outra alta patente como origem ou justificativa de urgência, é OBRIGATÓRIO ter evidência documental comprobatória (e-mail, ata de reunião, documento assinado, print de mensagem oficial). A citação sem evidência não pode sustentar nota de urgência acima de 3/10 (Felipe) nem dispensar qualquer condição de processo. Iara deve sinalizar como `⚠️ CLAIM SEM EVIDÊNCIA` e classificar como Lacuna de alto impacto. Felipe deve rebaixar o critério de Urgência proporcionalmente.
+
 ## Técnico (específico do squad)
 
 - **Nova estrutura de pastas validada (2026-05-16):** A migração de `output/{run_id}/v{N}/` para `projects/{PROJ-CODE}/{fase}/` funciona corretamente. Todos os 10 agentes escreveram nos caminhos corretos com placeholder `{project}` resolvido. Estrutura de fases: 01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento.
