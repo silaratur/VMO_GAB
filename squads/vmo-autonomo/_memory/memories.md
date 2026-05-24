@@ -14,6 +14,8 @@
 
 ## Técnico (específico do squad)
 
+- **Regra de estrutura de pastas (2026-05-24):** Toda nova pasta de projeto `projects/{PROJ-CODE}/` deve ter TODAS as 5 subpastas de fase criadas imediatamente na inicialização: `01-qualificacao`, `02-iniciacao`, `03-planejamento`, `04-monitoramento`, `05-encerramento`. Git não rastreia diretórios vazios — criar `.gitkeep` em todas as pastas que ainda não possuem arquivos, para que a estrutura completa apareça no repositório remoto desde o início. O `.gitkeep` é removido quando o primeiro arquivo real for escrito na pasta.
+
 - **Nova estrutura de pastas validada (2026-05-16):** A migração de `output/{run_id}/v{N}/` para `projects/{PROJ-CODE}/{fase}/` funciona corretamente. Todos os 10 agentes escreveram nos caminhos corretos com placeholder `{project}` resolvido. Estrutura de fases: 01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento.
 - **Fábio Fornecedor validado (Step 10):** Primeiro run completo com o agente de Work Request. Score 8,5/10 na revisão da Vera. Artefato Obrigatório (10 grupos / 41 itens) transcrito corretamente. Inconsistência narrativa identificada: seção de contexto deve referenciar "plataforma SaaS terceira" (não "planilhas e e-mails") para projetos de substituição de sistema.
 - **Ressalva de sponsor registrada pelo GP:** Nivel mínimo de sponsor para aprovação de TAP é Diretor ou superior. Registrar como condição bloqueante CB-01 explícita no TAP, não apenas como lacuna genérica.
