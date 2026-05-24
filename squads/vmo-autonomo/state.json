@@ -2,8 +2,8 @@
   "squad": "vmo-autonomo",
   "project": "PROJ-2026-007",
   "demand": "DEM-2026-007",
-  "status": "running",
-  "step": { "current": 6, "total": 16, "label": "Checkpoint: Aprovar Qualificação" },
+  "status": "waiting_requester",
+  "step": { "current": 6, "total": 16, "label": "Aguardando complementação do solicitante (CB-06 a CB-08)" },
   "agents": [
     { "id": "iara-inbound",      "name": "Iara Inbound",      "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
     { "id": "gabriel-governanca","name": "Gabriel Governança", "icon": "🛡️", "status": "done",    "desk": { "col": 2, "row": 1 } },
