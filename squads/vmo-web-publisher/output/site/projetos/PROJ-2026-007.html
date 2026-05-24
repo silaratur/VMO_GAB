@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJ-2026-007 — INT015 Integração GRLOG-SAP</title>
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--cyan:#06b6d4;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.header-right{font-size:.65rem;color:var(--text2);}
+.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
+.proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange);}
+.proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
+.badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
+.badge-bloqueado{background:#f9731622;color:var(--orange);border:1px solid #f9731655;}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
+.meta-box.warn{border-color:#eab30888;}
+.meta-box.warn .meta-box-value{color:var(--yellow);}
+.meta-box.orange-box{border-color:#f9731688;}
+.meta-box.orange-box .meta-box-value{color:var(--orange);}
+.meta-box.cyan-box{border-color:#06b6d488;}
+.meta-box.cyan-box .meta-box-value{color:var(--cyan);}
+.section-title{font-size:.65rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:768px){.grid2{grid-template-columns:1fr;}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.sem-table{width:100%;border-collapse:collapse;}
+.sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
+.sem-table tr:last-child td{border-bottom:none;}
+.sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
+.dot-g{background:var(--green);}
+.dot-y{background:var(--yellow);}
+.dot-r{background:var(--red);}
+.dot-o{background:var(--orange);}
+.dot-c{background:var(--cyan);}
+.progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
+.progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.fill{height:100%;border-radius:4px;}
+.fill-orange{background:var(--orange);}
+.fill-green{background:var(--green);}
+.cb-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:.8rem;}
+.cb-row:last-child{border-bottom:none;}
+.cb-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;min-width:52px;text-align:center;}
+.cb-id{font-size:.72rem;font-weight:800;color:var(--orange);min-width:54px;}
+.cb-label{flex:1;color:var(--text);}
+.cb-bloqueante{color:var(--red);font-weight:700;font-size:.65rem;white-space:nowrap;}
+.cb-prazo{color:var(--text2);font-size:.65rem;white-space:nowrap;}
+.r-critico{background:#ef444433;color:var(--red);}
+.r-alto{background:#ef444422;color:var(--red);}
+.r-medio{background:#eab30822;color:var(--yellow);}
+.r-laranja{background:#f9731622;color:var(--orange);}
+.milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.milestone-row:last-child{border-bottom:none;}
+.ms-step{color:var(--orange);font-weight:700;min-width:70px;font-size:.75rem;}
+.ms-label{color:var(--text);flex:1;}
+.ms-check{font-size:.7rem;white-space:nowrap;}
+.ms-done{color:var(--green);}
+.ms-pend{color:var(--text2);}
+.ms-wait{color:var(--orange);font-weight:700;}
+.qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.qa-row:last-child{border-bottom:none;}
+.score-ok{font-weight:700;color:var(--green);}
+.score-cond{font-weight:700;color:var(--yellow);}
+.score-low{font-weight:700;color:var(--red);}
+.score-mid{font-weight:700;color:var(--orange);}
+.info-box{background:#f9731611;border:1px solid #f9731633;border-radius:10px;padding:14px;margin-bottom:16px;}
+.info-box-title{font-size:.7rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.info-box-text{font-size:.8rem;color:var(--text);line-height:1.5;}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.tag{padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:600;background:var(--bg);border:1px solid var(--border);}
+.comm-box{background:#3b82f611;border:1px solid #3b82f633;border-radius:10px;padding:14px;margin-bottom:16px;}
+.comm-box-title{font-size:.7rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.comm-box-text{font-size:.8rem;color:var(--text);line-height:1.5;}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
+.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
+.doc-link:hover{border-color:var(--orange);background:var(--bg2);}
+.doc-icon{font-size:1rem;flex-shrink:0;}
+.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-phase{font-size:.62rem;}
+.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
+.ph-q{background:#3b82f622;color:var(--blue);}
+.ph-g{background:#f9731622;color:var(--orange);}
+footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="../index.html" class="back">← Dashboard</a>
+  <div class="header-right">Atualizado em: 24/05/2026 · AGUARDANDO SOLICITANTE</div>
+</header>
+<main class="main">
+
+  <!-- HERO -->
+  <div class="proj-hero">
+    <div class="proj-hero-top">
+      <div>
+        <div class="proj-id-label">PROJ-2026-007 · DEM-2026-007 · PROJETO</div>
+        <div class="proj-title">INT015 — Integração GRLOG-SAP — Faturamento Integrado por Medições Aprovadas</div>
+      </div>
+      <span class="badge badge-bloqueado">🟠 Aguardando Solicitante</span>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-box-label">Solicitante</div><div class="meta-box-value">Jairo De Melo Ferreira Mendes</div></div>
+      <div class="meta-box"><div class="meta-box-label">Área</div><div class="meta-box-value">Diretoria de Logística Dedicada (VIX Matriz)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Classificação</div><div class="meta-box-value">PROJETO</div></div>
+      <div class="meta-box warn"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">62/100 — APROVADO COM CONDIÇÕES</div></div>
+      <div class="meta-box orange-box"><div class="meta-box-label">Pipeline</div><div class="meta-box-value">Passo 6 / 16</div></div>
+      <div class="meta-box"><div class="meta-box-label">BAC Estimado</div><div class="meta-box-value">R$ 42.000 – R$ 67.000</div></div>
+      <div class="meta-box cyan-box"><div class="meta-box-label">Regulatório</div><div class="meta-box-value">CPC 47 / IFRS 15</div></div>
+      <div class="meta-box orange-box"><div class="meta-box-label">Status</div><div class="meta-box-value">waiting_requester</div></div>
+    </div>
+  </div>
+
+  <!-- INFO BOX -->
+  <div class="info-box">
+    <div class="info-box-title">📋 Contexto do Projeto</div>
+    <div class="info-box-text">
+      A INT015 propõe integrar o sistema GRLOG (gestão de logística dedicada) ao SAP para que o faturamento seja gerado automaticamente a partir das medições aprovadas — eliminando o processo manual atual de digitação e lançamento. A demanda tem relevância regulatória direta (CPC 47 / IFRS 15 — reconhecimento de receita conforme serviço prestado) e potencial de ganho operacional significativo. O projeto está <strong>bloqueado no passo 6/16</strong> aguardando que o solicitante Jairo De Melo Ferreira Mendes responda à comunicação enviada pela VMO com 8 Condições Bloqueantes (CBs). O orçamento declarado originalmente de R$10K foi identificado como incorreto — a estimativa preliminar revisada é de R$42.000 a R$67.000, necessitando aprovação orçamentária formal.
+    </div>
+    <div class="tag-row">
+      <span class="tag">GRLOG</span>
+      <span class="tag">SAP FI/SD</span>
+      <span class="tag">CPC 47 / IFRS 15</span>
+      <span class="tag">Faturamento por Medições</span>
+      <span class="tag">VIX Matriz — Logística Dedicada</span>
+      <span class="tag">8 CBs em Aberto</span>
+    </div>
+  </div>
+
+  <!-- PIPELINE STATUS + CRITERIA -->
+  <div class="grid2">
+
+    <div class="card">
+      <div class="section-title">Status do Pipeline (Passos 1–16)</div>
+      <div class="milestone-row">
+        <div class="ms-step">Passo 1</div>
+        <div class="ms-label">Iara — Coleta da Demanda</div>
+        <div class="ms-check ms-done">✅ Concluído</div>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-step">Passo 2</div>
+        <div class="ms-label">Gabriel Gate — Gate de Intake</div>
+        <div class="ms-check ms-done">✅ Concluído</div>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-step">Passo 3</div>
+        <div class="ms-label">Felipe — Qualificação Técnica e Scoring</div>
+        <div class="ms-check ms-done">✅ Concluído</div>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-step">Passo 4</div>
+        <div class="ms-label">Gabriel Gate — Gate de Qualificação</div>
+        <div class="ms-check ms-done">✅ Concluído</div>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-step">Passo 5</div>
+        <div class="ms-label">Adendo de Governança GP (CBs identificadas)</div>
+        <div class="ms-check ms-done">✅ Concluído</div>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-step">Passo 6</div>
+        <div class="ms-label">Comunicação enviada ao Solicitante — aguardando retorno</div>
+        <div class="ms-check ms-wait">⏳ Em Espera</div>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-step">Passos 7–16</div>
+        <div class="ms-label">Instrução, Planejamento, Aprovações, Kick-off</div>
+        <div class="ms-check ms-pend">🔲 Pendente</div>
+      </div>
+      <br>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Pipeline (6/16 passos)</span><span>37%</span></div>
+        <div class="progress-bar"><div class="fill fill-orange" style="width:37%"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Critérios de Qualificação (Scoring 62/100)</div>
+      <div class="qa-row"><span>Alinhamento Estratégico</span><span class="score-ok">9 / 10</span></div>
+      <div class="qa-row"><span>Impacto Regulatório</span><span class="score-ok">9 / 10</span></div>
+      <div class="qa-row"><span>Impacto Organizacional</span><span class="score-mid">7 / 10</span></div>
+      <div class="qa-row"><span>Governança</span><span class="score-mid">8 / 10 ⚠️ issues detectados</span></div>
+      <div class="qa-row"><span>Esforço (menor = melhor)</span><span class="score-mid">8 / 10</span></div>
+      <div class="qa-row"><span>Urgência</span><span class="score-cond">5 / 10 (revisado)</span></div>
+      <div class="qa-row"><span>Viabilidade Técnica</span><span class="score-cond">5 / 10</span></div>
+      <div class="qa-row"><span>ROI</span><span class="score-low">4 / 10</span></div>
+      <div class="qa-row"><span>Maturidade do Escopo</span><span class="score-low">4 / 10</span></div>
+      <div class="qa-row"><span>Recursos Disponíveis</span><span class="score-low">3 / 10</span></div>
+      <br>
+      <div class="qa-row"><span><strong>Total</strong></span><span class="score-cond"><strong>62 / 100 — APROVADO COM CONDIÇÕES</strong></span></div>
+    </div>
+
+  </div>
+
+  <!-- CBs -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">Condições Bloqueantes (CB-01 a CB-08) — 8 em Aberto</div>
+
+    <div class="cb-row">
+      <span class="cb-id">CB-01</span>
+      <span class="cb-label">Sponsor formal Diretor+ — formalização obrigatória para viabilizar aprovação</span>
+      <span class="cb-prazo">Prazo: 48h</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-02</span>
+      <span class="cb-label">Aprovação orçamentária formal — revisar orçamento de R$10K para R$42.000–R$67.000 (estimativa preliminar)</span>
+      <span class="cb-prazo">Prazo: 5 dias úteis</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-03</span>
+      <span class="cb-label">Escopo detalhado — documento descrevendo limites da integração GRLOG-SAP</span>
+      <span class="cb-prazo">Prazo: 24h</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-04</span>
+      <span class="cb-label">Prazo comprometido — esclarecimento da suposta determinação da CEO sobre deadline</span>
+      <span class="cb-prazo">Prazo: 24h</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-05</span>
+      <span class="cb-label">Responsável técnico DTI nomeado formalmente para conduzir a integração</span>
+      <span class="cb-prazo">Prazo: 24h</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-06</span>
+      <span class="cb-label">Evidência documental da origem CEO — adendo de governança exige comprovação</span>
+      <span class="cb-prazo">Adendo GP</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-07</span>
+      <span class="cb-label">Aprovação Diretoria da área solicitante — aprovação formal pelo Diretor responsável</span>
+      <span class="cb-bloqueante">🔴 BLOQUEANTE DE VALIDAÇÃO</span>
+    </div>
+    <div class="cb-row">
+      <span class="cb-id">CB-08</span>
+      <span class="cb-label">Aprovação Gerente TI divisão — aprovação formal do Gerente de TI</span>
+      <span class="cb-bloqueante">🔴 BLOQUEANTE DE VALIDAÇÃO</span>
+    </div>
+  </div>
+
+  <!-- COMMUNICATION -->
+  <div class="comm-box">
+    <div class="comm-box-title">📧 Comunicação Enviada ao Solicitante</div>
+    <div class="comm-box-text">
+      E-mail e mensagem Teams enviados a <strong>Jairo De Melo Ferreira Mendes</strong> (VIX Matriz — Diretoria de Logística Dedicada) solicitando resposta a 7 itens (CBs abertas) para desbloqueio e continuidade do pipeline. Aguardando retorno. <br><br>
+      <strong>Itens solicitados:</strong> (1) Confirmação de Sponsor Diretor+, (2) aprovação do orçamento revisado R$42–67K, (3) escopo detalhado da integração, (4) esclarecimento sobre prazo CEO, (5) nomeação de responsável técnico DTI, (6) evidência documental da origem CEO, (7) aprovação formal da Diretoria e Gerente TI.
+    </div>
+  </div>
+
+  <!-- REGULATORY + GOVERNANCE -->
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Conformidade Regulatória</div>
+      <table class="sem-table">
+        <tr><td class="dim">Norma</td><td><span class="dot dot-o"></span>CPC 47 / IFRS 15 — Receita de Contratos com Clientes</td></tr>
+        <tr><td class="dim">Relevância</td><td>Reconhecimento de receita conforme medições aprovadas — impacto direto no compliance contábil</td></tr>
+        <tr><td class="dim">Risco Reg.</td><td><span class="dot dot-r"></span>Não-conformidade se integração atrasar e reconhecimento permanecer manual</td></tr>
+        <tr><td class="dim">Score</td><td><span class="dot dot-g"></span>9/10 — maior driver do score de qualificação</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title">Governança e Contexto CEO</div>
+      <table class="sem-table">
+        <tr><td class="dim">Origem declarada</td><td><span class="dot dot-y"></span>Solicitante alega determinação da CEO — sem evidência documental</td></tr>
+        <tr><td class="dim">CB-06</td><td><span class="dot dot-r"></span>Evidência documental exigida pelo Adendo de Governança GP</td></tr>
+        <tr><td class="dim">Score Governança</td><td><span class="dot dot-o"></span>8/10 — issues detectados (sponsor, evidência CEO)</td></tr>
+        <tr><td class="dim">CB-07 / CB-08</td><td><span class="dot dot-r"></span>BLOQUEANTES DE VALIDAÇÃO — sem essas aprovações o projeto não avança</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- DOCS -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">Documentos da Qualificação (Fase 01)</div>
+    <div class="docs-grid">
+      <a class="doc-link" href="docs/PROJ-2026-007/demanda-coletada.md"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-007/gate-intake.md"><div class="doc-icon">🚪</div><div class="doc-info"><div class="doc-name">Gate de Intake</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-007/qualificacao.md"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação e Scoring</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-007/gate-qualificacao.md"><div class="doc-icon">🚪</div><div class="doc-info"><div class="doc-name">Gate de Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-007/adendo-governanca-gp.md"><div class="doc-icon">⚖️</div><div class="doc-info"><div class="doc-name">Adendo de Governança GP</div><div class="doc-phase"><span class="phase-tag ph-g">Governança</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-007/comunicacao-retorno-solicitante.md"><div class="doc-icon">📧</div><div class="doc-info"><div class="doc-name">Comunicação ao Solicitante</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+    </div>
+    <div style="font-size:.7rem;color:var(--text2);margin-top:8px;">⚠️ Documentos em formato .md — PDFs ainda não disponíveis (projeto em fase de qualificação)</div>
+  </div>
+
+</main>
+<footer>VMO Autônomo — Lucas Layout | PROJ-2026-007 | Run 2026-05-24 · AGUARDANDO SOLICITANTE — 8 CBs em Aberto | 24/05/2026</footer>
+</body>
+</html>

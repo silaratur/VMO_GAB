@@ -14,10 +14,10 @@
   "handoff": {
     "from": "lucas-layout",
     "to": null,
-    "message": "Dashboard atualizado: index.html + 6 páginas de projeto (PROJ-2026-001, 003, 004, 005, 006, DEM-2026-007). Run 2026-05-22.",
-    "completedAt": "2026-05-22T00:00:00Z"
+    "message": "Dashboard atualizado: index.html + 7 páginas (PROJ-2026-001, 003, 004, 005, 006, DEM-2026-007, PROJ-2026-007). PROJ-2026-007 adicionado — waiting_requester step 6/16.",
+    "completedAt": "2026-05-24T14:00:00.000Z"
   },
   "startedAt": "2026-05-22T00:00:00Z",
-  "completedAt": "2026-05-22T00:00:00Z",
-  "updatedAt": "2026-05-22T00:00:00Z"
+  "completedAt": "2026-05-24T14:00:00.000Z",
+  "updatedAt": "2026-05-24T14:00:00.000Z"
 }
