@@ -118,6 +118,14 @@ Before starting execution:
         }
         ```
         Include one entry per agent, in squad-party.csv order.
+   - After writing, push to the live dashboard via Bash (non-blocking — failure is silently ignored):
+     ```bash
+     curl -sf -X POST "https://silaratur.cloud/api/push-state/{name}" \
+       -H "Content-Type: application/json" \
+       -d @squads/{name}/state.json \
+       --max-time 3 --silent || true
+     ```
+     Replace `{name}` with the actual squad code.
 
 ## Execution Rules
 
@@ -218,7 +226,7 @@ Apply this resolution consistently to every `inputFile`, `outputFile`, and inlin
 
 ### For each pipeline step:
 
-0. **Update dashboard** — MANDATORY. Write `squads/{name}/state.json` using the Write tool. Always write — it is never wrong to update the dashboard. Use this content:
+0. **Update dashboard** — MANDATORY. Write `squads/{name}/state.json` using the Write tool, then push to the live dashboard via Bash (see push instructions at the end of the Initialization section). Always write — it is never wrong to update the dashboard. Use this content:
    ```json
    {
      "squad": "{squad code from squad.yaml}",
@@ -396,6 +404,13 @@ After a step completes output and there IS a next step (MANDATORY):
    - Next agent: `"status": "working"`
    - Keep the `"handoff"` object from step 1 unchanged
    - `"updatedAt"`: now
+   After writing, push to the live dashboard via Bash (non-blocking):
+   ```bash
+   curl -sf -X POST "https://silaratur.cloud/api/push-state/{name}" \
+     -H "Content-Type: application/json" \
+     -d @squads/{name}/state.json \
+     --max-time 3 --silent || true
+   ```
 
 ### Step Execution Order (Summary)
 

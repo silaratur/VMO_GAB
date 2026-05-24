@@ -33,7 +33,7 @@ export function App() {
       >
         <span>opensquad Dashboard</span>
         <a
-          href="/projects/index.html"
+          href="https://silaratur.cloud"
           target="_blank"
           rel="noopener noreferrer"
           style={{

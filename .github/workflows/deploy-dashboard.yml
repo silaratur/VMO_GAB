@@ -1,0 +1,96 @@
+name: Deploy Opensquad Dashboard
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'dashboard/**'
+      - 'infra/nginx-vmo-portfolio.conf'
+      - '.github/workflows/deploy-dashboard.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verificar Node.js
+        run: node --version && npm --version
+
+      - name: Instalar dependências
+        run: cd dashboard && npm ci --silent
+
+      - name: Build dashboard
+        run: cd dashboard && npm run build
+
+      - name: Implantar servidor Node.js
+        run: |
+          mkdir -p /opt/vmo-dashboard
+          cp dashboard/server.mjs /opt/vmo-dashboard/
+          cp dashboard/package.json /opt/vmo-dashboard/
+          cd /opt/vmo-dashboard && npm install --omit=dev --silent
+          echo "✅ Servidor implantado"
+
+      - name: Implantar arquivos estáticos
+        run: |
+          mkdir -p /opt/vmo-dashboard/dist
+          rsync -a --delete dashboard/dist/ /opt/vmo-dashboard/dist/
+          JS=$(find /opt/vmo-dashboard/dist -name '*.js' | wc -l)
+          echo "✅ $JS arquivos JS publicados"
+
+      - name: Sincronizar metadados dos squads
+        run: |
+          mkdir -p /opt/vmo-dashboard/squads
+          # Copia apenas squad.yaml de cada squad (sem outputs/projects/memory)
+          for squad_dir in squads/*/; do
+            squad_name=$(basename "$squad_dir")
+            [ "$squad_name" = ".gitkeep" ] && continue
+            mkdir -p "/opt/vmo-dashboard/squads/$squad_name"
+            [ -f "${squad_dir}squad.yaml" ] && \
+              cp "${squad_dir}squad.yaml" "/opt/vmo-dashboard/squads/$squad_name/"
+          done
+          TOTAL=$(find /opt/vmo-dashboard/squads -name 'squad.yaml' | wc -l)
+          echo "✅ $TOTAL squads sincronizados"
+
+      - name: Reiniciar servidor do dashboard
+        run: |
+          pkill -f "node /opt/vmo-dashboard/server.mjs" 2>/dev/null || true
+          sleep 1
+          PORT=3001 \
+          SQUADS_DIR=/opt/vmo-dashboard/squads \
+          nohup node /opt/vmo-dashboard/server.mjs \
+            > /opt/vmo-dashboard/server.log 2>&1 &
+          sleep 3
+          if curl -sf http://localhost:3001/health > /dev/null; then
+            echo "✅ Dashboard rodando na porta 3001"
+          else
+            echo "⚠️ Servidor não respondeu — log:"
+            tail -20 /opt/vmo-dashboard/server.log
+            exit 1
+          fi
+
+      - name: Atualizar configuração nginx
+        run: |
+          cp infra/nginx-vmo-portfolio.conf /etc/nginx/sites-available/vmo-portfolio
+          nginx -t && systemctl reload nginx
+          echo "✅ nginx recarregado"
+
+      - name: Verificar acesso externo
+        run: |
+          sleep 2
+          HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/agentes/ 2>/dev/null || echo "000")
+          HTTPS=$(curl -s -o /dev/null -w "%{http_code}" https://silaratur.cloud/agentes/ 2>/dev/null || echo "000")
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "HTTP  /agentes/ → $HTTP"
+          echo "HTTPS /agentes/ → $HTTPS"
+          echo "URL: https://silaratur.cloud/agentes/"
+          echo "Data: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          [ "$HTTPS" = "200" ] && echo "✅ Dashboard acessível" || echo "⚠️ Verificar nginx/servidor"
