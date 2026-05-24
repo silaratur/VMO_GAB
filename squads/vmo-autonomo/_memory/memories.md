@@ -8,7 +8,13 @@
 
 ## Proibições Explícitas
 
+- **Nunca validar demanda sem aprovações obrigatórias (regra GP — 2026-05-24):** Toda demanda, independente da origem ou criticidade declarada, só pode ser considerada VALIDADA se possuir: (1) aprovação formal em nível de Diretoria da área solicitante; (2) aprovação do Gerente de TI da divisão solicitante. Sem ambas, a demanda retorna ao solicitante para complementação — independente de urgência declarada, prazo de SLA ou pressão política.
+
+- **Nunca aceitar citação de alta patente sem evidência documental (regra GP — 2026-05-24):** Toda vez que uma demanda citar CEO, Diretor Executivo, VP ou outra alta patente como origem ou justificativa de urgência, é OBRIGATÓRIO ter evidência documental comprobatória (e-mail, ata de reunião, documento assinado, print de mensagem oficial). A citação sem evidência não pode sustentar nota de urgência acima de 3/10 (Felipe) nem dispensar qualquer condição de processo. Iara deve sinalizar como `⚠️ CLAIM SEM EVIDÊNCIA` e classificar como Lacuna de alto impacto. Felipe deve rebaixar o critério de Urgência proporcionalmente.
+
 ## Técnico (específico do squad)
+
+- **Regra de estrutura de pastas (2026-05-24):** Toda nova pasta de projeto `projects/{PROJ-CODE}/` deve ter TODAS as 5 subpastas de fase criadas imediatamente na inicialização: `01-qualificacao`, `02-iniciacao`, `03-planejamento`, `04-monitoramento`, `05-encerramento`. Git não rastreia diretórios vazios — criar `.gitkeep` em todas as pastas que ainda não possuem arquivos, para que a estrutura completa apareça no repositório remoto desde o início. O `.gitkeep` é removido quando o primeiro arquivo real for escrito na pasta.
 
 - **Nova estrutura de pastas validada (2026-05-16):** A migração de `output/{run_id}/v{N}/` para `projects/{PROJ-CODE}/{fase}/` funciona corretamente. Todos os 10 agentes escreveram nos caminhos corretos com placeholder `{project}` resolvido. Estrutura de fases: 01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento.
 - **Fábio Fornecedor validado (Step 10):** Primeiro run completo com o agente de Work Request. Score 8,5/10 na revisão da Vera. Artefato Obrigatório (10 grupos / 41 itens) transcrito corretamente. Inconsistência narrativa identificada: seção de contexto deve referenciar "plataforma SaaS terceira" (não "planilhas e e-mails") para projetos de substituição de sistema.
