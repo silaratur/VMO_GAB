@@ -1,1379 +1,193 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJ-2026-004 — Plataforma Interna de Inovação</title>
+<title>PROJ-2026-004 — Plataforma Interna de Gestão de Ideias</title>
 <style>
-:root {
-  --bg: #0f172a; --bg2: #1e293b; --bg3: #0d1526; --border: #334155;
-  --blue: #3b82f6; --green: #22c55e; --yellow: #eab308;
-  --red: #ef4444; --orange: #f97316; --purple: #a855f7; --gray: #64748b;
-  --text: #f1f5f9; --text2: #94a3b8;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-.header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 28px; background: var(--bg2); border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
-}
-.back-link { font-size: 0.75rem; color: var(--blue); text-decoration: none; display: flex; align-items: center; gap: 6px; }
-.back-link:hover { text-decoration: underline; }
-.header-title { font-size: 0.72rem; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
-.updated-at { font-size: 0.65rem; color: var(--text2); }
-
-.main { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
-
-/* Hero */
-.hero {
-  background: var(--bg2); border: 1px solid var(--border); border-left: 5px solid var(--yellow);
-  border-radius: 12px; padding: 28px 32px; margin-bottom: 28px;
-  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start;
-}
-@media(max-width:768px){ .hero { grid-template-columns: 1fr; } }
-.hero-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--yellow); background: #eab30820; border: 1px solid #eab30840; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
-.hero-title { font-size: 1.45rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
-.hero-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 16px; }
-.hero-meta { display: flex; flex-wrap: wrap; gap: 20px; }
-.hero-meta-item { display: flex; flex-direction: column; gap: 2px; }
-.hero-meta-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); }
-.hero-meta-value { font-size: 0.82rem; font-weight: 600; color: var(--text); }
-.hero-meta-value.blocker { color: var(--red); }
-.hero-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
-.score-ring { display: flex; flex-direction: column; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; text-align: center; }
-.score-big { font-size: 2.2rem; font-weight: 800; color: var(--green); line-height: 1; }
-.score-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-top: 4px; }
-.qual-score { display: flex; flex-direction: column; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 20px; text-align: center; }
-.qual-big { font-size: 1.3rem; font-weight: 700; color: var(--yellow); }
-.qual-label { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-top: 2px; }
-
-/* Alert blocker */
-.alert-blocker {
-  background: #ef444415; border: 1px solid #ef444440; border-left: 4px solid var(--red);
-  border-radius: 8px; padding: 14px 18px; margin-bottom: 24px;
-  display: flex; align-items: flex-start; gap: 12px;
-}
-.alert-icon { font-size: 1.2rem; margin-top: 1px; }
-.alert-title { font-size: 0.8rem; font-weight: 700; color: var(--red); margin-bottom: 4px; }
-.alert-text { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
-.alert-text strong { color: var(--text); }
-
-/* Metrics row */
-.metrics-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
-@media(max-width:900px){ .metrics-row { grid-template-columns: repeat(3,1fr); } }
-@media(max-width:480px){ .metrics-row { grid-template-columns: repeat(2,1fr); } }
-.metric-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  padding: 18px 14px; text-align: center; position: relative; overflow: hidden;
-}
-.metric-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.metric-card.blue::before { background: var(--blue); }
-.metric-card.green::before { background: var(--green); }
-.metric-card.yellow::before { background: var(--yellow); }
-.metric-card.red::before { background: var(--red); }
-.metric-card.purple::before { background: var(--purple); }
-.metric-value { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
-.metric-value.blue { color: var(--blue); }
-.metric-value.green { color: var(--green); }
-.metric-value.yellow { color: var(--yellow); }
-.metric-value.red { color: var(--red); }
-.metric-value.purple { color: var(--purple); }
-.metric-label { font-size: 0.62rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; line-height: 1.3; }
-
-/* Nav tabs */
-.doc-nav {
-  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 28px;
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 8px;
-}
-.doc-tab {
-  flex: 1; min-width: 90px; padding: 9px 12px; border-radius: 8px; cursor: pointer; border: none;
-  background: transparent; color: var(--text2); font-size: 0.72rem; font-weight: 600;
-  text-align: center; transition: all .2s; white-space: nowrap;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-}
-.doc-tab:hover { background: #ffffff10; color: var(--text); }
-.doc-tab.active { background: var(--blue); color: #fff; }
-.tab-icon { font-size: 1rem; }
-.tab-label { font-size: 0.63rem; }
-
-/* Sections */
-.doc-section { display: none; }
-.doc-section.active { display: block; }
-
-.section-title {
-  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2);
-  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-}
-.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* Cards grid */
-.cards-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-@media(max-width:768px){ .cards-2 { grid-template-columns: 1fr; } }
-.cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-@media(max-width:768px){ .cards-3 { grid-template-columns: 1fr; } }
-
-.content-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px;
-}
-.content-card h3 { font-size: 0.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.content-card h3 .icon { font-size: 0.9rem; }
-.content-card p { font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
-.content-card p + p { margin-top: 8px; }
-
-/* Smart objective */
-.smart-box {
-  background: linear-gradient(135deg, #1e3a8a20, #1e293b); border: 1px solid #3b82f640;
-  border-radius: 10px; padding: 20px; margin-bottom: 20px;
-}
-.smart-box .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--blue); margin-bottom: 8px; font-weight: 700; }
-.smart-box p { font-size: 0.82rem; color: var(--text); line-height: 1.7; }
-.smart-box p strong { color: var(--blue); }
-
-/* Tables */
-.doc-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 20px; }
-.doc-table th { background: var(--bg3); color: var(--text2); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-.doc-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text2); }
-.doc-table td:first-child { color: var(--text); font-weight: 500; }
-.doc-table tr:last-child td { border-bottom: none; }
-.doc-table tr:hover td { background: #ffffff05; }
-.doc-table .total-row td { background: var(--bg3); font-weight: 700; color: var(--text); border-top: 1px solid var(--border); }
-
-/* Scope lists */
-.scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-@media(max-width:768px){ .scope-grid { grid-template-columns: 1fr; } }
-.scope-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
-.scope-box.in { border-top: 3px solid var(--green); }
-.scope-box.out { border-top: 3px solid var(--red); }
-.scope-box h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-.scope-box.in h4 { color: var(--green); }
-.scope-box.out h4 { color: var(--red); }
-.scope-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-.scope-list li { font-size: 0.76rem; color: var(--text2); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
-.scope-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-.scope-box.in .scope-list li::before { background: var(--green); }
-.scope-box.out .scope-list li::before { background: var(--red); }
-
-/* Timeline */
-.timeline { position: relative; padding-left: 28px; margin-bottom: 20px; }
-.timeline::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
-.timeline-item { position: relative; margin-bottom: 16px; }
-.timeline-item::before { content: ''; position: absolute; left: -23px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--gray); border: 2px solid var(--bg2); }
-.timeline-item.done::before { background: var(--green); }
-.timeline-item.blocker::before { background: var(--red); animation: blink 1.5s infinite; }
-.timeline-item.pending::before { background: var(--border); }
-.timeline-item.critical::before { background: var(--yellow); }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-.tl-date { font-size: 0.62rem; color: var(--text2); margin-bottom: 2px; }
-.tl-title { font-size: 0.8rem; font-weight: 600; color: var(--text); }
-.tl-sub { font-size: 0.72rem; color: var(--text2); margin-top: 2px; }
-.tl-badge { display: inline-block; font-size: 0.58rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-.tl-badge.done { background: #22c55e20; color: var(--green); }
-.tl-badge.blocker { background: #ef444420; color: var(--red); }
-.tl-badge.critico { background: #eab30820; color: var(--yellow); }
-.tl-badge.pending { background: #64748b20; color: var(--gray); }
-
-/* Module cards */
-.modules-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 20px; }
-@media(max-width:900px){ .modules-grid { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:480px){ .modules-grid { grid-template-columns: 1fr; } }
-.module-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
-  border-top: 3px solid var(--blue);
-}
-.module-card.m2 { border-top-color: var(--purple); }
-.module-card.m3 { border-top-color: var(--yellow); }
-.module-card.m4 { border-top-color: var(--orange); }
-.module-card.m5 { border-top-color: var(--green); }
-.module-card.m6 { border-top-color: #06b6d4; }
-.module-code { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); margin-bottom: 4px; }
-.module-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-.module-rfs { font-size: 0.7rem; color: var(--text2); margin-bottom: 10px; }
-.rf-pills { display: flex; flex-wrap: wrap; gap: 4px; }
-.rf-pill { font-size: 0.6rem; padding: 2px 7px; background: #ffffff10; border: 1px solid var(--border); border-radius: 10px; color: var(--text2); }
-.mosco-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.mosco-badge { font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
-.must { background: #ef444420; color: var(--red); }
-.should { background: #eab30820; color: var(--yellow); }
-.could { background: #3b82f620; color: var(--blue); }
-
-/* Risk table */
-.risk-row-critical td:first-child { color: var(--red); }
-.risk-row-high td:first-child { color: var(--orange); }
-.risk-row-medium td:first-child { color: var(--yellow); }
-.sev-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.62rem; font-weight: 700; }
-.sev-critico { background: #ef444425; color: var(--red); }
-.sev-alto { background: #f9731625; color: var(--orange); }
-.sev-medio { background: #eab30825; color: var(--yellow); }
-.prob-pill { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; font-size: 0.7rem; font-weight: 700; }
-.p4 { background: #ef444440; color: var(--red); }
-.p3 { background: #f9731640; color: var(--orange); }
-.p2 { background: #eab30840; color: var(--yellow); }
-.p1 { background: #64748b40; color: var(--gray); }
-
-/* KPI cards */
-.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-@media(max-width:768px){ .kpi-grid { grid-template-columns: 1fr 1fr; } }
-.kpi-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
-}
-.kpi-code { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-.kpi-name { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
-.kpi-meta { display: flex; flex-direction: column; gap: 4px; }
-.kpi-meta-row { display: flex; justify-content: space-between; align-items: center; }
-.kpi-meta-key { font-size: 0.62rem; color: var(--text2); }
-.kpi-meta-val { font-size: 0.7rem; font-weight: 600; color: var(--blue); }
-.kpi-status { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 10px; background: #64748b20; color: var(--gray); margin-top: 8px; }
-
-/* EVM table */
-.evm-phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-@media(max-width:900px){ .evm-phases { grid-template-columns: repeat(2,1fr); } }
-.evm-phase-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px;
-}
-.evm-phase-name { font-size: 0.68rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.evm-phase-period { font-size: 0.6rem; color: var(--text2); margin-bottom: 8px; }
-.evm-pv { font-size: 1.1rem; font-weight: 800; color: var(--blue); }
-.evm-pv-acc { font-size: 0.65rem; color: var(--text2); margin-top: 2px; }
-.progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--blue); border-radius: 2px; }
-
-/* Agents section */
-.agents-timeline { display: flex; flex-direction: column; gap: 0; }
-.agent-row {
-  display: flex; align-items: center; gap: 0; position: relative;
-}
-.agent-row:not(:last-child)::after {
-  content: ''; position: absolute; left: 19px; top: 40px; width: 2px; height: calc(100% - 12px);
-  background: var(--border); z-index: 0;
-}
-.agent-dot {
-  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; flex-shrink: 0; border: 2px solid var(--border);
-  background: var(--bg2); z-index: 1; position: relative;
-}
-.agent-dot.done { border-color: var(--green); background: #22c55e15; }
-.agent-body { flex: 1; padding: 12px 16px; margin: 4px 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; margin-left: 12px; }
-.agent-name { font-size: 0.78rem; font-weight: 700; color: var(--text); }
-.agent-output { font-size: 0.7rem; color: var(--text2); margin-top: 3px; line-height: 1.4; }
-.agent-badge { display: inline-block; font-size: 0.58rem; padding: 2px 8px; border-radius: 10px; background: #22c55e20; color: var(--green); font-weight: 700; margin-top: 5px; }
-
-/* Status badges */
-.status-semaphore { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
-@media(max-width:768px){ .status-semaphore { grid-template-columns: repeat(3,1fr); } }
-.semaphore-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 10px; text-align: center; }
-.sem-icon { font-size: 1.2rem; margin-bottom: 4px; }
-.sem-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 4px; }
-.sem-status { font-size: 0.7rem; font-weight: 700; }
-.sem-status.green { color: var(--green); }
-.sem-status.yellow { color: var(--yellow); }
-.sem-status.red { color: var(--red); }
-
-/* Pendencies */
-.pendency-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.pendency-item {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
-  padding: 14px 16px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-}
-.pendency-item.blocker { border-left: 4px solid var(--red); }
-.pendency-content { flex: 1; }
-.pendency-title { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.pendency-resp { font-size: 0.7rem; color: var(--text2); }
-.pendency-deadline { font-size: 0.7rem; font-weight: 700; color: var(--red); white-space: nowrap; }
-
-/* Critical path */
-.critical-path {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
-  padding: 20px; margin-bottom: 20px; overflow-x: auto;
-}
-.cp-chain { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
-.cp-node {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
-  padding: 8px 12px; font-size: 0.72rem; font-weight: 600; color: var(--text);
-  white-space: nowrap; flex-shrink: 0;
-}
-.cp-node.red { border-color: var(--red); color: var(--red); }
-.cp-node.end { border-color: var(--green); color: var(--green); background: #22c55e10; }
-.cp-arrow { color: var(--text2); font-size: 0.8rem; padding: 0 4px; flex-shrink: 0; }
-
-/* Downloads section */
-.downloads-section {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
-  padding: 22px 28px; margin-bottom: 28px;
-}
-.downloads-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-.downloads-title { font-size: 0.8rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.downloads-sub { font-size: 0.7rem; color: var(--text2); }
-.downloads-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-.download-btn {
-  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  text-decoration: none; transition: all .2s; color: var(--text);
-}
-.download-btn:hover { border-color: var(--blue); background: #3b82f610; transform: translateY(-1px); }
-.download-btn.package { border-color: var(--green); background: #22c55e10; }
-.download-btn.package:hover { border-color: var(--green); background: #22c55e20; }
-.download-btn.docx { border-color: var(--blue); background: #3b82f610; }
-.download-btn.docx:hover { background: #3b82f620; }
-.dl-icon { font-size: 1.4rem; flex-shrink: 0; }
-.dl-info { flex: 1; min-width: 0; }
-.dl-name { font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dl-type { font-size: 0.62rem; color: var(--text2); margin-top: 2px; }
-.dl-badge { font-size: 0.58rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
-.dl-badge.md { background: #eab30820; color: var(--yellow); }
-.dl-badge.docx { background: #3b82f620; color: var(--blue); }
-.dl-badge.pkg { background: #22c55e20; color: var(--green); }
-.section-sep { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-
-footer {
-  text-align: center; padding: 28px 20px;
-  font-size: 0.65rem; color: var(--gray); border-top: 1px solid var(--border); margin-top: 40px;
-}
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.header-right{font-size:.65rem;color:var(--text2);}
+.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
+.proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--yellow);}
+.proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
+.badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
+.badge-atencao{background:#eab30822;color:var(--yellow);border:1px solid #eab30855;}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
+.meta-box.alert{border-color:#ef444488;}
+.meta-box.alert .meta-box-value{color:var(--red);}
+.section-title{font-size:.65rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:768px){.grid2{grid-template-columns:1fr;}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card.alert-card{border-color:#ef444444;}
+.sem-table{width:100%;border-collapse:collapse;}
+.sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
+.sem-table tr:last-child td{border-bottom:none;}
+.sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
+.dot-g{background:var(--green);}
+.dot-y{background:var(--yellow);}
+.dot-r{background:var(--red);}
+.progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
+.progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.fill{height:100%;border-radius:4px;}
+.fill-green{background:var(--green);}
+.fill-yellow{background:var(--yellow);}
+.risk-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.risk-row:last-child{border-bottom:none;}
+.risk-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;}
+.r-critico{background:#ef444433;color:var(--red);}
+.r-alto{background:#ef444422;color:var(--red);}
+.r-medio{background:#eab30822;color:var(--yellow);}
+.milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.milestone-row:last-child{border-bottom:none;}
+.ms-date{color:var(--blue);font-weight:700;min-width:90px;}
+.ms-label{color:var(--text);flex:1;}
+.ms-check{font-size:.7rem;white-space:nowrap;}
+.ms-block{color:var(--red);font-weight:700;}
+.ms-pend{color:var(--text2);}
+.qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.qa-row:last-child{border-bottom:none;}
+.score-ok{font-weight:700;color:var(--green);}
+.score-cond{font-weight:700;color:var(--yellow);}
+.score-fail{font-weight:700;color:var(--red);}
+.bloqueante-box{background:#ef444411;border:1px solid #ef444433;border-radius:10px;padding:16px;margin-bottom:16px;}
+.bloqueante-title{font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.bloqueante-item{font-size:.8rem;color:var(--text);margin-bottom:6px;}
+.bloqueante-item span{color:var(--text2);font-size:.72rem;}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
+.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
+.doc-link:hover{border-color:var(--blue);background:var(--bg2);}
+.doc-icon{font-size:1rem;flex-shrink:0;}
+.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-phase{font-size:.62rem;}
+.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
+.ph-q{background:#3b82f622;color:var(--blue);}
+.ph-i{background:#22c55e22;color:var(--green);}
+.ph-p{background:#eab30822;color:var(--yellow);}
+.ph-m{background:#06b6d422;color:#06b6d4;}
+.ph-e{background:#a855f722;color:#a855f7;}
+footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
 </style>
 </head>
 <body>
+<header class="header">
+  <a href="../index.html" class="back">← Dashboard</a>
+  <div class="header-right">Atualizado em: 22/05/2026</div>
+</header>
+<main class="main">
 
-<div class="header">
-  <a href="../index.html" class="back-link">← Dashboard VMO</a>
-  <span class="header-title">PROJ-2026-004 — Documentação Completa</span>
-  <span class="updated-at">Instrução: 2026-05-14</span>
-</div>
-
-<div class="main">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div>
-      <div class="hero-badge">💡 Instrução Concluída</div>
-      <div class="hero-title">Plataforma Interna de Gestão de Ideias de Inovação</div>
-      <div class="hero-sub">PROJ-2026-004 · DEM-2026-001 · Grupo Águia Branca — Área de Inovação</div>
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <span class="hero-meta-label">Solicitante</span>
-          <span class="hero-meta-value">Jadson (Área de Inovação)</span>
-        </div>
-        <div class="hero-meta-item">
-          <span class="hero-meta-label">Go-Live Previsto</span>
-          <span class="hero-meta-value">28/11/2026</span>
-        </div>
-        <div class="hero-meta-item">
-          <span class="hero-meta-label">Orçamento Teto</span>
-          <span class="hero-meta-value">R$ 90.000</span>
-        </div>
-        <div class="hero-meta-item">
-          <span class="hero-meta-label">Sponsor</span>
-          <span class="hero-meta-value blocker">⚠ A DEFINIR</span>
-        </div>
-        <div class="hero-meta-item">
-          <span class="hero-meta-label">Fase Atual</span>
-          <span class="hero-meta-value">Aguardando Kick-off</span>
-        </div>
+  <div class="proj-hero">
+    <div class="proj-hero-top">
+      <div>
+        <div class="proj-id-label">PROJ-2026-004</div>
+        <div class="proj-title">Plataforma Interna de Gestão de Ideias de Inovação</div>
       </div>
+      <span class="badge badge-atencao">🟡 Atenção</span>
     </div>
-    <div class="hero-right">
-      <div class="score-ring">
-        <span class="score-big">100</span>
-        <span class="score-label">Qualidade Vera Veredito</span>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">Grupo Águia Branca</div></div>
+      <div class="meta-box alert"><div class="meta-box-label">Sponsor</div><div class="meta-box-value">⚠️ A designar</div></div>
+      <div class="meta-box"><div class="meta-box-label">BAC</div><div class="meta-box-value">R$ 90.000</div></div>
+      <div class="meta-box"><div class="meta-box-label">Go-live</div><div class="meta-box-value">30/11/2026</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">21/30 (70%) ✅</div></div>
+      <div class="meta-box"><div class="meta-box-label">Vera Veredito</div><div class="meta-box-value">10,0/10 ⭐</div></div>
+      <div class="meta-box"><div class="meta-box-label">Aprovação Final</div><div class="meta-box-value">✅ (ciência NC)</div></div>
+      <div class="meta-box alert"><div class="meta-box-label">CB-01 Prazo</div><div class="meta-box-value">13/06/2026</div></div>
+    </div>
+  </div>
+
+  <div class="bloqueante-box">
+    <div class="bloqueante-title">⛔ Condição Bloqueante Ativa — CB-01</div>
+    <div class="bloqueante-item"><strong>Sponsor executivo não identificado.</strong> A execução do projeto NÃO pode iniciar sem a designação formal de um Diretor ou superior como sponsor.<br><span>Responsável: Jadson | Prazo: 13/06/2026 | Risco: RSK-01 (CRÍTICO)</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Semáforo de Dimensões</div>
+      <table class="sem-table">
+        <tr><td class="dim">Prazo</td><td><span class="dot dot-y"></span>ATENÇÃO — Execução depende de sponsor até 13/06</td></tr>
+        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>NORMAL — Sem gastos; instrução absorvida pelo VMO</td></tr>
+        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>NORMAL — 37 RFs + 10 RNFs documentados</td></tr>
+        <tr><td class="dim">Riscos</td><td><span class="dot dot-r"></span>ALERTA — 3 riscos CRÍTICOS (RSK-01, 02, 03)</td></tr>
+        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>NORMAL — Documentação completa e revisada</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title">Revisão de Qualidade</div>
+      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">10,0 / 10 — EXCELÊNCIA ⭐</span></div>
+      <div class="qa-row"><span>Gabriel Governança</span><span class="score-fail">❌ NC-CRÍTICA — Sponsor ausente</span></div>
+      <div class="qa-row"><span>Aprovação Marcelo</span><span class="score-cond">✅ Aprovado com ciência da NC</span></div>
+      <br>
+      <div class="section-title">Progresso</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Instrução VMO (100%)</span><span>100%</span></div>
+        <div class="progress-bar"><div class="fill fill-yellow" style="width:100%"></div></div>
       </div>
-      <div class="qual-score">
-        <span class="qual-big">21/30</span>
-        <span class="qual-label">Qualificação Felipe</span>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Execução — BLOQUEADA</span><span>0%</span></div>
+        <div class="progress-bar"><div class="fill fill-yellow" style="width:0%"></div></div>
       </div>
     </div>
   </div>
 
-  <!-- DOWNLOADS -->
-  <div class="downloads-section">
-    <div class="downloads-header">
-      <div class="downloads-title">📥 Documentos para Download</div>
-      <div class="downloads-sub">9 documentos individuais (.md) · Pacote consolidado (.md e .docx)</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Marcos Críticos</div>
+      <div class="milestone-row"><div class="ms-date">13/06/2026</div><div class="ms-label"><strong>Sponsor confirmado + orçamento aprovado</strong></div><div class="ms-check ms-block">⚠️ BLOQUEANTE</div></div>
+      <div class="milestone-row"><div class="ms-date">16/06/2026</div><div class="ms-label">Kick-off oficial</div><div class="ms-check ms-pend">🔲 Aguarda CB</div></div>
+      <div class="milestone-row"><div class="ms-date">30/06/2026</div><div class="ms-label">Planejamento detalhado + backlog</div><div class="ms-check ms-pend">🔲</div></div>
+      <div class="milestone-row"><div class="ms-date">11/08/2026</div><div class="ms-label">MVP (M1 + M2) em homologação</div><div class="ms-check ms-pend">🔲</div></div>
+      <div class="milestone-row"><div class="ms-date">30/11/2026</div><div class="ms-label"><strong>Go-live em produção — CRÍTICO</strong></div><div class="ms-check ms-block">🎯 Meta</div></div>
     </div>
-
-    <!-- Pacotes completos -->
-    <div class="downloads-grid" style="margin-bottom:12px">
-      <a class="download-btn package" href="docs/PROJ-2026-004-pacote-completo.docx" download>
-        <span class="dl-icon">📄</span>
-        <div class="dl-info">
-          <div class="dl-name">Pacote Completo</div>
-          <div class="dl-type">Todos os 9 documentos • Word</div>
-        </div>
-        <span class="dl-badge docx">.docx</span>
-      </a>
-      <a class="download-btn package" href="docs/PROJ-2026-004-pacote-completo.md" download>
-        <span class="dl-icon">📝</span>
-        <div class="dl-info">
-          <div class="dl-name">Pacote Completo</div>
-          <div class="dl-type">Todos os 9 documentos • Markdown</div>
-        </div>
-        <span class="dl-badge pkg">.md</span>
-      </a>
-    </div>
-
-    <hr class="section-sep">
-
-    <!-- Documentos individuais -->
-    <div class="downloads-grid">
-      <a class="download-btn" href="docs/01-demanda-coletada.md" download>
-        <span class="dl-icon">📥</span>
-        <div class="dl-info">
-          <div class="dl-name">01 — Demanda Coletada</div>
-          <div class="dl-type">Iara Inbound • 12 lacunas</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/02-qualificacao.md" download>
-        <span class="dl-icon">🔍</span>
-        <div class="dl-info">
-          <div class="dl-name">02 — Qualificação</div>
-          <div class="dl-type">Felipe Filtro • 21/30 (70%)</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/03-tap-canvas-plano-geral.md" download>
-        <span class="dl-icon">📋</span>
-        <div class="dl-info">
-          <div class="dl-name">03 — TAP + PM Canvas + Plano</div>
-          <div class="dl-type">Diana Documento • 10 planos</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/04-erf-requisitos.md" download>
-        <span class="dl-icon">⚙️</span>
-        <div class="dl-info">
-          <div class="dl-name">04 — ERF — Requisitos</div>
-          <div class="dl-type">Rafael Requisito • 37 RFs + 10 RNFs</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/05-cronograma.md" download>
-        <span class="dl-icon">📅</span>
-        <div class="dl-info">
-          <div class="dl-name">05 — Cronograma</div>
-          <div class="dl-type">Carlos Cronograma • WBS + 9 marcos</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/06-plano-riscos.md" download>
-        <span class="dl-icon">⚠️</span>
-        <div class="dl-info">
-          <div class="dl-name">06 — Plano de Riscos</div>
-          <div class="dl-type">Pedro Perigo • 12 riscos mapeados</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/07-kpis.md" download>
-        <span class="dl-icon">📊</span>
-        <div class="dl-info">
-          <div class="dl-name">07 — KPIs e Métricas</div>
-          <div class="dl-type">Marcela Métrica • EVM + 5 KRs</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/08-status-report.md" download>
-        <span class="dl-icon">📝</span>
-        <div class="dl-info">
-          <div class="dl-name">08 — Status Report #001</div>
-          <div class="dl-type">Sara Status • + Pesquisa satisfação</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
-      <a class="download-btn" href="docs/09-revisao-qualidade.md" download>
-        <span class="dl-icon">✅</span>
-        <div class="dl-info">
-          <div class="dl-name">09 — Revisão de Qualidade</div>
-          <div class="dl-type">Vera Veredito • Score 100/100</div>
-        </div>
-        <span class="dl-badge md">.md</span>
-      </a>
+    <div class="card">
+      <div class="section-title">Riscos Críticos</div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-01 — Sponsor não identificado (score 20) — BLOQUEANTE</span></div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-02 — Atraso no início da execução (score 15)</span></div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-03 — Scope creep durante execução (score 16)</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>RSK-11 — Volume de defeitos no UAT (score 12)</span></div>
+      <br>
+      <div class="section-title">Próximos Passos</div>
+      <div class="risk-row">🔴 <strong>Jadson: identificar e confirmar sponsor (Diretor+) até 13/06</strong></div>
+      <div class="risk-row">🔴 Sponsor: aprovar orçamento de R$ 90.000 até 13/06</div>
+      <div class="risk-row">📌 Jadson + TI: definir modelo de execução (interno/externo/misto)</div>
     </div>
   </div>
 
-  <!-- ALERT -->
-  <div class="alert-blocker">
-    <span class="alert-icon">🔴</span>
-    <div>
-      <div class="alert-title">Condição Bloqueante — Ação Urgente Necessária</div>
-      <div class="alert-text">
-        O projeto <strong>não pode iniciar a execução</strong> até que o sponsor executivo seja identificado e o orçamento de R$ 90.000 seja formalmente aprovado.
-        <strong>Prazo-limite: 13/06/2026.</strong> Responsável: Jadson + Liderança do Grupo Águia Branca.
-      </div>
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">Documentos do Projeto</div>
+    <div class="docs-grid">
+      <a class="doc-link" href="docs/PROJ-2026-004/01-qualificacao.md"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/02-demanda-coletada.md"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/03-tap-canvas-plano-geral.md"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">TAP + PM Canvas + Plano Geral</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/04-erf-requisitos.md"><div class="doc-icon">📝</div><div class="doc-info"><div class="doc-name">ERF — Especificação de Requisitos</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/05-cronograma.md"><div class="doc-icon">📅</div><div class="doc-info"><div class="doc-name">Cronograma</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/06-plano-riscos.md"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">Plano de Riscos</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/07-kpis.md"><div class="doc-icon">📊</div><div class="doc-info"><div class="doc-name">Framework de KPIs</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/08-status-report.md"><div class="doc-icon">📈</div><div class="doc-info"><div class="doc-name">Status Report</div><div class="doc-phase"><span class="phase-tag ph-m">04 · Monitoramento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/09-revisao-final.md"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Revisão de Qualidade (Vera)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/10-aprovacao-final.md"><div class="doc-icon">🏁</div><div class="doc-info"><div class="doc-name">Aprovação Final</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+      <a class="doc-link" href="docs/PROJ-2026-004/11-auditoria-governanca.md"><div class="doc-icon">🔍</div><div class="doc-info"><div class="doc-name">Auditoria de Governança (Gabriel)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
     </div>
   </div>
 
-  <!-- METRICS -->
-  <div class="metrics-row">
-    <div class="metric-card blue">
-      <div class="metric-value blue">37</div>
-      <div class="metric-label">Requisitos Funcionais</div>
-    </div>
-    <div class="metric-card purple">
-      <div class="metric-value purple">6</div>
-      <div class="metric-label">Módulos de Software</div>
-    </div>
-    <div class="metric-card green">
-      <div class="metric-value green">9</div>
-      <div class="metric-label">Marcos no Cronograma</div>
-    </div>
-    <div class="metric-card red">
-      <div class="metric-value red">12</div>
-      <div class="metric-label">Riscos Mapeados</div>
-    </div>
-    <div class="metric-card yellow">
-      <div class="metric-value yellow">R$90K</div>
-      <div class="metric-label">Orçamento Total</div>
-    </div>
-  </div>
-
-  <!-- NAV TABS -->
-  <div class="doc-nav">
-    <button class="doc-tab active" onclick="showTab('visao-geral')">
-      <span class="tab-icon">📊</span><span class="tab-label">Visão Geral</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('tap')">
-      <span class="tab-icon">📋</span><span class="tab-label">TAP</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('requisitos')">
-      <span class="tab-icon">⚙️</span><span class="tab-label">Requisitos</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('cronograma')">
-      <span class="tab-icon">📅</span><span class="tab-label">Cronograma</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('riscos')">
-      <span class="tab-icon">⚠️</span><span class="tab-label">Riscos</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('kpis')">
-      <span class="tab-icon">📈</span><span class="tab-label">KPIs</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('status')">
-      <span class="tab-icon">📝</span><span class="tab-label">Status</span>
-    </button>
-    <button class="doc-tab" onclick="showTab('pipeline')">
-      <span class="tab-icon">🤖</span><span class="tab-label">Pipeline</span>
-    </button>
-  </div>
-
-  <!-- TAB: VISÃO GERAL -->
-  <div id="tab-visao-geral" class="doc-section active">
-    <div class="section-title">Objetivo SMART</div>
-    <div class="smart-box">
-      <div class="label">Objetivo do Projeto</div>
-      <p>Desenvolver e entregar em produção uma plataforma web interna de gestão de ideias de inovação para o Grupo Águia Branca, com capacidade para atender <strong>100% dos colaboradores</strong> da holding e divisões, contemplando os <strong>6 módulos funcionais</strong> definidos no escopo, <strong>até 30 de novembro de 2026</strong>, com investimento máximo de <strong>R$ 90.000,00</strong>, obtendo homologação de pelo menos <strong>80% das funcionalidades</strong> pelo time de inovação em UAT formal e nota de satisfação ≥ 4,0/5,0, eliminando o custo anual de R$ 80.000–90.000 com plataforma terceirizada.</p>
-    </div>
-
-    <div class="section-title">Justificativa de Negócio</div>
-    <div class="cards-2">
-      <div class="content-card">
-        <h3><span class="icon">💸</span> Problema Atual</h3>
-        <p>Plataforma terceirizada custa <strong>R$ 80–90K/ano</strong> com modelo de licenciamento restritivo que impede a expansão para todos os colaboradores do Grupo (holding + VixPar + VAB + divisões de comércio).</p>
-        <p>Dependência de fornecedor externo impede customizações alinhadas ao processo interno de inovação do Grupo.</p>
-      </div>
-      <div class="content-card">
-        <h3><span class="icon">✅</span> Solução Proposta</h3>
-        <p>Plataforma proprietária com as mesmas funcionalidades + melhorias, escalável para todos os colaboradores sem custo adicional por usuário.</p>
-        <p><strong>Payback: 12 meses</strong> via rescisão do contrato atual. Investimento único de R$ 90K elimina custo recorrente equivalente.</p>
-      </div>
-    </div>
-
-    <div class="section-title">Escopo do Projeto</div>
-    <div class="scope-grid">
-      <div class="scope-box in">
-        <h4>✅ Dentro do Escopo</h4>
-        <ul class="scope-list">
-          <li>Portal web responsivo de cadastro de ideias (problema, ganhos, benefícios)</li>
-          <li>Módulo de campanhas e desafios lançados pelo time de inovação</li>
-          <li>Fluxo de aprovação pelo gestor da área do proponente</li>
-          <li>Mini gestão de projetos para implementação de ideias aprovadas</li>
-          <li>Módulo de mensuração de ganhos obtidos</li>
-          <li>Gestão de perfis (colaborador, gestor, inovação, admin)</li>
-          <li>Capacidade para todos os colaboradores do Grupo sem limite de licença</li>
-          <li>Testes de aceitação (UAT) com o time de inovação</li>
-          <li>Treinamento de administradores e time de inovação</li>
-          <li>Documentação técnica e manual do usuário</li>
-        </ul>
-      </div>
-      <div class="scope-box out">
-        <h4>🚫 Fora do Escopo</h4>
-        <ul class="scope-list">
-          <li>Integração com sistemas legados (ERP, RH, folha de pagamento)</li>
-          <li>Aplicativo mobile nativo (iOS/Android)</li>
-          <li>Migração de dados históricos da plataforma atual</li>
-          <li>Suporte pós-implantação além de 90 dias de garantia</li>
-          <li>Treinamento presencial de todos os colaboradores (divisões)</li>
-          <li>Hospedagem e infraestrutura (responsabilidade da TI do Grupo)</li>
-          <li>Integração com plataformas externas de crowdsourcing</li>
-          <li>Gamificação avançada, IA para triagem, mobile nativo</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="section-title">Critérios de Sucesso</div>
-    <table class="doc-table">
-      <thead><tr><th>#</th><th>Critério</th><th>Meta</th></tr></thead>
-      <tbody>
-        <tr><td>CS-01</td><td>Entrega em produção dentro do prazo</td><td>Go-live até 30/11/2026</td></tr>
-        <tr><td>CS-02</td><td>Entrega dentro do orçamento aprovado</td><td>Custo total ≤ R$ 90.000</td></tr>
-        <tr><td>CS-03</td><td>Cobertura funcional homologada em UAT</td><td>≥ 80% das funcionalidades aprovadas</td></tr>
-        <tr><td>CS-04</td><td>Escalabilidade para todos os colaboradores</td><td>500 usuários simultâneos sem degradação</td></tr>
-        <tr><td>CS-05</td><td>Satisfação do solicitante pós-implantação</td><td>Nota ≥ 4,0/5,0</td></tr>
-        <tr><td>CS-06</td><td>Eliminação do custo recorrente</td><td>Rescisão do contrato atual confirmada até jan/2027</td></tr>
-        <tr><td>CS-07</td><td>Prazo de aprovação de ideias operacional</td><td>Ciclo ideia → decisão ≤ 7 dias úteis</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-title">Orçamento Estimado</div>
-    <table class="doc-table">
-      <thead><tr><th>Item</th><th>Valor</th></tr></thead>
-      <tbody>
-        <tr><td>Desenvolvimento da plataforma</td><td>R$ 60.000,00</td></tr>
-        <tr><td>Testes, UAT e homologação</td><td>R$ 8.000,00</td></tr>
-        <tr><td>Implantação e go-live</td><td>R$ 5.000,00</td></tr>
-        <tr><td>Treinamento (admins + time de inovação)</td><td>R$ 2.000,00</td></tr>
-        <tr class="total-row"><td>Subtotal (Baseline)</td><td>R$ 75.000,00</td></tr>
-        <tr class="total-row"><td>Contingência (20%)</td><td>R$ 15.000,00</td></tr>
-        <tr class="total-row"><td>TOTAL COM CONTINGÊNCIA</td><td>R$ 90.000,00</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TAB: TAP -->
-  <div id="tab-tap" class="doc-section">
-    <div class="section-title">Identificação do Projeto</div>
-    <table class="doc-table">
-      <thead><tr><th>Campo</th><th>Informação</th></tr></thead>
-      <tbody>
-        <tr><td>Código</td><td>PROJ-2026-004</td></tr>
-        <tr><td>Nome</td><td>Plataforma Interna de Gestão de Ideias de Inovação</td></tr>
-        <tr><td>Data de Emissão</td><td>2026-05-14</td></tr>
-        <tr><td>Solicitante</td><td>Jadson — Área de Inovação, Grupo Águia Branca</td></tr>
-        <tr><td>Sponsor</td><td>⚠ A DEFINIR (condição bloqueante)</td></tr>
-        <tr><td>Gerente do Projeto</td><td>A DESIGNAR (pós aprovação do TAP)</td></tr>
-        <tr><td>Cliente/Beneficiário</td><td>Grupo Águia Branca (holding, VixPar, VAB e divisões)</td></tr>
-        <tr><td>Qualificação</td><td>21/30 — 70% — APROVADO COM CONDIÇÕES</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-title">Premissas</div>
-    <table class="doc-table">
-      <thead><tr><th>#</th><th>Premissa</th></tr></thead>
-      <tbody>
-        <tr><td>P-01</td><td>Sponsor identificado e designado antes do início do planejamento detalhado</td></tr>
-        <tr><td>P-02</td><td>Orçamento de até R$ 90.000 aprovado antes do início da execução</td></tr>
-        <tr><td>P-03</td><td>TI do Grupo provisionará ambientes de homologação e produção sem custo ao projeto</td></tr>
-        <tr><td>P-04</td><td>Jadson disponível para validações e aprovações ao longo do projeto</td></tr>
-        <tr><td>P-05</td><td>Modelo de execução definido até o kick-off (16/06/2026)</td></tr>
-        <tr><td>P-06</td><td>Sem integrações com sistemas legados no escopo desta fase</td></tr>
-        <tr><td>P-07</td><td>Colaboradores têm acesso à internet corporativa para uso do portal</td></tr>
-        <tr><td>P-08</td><td>Prazo de 30/11/2026 é fixo e não negociável</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-title">PM Canvas — 9 Blocos</div>
-    <div class="cards-3">
-      <div class="content-card">
-        <h3><span class="icon">🎯</span> Por que fazer?</h3>
-        <p>Eliminar R$ 80–90K/ano de custo recorrente com plataforma terceirizada de licenciamento restritivo que impede a democratização da inovação no Grupo. Payback imediato no primeiro ano de operação.</p>
-      </div>
-      <div class="content-card">
-        <h3><span class="icon">📦</span> O que entregar?</h3>
-        <p>Plataforma web proprietária com 6 módulos: Portal de Ideias, Campanhas/Desafios, Aprovação Gerencial, Mini Gestão de Projetos, Mensuração de Ganhos e Gestão de Usuários.</p>
-      </div>
-      <div class="content-card">
-        <h3><span class="icon">👥</span> Stakeholders</h3>
-        <p>Jadson (solicitante/focal), Sponsor (⚠ a definir), GP VMO, Time de Inovação, Gestores de Área, Colaboradores do Grupo, TI do Grupo, PMO VMO.</p>
-      </div>
-      <div class="content-card">
-        <h3><span class="icon">🏗️</span> Equipe</h3>
-        <p>GP (a designar), Arquiteto/Tech Lead, 2× Dev Full Stack, Analista UX/Requisitos, QA. Modelo de execução (interno/externo/misto) a definir até kick-off.</p>
-      </div>
-      <div class="content-card">
-        <h3><span class="icon">🔒</span> Restrições</h3>
-        <p>Orçamento máximo R$ 90K. Prazo 30/11/2026 inegociável. Sem SaaS recorrente. Sem integrações com sistemas legados nesta fase.</p>
-      </div>
-      <div class="content-card">
-        <h3><span class="icon">⚠️</span> Top 3 Riscos</h3>
-        <p><strong>1.</strong> Sponsor não confirmado (Crítico). <strong>2.</strong> Scope creep durante execução (Crítico). <strong>3.</strong> Prazo insuficiente para desenvolvimento (Alto).</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB: REQUISITOS -->
-  <div id="tab-requisitos" class="doc-section">
-    <div class="section-title">6 Módulos — 37 Requisitos Funcionais</div>
-    <div class="modules-grid">
-      <div class="module-card">
-        <div class="module-code">Módulo M1</div>
-        <div class="module-name">Autenticação e Gestão de Usuários</div>
-        <div class="module-rfs">RF001 – RF006 · 6 requisitos</div>
-        <div class="rf-pills">
-          <span class="rf-pill">Auto-registro</span>
-          <span class="rf-pill">Login seguro</span>
-          <span class="rf-pill">RBAC</span>
-          <span class="rf-pill">Perfis</span>
-          <span class="rf-pill">Domínios corporativos</span>
-          <span class="rf-pill">Recuperação de senha</span>
-        </div>
-        <div class="mosco-row">
-          <span class="mosco-badge must">6 Must Have</span>
-        </div>
-      </div>
-      <div class="module-card m2">
-        <div class="module-code">Módulo M2</div>
-        <div class="module-name">Portal de Ideias</div>
-        <div class="module-rfs">RF007 – RF014 · 8 requisitos</div>
-        <div class="rf-pills">
-          <span class="rf-pill">Submissão de ideias</span>
-          <span class="rf-pill">Problema/Ganhos/Benefícios</span>
-          <span class="rf-pill">Listagem</span>
-          <span class="rf-pill">Busca/Filtro</span>
-          <span class="rf-pill">Comentários</span>
-          <span class="rf-pill">Histórico</span>
-        </div>
-        <div class="mosco-row">
-          <span class="mosco-badge must">6 Must Have</span>
-          <span class="mosco-badge should">2 Should Have</span>
-        </div>
-      </div>
-      <div class="module-card m3">
-        <div class="module-code">Módulo M3</div>
-        <div class="module-name">Campanhas e Desafios</div>
-        <div class="module-rfs">RF015 – RF020 · 6 requisitos</div>
-        <div class="rf-pills">
-          <span class="rf-pill">Criar campanha</span>
-          <span class="rf-pill">Publicar/Encerrar</span>
-          <span class="rf-pill">Vincular ideias</span>
-          <span class="rf-pill">Visualizar campanhas</span>
-          <span class="rf-pill">Resumo de resultados</span>
-        </div>
-        <div class="mosco-row">
-          <span class="mosco-badge must">4 Must Have</span>
-          <span class="mosco-badge should">2 Should Have</span>
-        </div>
-      </div>
-      <div class="module-card m4">
-        <div class="module-code">Módulo M4</div>
-        <div class="module-name">Fluxo de Aprovação Gerencial</div>
-        <div class="module-rfs">RF021 – RF027 · 7 requisitos</div>
-        <div class="rf-pills">
-          <span class="rf-pill">Fila de aprovação</span>
-          <span class="rf-pill">Aprovar/Rejeitar</span>
-          <span class="rf-pill">Justificativa</span>
-          <span class="rf-pill">Notificações</span>
-          <span class="rf-pill">SLA de aprovação</span>
-          <span class="rf-pill">Histórico/Auditoria</span>
-        </div>
-        <div class="mosco-row">
-          <span class="mosco-badge must">5 Must Have</span>
-          <span class="mosco-badge should">2 Should Have</span>
-        </div>
-      </div>
-      <div class="module-card m5">
-        <div class="module-code">Módulo M5</div>
-        <div class="module-name">Mini Gestão de Projetos</div>
-        <div class="module-rfs">RF028 – RF032 · 5 requisitos</div>
-        <div class="rf-pills">
-          <span class="rf-pill">Criar projeto de ideia</span>
-          <span class="rf-pill">Tarefas</span>
-          <span class="rf-pill">Responsáveis</span>
-          <span class="rf-pill">Prazos</span>
-          <span class="rf-pill">Progresso</span>
-        </div>
-        <div class="mosco-row">
-          <span class="mosco-badge must">3 Must Have</span>
-          <span class="mosco-badge should">2 Should Have</span>
-        </div>
-      </div>
-      <div class="module-card m6">
-        <div class="module-code">Módulo M6</div>
-        <div class="module-name">Mensuração de Ganhos</div>
-        <div class="module-rfs">RF033 – RF037 · 5 requisitos</div>
-        <div class="rf-pills">
-          <span class="rf-pill">Registrar ganhos</span>
-          <span class="rf-pill">Financeiro/Não-financeiro</span>
-          <span class="rf-pill">Dashboard resultados</span>
-          <span class="rf-pill">Exportação</span>
-          <span class="rf-pill">Relatórios</span>
-        </div>
-        <div class="mosco-row">
-          <span class="mosco-badge must">3 Must Have</span>
-          <span class="mosco-badge could">2 Could Have</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-title">Requisitos Não-Funcionais — 10 RNFs</div>
-    <table class="doc-table">
-      <thead><tr><th>Categoria</th><th>Requisito</th><th>Meta</th></tr></thead>
-      <tbody>
-        <tr><td>Performance</td><td>Tempo de resposta sob carga</td><td>&lt; 3 segundos (95% das req.) com 500 usuários simultâneos</td></tr>
-        <tr><td>Performance</td><td>Usuários simultâneos</td><td>500 sem degradação</td></tr>
-        <tr><td>Capacidade</td><td>Usuários cadastrados</td><td>10.000+ sem degradação</td></tr>
-        <tr><td>Disponibilidade</td><td>Uptime em horário comercial</td><td>≥ 99,5%</td></tr>
-        <tr><td>Segurança</td><td>Protocolo de comunicação</td><td>HTTPS obrigatório, TLS 1.2+</td></tr>
-        <tr><td>Segurança</td><td>Armazenamento de senhas</td><td>bcrypt ou Argon2</td></tr>
-        <tr><td>Segurança</td><td>Controle de acesso</td><td>RBAC com 4 perfis distintos</td></tr>
-        <tr><td>Manutenibilidade</td><td>Containerização</td><td>Docker (deploy reproduzível)</td></tr>
-        <tr><td>Qualidade</td><td>Cobertura de testes</td><td>≥ 70% do código coberto</td></tr>
-        <tr><td>Usabilidade</td><td>Responsividade</td><td>Compatível com navegadores web modernos e mobile via browser</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TAB: CRONOGRAMA -->
-  <div id="tab-cronograma" class="doc-section">
-    <div class="section-title">Marcos do Projeto</div>
-    <div class="timeline">
-      <div class="timeline-item done">
-        <div class="tl-date">2026-05-14</div>
-        <div class="tl-title">M-00 — Documentação de Instrução Concluída</div>
-        <div class="tl-sub">TAP, PM Canvas, Plano Geral, ERF, Cronograma, Riscos, KPIs, Status Report (Score 100/100)</div>
-        <span class="tl-badge done">Concluído</span>
-      </div>
-      <div class="timeline-item blocker">
-        <div class="tl-date">Até 2026-06-13</div>
-        <div class="tl-title">M-01 — Sponsor Confirmado + Orçamento Aprovado</div>
-        <div class="tl-sub">Condição bloqueante para início do projeto. Responsável: Jadson + Sponsor executivo</div>
-        <span class="tl-badge blocker">⚠ Bloqueante</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-06-16</div>
-        <div class="tl-title">M-02 — Kick-off Oficial</div>
-        <div class="tl-sub">Reunião com todos os stakeholders. Início do planejamento detalhado.</div>
-        <span class="tl-badge pending">Aguardando M-01</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-06-30</div>
-        <div class="tl-title">M-03 — Planejamento Detalhado Concluído</div>
-        <div class="tl-sub">Backlog priorizado, wireframes aprovados, arquitetura definida, ambientes de dev configurados</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-08-11</div>
-        <div class="tl-title">M-04 — MVP em Homologação (M1 + M2)</div>
-        <div class="tl-sub">Portal de ideias + autenticação funcionando. Review Sprint 1 com Jadson em 12/08.</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-09-12</div>
-        <div class="tl-title">M-05 — M3 + M4 em Homologação</div>
-        <div class="tl-sub">Campanhas/desafios + fluxo de aprovação gerencial completo. Review Sprint 2 em 15/09.</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-10-27</div>
-        <div class="tl-title">M-06 — Todos os Módulos Integrados</div>
-        <div class="tl-sub">M5 (gestão de projetos) + M6 (mensuração de ganhos) + testes sistêmicos integrados</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-11-07</div>
-        <div class="tl-title">M-07 — Plataforma Liberada para UAT</div>
-        <div class="tl-sub">Zero defeitos P1. Performance ≥ 500 usuários simultâneos validada.</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-11-14</div>
-        <div class="tl-title">M-08 — UAT Aprovado</div>
-        <div class="tl-sub">Meta: ≥ 80% dos casos de teste aprovados por Jadson e time de inovação</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-      <div class="timeline-item critical">
-        <div class="tl-date">2026-11-28</div>
-        <div class="tl-title">M-09 — Go-Live em Produção 🚀</div>
-        <div class="tl-sub">Limite máximo: 30/11/2026. Margem de 2 dias úteis. Comunicado interno + acesso liberado para todos os colaboradores.</div>
-        <span class="tl-badge critico">⭐ Marco Crítico</span>
-      </div>
-      <div class="timeline-item pending">
-        <div class="tl-date">2026-12-15</div>
-        <div class="tl-title">M-10 — Encerramento Formal</div>
-        <div class="tl-sub">Documentação técnica, relatório final, lições aprendidas, aceite do cliente.</div>
-        <span class="tl-badge pending">Pendente</span>
-      </div>
-    </div>
-
-    <div class="section-title">Caminho Crítico</div>
-    <div class="critical-path">
-      <div class="cp-chain">
-        <span class="cp-node red">⚠ Sponsor/Orçamento</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">Kick-off 16/06</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">Setup Ambiente</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">M1: Auth</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">M2: Portal</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">M4: Aprovação</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">M5: Projetos</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">Integração + Testes</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">UAT</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node">Correções</span>
-        <span class="cp-arrow">→</span>
-        <span class="cp-node end">✓ Go-Live 28/11</span>
-      </div>
-    </div>
-
-    <div class="section-title">Buffer e Folga por Módulo</div>
-    <table class="doc-table">
-      <thead><tr><th>Fase</th><th>Duração Bruta (d.u.)</th><th>Buffer 15%</th><th>Duração Final</th><th>Caminho Crítico</th><th>Folga</th></tr></thead>
-      <tbody>
-        <tr><td>Planejamento Detalhado</td><td>10</td><td>—</td><td>10</td><td>Sim</td><td>0</td></tr>
-        <tr><td>M1 — Auth e Usuários</td><td>10</td><td>+2</td><td>12</td><td>Sim</td><td>0</td></tr>
-        <tr><td>M2 — Portal de Ideias</td><td>12</td><td>+2</td><td>14</td><td>Sim</td><td>0</td></tr>
-        <tr><td>M3 — Campanhas</td><td>8</td><td>+2</td><td>10</td><td><strong>Não</strong></td><td>~5 d.u.</td></tr>
-        <tr><td>M4 — Aprovação Gerencial</td><td>12</td><td>+2</td><td>14</td><td>Sim</td><td>0</td></tr>
-        <tr><td>M5 — Gestão de Projetos</td><td>10</td><td>+2</td><td>12</td><td>Sim</td><td>0</td></tr>
-        <tr><td>M6 — Mensuração de Ganhos</td><td>8</td><td>+2</td><td>10</td><td><strong>Não</strong></td><td>~3 d.u.</td></tr>
-        <tr><td>Integração + Testes Sistêmicos</td><td>8</td><td>—</td><td>8</td><td>Sim</td><td>0</td></tr>
-        <tr><td>UAT</td><td>10</td><td>—</td><td>10</td><td>Sim</td><td>0</td></tr>
-        <tr><td>Implantação e Go-live</td><td>10</td><td>—</td><td>10</td><td>Sim</td><td>0</td></tr>
-        <tr class="total-row"><td>TOTAL</td><td>98</td><td>+12</td><td>110</td><td colspan="2">Folga real: ~10 d.u.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TAB: RISCOS -->
-  <div id="tab-riscos" class="doc-section">
-    <div class="section-title">Registro de Riscos — 12 Riscos Identificados</div>
-    <table class="doc-table">
-      <thead><tr><th>Código</th><th>Risco</th><th>P</th><th>I</th><th>Severidade</th><th>Estratégia</th><th>Dono</th></tr></thead>
-      <tbody>
-        <tr class="risk-row-critical">
-          <td>RSK-01</td>
-          <td>Sponsor não identificado / orçamento não aprovado a tempo</td>
-          <td><span class="prob-pill p4">4</span></td>
-          <td>5</td>
-          <td><span class="sev-badge sev-critico">Crítico (20)</span></td>
-          <td>Eliminar</td>
-          <td>GP/PMO</td>
-        </tr>
-        <tr class="risk-row-critical">
-          <td>RSK-02</td>
-          <td>Atraso no início da execução pós kick-off</td>
-          <td><span class="prob-pill p3">3</span></td>
-          <td>5</td>
-          <td><span class="sev-badge sev-critico">Crítico (15)</span></td>
-          <td>Mitigar</td>
-          <td>GP</td>
-        </tr>
-        <tr class="risk-row-critical">
-          <td>RSK-03</td>
-          <td>Scope creep — requisições de novas funcionalidades</td>
-          <td><span class="prob-pill p4">4</span></td>
-          <td>4</td>
-          <td><span class="sev-badge sev-critico">Crítico (16)</span></td>
-          <td>Mitigar</td>
-          <td>GP</td>
-        </tr>
-        <tr class="risk-row-high">
-          <td>RSK-04</td>
-          <td>Prazo insuficiente para desenvolvimento completo</td>
-          <td><span class="prob-pill p3">3</span></td>
-          <td>4</td>
-          <td><span class="sev-badge sev-alto">Alto (12)</span></td>
-          <td>Mitigar (MVP)</td>
-          <td>GP+Tech Lead</td>
-        </tr>
-        <tr class="risk-row-high">
-          <td>RSK-09</td>
-          <td>Vulnerabilidades de segurança em auditoria ou produção</td>
-          <td><span class="prob-pill p2">2</span></td>
-          <td>5</td>
-          <td><span class="sev-badge sev-alto">Alto (10)</span></td>
-          <td>Mitigar</td>
-          <td>Tech Lead+QA</td>
-        </tr>
-        <tr class="risk-row-high">
-          <td>RSK-11</td>
-          <td>Volume de defeitos no UAT acima da capacidade de correção</td>
-          <td><span class="prob-pill p3">3</span></td>
-          <td>4</td>
-          <td><span class="sev-badge sev-alto">Alto (12)</span></td>
-          <td>Mitigar</td>
-          <td>GP+QA</td>
-        </tr>
-        <tr>
-          <td>RSK-05</td>
-          <td>Indisponibilidade de recurso-chave durante execução</td>
-          <td><span class="prob-pill p2">2</span></td>
-          <td>4</td>
-          <td><span class="sev-badge sev-medio">Médio (8)</span></td>
-          <td>Mitigar</td>
-          <td>GP</td>
-        </tr>
-        <tr>
-          <td>RSK-06</td>
-          <td>Ambiente de produção (TI do Grupo) não provisionado a tempo</td>
-          <td><span class="prob-pill p3">3</span></td>
-          <td>3</td>
-          <td><span class="sev-badge sev-medio">Médio (9)</span></td>
-          <td>Mitigar</td>
-          <td>GP+TI Grupo</td>
-        </tr>
-        <tr>
-          <td>RSK-07</td>
-          <td>Baixa adoção pelos colaboradores após go-live</td>
-          <td><span class="prob-pill p2">2</span></td>
-          <td>3</td>
-          <td><span class="sev-badge sev-medio">Médio (6)</span></td>
-          <td>Mitigar</td>
-          <td>Jadson</td>
-        </tr>
-        <tr>
-          <td>RSK-08</td>
-          <td>Performance/carga insatisfatória (&lt; 500 usuários simultâneos)</td>
-          <td><span class="prob-pill p2">2</span></td>
-          <td>4</td>
-          <td><span class="sev-badge sev-medio">Médio (8)</span></td>
-          <td>Mitigar</td>
-          <td>Tech Lead</td>
-        </tr>
-        <tr>
-          <td>RSK-10</td>
-          <td>Cláusula de fidelidade na rescisão do contrato terceirizado</td>
-          <td><span class="prob-pill p2">2</span></td>
-          <td>3</td>
-          <td><span class="sev-badge sev-medio">Médio (6)</span></td>
-          <td>Mitigar</td>
-          <td>Jadson+Suprimentos</td>
-        </tr>
-        <tr>
-          <td>RSK-12</td>
-          <td>Jadson indisponível em período crítico de validação</td>
-          <td><span class="prob-pill p2">2</span></td>
-          <td>3</td>
-          <td><span class="sev-badge sev-medio">Médio (6)</span></td>
-          <td>Mitigar</td>
-          <td>Jadson/GP</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="section-title">Reserva de Contingência</div>
-    <table class="doc-table">
-      <thead><tr><th>Risco</th><th>Valor Alocado</th><th>Gatilho de Uso</th></tr></thead>
-      <tbody>
-        <tr><td>RSK-03 — Scope creep</td><td>R$ 3.000</td><td>Mudanças menores aprovadas sem impacto crítico</td></tr>
-        <tr><td>RSK-04 — Prazo apertado</td><td>R$ 5.000</td><td>Contratação de recurso adicional por 2–3 semanas</td></tr>
-        <tr><td>RSK-05 — Indisponibilidade de recurso</td><td>R$ 2.500</td><td>Custo de onboarding de substituto</td></tr>
-        <tr class="total-row"><td>Total Alocado</td><td>R$ 10.500</td><td></td></tr>
-        <tr class="total-row"><td>Reserva Residual</td><td>R$ 4.500</td><td>Eventos não cobertos</td></tr>
-        <tr class="total-row"><td>TOTAL CONTINGÊNCIA</td><td>R$ 15.000</td><td>Aprovação do GP (≤R$5K) ou sponsor (&gt;R$5K)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TAB: KPIs -->
-  <div id="tab-kpis" class="doc-section">
-    <div class="section-title">EVM — Curva S de Valor Planejado</div>
-    <div class="evm-phases">
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">Planejamento</div>
-        <div class="evm-phase-period">16/06 – 30/06</div>
-        <div class="evm-pv">R$ 6.000</div>
-        <div class="evm-pv-acc">Acumulado: R$ 6K (8%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:8%"></div></div>
-      </div>
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">Sprint 1 — M1+M2</div>
-        <div class="evm-phase-period">01/07 – 11/08</div>
-        <div class="evm-pv">R$ 22.500</div>
-        <div class="evm-pv-acc">Acumulado: R$ 28.5K (38%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
-      </div>
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">Sprint 2 — M3+M4</div>
-        <div class="evm-phase-period">13/08 – 12/09</div>
-        <div class="evm-pv">R$ 15.000</div>
-        <div class="evm-pv-acc">Acumulado: R$ 43.5K (58%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:58%"></div></div>
-      </div>
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">Sprint 3 — M5+M6</div>
-        <div class="evm-phase-period">16/09 – 27/10</div>
-        <div class="evm-pv">R$ 15.000</div>
-        <div class="evm-pv-acc">Acumulado: R$ 58.5K (78%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
-      </div>
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">Integração + Testes</div>
-        <div class="evm-phase-period">29/10 – 07/11</div>
-        <div class="evm-pv">R$ 6.000</div>
-        <div class="evm-pv-acc">Acumulado: R$ 64.5K (86%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:86%"></div></div>
-      </div>
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">UAT</div>
-        <div class="evm-phase-period">10/11 – 14/11</div>
-        <div class="evm-pv">R$ 4.500</div>
-        <div class="evm-pv-acc">Acumulado: R$ 69K (92%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
-      </div>
-      <div class="evm-phase-card">
-        <div class="evm-phase-name">Implantação</div>
-        <div class="evm-phase-period">17/11 – 28/11</div>
-        <div class="evm-pv">R$ 6.000</div>
-        <div class="evm-pv-acc">Acumulado: R$ 75K (100%)</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-      </div>
-    </div>
-
-    <div class="section-title">KPIs de Entrega</div>
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-code">KPI-T01</div>
-        <div class="kpi-name">Tempo de Resposta sob Carga</div>
-        <div class="kpi-meta">
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Meta</span><span class="kpi-meta-val">&lt; 3s (95% req.)</span></div>
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Carga</span><span class="kpi-meta-val">500 usuários simultâneos</span></div>
-        </div>
-        <span class="kpi-status">⚪ A medir (out/2026)</span>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-code">KPI-D02</div>
-        <div class="kpi-name">Cobertura de Testes Unitários</div>
-        <div class="kpi-meta">
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Meta</span><span class="kpi-meta-val">≥ 70% do código</span></div>
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Medição</span><span class="kpi-meta-val">CI/CD automático</span></div>
-        </div>
-        <span class="kpi-status">⚪ A medir (por sprint)</span>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-code">KPI-U01</div>
-        <div class="kpi-name">Taxa de Aprovação UAT</div>
-        <div class="kpi-meta">
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Meta</span><span class="kpi-meta-val">≥ 80% dos casos</span></div>
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Todos críticos</span><span class="kpi-meta-val">100%</span></div>
-        </div>
-        <span class="kpi-status">⚪ A medir (nov/2026)</span>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-code">KPI-D04/05</div>
-        <div class="kpi-name">Defeitos no Go-Live</div>
-        <div class="kpi-meta">
-          <div class="kpi-meta-row"><span class="kpi-meta-key">P1 (críticos)</span><span class="kpi-meta-val">0 abertos</span></div>
-          <div class="kpi-meta-row"><span class="kpi-meta-key">P2 (altos)</span><span class="kpi-meta-val">≤ 5 abertos</span></div>
-        </div>
-        <span class="kpi-status">⚪ A medir (nov/2026)</span>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-code">KPI-U03</div>
-        <div class="kpi-name">Satisfação no UAT</div>
-        <div class="kpi-meta">
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Meta</span><span class="kpi-meta-val">≥ 4,0/5,0</span></div>
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Avaliador</span><span class="kpi-meta-val">Jadson + time inovação</span></div>
-        </div>
-        <span class="kpi-status">⚪ A medir (nov/2026)</span>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-code">KPI-T02</div>
-        <div class="kpi-name">Disponibilidade Pós-Go-Live</div>
-        <div class="kpi-meta">
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Meta</span><span class="kpi-meta-val">≥ 99% (horário comerc.)</span></div>
-          <div class="kpi-meta-row"><span class="kpi-meta-key">Medição</span><span class="kpi-meta-val">Monitoramento TI Grupo</span></div>
-        </div>
-        <span class="kpi-status">⚪ A medir (dez/2026+)</span>
-      </div>
-    </div>
-
-    <div class="section-title">Key Results — Pós-Entrega</div>
-    <table class="doc-table">
-      <thead><tr><th>KR</th><th>Resultado Esperado</th><th>Meta</th><th>Prazo de Apuração</th></tr></thead>
-      <tbody>
-        <tr><td>KR-01</td><td>Plataforma entregue no prazo e orçamento</td><td>Go-live até 30/11/2026 com custo ≤ R$90K</td><td>30/11/2026</td></tr>
-        <tr><td>KR-02</td><td>Adoção pelos colaboradores (30 dias)</td><td>≥ 50% dos usuários ativos acessaram + ≥ 30 ideias</td><td>28/12/2026</td></tr>
-        <tr><td>KR-03</td><td>Eliminação do custo recorrente</td><td>Rescisão do contrato terceirizado confirmada</td><td>28/02/2027</td></tr>
-        <tr><td>KR-04</td><td>Satisfação pós-Prêmio Inovação 2027</td><td>Nota ≥ 4,0/5,0 — Jadson e time de inovação</td><td>31/01/2027</td></tr>
-        <tr><td>KR-05</td><td>Cobertura funcional 30 dias pós-go-live</td><td>≥ 95% dos 37 RFs operacionais, 0 P1 abertos</td><td>28/12/2026</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TAB: STATUS -->
-  <div id="tab-status" class="doc-section">
-    <div class="section-title">Semáforo — Status Report #001 (2026-05-14)</div>
-    <div class="status-semaphore">
-      <div class="semaphore-item">
-        <div class="sem-icon">📅</div>
-        <div class="sem-label">Prazo</div>
-        <div class="sem-status yellow">🟡 Atenção</div>
-      </div>
-      <div class="semaphore-item">
-        <div class="sem-icon">💰</div>
-        <div class="sem-label">Custo</div>
-        <div class="sem-status green">🟢 Normal</div>
-      </div>
-      <div class="semaphore-item">
-        <div class="sem-icon">📦</div>
-        <div class="sem-label">Escopo</div>
-        <div class="sem-status green">🟢 Normal</div>
-      </div>
-      <div class="semaphore-item">
-        <div class="sem-icon">⚠️</div>
-        <div class="sem-label">Riscos</div>
-        <div class="sem-status red">🔴 Alerta</div>
-      </div>
-      <div class="semaphore-item">
-        <div class="sem-icon">✅</div>
-        <div class="sem-label">Qualidade</div>
-        <div class="sem-status green">🟢 Normal</div>
-      </div>
-    </div>
-
-    <div class="section-title">Pendências Críticas</div>
-    <div class="pendency-list">
-      <div class="pendency-item blocker">
-        <div class="pendency-content">
-          <div class="pendency-title">P-01 — Identificar e confirmar sponsor executivo</div>
-          <div class="pendency-resp">Responsável: Jadson · Condição bloqueante para início da execução</div>
-        </div>
-        <div class="pendency-deadline">13/06/2026</div>
-      </div>
-      <div class="pendency-item blocker">
-        <div class="pendency-content">
-          <div class="pendency-title">P-02 — Aprovar orçamento de até R$ 90.000</div>
-          <div class="pendency-resp">Responsável: Sponsor + Financeiro do Grupo · Condição bloqueante para execução</div>
-        </div>
-        <div class="pendency-deadline">13/06/2026</div>
-      </div>
-      <div class="pendency-item blocker">
-        <div class="pendency-content">
-          <div class="pendency-title">P-03 — Definir modelo de execução (TI interna / externo / misto)</div>
-          <div class="pendency-resp">Responsável: Jadson + TI do Grupo · Afeta estimativas de prazo e custo</div>
-        </div>
-        <div class="pendency-deadline">13/06/2026</div>
-      </div>
-      <div class="pendency-item">
-        <div class="pendency-content">
-          <div class="pendency-title">P-04 — Fornecer condições do contrato da plataforma terceirizada</div>
-          <div class="pendency-resp">Responsável: Jadson + Suprimentos · Necessário para avaliar RSK-10</div>
-        </div>
-        <div class="pendency-deadline">Até kick-off</div>
-      </div>
-      <div class="pendency-item">
-        <div class="pendency-content">
-          <div class="pendency-title">P-05 — Fornecer baseline de métricas da plataforma atual</div>
-          <div class="pendency-resp">Responsável: Jadson · Usuários ativos, ideias/mês — necessário para apurar KRs pós-go-live</div>
-        </div>
-        <div class="pendency-deadline">Até kick-off</div>
-      </div>
-    </div>
-
-    <div class="section-title">Progresso da Instrução — 100% Concluída</div>
-    <table class="doc-table">
-      <thead><tr><th>Entrega</th><th>Responsável</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>Coleta e estruturação da demanda (DEM-2026-001)</td><td>Iara Inbound</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>Qualificação (21/30 — 70% — Aprovado com condições)</td><td>Felipe Filtro</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>TAP + PM Canvas + Plano Geral (10 planos subsidiários)</td><td>Diana Documento</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>ERF — 37 RFs em 6 módulos + 10 RNFs</td><td>Rafael Requisito</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>WBS + Cronograma Detalhado (9 marcos, buffer 15%)</td><td>Carlos Cronograma</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>Plano de Riscos (12 riscos, reserva R$10.500)</td><td>Pedro Perigo</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>Framework de KPIs (EVM + 5 KRs pós-go-live)</td><td>Marcela Métrica</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>Status Report #001 + Pesquisa de Satisfação</td><td>Sara Status</td><td style="color:var(--green)">✅ Concluído</td></tr>
-        <tr><td>Revisão de Qualidade — Score 100/100</td><td>Vera Veredito</td><td style="color:var(--green)">✅ Aprovado</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TAB: PIPELINE -->
-  <div id="tab-pipeline" class="doc-section">
-    <div class="section-title">VMO Autônomo — 9 Agentes · Run 2026-05-14-201500</div>
-    <div class="agents-timeline">
-      <div class="agent-row">
-        <div class="agent-dot done">📥</div>
-        <div class="agent-body">
-          <div class="agent-name">Iara Inbound</div>
-          <div class="agent-output">Coletou e estruturou a demanda a partir da transcrição Fireflies (ID: 01KPV48BER47DVPT37Q0CGCNXN, 22/04/2026). 12 lacunas identificadas. Entregou demanda-coletada.md.</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">🔍</div>
-        <div class="agent-body">
-          <div class="agent-name">Felipe Filtro</div>
-          <div class="agent-output">Qualificação em 6 critérios: score 21/30 (70%) — APROVADO COM CONDIÇÕES. Definiu 3 condições bloqueantes (sponsor, orçamento, modelo de execução). Entregou qualificacao.md.</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">📋</div>
-        <div class="agent-body">
-          <div class="agent-name">Diana Documento</div>
-          <div class="agent-output">Gerou TAP (objetivo SMART, 7 critérios de sucesso, 10 marcos), PM Canvas (9 blocos completos) e Plano Geral (10 planos subsidiários). Orçamento R$90K, prazo 30/11/2026. Entregou documentacao-base.md (v2).</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">⚙️</div>
-        <div class="agent-body">
-          <div class="agent-name">Rafael Requisito</div>
-          <div class="agent-output">ERF completa: 37 RFs em 6 módulos (M1–M6) com priorização MoSCoW e critérios de aceite objetivos. 10 RNFs (performance, segurança, disponibilidade, qualidade). Entregou requisitos.md (v3).</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">📅</div>
-        <div class="agent-body">
-          <div class="agent-name">Carlos Cronograma</div>
-          <div class="agent-output">WBS detalhada (7 fases, 35 entregas), 9 marcos com datas, buffer de 15% por fase de desenvolvimento, caminho crítico explícito, análise de folga por módulo. Go-live: 28/11/2026. Entregou cronograma.md (v4).</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">⚠️</div>
-        <div class="agent-body">
-          <div class="agent-name">Pedro Perigo</div>
-          <div class="agent-output">12 riscos identificados com matriz P×I, 3 críticos (RSK-01/02/03), plano de resposta detalhado para cada risco. Reserva de contingência R$10.500 alocada. Entregou plano-riscos.md (v5).</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">📊</div>
-        <div class="agent-body">
-          <div class="agent-name">Marcela Métrica</div>
-          <div class="agent-output">Framework EVM completo: BAC R$75K, curva S (7 pontos de controle), thresholds de alerta CPI/SPI. 7 KPIs de entrega + 5 KRs pós-go-live com prazo de apuração. Entregou kpis.md (v6).</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">📝</div>
-        <div class="agent-body">
-          <div class="agent-name">Sara Status</div>
-          <div class="agent-output">Status Report #001: semáforo por dimensão (prazo 🟡, riscos 🔴, resto 🟢), 5 pendências com responsável e prazo, 9 entregas da instrução documentadas, pesquisa de satisfação estruturada (8 questões). Entregou status-report-inicial.md (v7).</div>
-          <span class="agent-badge">✅ Concluído</span>
-        </div>
-      </div>
-      <div class="agent-row">
-        <div class="agent-dot done">✅</div>
-        <div class="agent-body">
-          <div class="agent-name">Vera Veredito</div>
-          <div class="agent-output">Revisão de qualidade em 5 dimensões: Completude 30/30, Consistência 25/25, Qualidade Técnica 25/25, Rastreabilidade 10/10, Acionabilidade 10/10. Score final: 100/100 — APROVADO. Entregou revisao-final.md (v8).</div>
-          <span class="agent-badge">✅ 100/100 Aprovado</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<footer>
-  PROJ-2026-004 · Plataforma Interna de Gestão de Ideias de Inovação · Run 2026-05-14-201500 · VMO Autônomo v1.0<br>
-  Gerado por Lucas Layout · VMO Consultoria · 9 documentos · Score qualidade 100/100
-</footer>
-
-<script>
-function showTab(name) {
-  document.querySelectorAll('.doc-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-</script>
+</main>
+<footer>VMO Autônomo — Lucas Layout | PROJ-2026-004 | Run 2026-05-22</footer>
 </body>
 </html>

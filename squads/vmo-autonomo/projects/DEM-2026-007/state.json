@@ -1,0 +1,78 @@
+{
+  "project": "DEM-2026-007",
+  "name": "Importação DDA SAP — VAB Matriz",
+  "pipeline_version": "2.0.0",
+  "status": "EM_ESPERA",
+  "current_step": 6,
+  "last_updated": "2026-05-20",
+  "checkpoint_decisions": {
+    "step_3": {
+      "date": "2026-05-20",
+      "decision": "APROVADO",
+      "note": "Intake validado pelo usuário. Iara PASS + Gabriel Gate Intake PASS."
+    },
+    "step_6": {
+      "date": "2026-05-20",
+      "decision": "EM_ESPERA",
+      "note": "Qualificação Felipe Filtro: 44/100 (44%). Decisão EM ESPERA aceita pelo usuário. Pipeline pausado até resolução das 4 CBs."
+    }
+  },
+  "qualification": {
+    "score": 44,
+    "max_score": 100,
+    "percentage": 44,
+    "decision": "EM_ESPERA",
+    "classification": "MELHORIA EVOLUTIVA",
+    "sustentacao_team": "FI",
+    "analyst": "Felipe Filtro",
+    "gate_governance": "PASS"
+  },
+  "open_conditions": [
+    {
+      "id": "CB-1",
+      "description": "Documentação técnica DDA da Divisão Logística (config SAP FI, layout CNAB, integração Santander)",
+      "owner": "Noemia / DTI",
+      "deadline_days": 7,
+      "status": "ABERTA"
+    },
+    {
+      "id": "CB-2",
+      "description": "Especificação dos 'ajustes necessários' + estimativa de esforço por fase",
+      "owner": "DTI (após CB-4)",
+      "deadline_days": 10,
+      "status": "ABERTA"
+    },
+    {
+      "id": "CB-3",
+      "description": "Resolução da contradição de autorização Holding: custo zero confirmado OU nova autorização Walace para custo real",
+      "owner": "Noemia → Gladston → Walace Bacelar",
+      "deadline_days": 5,
+      "status": "ABERTA"
+    },
+    {
+      "id": "CB-4",
+      "description": "Designação de responsável técnico DTI por Gladston Campos",
+      "owner": "Gladston Campos",
+      "deadline_days": 2,
+      "status": "ABERTA",
+      "priority": "URGENTE"
+    },
+    {
+      "id": "CB-Sponsor",
+      "description": "Sponsor com nível Diretor+ não identificado — Gladston é Gerente, Walace tem aprovação condicional",
+      "owner": "A definir na iniciação",
+      "status": "NÃO_REGISTRADA",
+      "priority": "MONITORAR"
+    }
+  ],
+  "open_questions": ["P-1", "P-2", "P-3", "P-4", "P-5", "P-6"],
+  "documents": {
+    "01-qualificacao": {
+      "demanda-coletada.md": "CONCLUÍDO",
+      "gate-intake.md": "CONCLUÍDO — PASS",
+      "qualificacao.md": "CONCLUÍDO — EM ESPERA",
+      "gate-qualificacao.md": "CONCLUÍDO — PASS"
+    }
+  },
+  "next_action": "Resolver CB-1 a CB-4 e requalificar (Step 4) com novas informações"
+}

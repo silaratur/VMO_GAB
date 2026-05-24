@@ -1,29 +1,42 @@
 pipeline:
   name: "VMO Web Publisher — Atualização do Dashboard"
-  version: "1.0.0"
+  version: "2.0.0"
   squad: vmo-web-publisher
   description: >
     Varre todos os projetos VMO, lê os documentos mais recentes e gera/atualiza
-    as páginas HTML do dashboard. Roda a cada 6 horas automaticamente.
+    as páginas HTML do dashboard + espelha os documentos fonte na pasta docs/.
+    Roda a cada 6 horas automaticamente.
 
 steps:
   - step: 1
     name: "Escanear Projetos"
-    file: steps/step-01-scan-projetos.md
+    file: tasks/scan-projetos.md
     type: agent
     agent: lucas-layout
     execution: inline
 
   - step: 2
     name: "Gerar Dashboard Principal"
-    file: steps/step-02-gerar-index.md
+    file: tasks/gerar-dashboard.md
     type: agent
     agent: lucas-layout
     execution: inline
 
   - step: 3
-    name: "Gerar Páginas por Projeto"
-    file: steps/step-03-gerar-paginas-projeto.md
+    name: "Gerar Páginas HTML por Projeto"
+    file: tasks/gerar-pagina-projeto.md
     type: agent
     agent: lucas-layout
     execution: inline
+
+  - step: 4
+    name: "Espelhar Documentos dos Projetos"
+    file: tasks/espelhar-documentos.md
+    type: agent
+    agent: lucas-layout
+    execution: inline
+    required: true
+    description: >
+      OBRIGATÓRIO — Copia os arquivos .md fonte de squads/vmo-autonomo/projects/{ID}/
+      para output/site/projetos/docs/{ID}/ espelhando a estrutura completa do projeto.
+      Um run sem este step está INCOMPLETO.

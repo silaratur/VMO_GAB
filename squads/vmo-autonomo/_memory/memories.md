@@ -8,13 +8,40 @@
 
 ## Proibições Explícitas
 
+- **Nunca validar demanda sem aprovações obrigatórias (regra GP — 2026-05-24):** Toda demanda, independente da origem ou criticidade declarada, só pode ser considerada VALIDADA se possuir: (1) aprovação formal em nível de Diretoria da área solicitante; (2) aprovação do Gerente de TI da divisão solicitante. Sem ambas, a demanda retorna ao solicitante para complementação — independente de urgência declarada, prazo de SLA ou pressão política.
+
+- **Nunca aceitar citação de alta patente sem evidência documental (regra GP — 2026-05-24):** Toda vez que uma demanda citar CEO, Diretor Executivo, VP ou outra alta patente como origem ou justificativa de urgência, é OBRIGATÓRIO ter evidência documental comprobatória (e-mail, ata de reunião, documento assinado, print de mensagem oficial). A citação sem evidência não pode sustentar nota de urgência acima de 3/10 (Felipe) nem dispensar qualquer condição de processo. Iara deve sinalizar como `⚠️ CLAIM SEM EVIDÊNCIA` e classificar como Lacuna de alto impacto. Felipe deve rebaixar o critério de Urgência proporcionalmente.
+
 ## Técnico (específico do squad)
+
+- **Regra de estrutura de pastas (2026-05-24):** Toda nova pasta de projeto `projects/{PROJ-CODE}/` deve ter TODAS as 5 subpastas de fase criadas imediatamente na inicialização: `01-qualificacao`, `02-iniciacao`, `03-planejamento`, `04-monitoramento`, `05-encerramento`. Git não rastreia diretórios vazios — criar `.gitkeep` em todas as pastas que ainda não possuem arquivos, para que a estrutura completa apareça no repositório remoto desde o início. O `.gitkeep` é removido quando o primeiro arquivo real for escrito na pasta.
 
 - **Nova estrutura de pastas validada (2026-05-16):** A migração de `output/{run_id}/v{N}/` para `projects/{PROJ-CODE}/{fase}/` funciona corretamente. Todos os 10 agentes escreveram nos caminhos corretos com placeholder `{project}` resolvido. Estrutura de fases: 01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento.
 - **Fábio Fornecedor validado (Step 10):** Primeiro run completo com o agente de Work Request. Score 8,5/10 na revisão da Vera. Artefato Obrigatório (10 grupos / 41 itens) transcrito corretamente. Inconsistência narrativa identificada: seção de contexto deve referenciar "plataforma SaaS terceira" (não "planilhas e e-mails") para projetos de substituição de sistema.
 - **Ressalva de sponsor registrada pelo GP:** Nivel mínimo de sponsor para aprovação de TAP é Diretor ou superior. Registrar como condição bloqueante CB-01 explícita no TAP, não apenas como lacuna genérica.
 
 ## Run History
+
+### Re-execução 2026-05-18 — Pipeline v2 (4 projetos simultâneos)
+
+**Objetivo:** Aplicar os 2 novos steps do pipeline v2 (Step 7 — Fábio Fornecedor / Work Request; Step 13 — Gabriel Governança / Auditoria de Governança) em todos os projetos sem esse tratamento.
+
+**Nova estrutura de pastas aplicada:** `projects/{PROJ-CODE}/{01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento}/`
+
+**Resultados:**
+
+| Projeto | Score Vera | Auditoria Gabriel | Aprovação Final |
+|---------|-----------|-------------------|-----------------|
+| PROJ-2026-001 — SAP FI Aprovador | 8.7/10 | APROVADO COM RESSALVAS (NC-MENOR: TAP sem assinatura) | ✅ APROVADO |
+| PROJ-2026-003 — Caminhos ERP GAB | 9.0/10 | APROVADO (3 riscos preventivos) | ✅ APROVADO |
+| PROJ-2026-004 — Plataforma Ideias | 10.0/10 | REPROVADO NC-CRÍTICA (sponsor A DEFINIR) | ✅ APROVADO com ciência |
+| PROJ-2026-005 — Auditor Fiscal NBS | 9.1/10 | REPROVADO NC-CRÍTICA (sponsor CB-01, prazo 25/05) | ✅ APROVADO com ciência |
+
+**Aprendizados do pipeline v2:**
+- Fábio Fornecedor (Step 7): WRs gerados para todos os 4 projetos com 10 grupos / 41 itens do Artefato Obrigatório. Subagentes atingiram rate limit — executar inline é mais confiável para runs múltiplos simultâneos.
+- Gabriel Governança (Step 13): Auditoria crítica de sponsor funcionou corretamente como filtro de governança. PROJ-004 e PROJ-005 corretamente REPROVADOS por sponsor ausente, com ciência do GP registrada em aprovacao-final.md.
+- Sponsor ausente é NC-CRÍTICA recorrente — reforçar no onboarding de novas demandas: sponsor deve ser identificado ANTES do pipeline iniciar.
+- Nova estrutura de pastas por fase facilita rastreabilidade mas exige que todos os agentes resolvam o placeholder `{project}` corretamente.
 
 ### Run 2026-05-15-150000 — PROJ-2026-005
 

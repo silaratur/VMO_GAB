@@ -82,7 +82,12 @@ Before starting execution:
      mkdir -p "squads/{name}/projects/{project_code}/03-planejamento"
      mkdir -p "squads/{name}/projects/{project_code}/04-monitoramento"
      mkdir -p "squads/{name}/projects/{project_code}/05-encerramento"
+     touch "squads/{name}/projects/{project_code}/02-iniciacao/.gitkeep"
+     touch "squads/{name}/projects/{project_code}/03-planejamento/.gitkeep"
+     touch "squads/{name}/projects/{project_code}/04-monitoramento/.gitkeep"
+     touch "squads/{name}/projects/{project_code}/05-encerramento/.gitkeep"
      ```
+   - **OBRIGATÓRIO**: O `.gitkeep` deve ser criado em TODAS as pastas de fase que ainda não possuem arquivos. Git não rastreia diretórios vazios — sem o `.gitkeep`, as pastas são invisíveis no repositório remoto. O `.gitkeep` é removido automaticamente quando o agente da fase escrever o primeiro arquivo real na pasta.
    - Add `"project": "{project_code}"` and `"demand": "{demand_code}"` fields to the state.json being initialized in step 6.
 6. **Initialize state.json**: Create `squads/{name}/state.json` from scratch (see below). State writes are always mandatory.
    - **IMPORTANT**: You MUST write to `squads/{name}/state.json` before every step and after every handoff. This is non-negotiable. Never skip these writes.

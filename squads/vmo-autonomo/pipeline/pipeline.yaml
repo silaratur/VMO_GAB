@@ -1,11 +1,15 @@
 pipeline:
   name: "VMO Autônomo — Iniciação de Projeto"
-  version: "1.0.0"
+  version: "2.0.0"
   squad: vmo-autonomo
   description: >
     Pipeline de iniciação de projeto: da demanda recebida até o pacote completo
     de documentação aprovado pelo VMO (TAP, PM Canvas, ERF, Cronograma, Riscos,
     KPIs, Work Request, Status Report e Auditoria de Governança).
+    Canais de entrada suportados: ticket de service desk, e-mail, PDF, transcrição
+    de reunião, mensagem direta, formulário ou qualquer combinação.
+    Gates de governança executados em 3 momentos: após intake, após qualificação
+    e antes da aprovação final.
 
 steps:
   - step: 1
@@ -16,93 +20,107 @@ steps:
     execution: subagent
 
   - step: 2
+    name: "Gate de Governança — Intake"
+    file: steps/step-02-gate-intake.md
+    type: agent
+    agent: gabriel-governanca
+    execution: inline
+
+  - step: 3
     name: "Checkpoint: Validar Demanda"
     file: steps/step-02-checkpoint-validar-demanda.md
     type: checkpoint
 
-  - step: 3
+  - step: 4
     name: "Qualificar Demanda"
     file: steps/step-03-qualificar-demanda.md
     type: agent
     agent: felipe-filtro
     execution: inline
 
-  - step: 4
+  - step: 5
+    name: "Gate de Governança — Qualificação"
+    file: steps/step-05-gate-qualificacao.md
+    type: agent
+    agent: gabriel-governanca
+    execution: inline
+
+  - step: 6
     name: "Checkpoint: Aprovar Qualificação"
     file: steps/step-04-checkpoint-aprovar-qualificacao.md
     type: checkpoint
 
-  - step: 5
+  - step: 7
     name: "Criar Documentação Base"
     file: steps/step-05-criar-documentacao-base.md
     type: agent
     agent: diana-documento
     execution: subagent
 
-  - step: 6
+  - step: 8
     name: "Especificar Requisitos"
     file: steps/step-06-especificar-requisitos.md
     type: agent
     agent: rafael-requisito
     execution: subagent
 
-  - step: 7
+  - step: 9
     name: "Criar Work Request (Mini-RFP)"
     file: steps/step-07-criar-work-request.md
     type: agent
     agent: fabio-fornecedor
     execution: subagent
 
-  - step: 8
+  - step: 10
     name: "Criar Cronograma"
     file: steps/step-08-criar-cronograma.md
     type: agent
     agent: carlos-cronograma
     execution: inline
 
-  - step: 9
+  - step: 11
     name: "Plano de Riscos"
     file: steps/step-09-plano-riscos.md
     type: agent
     agent: pedro-perigo
     execution: inline
 
-  - step: 10
+  - step: 12
     name: "Framework de KPIs"
     file: steps/step-10-framework-kpis.md
     type: agent
     agent: marcela-metrica
     execution: subagent
 
-  - step: 11
+  - step: 13
     name: "Status Report Inicial"
     file: steps/step-11-status-report-inicial.md
     type: agent
     agent: sara-status
     execution: inline
 
-  - step: 12
+  - step: 14
     name: "Revisão de Qualidade"
     file: steps/step-12-revisao-qualidade.md
     type: agent
     agent: vera-veredito
     execution: inline
-    on_reject: 5
+    on_reject: 7
 
-  - step: 13
-    name: "Auditoria de Governança"
+  - step: 15
+    name: "Auditoria de Governança Final"
     file: steps/step-13-auditoria-governanca.md
     type: agent
     agent: gabriel-governanca
     execution: inline
-    on_reject: 5
+    on_reject: 7
 
-  - step: 14
+  - step: 16
     name: "Checkpoint: Aprovar Documentação Final"
     file: steps/step-14-checkpoint-aprovacao-final.md
     type: checkpoint
 
 checkpoints:
-  - step: 2
-  - step: 4
-  - step: 14
+  - step: 3
+  - step: 6
+  - step: 16

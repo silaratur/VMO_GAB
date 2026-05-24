@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEM-2026-007 — DDA SAP VAB Matriz</title>
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--cyan:#06b6d4;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.header-right{font-size:.65rem;color:var(--text2);}
+.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
+.proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--cyan);}
+.proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
+.badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
+.badge-novo{background:#06b6d422;color:var(--cyan);border:1px solid #06b6d455;}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
+.meta-box.warn{border-color:#eab30888;}
+.meta-box.warn .meta-box-value{color:var(--yellow);}
+.meta-box.cyan-box{border-color:#06b6d488;}
+.meta-box.cyan-box .meta-box-value{color:var(--cyan);}
+.section-title{font-size:.65rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:768px){.grid2{grid-template-columns:1fr;}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.sem-table{width:100%;border-collapse:collapse;}
+.sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
+.sem-table tr:last-child td{border-bottom:none;}
+.sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
+.dot-g{background:var(--green);}
+.dot-y{background:var(--yellow);}
+.dot-r{background:var(--red);}
+.dot-c{background:var(--cyan);}
+.progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
+.progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.fill{height:100%;border-radius:4px;}
+.fill-cyan{background:var(--cyan);}
+.fill-green{background:var(--green);}
+.risk-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.risk-row:last-child{border-bottom:none;}
+.risk-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;}
+.r-critico{background:#ef444433;color:var(--red);}
+.r-alto{background:#ef444422;color:var(--red);}
+.r-medio{background:#eab30822;color:var(--yellow);}
+.milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.milestone-row:last-child{border-bottom:none;}
+.ms-date{color:var(--cyan);font-weight:700;min-width:90px;}
+.ms-label{color:var(--text);flex:1;}
+.ms-check{font-size:.7rem;white-space:nowrap;}
+.ms-done{color:var(--green);}
+.ms-pend{color:var(--text2);}
+.ms-warn{color:var(--yellow);font-weight:700;}
+.qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.qa-row:last-child{border-bottom:none;}
+.score-ok{font-weight:700;color:var(--green);}
+.score-cond{font-weight:700;color:var(--yellow);}
+.info-box{background:#06b6d411;border:1px solid #06b6d433;border-radius:10px;padding:14px;margin-bottom:16px;}
+.info-box-title{font-size:.7rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.info-box-text{font-size:.8rem;color:var(--text);line-height:1.5;}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.tag{padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:600;background:var(--bg);border:1px solid var(--border);}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
+.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
+.doc-link:hover{border-color:var(--cyan);background:var(--bg2);}
+.doc-icon{font-size:1rem;flex-shrink:0;}
+.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-phase{font-size:.62rem;}
+.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
+.ph-q{background:#3b82f622;color:var(--blue);}
+.ph-i{background:#22c55e22;color:var(--green);}
+.ph-p{background:#eab30822;color:var(--yellow);}
+.ph-m{background:#06b6d422;color:var(--cyan);}
+.ph-e{background:#a855f722;color:#a855f7;}
+footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="../index.html" class="back">← Dashboard</a>
+  <div class="header-right">Atualizado em: 22/05/2026 · NOVO</div>
+</header>
+<main class="main">
+
+  <div class="proj-hero">
+    <div class="proj-hero-top">
+      <div>
+        <div class="proj-id-label">DEM-2026-007 · NOVA DEMANDA</div>
+        <div class="proj-title">Implantação DDA (Débito Direto Autorizado) no SAP — VAB Matriz</div>
+      </div>
+      <span class="badge badge-novo">🔵 Em Instrução</span>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-box-label">Solicitante</div><div class="meta-box-value">Lucas Medeiros Pereira</div></div>
+      <div class="meta-box"><div class="meta-box-label">Coordenadora</div><div class="meta-box-value">Noemia Tambara</div></div>
+      <div class="meta-box"><div class="meta-box-label">Área</div><div class="meta-box-value">VAB Matriz — CP</div></div>
+      <div class="meta-box"><div class="meta-box-label">Executora</div><div class="meta-box-value">DTI Sustentação FI</div></div>
+      <div class="meta-box cyan-box"><div class="meta-box-label">Classificação</div><div class="meta-box-value">Melhoria Evolutiva</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">49/100 (49%)</div></div>
+      <div class="meta-box"><div class="meta-box-label">BAC Externo</div><div class="meta-box-value">R$ 0 – R$ 2.000</div></div>
+      <div class="meta-box"><div class="meta-box-label">Go-live Meta</div><div class="meta-box-value">30/09/2026</div></div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-box-title">📋 Contexto da Demanda</div>
+    <div class="info-box-text">
+      O processo atual de pagamento de boletos na VAB Matriz exige digitação manual de código de barras no SAP. Esta demanda automatiza o recebimento eletrônico de boletos via DDA (Débito Direto Autorizado) diretamente no SAP FI — replicando o modelo já implantado na Divisão Logística GAB e na unidade VIX.
+    </div>
+    <div class="tag-row">
+      <span class="tag">SAP FI</span>
+      <span class="tag">Santander CNAB 240</span>
+      <span class="tag">Melhoria Evolutiva</span>
+      <span class="tag">Precedente: Div. Logística</span>
+      <span class="tag">Esforço: 80–160h (a confirmar)</span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Status da Instrução</div>
+      <table class="sem-table">
+        <tr><td class="dim">Qualificação</td><td><span class="dot dot-y"></span>49/100 — EM ESPERA → requalificado para instrução</td></tr>
+        <tr><td class="dim">Classificação</td><td><span class="dot dot-c"></span>Melhoria Evolutiva — DTI FI (provisória, CB-2 confirma)</td></tr>
+        <tr><td class="dim">Vera Veredito</td><td><span class="dot dot-g"></span>8,30/10 — APROVADO COM CONDIÇÕES</td></tr>
+        <tr><td class="dim">Gabriel Gov.</td><td><span class="dot dot-y"></span>APROVADO COM RESSALVAS (1 NC-MOD)</td></tr>
+        <tr><td class="dim">Aprovação Final</td><td><span class="dot dot-y"></span>⏳ Aguardando Marcelo Silveira (Step 15)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title">Revisão de Qualidade (Vera Veredito)</div>
+      <div class="qa-row"><span>Score Geral</span><span class="score-cond">8,30 / 10 — APROVADO CC</span></div>
+      <div class="qa-row"><span>ERF</span><span class="score-ok">9,0 / 10 — Exemplar</span></div>
+      <div class="qa-row"><span>Plano de Riscos</span><span class="score-ok">9,0 / 10 — Maduro</span></div>
+      <div class="qa-row"><span>TAP / Cronograma</span><span class="score-cond">8,0 / 10 — CC (premissas)</span></div>
+      <div class="qa-row"><span>Gabriel Governança</span><span class="score-cond">⚠️ NC-MOD-001 — Sponsor nível Gerente (não Diretor)</span></div>
+      <br>
+      <div class="section-title">Progresso da Instrução</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Pipeline VMO (Steps 1–15)</span><span>~95%</span></div>
+        <div class="progress-bar"><div class="fill fill-cyan" style="width:95%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Marcos e Próximas Datas</div>
+      <div class="milestone-row"><div class="ms-date">2026-05-20</div><div class="ms-label">Vera + Gabriel concluem revisão</div><div class="ms-check ms-done">✅</div></div>
+      <div class="milestone-row"><div class="ms-date">~22/05/2026</div><div class="ms-label">Aprovação Final — Marcelo Silveira (Step 15)</div><div class="ms-check ms-warn">⏳ Pendente</div></div>
+      <div class="milestone-row"><div class="ms-date">30/05/2026</div><div class="ms-label">CB-Sponsor — Diretor+ identificado</div><div class="ms-check ms-warn">⚠️ CB aberta</div></div>
+      <div class="milestone-row"><div class="ms-date">08/06/2026</div><div class="ms-label">Kick-off (estimado, pós-CBs)</div><div class="ms-check ms-pend">🔲</div></div>
+      <div class="milestone-row"><div class="ms-date">CB-2</div><div class="ms-label">Levantamento técnico DTI — definir esforço e reclassificar</div><div class="ms-check ms-pend">🔲 Step 8</div></div>
+      <div class="milestone-row"><div class="ms-date">30/09/2026</div><div class="ms-label"><strong>Go-live DDA em produção (meta)</strong></div><div class="ms-check ms-warn">🎯</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">Riscos Principais</div>
+      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>R-001 — Holding exige custo zero; re-autorização se houver custo</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R-002 — Ajustes de replicação maiores que esperado (reclassificar para PROJETO)</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R-003 — DDA Santander não habilitado na VAB Matriz (L5 a confirmar)</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MÉDIO</span><span>R-004 — Disponibilidade do DTI FI para execução</span></div>
+      <br>
+      <div class="section-title">Aprovações de Negócio</div>
+      <div class="risk-row">✅ <strong>Gladston Campos</strong> — "Aprovado!" (06/05/2026) — INCONDICIONAL</div>
+      <div class="risk-row">⚠️ <strong>Walace Bacelar / Holding</strong> — Condicional (custo zero) — re-autorização necessária se houver custo</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Condições de Kick-off em Aberto</div>
+    <div class="risk-row">⚠️ <strong>CB-2:</strong> Levantamento técnico dos ajustes vs. DDA Logística — Rafael Requisito (DTI) — pode reclassificar para PROJETO se esforço &gt; 160h</div>
+    <div class="risk-row">⚠️ <strong>CB-3:</strong> Formalização de custos + re-autorização Holding — Noemia → Gladston → Walace</div>
+    <div class="risk-row">⚠️ <strong>CB-Sponsor:</strong> Identificar Diretor+ como sponsor formal — prazo 30/05/2026</div>
+    <div class="risk-row">📌 Confirmar habilitação DDA no Santander para conta VAB Matriz (L5)</div>
+    <div class="risk-row">📌 Designar recurso técnico DTI FI responsável pela implantação</div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">Documentos da Instrução</div>
+    <div class="docs-grid">
+      <a class="doc-link" href="docs/DEM-2026-007/01-qualificacao.pdf"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/02-demanda-coletada.pdf"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/03-tap-canvas-plano-geral.pdf"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">TAP + PM Canvas + Plano Geral</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/04-erf-requisitos.pdf"><div class="doc-icon">📝</div><div class="doc-info"><div class="doc-name">ERF — Especificação de Requisitos</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/05-cronograma.pdf"><div class="doc-icon">📅</div><div class="doc-info"><div class="doc-name">Cronograma</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/06-plano-riscos.pdf"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">Plano de Riscos</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/07-kpis.pdf"><div class="doc-icon">📊</div><div class="doc-info"><div class="doc-name">Framework de KPIs</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/08-status-report.pdf"><div class="doc-icon">📈</div><div class="doc-info"><div class="doc-name">Status Report</div><div class="doc-phase"><span class="phase-tag ph-m">04 · Monitoramento</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/09-revisao-final.pdf"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Revisão de Qualidade (Vera)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+      <a class="doc-link" href="docs/DEM-2026-007/11-auditoria-governanca.pdf"><div class="doc-icon">🔍</div><div class="doc-info"><div class="doc-name">Auditoria de Governança (Gabriel)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+    </div>
+  </div>
+
+</main>
+<footer>VMO Autônomo — Lucas Layout | DEM-2026-007 | Run 2026-05-22 · NOVA PÁGINA</footer>
+</body>
+</html>
