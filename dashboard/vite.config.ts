@@ -5,6 +5,7 @@ import { squadWatcherPlugin } from "./src/plugin/squadWatcher";
 import { projectsPlugin } from "./src/plugin/projectsPlugin";
 
 export default defineConfig({
+  base: "/agentes/",
   plugins: [react(), squadWatcherPlugin(), projectsPlugin()],
   resolve: {
     alias: {
