@@ -6,7 +6,8 @@ on:
       - master
     paths:
       - 'dashboard/**'
-      - 'infra/nginx-vmo-portfolio.conf'
+      - 'squads/vmo-web-publisher/output/site/**'
+      - 'infra/nginx-www-docker.conf'
       - '.github/workflows/deploy-dashboard.yml'
   workflow_dispatch:
 
@@ -37,7 +38,7 @@ jobs:
           cd /opt/vmo-dashboard && npm install --omit=dev --silent
           echo "✅ Servidor implantado"
 
-      - name: Implantar arquivos estáticos
+      - name: Implantar arquivos estáticos do dashboard
         run: |
           mkdir -p /opt/vmo-dashboard/dist
           rsync -a --delete dashboard/dist/ /opt/vmo-dashboard/dist/
@@ -47,7 +48,6 @@ jobs:
       - name: Sincronizar metadados dos squads
         run: |
           mkdir -p /opt/vmo-dashboard/squads
-          # Copia apenas squad.yaml de cada squad (sem outputs/projects/memory)
           for squad_dir in squads/*/; do
             squad_name=$(basename "$squad_dir")
             [ "$squad_name" = ".gitkeep" ] && continue
@@ -57,6 +57,13 @@ jobs:
           done
           TOTAL=$(find /opt/vmo-dashboard/squads -name 'squad.yaml' | wc -l)
           echo "✅ $TOTAL squads sincronizados"
+
+      - name: Implantar portfolio
+        run: |
+          mkdir -p /var/www/vmo-portfolio
+          rsync -a --delete squads/vmo-web-publisher/output/site/ /var/www/vmo-portfolio/
+          PAGES=$(find /var/www/vmo-portfolio -name '*.html' | wc -l)
+          echo "✅ $PAGES páginas do portfolio implantadas"
 
       - name: Reiniciar servidor do dashboard
         run: |
@@ -75,21 +82,24 @@ jobs:
             exit 1
           fi
 
-      - name: Recarregar nginx (sem sobrescrever config — preserva SSL do certbot)
+      - name: Recarregar container nginx (Traefik www)
         run: |
-          nginx -t && systemctl reload nginx
-          echo "✅ nginx recarregado"
+          cd /root && docker compose up -d --force-recreate www
+          sleep 2
+          echo "✅ Container www reiniciado"
 
       - name: Verificar acesso externo
         run: |
           sleep 2
-          HTTP=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/agentes/ 2>/dev/null || echo "000")
-          HTTPS=$(curl -s -o /dev/null -w "%{http_code}" https://silaratur.cloud/agentes/ 2>/dev/null || echo "000")
+          PORTFOLIO=$(curl -s -o /dev/null -w "%{http_code}" https://silaratur.cloud/ 2>/dev/null || echo "000")
+          DASHBOARD=$(curl -s -o /dev/null -w "%{http_code}" https://silaratur.cloud/agentes/ 2>/dev/null || echo "000")
           echo ""
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "HTTP  /agentes/ → $HTTP"
-          echo "HTTPS /agentes/ → $HTTPS"
-          echo "URL: https://silaratur.cloud/agentes/"
+          echo "Portfolio  → $PORTFOLIO"
+          echo "Dashboard  → $DASHBOARD"
+          echo "Portfolio: https://silaratur.cloud/"
+          echo "Dashboard: https://silaratur.cloud/agentes/"
           echo "Data: $(date '+%Y-%m-%d %H:%M:%S')"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          [ "$HTTPS" = "200" ] && echo "✅ Dashboard acessível" || echo "⚠️ Verificar nginx/servidor"
+          [ "$PORTFOLIO" = "200" ] && echo "✅ Portfolio acessível" || echo "⚠️ Verificar portfolio"
+          [ "$DASHBOARD" = "200" ] && echo "✅ Dashboard acessível" || echo "⚠️ Verificar dashboard"
