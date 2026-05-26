@@ -1,0 +1,77 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: consultar_kpis
+displayName: "Consultar KPIs do Portfolio"
+description: "Marcela Métrica — Exibe KPIs consolidados do portfolio ou de projeto específico"
+
+triggerIntents:
+  - "ver kpis"
+  - "indicadores do projeto"
+  - "métricas"
+  - "cpi do projeto"
+  - "spi"
+  - "health score"
+  - "como estão os indicadores"
+  - "dashboard de kpis"
+  - "performance do projeto"
+
+variables:
+  - name: EscopoConsulta
+    type: String
+  - name: NomeProjeto
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: Question
+    id: q_escopo
+    prompt: "📊 Deseja ver KPIs de um **projeto específico** ou do **portfolio completo**?"
+    choices:
+      - value: "Portfolio Completo"
+        synonyms: ["todos", "geral", "portfolio", "tudo"]
+      - value: "Projeto Específico"
+        synonyms: ["projeto", "específico", "um projeto"]
+    variable: Topic.EscopoConsulta
+
+  - kind: ConditionGroup
+    id: verificar_escopo
+    conditions:
+      - condition: =Topic.EscopoConsulta = "Projeto Específico"
+        actions:
+          - kind: Question
+            id: q_nome_projeto
+            prompt: "Qual é o nome do projeto?"
+            entityType:
+              kind: FreeTextEntityType
+            variable: Topic.NomeProjeto
+
+  - kind: InvokeFlowAction
+    id: invoke_kpis
+    flowId: "VMO_Marcela_DefinirKPIs"
+    input:
+      binding:
+        escopo: =Topic.EscopoConsulta
+        nomeProjeto: =Topic.NomeProjeto
+    output:
+      binding:
+        FlowResult: Topic.FlowResult
+
+  - kind: SendMessage
+    id: msg_kpis
+    message: |
+      📈 **KPIs VMO — @{Topic.EscopoConsulta}**
+
+      | Indicador | Valor | Meta | Status |
+      |-----------|-------|------|--------|
+      | **CPI** (Índice de Perf. de Custo) | @{Topic.FlowResult.cpi} | ≥ 0,95 | @{Topic.FlowResult.statusCPI} |
+      | **SPI** (Índice de Perf. de Prazo) | @{Topic.FlowResult.spi} | ≥ 0,90 | @{Topic.FlowResult.statusSPI} |
+      | **IHP** (Saúde do Plano) | @{Topic.FlowResult.ihp}/100 | ≥ 70 | @{Topic.FlowResult.statusIHP} |
+      | **IHG** (Saúde de Governança) | @{Topic.FlowResult.ihg}/100 | ≥ 80 | @{Topic.FlowResult.statusIHG} |
+      | **IHC** (Saúde de Custo) | @{Topic.FlowResult.ihc}/100 | ≥ 75 | @{Topic.FlowResult.statusIHC} |
+      | **ISC** (Satisfação do Cliente) | @{Topic.FlowResult.isc}/100 | ≥ 80 | @{Topic.FlowResult.statusISC} |
+
+      **Health Score Global:** @{Topic.FlowResult.healthScore}/100
+
+      @{if(less(Topic.FlowResult.healthScore, 60), '🔴 ATENÇÃO: Portfolio em estado crítico. Recomendo acionar Sara para status reports urgentes.', if(less(Topic.FlowResult.healthScore, 80), '🟡 Portfolio em atenção. Monitore de perto.', '🟢 Portfolio saudável.'))}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24.10069" SolutionPackageVersion="9.2" languagecode="1046" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>VMO_GAB</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="VMO GAB — Escritório de Projetos Autônomo" languagecode="1046" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Solução completa VMO GAB: VMO-Autônomo (pipeline de iniciação de projetos) e VMO-Publisher (dashboard web). Inclui 13 Power Automate Flows, Canvas App Dashboard e Copilot Studio Bot com 11 agentes especializados." languagecode="1046" />
+    </Descriptions>
+    <Version>1.0.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>VMOConsultoria</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="VMO Consultoria" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress>contato@vmoconsultoria.com.br</EMailAddress>
+      <SupportingWebsiteUrl>https://vmoconsultoria.com.br</SupportingWebsiteUrl>
+      <CustomizationPrefix>vmo</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City>São Paulo</City>
+          <Country>Brasil</Country>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <!-- Power Automate Flows -->
+      <RootComponent type="29" schemaName="vmo_VMO_Main_Pipeline" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Iara_CapturarDemanda" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Felipe_QualificarDemanda" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Diana_CriarDocumentos" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Rafael_LevantarRequisitos" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Fabio_GerarWorkRequest" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Carlos_CriarCronograma" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Pedro_AnaliseRiscos" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Marcela_DefinirKPIs" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Sara_StatusReport" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Vera_RevisaoQualidade" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Gabriel_Governanca" behavior="0" />
+      <RootComponent type="29" schemaName="vmo_VMO_Publisher_Dashboard" behavior="0" />
+      <!-- Canvas App -->
+      <RootComponent type="300" schemaName="vmo_VMO_GAB_Dashboard" behavior="0" />
+      <!-- Copilot Studio Bot -->
+      <RootComponent type="10730" schemaName="vmo_VMO_Assistente" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>

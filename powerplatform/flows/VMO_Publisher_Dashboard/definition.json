@@ -1,0 +1,192 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO Publisher — Atualizar Dashboard (Agendado)",
+    "description": "Agente Lucas Layout. Varre projetos ativos, consolida KPIs/riscos/alertas e atualiza VMO_DashboardData no SharePoint. Executa a cada 6 horas.",
+    "agent": "Lucas Layout",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" },
+    "TeamsNotification": { "defaultValue": true, "type": "Bool" }
+  },
+  "triggers": {
+    "Recorrencia_6_Horas": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Hour",
+        "interval": 6,
+        "timeZone": "E. South America Standard Time",
+        "startTime": "2025-01-01T06:00:00"
+      }
+    }
+  },
+  "actions": {
+
+    "Buscar_Projetos_Ativos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "Status ne 'CONCLUIDO' and Status ne 'CANCELADO'",
+          "$orderby": "DataInicio desc"
+        }
+      },
+      "runAfter": {}
+    },
+
+    "Buscar_Todos_KPIs": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_KPIs'))}/items",
+        "queries": { "$orderby": "Data desc", "$top": "100" }
+      },
+      "runAfter": {}
+    },
+
+    "Buscar_Riscos_Abertos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Riscos'))}/items",
+        "queries": { "$filter": "Status ne 'FECHADO'" }
+      },
+      "runAfter": {}
+    },
+
+    "Buscar_Alertas_Abertos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Alertas'))}/items",
+        "queries": { "$filter": "Resolvido eq false" }
+      },
+      "runAfter": {}
+    },
+
+    "Calcular_Metricas_Consolidadas": {
+      "type": "Compose",
+      "inputs": {
+        "total_projetos":    "@{length(body('Buscar_Projetos_Ativos')?['value'])}",
+        "projetos_ativos":   "@{length(body('Buscar_Projetos_Ativos')?['value'])}",
+        "total_riscos":      "@{length(body('Buscar_Riscos_Abertos')?['value'])}",
+        "riscos_altos":      "@{length(body('Buscar_Riscos_Abertos')?['value'])}",
+        "total_alertas":     "@{length(body('Buscar_Alertas_Abertos')?['value'])}",
+        "alertas_criticos":  "@{length(body('Buscar_Alertas_Abertos')?['value'])}",
+        "health_score":      "@{if(empty(body('Buscar_Todos_KPIs')?['value']), 100, first(body('Buscar_Todos_KPIs')?['value'])?['HealthScore'])}",
+        "cpi_medio":         "@{if(empty(body('Buscar_Todos_KPIs')?['value']), 1.0, first(body('Buscar_Todos_KPIs')?['value'])?['CPI'])}",
+        "spi_medio":         "@{if(empty(body('Buscar_Todos_KPIs')?['value']), 1.0, first(body('Buscar_Todos_KPIs')?['value'])?['SPI'])}",
+        "ultima_atualizacao": "@utcNow()"
+      },
+      "runAfter": {
+        "Buscar_Projetos_Ativos": ["Succeeded"],
+        "Buscar_Todos_KPIs": ["Succeeded"],
+        "Buscar_Riscos_Abertos": ["Succeeded"],
+        "Buscar_Alertas_Abertos": ["Succeeded"]
+      }
+    },
+
+    "Buscar_Dashboard_Existente": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_DashboardData'))}/items",
+        "queries": { "$top": "1" }
+      },
+      "runAfter": { "Calcular_Metricas_Consolidadas": ["Succeeded"] }
+    },
+
+    "Criar_Ou_Atualizar_Dashboard": {
+      "type": "Condition",
+      "expression": {
+        "and": [{ "greater": ["@length(body('Buscar_Dashboard_Existente')?['value'])", 0] }]
+      },
+      "actions": {
+        "Atualizar_Dashboard_Existente": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+            "method": "patch",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_DashboardData'))}/items/@{first(body('Buscar_Dashboard_Existente')?['value'])?['ID']}",
+            "body": {
+              "TotalProjetos":    "@{outputs('Calcular_Metricas_Consolidadas')?['total_projetos']}",
+              "ProjetosAtivos":   "@{outputs('Calcular_Metricas_Consolidadas')?['projetos_ativos']}",
+              "HealthScore":      "@{outputs('Calcular_Metricas_Consolidadas')?['health_score']}",
+              "TotalAlertas":     "@{outputs('Calcular_Metricas_Consolidadas')?['total_alertas']}",
+              "AlertasCriticos":  "@{outputs('Calcular_Metricas_Consolidadas')?['alertas_criticos']}",
+              "TotalRiscos":      "@{outputs('Calcular_Metricas_Consolidadas')?['total_riscos']}",
+              "RiscosAltos":      "@{outputs('Calcular_Metricas_Consolidadas')?['riscos_altos']}",
+              "CPIMedio":         "@{outputs('Calcular_Metricas_Consolidadas')?['cpi_medio']}",
+              "SPIMedio":         "@{outputs('Calcular_Metricas_Consolidadas')?['spi_medio']}",
+              "UltimaAtualizacao":"@utcNow()",
+              "DadosJSON":        "@{string(outputs('Calcular_Metricas_Consolidadas'))}"
+            }
+          },
+          "runAfter": {}
+        }
+      },
+      "else": {
+        "actions": {
+          "Criar_Novo_Dashboard": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+              "method": "post",
+              "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_DashboardData'))}/items",
+              "body": {
+                "Title":            "VMO Dashboard Data — Consolidado",
+                "TotalProjetos":    "@{outputs('Calcular_Metricas_Consolidadas')?['total_projetos']}",
+                "ProjetosAtivos":   "@{outputs('Calcular_Metricas_Consolidadas')?['projetos_ativos']}",
+                "HealthScore":      "@{outputs('Calcular_Metricas_Consolidadas')?['health_score']}",
+                "TotalAlertas":     "@{outputs('Calcular_Metricas_Consolidadas')?['total_alertas']}",
+                "AlertasCriticos":  "@{outputs('Calcular_Metricas_Consolidadas')?['alertas_criticos']}",
+                "TotalRiscos":      "@{outputs('Calcular_Metricas_Consolidadas')?['total_riscos']}",
+                "RiscosAltos":      "@{outputs('Calcular_Metricas_Consolidadas')?['riscos_altos']}",
+                "CPIMedio":         "@{outputs('Calcular_Metricas_Consolidadas')?['cpi_medio']}",
+                "SPIMedio":         "@{outputs('Calcular_Metricas_Consolidadas')?['spi_medio']}",
+                "UltimaAtualizacao":"@utcNow()",
+                "DadosJSON":        "@{string(outputs('Calcular_Metricas_Consolidadas'))}"
+              }
+            },
+            "runAfter": {}
+          }
+        }
+      },
+      "runAfter": { "Buscar_Dashboard_Existente": ["Succeeded"] }
+    },
+
+    "Notificar_Teams_Atualizacao": {
+      "type": "Condition",
+      "expression": {
+        "and": [{ "equals": ["@parameters('TeamsNotification')", true] }]
+      },
+      "actions": {
+        "Post_Teams_Dashboard": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": { "connection": { "name": "@parameters('$connections')['teams']['connectionId']" } },
+            "method": "post",
+            "path": "/beta/teams/messages",
+            "body": {
+              "messageBody": "🌐 **VMO Dashboard atualizado** — @{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}\n\n📊 **Portfolio:** @{outputs('Calcular_Metricas_Consolidadas')?['total_projetos']} projetos | Health @{outputs('Calcular_Metricas_Consolidadas')?['health_score']}/100\n⚠️ Riscos abertos: @{outputs('Calcular_Metricas_Consolidadas')?['total_riscos']} | 🔔 Alertas: @{outputs('Calcular_Metricas_Consolidadas')?['total_alertas']}"
+            }
+          },
+          "runAfter": {}
+        }
+      },
+      "else": { "actions": {} },
+      "runAfter": { "Criar_Ou_Atualizar_Dashboard": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

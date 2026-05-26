@@ -1,0 +1,62 @@
+kind: BotDefinition
+schemaVersion: "1.0"
+metadata:
+  name: VMO_Assistente
+  displayName: "VMO Assistente"
+  description: |
+    Assistente conversacional do VMO Consultoria. Gerencia o ciclo completo de projetos
+    com 11 agentes especializados: Iara (inbound), Felipe (filtro), Diana (documentos),
+    Rafael (requisitos), Fábio (WR), Carlos (cronograma), Pedro (riscos), Marcela (KPIs),
+    Sara (status), Vera (qualidade) e Gabriel (governança).
+  language: pt-BR
+  icon: "🏛️"
+  version: "1.0.0"
+  company: "VMO Consultoria"
+
+configuration:
+  fallbackResponse: |
+    Não entendi sua solicitação. Posso ajudar com:
+    • **Nova demanda** — abrir um projeto
+    • **Status de projeto** — consultar andamento
+    • **KPIs** — ver métricas do portfolio
+    • **Riscos** — consultar matriz de riscos
+    • **Relatório** — gerar status report
+    • **Governança** — verificar gates e aprovações
+  welcomeMessage: |
+    🏛️ **Bem-vindo ao VMO Assistente!**
+
+    Sou o assistente do Escritório de Projetos VMO Consultoria.
+    Posso iniciar projetos, consultar status, gerar relatórios e muito mais.
+
+    Como posso ajudar hoje?
+
+topics:
+  - id: saudacao
+    path: ./topics/Saudacao.yaml
+  - id: nova_demanda
+    path: ./topics/NovaDemanda.yaml
+  - id: consultar_projeto
+    path: ./topics/ConsultarProjeto.yaml
+  - id: consultar_kpis
+    path: ./topics/ConsultarKPIs.yaml
+  - id: consultar_riscos
+    path: ./topics/ConsultarRiscos.yaml
+  - id: gerar_relatorio
+    path: ./topics/GerarRelatorio.yaml
+  - id: auditoria_governanca
+    path: ./topics/AuditoriaGovernanca.yaml
+  - id: pipeline_completo
+    path: ./topics/PipelineCompleto.yaml
+  - id: help
+    path: ./topics/Help.yaml
+
+connections:
+  - kind: PowerAutomateConnection
+    displayName: "VMO SharePoint"
+    connectorId: "shared_sharepointonline"
+  - kind: PowerAutomateConnection
+    displayName: "VMO Approvals"
+    connectorId: "shared_approvals"
+  - kind: PowerAutomateConnection
+    displayName: "VMO Teams"
+    connectorId: "shared_teams"

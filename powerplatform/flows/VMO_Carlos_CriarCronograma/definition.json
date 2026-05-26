@@ -1,0 +1,416 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Carlos: Criar Cronograma",
+    "description": "Agente Carlos Cronograma. Cria a WBS com ao menos 8 tarefas em 3 níveis, registra na lista VMO_Cronograma e gera documento de cronograma na pasta 06_Cronograma.",
+    "agent": "Carlos Cronograma",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":      { "type": "string" },
+            "nomeProjeto":    { "type": "string" },
+            "dataInicio":     { "type": "string" },
+            "dataFim":        { "type": "string" },
+            "gerenteProjeto": { "type": "string" }
+          },
+          "required": ["projetoId"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_Cronograma": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":      "@{triggerBody()?['projetoId']}",
+        "nomeProjeto":    "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "dataInicio":     "@{if(empty(triggerBody()?['dataInicio']), formatDateTime(utcNow(), 'dd/MM/yyyy'), triggerBody()?['dataInicio'])}",
+        "dataFim":        "@{if(empty(triggerBody()?['dataFim']), 'A definir', triggerBody()?['dataFim'])}",
+        "gerenteProjeto": "@{if(empty(triggerBody()?['gerenteProjeto']), 'A definir', triggerBody()?['gerenteProjeto'])}",
+        "dataGeracao":    "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}",
+        "versao":         "1.0"
+      },
+      "runAfter": {}
+    },
+
+    "Criar_WBS_1_Iniciacao": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "1 — Iniciação do Projeto",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "1",
+          "CodigoWBS":       "1",
+          "Tarefa":          "Fase de Iniciação",
+          "DataInicio":      "@{outputs('Preparar_Dados_Cronograma')?['dataInicio']}",
+          "DataFim":         "Semana 2",
+          "Responsavel":     "@{outputs('Preparar_Dados_Cronograma')?['gerenteProjeto']}",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Preparar_Dados_Cronograma": ["Succeeded"] }
+    },
+
+    "Criar_WBS_1_1_Kickoff": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "1.1 — Reunião de Kickoff",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "2",
+          "CodigoWBS":       "1.1",
+          "Tarefa":          "Realização da reunião de kickoff com todos os stakeholders; apresentação do TAP e alinhamento de expectativas.",
+          "DataInicio":      "@{outputs('Preparar_Dados_Cronograma')?['dataInicio']}",
+          "DataFim":         "Dia 3",
+          "Responsavel":     "@{outputs('Preparar_Dados_Cronograma')?['gerenteProjeto']}",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_1_Iniciacao": ["Succeeded"] }
+    },
+
+    "Criar_WBS_1_1_1_Preparar_Pauta": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "1.1.1 — Preparar Pauta e Materiais do Kickoff",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "3",
+          "CodigoWBS":       "1.1.1",
+          "Tarefa":          "Elaboração da pauta, apresentação e envio de convites aos participantes do kickoff.",
+          "DataInicio":      "@{outputs('Preparar_Dados_Cronograma')?['dataInicio']}",
+          "DataFim":         "Dia 2",
+          "Responsavel":     "@{outputs('Preparar_Dados_Cronograma')?['gerenteProjeto']}",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": false,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_1_1_Kickoff": ["Succeeded"] }
+    },
+
+    "Criar_WBS_2_Planejamento": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "2 — Planejamento e Arquitetura",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "1",
+          "CodigoWBS":       "2",
+          "Tarefa":          "Fase de Planejamento e Definição de Arquitetura",
+          "DataInicio":      "Semana 3",
+          "DataFim":         "Semana 6",
+          "Responsavel":     "@{outputs('Preparar_Dados_Cronograma')?['gerenteProjeto']}",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_1_1_1_Preparar_Pauta": ["Succeeded"] }
+    },
+
+    "Criar_WBS_2_1_Requisitos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "2.1 — Levantamento e Validação de Requisitos",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "2",
+          "CodigoWBS":       "2.1",
+          "Tarefa":          "Workshops de levantamento de requisitos, priorização MoSCoW e validação com stakeholders.",
+          "DataInicio":      "Semana 3",
+          "DataFim":         "Semana 4",
+          "Responsavel":     "Analista de Negócios",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_2_Planejamento": ["Succeeded"] }
+    },
+
+    "Criar_WBS_2_2_Arquitetura": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "2.2 — Design de Arquitetura de Solução",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "2",
+          "CodigoWBS":       "2.2",
+          "Tarefa":          "Definição e documentação da arquitetura técnica, modelo de dados, integrações e stack tecnológico.",
+          "DataInicio":      "Semana 4",
+          "DataFim":         "Semana 6",
+          "Responsavel":     "Tech Lead",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_2_1_Requisitos": ["Succeeded"] }
+    },
+
+    "Criar_WBS_3_Execucao": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "3 — Execução e Desenvolvimento",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "1",
+          "CodigoWBS":       "3",
+          "Tarefa":          "Fase de Desenvolvimento e Implementação da Solução",
+          "DataInicio":      "Semana 7",
+          "DataFim":         "Semana 16",
+          "Responsavel":     "Tech Lead",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_2_2_Arquitetura": ["Succeeded"] }
+    },
+
+    "Criar_WBS_3_1_Sprint1": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "3.1 — Sprint 1: Fundação e Autenticação",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "2",
+          "CodigoWBS":       "3.1",
+          "Tarefa":          "Setup de ambiente, CI/CD, autenticação SSO, estrutura base da aplicação e primeiras integrações.",
+          "DataInicio":      "Semana 7",
+          "DataFim":         "Semana 10",
+          "Responsavel":     "Tech Lead",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_3_Execucao": ["Succeeded"] }
+    },
+
+    "Criar_WBS_3_2_Sprint2": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "3.2 — Sprint 2: Funcionalidades Core e Dashboard",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "2",
+          "CodigoWBS":       "3.2",
+          "Tarefa":          "Desenvolvimento das funcionalidades principais: dashboard, gestão de documentos, KPIs e notificações.",
+          "DataInicio":      "Semana 11",
+          "DataFim":         "Semana 14",
+          "Responsavel":     "Tech Lead",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_3_1_Sprint1": ["Succeeded"] }
+    },
+
+    "Criar_WBS_4_Testes": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Cronograma'))}/items",
+        "body": {
+          "Title":           "4 — Testes, Homologação e Go-Live",
+          "ProjetoID":       "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "NivelWBS":        "1",
+          "CodigoWBS":       "4",
+          "Tarefa":          "Fase de Testes, Homologação com Usuários e Implantação em Produção",
+          "DataInicio":      "Semana 17",
+          "DataFim":         "@{outputs('Preparar_Dados_Cronograma')?['dataFim']}",
+          "Responsavel":     "@{outputs('Preparar_Dados_Cronograma')?['gerenteProjeto']}",
+          "Status":          "PLANEJADO",
+          "CaminhosCritico": true,
+          "Agente":          "Carlos Cronograma",
+          "DataCriacao":     "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_WBS_3_2_Sprint2": ["Succeeded"] }
+    },
+
+    "Criar_Documento_Cronograma": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Cronograma')?['projetoId']}/06_Cronograma",
+          "Name": "Cronograma_WBS.md",
+          "ContentBytes": "@{base64(concat('# CRONOGRAMA E WBS — ', outputs('Preparar_Dados_Cronograma')?['nomeProjeto'], '\n\n**Versão:** ', outputs('Preparar_Dados_Cronograma')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_Cronograma')?['dataGeracao'], '\n**Agente:** Carlos Cronograma\n\n---\n\n## 1. RESUMO DO CRONOGRAMA\n\n| Campo | Valor |\n|---|---|\n| **Data de Início** | ', outputs('Preparar_Dados_Cronograma')?['dataInicio'], ' |\n| **Data de Conclusão** | ', outputs('Preparar_Dados_Cronograma')?['dataFim'], ' |\n| **Total de Tarefas** | 11 |\n| **Fases** | 4 |\n| **Caminho Crítico** | Fases 1 → 2 → 3 → 4 |\n\n---\n\n## 2. WBS — ESTRUTURA ANALÍTICA DO PROJETO\n\n```\n', outputs('Preparar_Dados_Cronograma')?['nomeProjeto'], '\n│\n├── 1. INICIAÇÃO (Semanas 1–2)\n│   └── 1.1 Reunião de Kickoff\n│       └── 1.1.1 Preparar Pauta e Materiais\n│\n├── 2. PLANEJAMENTO E ARQUITETURA (Semanas 3–6)\n│   ├── 2.1 Levantamento e Validação de Requisitos\n│   └── 2.2 Design de Arquitetura de Solução\n│\n├── 3. EXECUÇÃO E DESENVOLVIMENTO (Semanas 7–16)\n│   ├── 3.1 Sprint 1: Fundação e Autenticação (Sem 7–10)\n│   └── 3.2 Sprint 2: Funcionalidades Core e Dashboard (Sem 11–14)\n│\n└── 4. TESTES, HOMOLOGAÇÃO E GO-LIVE (Semana 17 – Fim)\n```\n\n---\n\n## 3. CRONOGRAMA DETALHADO\n\n| WBS | Tarefa | Nível | Início | Fim | Responsável | Status | Crítico? |\n|---|---|---|---|---|---|---|---|\n| 1 | Iniciação | 1 | Semana 1 | Semana 2 | GP | Planejado | Sim |\n| 1.1 | Reunião de Kickoff | 2 | Semana 1 | Dia 3 | GP | Planejado | Sim |\n| 1.1.1 | Preparar Pauta e Materiais | 3 | Semana 1 | Dia 2 | GP | Planejado | Não |\n| 2 | Planejamento e Arquitetura | 1 | Semana 3 | Semana 6 | GP | Planejado | Sim |\n| 2.1 | Levantamento de Requisitos | 2 | Semana 3 | Semana 4 | Analista | Planejado | Sim |\n| 2.2 | Design de Arquitetura | 2 | Semana 4 | Semana 6 | Tech Lead | Planejado | Sim |\n| 3 | Execução e Desenvolvimento | 1 | Semana 7 | Semana 16 | Tech Lead | Planejado | Sim |\n| 3.1 | Sprint 1: Fundação | 2 | Semana 7 | Semana 10 | Tech Lead | Planejado | Sim |\n| 3.2 | Sprint 2: Core e Dashboard | 2 | Semana 11 | Semana 14 | Tech Lead | Planejado | Sim |\n| 4 | Testes, Homologação e Go-Live | 1 | Semana 17 | Fim | GP | Planejado | Sim |\n\n---\n\n## 4. MARCOS DO PROJETO\n\n| Marco | Data Prevista | Critério de Conclusão |\n|---|---|---|\n| M1 — Kickoff Realizado | Dia 3 | Ata assinada por todos os stakeholders |\n| M2 — Requisitos Aprovados | Semana 4 | Matriz de Requisitos validada |\n| M3 — Arquitetura Aprovada | Semana 6 | SAD revisado e aprovado |\n| M4 — MVP Entregue | Semana 10 | Sprint 1 concluída, ambiente disponível |\n| M5 — Gate Final | Semana 17 | Todos os artefatos entregues |\n| M6 — Go-Live | Fim | Aceite formal assinado |\n\n---\n\n## 5. HISTÓRICO DE VERSÕES\n\n| Versão | Data | Autor | Descrição |\n|---|---|---|---|\n| 1.0 | ', outputs('Preparar_Dados_Cronograma')?['dataGeracao'], ' | Carlos Cronograma | Criação inicial via VMO |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Carlos Cronograma.*\n'))}"
+        }
+      },
+      "runAfter": { "Criar_WBS_4_Testes": ["Succeeded"] }
+    },
+
+    "Registrar_Documento_Lista": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":       "Cronograma WBS — @{outputs('Preparar_Dados_Cronograma')?['nomeProjeto']}",
+          "Tipo":        "CRONOGRAMA",
+          "ProjetoID":   "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "Versao":      "1.0",
+          "Status":      "RASCUNHO",
+          "Agente":      "Carlos Cronograma",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":     "/VMO_Projetos/@{outputs('Preparar_Dados_Cronograma')?['projetoId']}/06_Cronograma/Cronograma_WBS.md"
+        }
+      },
+      "runAfter": { "Criar_Documento_Cronograma": ["Succeeded"] }
+    },
+
+    "Obter_Registro_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_Cronograma')?['projetoId']}'"
+        }
+      },
+      "runAfter": { "Registrar_Documento_Lista": ["Succeeded"] }
+    },
+
+    "Atualizar_Status_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{first(outputs('Obter_Registro_Projeto')?['body/value'])?['ID']}",
+        "body": {
+          "Status":                  "CRONOGRAMA_CRIADO",
+          "AgenteAtual":             "Carlos Cronograma",
+          "DataUltimaAtualizacao":   "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Obter_Registro_Projeto": ["Succeeded"] }
+    },
+
+    "Resposta_Sucesso": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status":        "ok",
+          "agente":        "Carlos Cronograma",
+          "projetoId":     "@{outputs('Preparar_Dados_Cronograma')?['projetoId']}",
+          "mensagem":      "Cronograma e WBS criados com sucesso. 11 tarefas em 3 níveis e 4 fases.",
+          "totalTarefas":  11,
+          "totalFases":    4,
+          "totalNiveis":   3,
+          "documentoId":   "@{outputs('Registrar_Documento_Lista')?['body/ID']}",
+          "statusProjeto": "CRONOGRAMA_CRIADO",
+          "proximoPasso":  "PEDRO_ANALISE_RISCOS"
+        }
+      },
+      "runAfter": { "Atualizar_Status_Projeto": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

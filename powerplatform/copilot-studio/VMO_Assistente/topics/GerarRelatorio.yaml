@@ -1,0 +1,94 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: gerar_relatorio
+displayName: "Gerar Status Report (Sara)"
+description: "Sara Status — Gera status report semanal de um projeto ou de todo o portfolio"
+
+triggerIntents:
+  - "gerar relatório"
+  - "status report"
+  - "relatório semanal"
+  - "relatório do projeto"
+  - "sara gera relatório"
+  - "preciso de um relatório"
+  - "quero o relatório"
+  - "gerar report"
+
+variables:
+  - name: NomeProjeto
+    type: String
+  - name: TipoRelatorio
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: SendMessage
+    id: msg_intro
+    message: |
+      📝 Vou acionar a **Sara** para gerar o status report.
+
+  - kind: Question
+    id: q_tipo
+    prompt: "Qual tipo de relatório?"
+    choices:
+      - value: "Status Report Semanal"
+        synonyms: ["semanal", "semana", "weekly"]
+      - value: "Relatório Executivo"
+        synonyms: ["executivo", "board", "diretoria"]
+      - value: "Relatório de Portfolio"
+        synonyms: ["portfolio", "todos os projetos", "consolidado"]
+    variable: Topic.TipoRelatorio
+
+  - kind: Question
+    id: q_projeto
+    prompt: "Para qual projeto? (ou 'todos' para portfolio completo)"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.NomeProjeto
+
+  - kind: SendMessage
+    id: msg_gerando
+    message: |
+      ⏳ Sara está gerando o relatório de **@{Topic.NomeProjeto}**...
+
+  - kind: InvokeFlowAction
+    id: invoke_sara
+    flowId: "VMO_Sara_StatusReport"
+    input:
+      binding:
+        nomeProjeto: =Topic.NomeProjeto
+        tipoRelatorio: =Topic.TipoRelatorio
+    output:
+      binding:
+        FlowResult: Topic.FlowResult
+
+  - kind: SendMessage
+    id: msg_relatorio
+    message: |
+      ✅ **Relatório gerado com sucesso!**
+
+      📋 **@{Topic.TipoRelatorio} — @{Topic.NomeProjeto}**
+      📅 **Período:** @{Topic.FlowResult.periodo}
+
+      ---
+
+      **📊 Resumo Executivo:**
+      @{Topic.FlowResult.resumoExecutivo}
+
+      ---
+
+      **🚦 Status por Dimensão:**
+      • Prazo: @{Topic.FlowResult.statusPrazo}
+      • Custo: @{Topic.FlowResult.statusCusto}
+      • Escopo: @{Topic.FlowResult.statusEscopo}
+      • Qualidade: @{Topic.FlowResult.statusQualidade}
+
+      ---
+
+      **⚠️ Issues em Aberto:** @{Topic.FlowResult.totalIssues}
+      **✅ Próximas 3 Ações:**
+      @{Topic.FlowResult.proximasAcoes}
+
+      📎 Relatório completo salvo no SharePoint: @{Topic.FlowResult.linkDocumento}

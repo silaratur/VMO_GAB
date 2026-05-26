@@ -1,0 +1,151 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Fábio: Gerar Work Request",
+    "description": "Agente Fábio Fornecedor. Gera o documento de Work Request com escopo, checklist de 41 artefatos obrigatórios em 10 grupos, termos comerciais e matriz de avaliação de fornecedores.",
+    "agent": "Fábio Fornecedor",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":       { "type": "string" },
+            "nomeProjeto":     { "type": "string" },
+            "escopoIncluido":  { "type": "string" },
+            "escopoExcluido":  { "type": "string" },
+            "orcamento":       { "type": "string" },
+            "prazo":           { "type": "string" },
+            "gerenteProjeto":  { "type": "string" }
+          },
+          "required": ["projetoId"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_WorkRequest": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":      "@{triggerBody()?['projetoId']}",
+        "nomeProjeto":    "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "escopoIncluido": "@{if(empty(triggerBody()?['escopoIncluido']), 'Conforme detalhado no TAP e PM Canvas.', triggerBody()?['escopoIncluido'])}",
+        "escopoExcluido": "@{if(empty(triggerBody()?['escopoExcluido']), 'Conforme detalhado no TAP e PM Canvas.', triggerBody()?['escopoExcluido'])}",
+        "orcamento":      "@{if(empty(triggerBody()?['orcamento']), 'A definir', triggerBody()?['orcamento'])}",
+        "prazo":          "@{if(empty(triggerBody()?['prazo']), 'A definir', triggerBody()?['prazo'])}",
+        "gerenteProjeto": "@{if(empty(triggerBody()?['gerenteProjeto']), 'A definir', triggerBody()?['gerenteProjeto'])}",
+        "dataGeracao":    "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}",
+        "versao":         "1.0",
+        "numeroWR":       "@{concat('WR-', triggerBody()?['projetoId'], '-001')}"
+      },
+      "runAfter": {}
+    },
+
+    "Criar_Documento_Work_Request": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_WorkRequest')?['projetoId']}/05_WorkRequest",
+          "Name": "Work_Request.md",
+          "ContentBytes": "@{base64(concat('# WORK REQUEST — ', outputs('Preparar_Dados_WorkRequest')?['numeroWR'], '\n\n**Projeto:** ', outputs('Preparar_Dados_WorkRequest')?['nomeProjeto'], '\n**Versão:** ', outputs('Preparar_Dados_WorkRequest')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_WorkRequest')?['dataGeracao'], '\n**Agente:** Fábio Fornecedor\n\n---\n\n## 1. IDENTIFICAÇÃO\n\n| Campo | Valor |\n|---|---|\n| **Número do WR** | ', outputs('Preparar_Dados_WorkRequest')?['numeroWR'], ' |\n| **Projeto** | ', outputs('Preparar_Dados_WorkRequest')?['nomeProjeto'], ' |\n| **Gerente de Projeto** | ', outputs('Preparar_Dados_WorkRequest')?['gerenteProjeto'], ' |\n| **Data de Emissão** | ', outputs('Preparar_Dados_WorkRequest')?['dataGeracao'], ' |\n| **Orçamento Disponível** | ', outputs('Preparar_Dados_WorkRequest')?['orcamento'], ' |\n| **Prazo Máximo** | ', outputs('Preparar_Dados_WorkRequest')?['prazo'], ' |\n\n---\n\n## 2. ESCOPO DO FORNECIMENTO\n\n### 2.1 Incluso no Escopo\n\n', outputs('Preparar_Dados_WorkRequest')?['escopoIncluido'], '\n\n### 2.2 Excluído do Escopo\n\n', outputs('Preparar_Dados_WorkRequest')?['escopoExcluido'], '\n\n---\n\n## 3. CHECKLIST DE ARTEFATOS OBRIGATÓRIOS\n\n> O fornecedor deve entregar **todos** os artefatos marcados como obrigatórios. A ausência de qualquer artefato implica retenção de pagamento até regularização.\n\n### GRUPO 1 — PLANEJAMENTO (5 artefatos)\n\n- [ ] **AR-001** Plano de Projeto detalhado (WBS + cronograma)\n- [ ] **AR-002** Plano de Comunicação\n- [ ] **AR-003** Plano de Qualidade\n- [ ] **AR-004** Plano de Gerenciamento de Riscos\n- [ ] **AR-005** Matriz de Responsabilidades (RACI)\n\n### GRUPO 2 — ARQUITETURA E DESIGN (5 artefatos)\n\n- [ ] **AR-006** Documento de Arquitetura de Solução (SAD)\n- [ ] **AR-007** Diagramas de Arquitetura (C4 Model ou equivalente)\n- [ ] **AR-008** Modelo de Dados (DER / ERD)\n- [ ] **AR-009** Especificação de APIs (OpenAPI 3.0)\n- [ ] **AR-010** Decisões de Arquitetura (ADRs)\n\n### GRUPO 3 — DESENVOLVIMENTO (4 artefatos)\n\n- [ ] **AR-011** Código-fonte versionado em repositório Git\n- [ ] **AR-012** Pipeline CI/CD configurado e documentado\n- [ ] **AR-013** Padrões de codificação aplicados (linting, code review)\n- [ ] **AR-014** Changelog versionado (SemVer)\n\n### GRUPO 4 — TESTES E QUALIDADE (5 artefatos)\n\n- [ ] **AR-015** Plano de Testes completo\n- [ ] **AR-016** Casos de Teste (unitários, integração, E2E)\n- [ ] **AR-017** Relatório de Execução de Testes\n- [ ] **AR-018** Evidências de Testes (prints, logs)\n- [ ] **AR-019** Relatório de Cobertura de Código (mín. 80%)\n\n### GRUPO 5 — SEGURANÇA (4 artefatos)\n\n- [ ] **AR-020** Análise de Vulnerabilidades (SAST/DAST)\n- [ ] **AR-021** Relatório de Pentest (se aplicável)\n- [ ] **AR-022** Conformidade LGPD documentada\n- [ ] **AR-023** Gestão de Segredos e Certificados\n\n### GRUPO 6 — INFRAESTRUTURA E DEPLOY (4 artefatos)\n\n- [ ] **AR-024** Diagrama de Infraestrutura\n- [ ] **AR-025** Scripts de Infraestrutura como Código (IaC)\n- [ ] **AR-026** Runbook de Deploy e Rollback\n- [ ] **AR-027** Configuração de Monitoramento e Alertas\n\n### GRUPO 7 — DOCUMENTAÇÃO TÉCNICA (5 artefatos)\n\n- [ ] **AR-028** Manual Técnico de Instalação/Configuração\n- [ ] **AR-029** Documentação de APIs e Integrações\n- [ ] **AR-030** Dicionário de Dados\n- [ ] **AR-031** Guia de Troubleshooting\n- [ ] **AR-032** Documentação de Dependências e Licenças\n\n### GRUPO 8 — DOCUMENTAÇÃO DO USUÁRIO (3 artefatos)\n\n- [ ] **AR-033** Manual do Usuário Final\n- [ ] **AR-034** Material de Treinamento (slides/vídeos)\n- [ ] **AR-035** FAQ e Base de Conhecimento inicial\n\n### GRUPO 9 — TRANSIÇÃO E ENTREGA (3 artefatos)\n\n- [ ] **AR-036** Plano de Transição e Go-Live\n- [ ] **AR-037** Plano de Suporte Pós-Implantação\n- [ ] **AR-038** Termo de Aceite Final assinado\n\n### GRUPO 10 — GOVERNANÇA E COMPLIANCE (3 artefatos)\n\n- [ ] **AR-039** Relatório Final do Projeto\n- [ ] **AR-040** Lições Aprendidas\n- [ ] **AR-041** Inventário de Ativos Entregues\n\n**TOTAL: 41 artefatos obrigatórios em 10 grupos**\n\n---\n\n## 4. TERMOS COMERCIAIS\n\n### 4.1 Modelo de Contratação\n\n| Item | Detalhe |\n|---|---|\n| **Modelo** | Preço Fixo (Fixed Price) com marcos de entrega |\n| **Orçamento Total** | ', outputs('Preparar_Dados_WorkRequest')?['orcamento'], ' |\n| **Moeda** | BRL (Real Brasileiro) |\n| **Forma de Pagamento** | 30% na assinatura; 40% na entrega do MVP; 30% no aceite final |\n\n### 4.2 Cronograma de Pagamentos\n\n| Marco | % | Gatilho de Pagamento |\n|---|---|---|\n| Início do Projeto | 30% | Assinatura do contrato e kick-off realizado |\n| Entrega do MVP | 40% | Aprovação dos testes de aceite do MVP |\n| Aceite Final | 30% | Assinatura do Termo de Aceite e entrega de todos os artefatos |\n\n### 4.3 Penalidades\n\n| Situação | Penalidade |\n|---|---|\n| Atraso na entrega (por semana) | 0,5% do valor contratual |\n| Artefato obrigatório não entregue | Retenção de 5% até regularização |\n| Retrabalho por falha do fornecedor | Às expensas do fornecedor |\n\n### 4.4 Garantia\n\n- Garantia de 90 dias após aceite final para correção de bugs críticos sem custo adicional\n- SLA de atendimento: Crítico < 4h, Alto < 8h, Médio < 2 dias úteis\n\n---\n\n## 5. MATRIZ DE AVALIAÇÃO DE FORNECEDORES\n\n| Critério | Peso | Pontuação Mín. | Método de Avaliação |\n|---|---|---|---|\n| Experiência Técnica Comprovada | 25% | 7/10 | Portfólio + referências |\n| Qualificação da Equipe | 20% | 7/10 | CVs + certificações |\n| Proposta Técnica | 20% | 7/10 | Aderência ao escopo |\n| Proposta Comercial | 20% | 6/10 | Melhor relação custo-benefício |\n| Saúde Financeira | 10% | 7/10 | Balanço + certidões |\n| Conformidade e Compliance | 5% | 8/10 | Certificações ISO / LGPD |\n\n**Pontuação mínima para qualificação: 7.0/10 (média ponderada)**\n\n### 5.1 Critérios de Desclassificação\n\n- Proposta comercial > 20% acima do orçamento disponível\n- Pontuação em qualquer critério obrigatório < 5/10\n- Impedimentos legais ou cadastrais (CNPJ irregular, débitos fiscais)\n- Conflito de interesse com membros da equipe contratante\n\n---\n\n## 6. REQUISITOS DE SUBMISSÃO\n\n### Documentos Obrigatórios na Proposta\n\n1. Proposta Técnica (máx. 30 páginas)\n2. Proposta Comercial (planilha detalhada)\n3. Metodologia de Trabalho\n4. Cronograma macro de entregas\n5. Composição da equipe (CVs dos principais profissionais)\n6. Portfólio de projetos similares (mín. 3 referências)\n7. Certidão Negativa de Débitos Federais, Estaduais e Municipais\n8. Certidão Negativa de Débitos Trabalhistas (CNDT)\n\n### Prazo de Submissão\n\n- **Data limite:** A definir pelo Gerente de Projeto\n- **Formato:** PDF via e-mail para o endereço indicado no edital\n- **Sessão de esclarecimentos:** Até 5 dias antes do prazo de submissão\n\n---\n\n## 7. CRITÉRIOS DE ACEITE\n\nO projeto será considerado concluído quando:\n1. Todos os 41 artefatos obrigatórios forem entregues e aprovados\n2. Todos os testes de aceite passarem sem falhas críticas\n3. Documentação técnica e de usuário estiver completa\n4. Treinamento da equipe interna for realizado\n5. Termo de Aceite Final for assinado pelo Gerente de Projeto e Patrocinador\n\n---\n\n## 8. HISTÓRICO DE VERSÕES\n\n| Versão | Data | Autor | Descrição |\n|---|---|---|---|\n| 1.0 | ', outputs('Preparar_Dados_WorkRequest')?['dataGeracao'], ' | Fábio Fornecedor | Criação inicial via VMO |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Fábio Fornecedor.*\n'))}"
+        }
+      },
+      "runAfter": { "Preparar_Dados_WorkRequest": ["Succeeded"] }
+    },
+
+    "Registrar_Documento_Lista": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":       "Work Request — @{outputs('Preparar_Dados_WorkRequest')?['nomeProjeto']}",
+          "Tipo":        "WORK_REQUEST",
+          "ProjetoID":   "@{outputs('Preparar_Dados_WorkRequest')?['projetoId']}",
+          "Versao":      "1.0",
+          "Status":      "RASCUNHO",
+          "Agente":      "Fábio Fornecedor",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":     "/VMO_Projetos/@{outputs('Preparar_Dados_WorkRequest')?['projetoId']}/05_WorkRequest/Work_Request.md"
+        }
+      },
+      "runAfter": { "Criar_Documento_Work_Request": ["Succeeded"] }
+    },
+
+    "Obter_Registro_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_WorkRequest')?['projetoId']}'"
+        }
+      },
+      "runAfter": { "Registrar_Documento_Lista": ["Succeeded"] }
+    },
+
+    "Atualizar_Status_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{first(outputs('Obter_Registro_Projeto')?['body/value'])?['ID']}",
+        "body": {
+          "Status":                  "WORK_REQUEST_GERADO",
+          "AgenteAtual":             "Fábio Fornecedor",
+          "DataUltimaAtualizacao":   "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Obter_Registro_Projeto": ["Succeeded"] }
+    },
+
+    "Resposta_Sucesso": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status":          "ok",
+          "agente":          "Fábio Fornecedor",
+          "projetoId":       "@{outputs('Preparar_Dados_WorkRequest')?['projetoId']}",
+          "mensagem":        "Work Request gerado com sucesso. 41 artefatos obrigatórios em 10 grupos definidos.",
+          "numeroWR":        "@{outputs('Preparar_Dados_WorkRequest')?['numeroWR']}",
+          "totalArtefatos":  41,
+          "totalGrupos":     10,
+          "documentoId":     "@{outputs('Registrar_Documento_Lista')?['body/ID']}",
+          "statusProjeto":   "WORK_REQUEST_GERADO",
+          "proximoPasso":    "CARLOS_CRIAR_CRONOGRAMA"
+        }
+      },
+      "runAfter": { "Atualizar_Status_Projeto": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

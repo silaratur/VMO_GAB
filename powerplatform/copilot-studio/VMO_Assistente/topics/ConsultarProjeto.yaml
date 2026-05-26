@@ -1,0 +1,72 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: consultar_projeto
+displayName: "Consultar Status de Projeto"
+description: "Consulta status, fase atual, documentos e próximas ações de um projeto"
+
+triggerIntents:
+  - "status do projeto"
+  - "como está o projeto"
+  - "consultar projeto"
+  - "acompanhar projeto"
+  - "qual é a fase"
+  - "andamento do projeto"
+  - "meu projeto"
+  - "ver projeto"
+
+variables:
+  - name: NomeProjeto
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: Question
+    id: q_nome
+    prompt: "🔍 Qual é o nome ou ID do projeto que deseja consultar?"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.NomeProjeto
+
+  - kind: InvokeFlowAction
+    id: invoke_consulta
+    flowId: "VMO_Consultar_Projeto"
+    input:
+      binding:
+        nomeProjeto: =Topic.NomeProjeto
+    output:
+      binding:
+        FlowResult: Topic.FlowResult
+
+  - kind: ConditionGroup
+    id: verificar_resultado
+    conditions:
+      - condition: =Topic.FlowResult.encontrado = true
+        actions:
+          - kind: SendMessage
+            id: msg_projeto
+            message: |
+              📊 **Status do Projeto: @{Topic.FlowResult.titulo}**
+
+              | Campo | Valor |
+              |-------|-------|
+              | **Fase** | @{Topic.FlowResult.fase} |
+              | **Status** | @{Topic.FlowResult.status} |
+              | **Health Score** | @{Topic.FlowResult.healthScore}/100 |
+              | **CPI** | @{Topic.FlowResult.cpi} |
+              | **SPI** | @{Topic.FlowResult.spi} |
+              | **Responsável** | @{Topic.FlowResult.responsavel} |
+              | **Data Início** | @{Topic.FlowResult.dataInicio} |
+              | **Data Fim Prevista** | @{Topic.FlowResult.dataFim} |
+
+              **Próxima ação:** @{Topic.FlowResult.proximaAcao}
+
+      - condition: =true
+        actions:
+          - kind: SendMessage
+            id: msg_nao_encontrado
+            message: |
+              ❌ Projeto "@{Topic.NomeProjeto}" não encontrado.
+
+              Verifique o nome e tente novamente, ou consulte a lista completa de projetos no VMO Dashboard.

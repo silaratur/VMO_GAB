@@ -1,0 +1,218 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Gabriel: Auditoria de Governança",
+    "description": "Agente Gabriel Governança. Executa 3 gates obrigatórios (INTAKE, QUALIFICACAO, FINAL) e change control. Bloqueia projeto até resolver condições bloqueantes.",
+    "agent": "Gabriel Governança",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":  { "type": "string" },
+            "tipoGate":   { "type": "string" },
+            "nomeProjeto":{ "type": "string" }
+          },
+          "required": ["projetoId", "tipoGate"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Buscar_Dados_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{triggerBody()?['projetoId']}"
+      },
+      "runAfter": {}
+    },
+
+    "Buscar_Documentos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "queries": { "$filter": "ProjetoID eq '@{triggerBody()?['projetoId']}'" }
+      },
+      "runAfter": {}
+    },
+
+    "Avaliar_Gate_por_Tipo": {
+      "type": "Switch",
+      "expression": "@triggerBody()?['tipoGate']",
+      "cases": {
+
+        "INTAKE": {
+          "case": "INTAKE",
+          "actions": {
+            "Checklist_Gate_Intake": {
+              "type": "Compose",
+              "inputs": {
+                "gate":              "INTAKE",
+                "docs_necessarios":  ["DEMANDA_ESTRUTURADA"],
+                "docs_encontrados":  "@{length(body('Buscar_Documentos')?['value'])}",
+                "score":             "@{if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 1), 100, 0)}",
+                "veredicto":         "@{if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 1), 'APROVADO', 'BLOQUEADO')}",
+                "bloqueantes":       "@{if(less(length(body('Buscar_Documentos')?['value']), 1), 'Demanda estruturada não encontrada.', '')}",
+                "docs_faltantes":    "@{if(less(length(body('Buscar_Documentos')?['value']), 1), 'Demanda Estruturada (Iara)', 'Nenhum')}",
+                "proxima_fase":      "QUALIFICACAO"
+              },
+              "runAfter": {}
+            },
+            "Salvar_Gate_Intake": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+                "method": "post",
+                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Gates'))}/items",
+                "body": {
+                  "Title":                 "Gate Intake — @{body('Buscar_Dados_Projeto')?['Title']}",
+                  "ProjetoID":             "@triggerBody()?['projetoId']",
+                  "Tipo":                  "INTAKE",
+                  "Status":                "@{outputs('Checklist_Gate_Intake')?['veredicto']}",
+                  "Decisor":               "Gabriel Governança",
+                  "DataDecisao":           "@utcNow()",
+                  "ScoreGovernanca":       "@{outputs('Checklist_Gate_Intake')?['score']}",
+                  "ChecklistCompleto":     "@{equals(outputs('Checklist_Gate_Intake')?['veredicto'], 'APROVADO')}",
+                  "DocumentosFaltantes":   "@{outputs('Checklist_Gate_Intake')?['docs_faltantes']}",
+                  "CondicoesBloqueantes":  "@{outputs('Checklist_Gate_Intake')?['bloqueantes']}"
+                }
+              },
+              "runAfter": { "Checklist_Gate_Intake": ["Succeeded"] }
+            }
+          }
+        },
+
+        "QUALIFICACAO": {
+          "case": "QUALIFICACAO",
+          "actions": {
+            "Checklist_Gate_Qualificacao": {
+              "type": "Compose",
+              "inputs": {
+                "gate":         "QUALIFICACAO",
+                "score_qualificacao": "@{body('Buscar_Dados_Projeto')?['ScoreQualificacao']}",
+                "classificacao": "@{body('Buscar_Dados_Projeto')?['Classificacao']}",
+                "score":        "@{if(greaterOrEquals(body('Buscar_Dados_Projeto')?['ScoreQualificacao'], 50), 100, if(greaterOrEquals(body('Buscar_Dados_Projeto')?['ScoreQualificacao'], 30), 70, 0))}",
+                "veredicto":    "@{if(greaterOrEquals(body('Buscar_Dados_Projeto')?['ScoreQualificacao'], 50), 'APROVADO', if(greaterOrEquals(body('Buscar_Dados_Projeto')?['ScoreQualificacao'], 30), 'APROVADO_COM_RESSALVAS', 'BLOQUEADO'))}",
+                "bloqueantes":  "@{if(less(body('Buscar_Dados_Projeto')?['ScoreQualificacao'], 30), 'Score de qualificação abaixo do mínimo (30/100).', '')}",
+                "proxima_fase": "DOCUMENTACAO"
+              },
+              "runAfter": {}
+            },
+            "Salvar_Gate_Qualificacao": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+                "method": "post",
+                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Gates'))}/items",
+                "body": {
+                  "Title":               "Gate Qualificação — @{body('Buscar_Dados_Projeto')?['Title']}",
+                  "ProjetoID":           "@triggerBody()?['projetoId']",
+                  "Tipo":                "QUALIFICACAO",
+                  "Status":              "@{outputs('Checklist_Gate_Qualificacao')?['veredicto']}",
+                  "Decisor":             "Gabriel Governança",
+                  "DataDecisao":         "@utcNow()",
+                  "ScoreGovernanca":     "@{outputs('Checklist_Gate_Qualificacao')?['score']}",
+                  "ChecklistCompleto":   "@{not(equals(outputs('Checklist_Gate_Qualificacao')?['veredicto'], 'BLOQUEADO'))}",
+                  "CondicoesBloqueantes":"@{outputs('Checklist_Gate_Qualificacao')?['bloqueantes']}"
+                }
+              },
+              "runAfter": { "Checklist_Gate_Qualificacao": ["Succeeded"] }
+            }
+          }
+        },
+
+        "FINAL": {
+          "case": "FINAL",
+          "actions": {
+            "Checklist_Gate_Final": {
+              "type": "Compose",
+              "inputs": {
+                "gate":           "FINAL",
+                "docs_total":     "@{length(body('Buscar_Documentos')?['value'])}",
+                "docs_minimo":    8,
+                "score":          "@{mul(div(min(length(body('Buscar_Documentos')?['value']), 8), 8), 100)}",
+                "veredicto":      "@{if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 8), 'APROVADO', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 6), 'APROVADO_COM_RESSALVAS', 'BLOQUEADO'))}",
+                "bloqueantes":    "@{if(less(length(body('Buscar_Documentos')?['value']), 6), concat('Documentação incompleta. Mínimo 6 documentos. Encontrados: ', length(body('Buscar_Documentos')?['value'])), '')}",
+                "proxima_fase":   "PRONTO_EXECUCAO"
+              },
+              "runAfter": {}
+            },
+            "Salvar_Gate_Final": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+                "method": "post",
+                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Gates'))}/items",
+                "body": {
+                  "Title":               "Gate Final — @{body('Buscar_Dados_Projeto')?['Title']}",
+                  "ProjetoID":           "@triggerBody()?['projetoId']",
+                  "Tipo":                "FINAL",
+                  "Status":              "@{outputs('Checklist_Gate_Final')?['veredicto']}",
+                  "Decisor":             "Gabriel Governança",
+                  "DataDecisao":         "@utcNow()",
+                  "ScoreGovernanca":     "@{outputs('Checklist_Gate_Final')?['score']}",
+                  "ChecklistCompleto":   "@{equals(outputs('Checklist_Gate_Final')?['veredicto'], 'APROVADO')}",
+                  "CondicoesBloqueantes":"@{outputs('Checklist_Gate_Final')?['bloqueantes']}"
+                }
+              },
+              "runAfter": { "Checklist_Gate_Final": ["Succeeded"] }
+            }
+          }
+        }
+
+      },
+      "default": {
+        "actions": {
+          "Tipo_Gate_Invalido": {
+            "type": "Response",
+            "inputs": {
+              "statusCode": 400,
+              "body": { "erro": "tipoGate inválido. Use: INTAKE, QUALIFICACAO ou FINAL" }
+            },
+            "runAfter": {}
+          }
+        }
+      },
+      "runAfter": {
+        "Buscar_Dados_Projeto": ["Succeeded"],
+        "Buscar_Documentos": ["Succeeded"]
+      }
+    },
+
+    "Resposta_Gabriel": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status": "ok",
+          "agente": "Gabriel Governança",
+          "projetoId": "@triggerBody()?['projetoId']",
+          "tipoGate": "@triggerBody()?['tipoGate']",
+          "veredicto": "@{coalesce(outputs('Checklist_Gate_Final')?['veredicto'], outputs('Checklist_Gate_Qualificacao')?['veredicto'], outputs('Checklist_Gate_Intake')?['veredicto'], 'PENDENTE')}",
+          "scoreGovernanca": "@{coalesce(outputs('Checklist_Gate_Final')?['score'], outputs('Checklist_Gate_Qualificacao')?['score'], outputs('Checklist_Gate_Intake')?['score'], 0)}",
+          "condicoesBloqueantes": "@{coalesce(outputs('Checklist_Gate_Final')?['bloqueantes'], outputs('Checklist_Gate_Qualificacao')?['bloqueantes'], outputs('Checklist_Gate_Intake')?['bloqueantes'], '')}",
+          "documentosFaltantes": "@{coalesce(outputs('Checklist_Gate_Intake')?['docs_faltantes'], 'Nenhum')}",
+          "totalDocumentos": "@{length(body('Buscar_Documentos')?['value'])}"
+        }
+      },
+      "runAfter": { "Avaliar_Gate_por_Tipo": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

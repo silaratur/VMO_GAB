@@ -1,0 +1,141 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Iara: Capturar Demanda",
+    "description": "Agente Iara Inbound. Recebe demanda não estruturada, extrai campos obrigatórios e registra na lista VMO_Demandas do SharePoint.",
+    "agent": "Iara Inbound",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP_ou_Bot": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":     { "type": "string" },
+            "demandaTexto":  { "type": "string" },
+            "solicitante":   { "type": "string" },
+            "canal":         { "type": "string" },
+            "dataRecebimento": { "type": "string" }
+          },
+          "required": ["demandaTexto", "solicitante"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Extrair_Dados_Demanda": {
+      "type": "Compose",
+      "inputs": {
+        "id_demanda": "@{guid()}",
+        "titulo": "@{if(empty(triggerBody()?['titulo']), concat('Demanda — ', formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')), triggerBody()?['titulo'])}",
+        "descricao": "@triggerBody()?['demandaTexto']",
+        "solicitante": "@triggerBody()?['solicitante']",
+        "canal": "@{if(empty(triggerBody()?['canal']), 'Teams', triggerBody()?['canal'])}",
+        "data_recebimento": "@{if(empty(triggerBody()?['dataRecebimento']), utcNow(), triggerBody()?['dataRecebimento'])}",
+        "status": "AGUARDANDO_GATE1",
+        "campos_faltantes": "@{if(empty(triggerBody()?['demandaTexto']), 'descricao', '')}"
+      },
+      "runAfter": {}
+    },
+
+    "Validar_Campos_Obrigatorios": {
+      "type": "Condition",
+      "expression": {
+        "and": [
+          { "not": { "equals": ["@triggerBody()?['demandaTexto']", null] } },
+          { "not": { "equals": ["@triggerBody()?['solicitante']", null] } },
+          { "greater": ["@length(triggerBody()?['demandaTexto'])", 20] }
+        ]
+      },
+      "actions": {
+
+        "Criar_Demanda_SharePoint": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+              "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+            },
+            "method": "post",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Demandas'))}/items",
+            "body": {
+              "Title":            "@{outputs('Extrair_Dados_Demanda')?['titulo']}",
+              "Descricao":        "@{outputs('Extrair_Dados_Demanda')?['descricao']}",
+              "Solicitante":      "@{outputs('Extrair_Dados_Demanda')?['solicitante']}",
+              "Canal":            "@{outputs('Extrair_Dados_Demanda')?['canal']}",
+              "DataRecebimento":  "@{outputs('Extrair_Dados_Demanda')?['data_recebimento']}",
+              "Status":           "AGUARDANDO_GATE1",
+              "IDDemanda":        "@{outputs('Extrair_Dados_Demanda')?['id_demanda']}",
+              "ProjetoID":        "@{triggerBody()?['projetoId']}",
+              "Agente":           "Iara Inbound",
+              "DocumentacaoOK":   false
+            }
+          },
+          "runAfter": {}
+        },
+
+        "Criar_Documento_Estruturado": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" }
+            },
+            "method": "post",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+            "body": {
+              "FolderPath": "/VMO_Projetos/@{triggerBody()?['projetoId']}/01_Captura",
+              "Name": "00_Demanda_Estruturada.md",
+              "ContentBytes": "@{base64(concat('# DEMANDA ESTRUTURADA — IARA INBOUND\n\n**Data:** ', formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm'), '\n**Agente:** Iara Inbound\n\n---\n\n## Identificação\n\n- **ID:** ', outputs('Extrair_Dados_Demanda')?['id_demanda'], '\n- **Solicitante:** ', outputs('Extrair_Dados_Demanda')?['solicitante'], '\n- **Canal:** ', outputs('Extrair_Dados_Demanda')?['canal'], '\n- **Data Recebimento:** ', formatDateTime(outputs('Extrair_Dados_Demanda')?['data_recebimento'], 'dd/MM/yyyy HH:mm'), '\n\n## Descrição da Demanda\n\n', outputs('Extrair_Dados_Demanda')?['descricao'], '\n\n## Campos Pendentes\n\n- [ ] Patrocinador identificado?\n- [ ] Prazo esperado informado?\n- [ ] Orçamento estimado?\n- [ ] Área impactada mapeada?\n\n## Status\n\n✅ Demanda capturada e estruturada por Iara.\n⏳ Aguardando Gate 01 — Intake.\n'))}"
+            }
+          },
+          "runAfter": { "Criar_Demanda_SharePoint": ["Succeeded"] }
+        },
+
+        "Resposta_Sucesso": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "status": "ok",
+              "agente": "Iara Inbound",
+              "demandaId": "@{outputs('Criar_Demanda_SharePoint')?['body/ID']}",
+              "mensagem": "Demanda capturada e estruturada com sucesso. Aguardando Gate 01.",
+              "proximoPasso": "GATE_01_INTAKE"
+            }
+          },
+          "runAfter": { "Criar_Documento_Estruturado": ["Succeeded"] }
+        }
+
+      },
+      "else": {
+        "actions": {
+          "Resposta_Validacao_Falhou": {
+            "type": "Response",
+            "inputs": {
+              "statusCode": 400,
+              "body": {
+                "status": "erro",
+                "agente": "Iara Inbound",
+                "mensagem": "Demanda inválida. Campos obrigatórios: demandaTexto (mínimo 20 caracteres) e solicitante.",
+                "camposFaltantes": "@{outputs('Extrair_Dados_Demanda')?['campos_faltantes']}"
+              }
+            },
+            "runAfter": {}
+          }
+        }
+      },
+      "runAfter": { "Extrair_Dados_Demanda": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

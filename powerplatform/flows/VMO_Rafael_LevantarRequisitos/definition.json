@@ -1,0 +1,334 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Rafael: Levantar Requisitos",
+    "description": "Agente Rafael Requisito. Levanta e registra requisitos funcionais (RF) e não funcionais (RNF) com priorização MoSCoW, cria a Matriz de Requisitos e salva na lista VMO_Requisitos.",
+    "agent": "Rafael Requisito",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":    { "type": "string" },
+            "nomeProjeto":  { "type": "string" },
+            "escopoIncluido": { "type": "string" },
+            "objetivoSmart":  { "type": "string" }
+          },
+          "required": ["projetoId"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_Requisitos": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":     "@{triggerBody()?['projetoId']}",
+        "nomeProjeto":   "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "dataGeracao":   "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}",
+        "versao":        "1.0"
+      },
+      "runAfter": {}
+    },
+
+    "Criar_RF001_Autenticacao": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RF-001 — Autenticação de Usuários",
+          "Tipo":              "RF",
+          "Prioridade":        "Must Have",
+          "Descricao":         "O sistema deve autenticar usuários via SSO integrado ao Active Directory corporativo, garantindo acesso seguro e rastreável.",
+          "CriterioAceitacao": "Usuário consegue logar com credenciais AD em menos de 3 segundos; sessão expira após 8h de inatividade.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Preparar_Dados_Requisitos": ["Succeeded"] }
+    },
+
+    "Criar_RF002_Dashboard": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RF-002 — Dashboard de Acompanhamento",
+          "Tipo":              "RF",
+          "Prioridade":        "Must Have",
+          "Descricao":         "O sistema deve exibir um dashboard em tempo real com KPIs do projeto, indicadores de saúde e alertas de desvio.",
+          "CriterioAceitacao": "Dashboard atualiza automaticamente a cada 6 horas; exibe CPI, SPI, HealthScore e alertas com filtro por projeto.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RF001_Autenticacao": ["Succeeded"] }
+    },
+
+    "Criar_RF003_Gestao_Documentos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RF-003 — Gestão de Documentos do Projeto",
+          "Tipo":              "RF",
+          "Prioridade":        "Must Have",
+          "Descricao":         "O sistema deve gerar, versionar e armazenar todos os documentos obrigatórios do projeto conforme metodologia VMO.",
+          "CriterioAceitacao": "Todos os documentos são criados automaticamente por agentes; versionamento semântico aplicado; auditoria de alterações disponível.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RF002_Dashboard": ["Succeeded"] }
+    },
+
+    "Criar_RF004_Notificacoes": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RF-004 — Notificações e Alertas Automáticos",
+          "Tipo":              "RF",
+          "Prioridade":        "Should Have",
+          "Descricao":         "O sistema deve enviar notificações via e-mail e Teams quando KPIs atingirem limiares críticos ou quando documentos exigirem aprovação.",
+          "CriterioAceitacao": "Notificações enviadas em até 5 minutos após evento gatilho; canal configurável por projeto e perfil de usuário.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RF003_Gestao_Documentos": ["Succeeded"] }
+    },
+
+    "Criar_RF005_Relatorio_Status": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RF-005 — Geração Automática de Status Report",
+          "Tipo":              "RF",
+          "Prioridade":        "Should Have",
+          "Descricao":         "O sistema deve gerar automaticamente relatórios de status semanais consolidando KPIs, riscos abertos e próximas ações.",
+          "CriterioAceitacao": "Status report gerado toda segunda-feira às 08h; distribuído automaticamente por e-mail aos stakeholders cadastrados.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RF004_Notificacoes": ["Succeeded"] }
+    },
+
+    "Criar_RNF001_Performance": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RNF-001 — Performance e Tempo de Resposta",
+          "Tipo":              "RNF",
+          "Prioridade":        "Must Have",
+          "Descricao":         "O sistema deve responder a 95% das requisições em menos de 2 segundos e suportar até 200 usuários simultâneos sem degradação.",
+          "CriterioAceitacao": "Teste de carga com 200 usuários simultâneos: p95 < 2s, p99 < 5s, disponibilidade >= 99,5%.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RF005_Relatorio_Status": ["Succeeded"] }
+    },
+
+    "Criar_RNF002_Seguranca": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RNF-002 — Segurança e Controle de Acesso",
+          "Tipo":              "RNF",
+          "Prioridade":        "Must Have",
+          "Descricao":         "Todos os dados devem ser criptografados em trânsito (TLS 1.2+) e em repouso; RBAC aplicado conforme perfis definidos; logs de auditoria mantidos por 2 anos.",
+          "CriterioAceitacao": "Scan de segurança sem vulnerabilidades críticas ou altas; auditoria de acesso 100% rastreável; conformidade com LGPD.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RNF001_Performance": ["Succeeded"] }
+    },
+
+    "Criar_RNF003_Disponibilidade": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Requisitos'))}/items",
+        "body": {
+          "Title":             "RNF-003 — Disponibilidade e Continuidade",
+          "Tipo":              "RNF",
+          "Prioridade":        "Should Have",
+          "Descricao":         "O sistema deve ter disponibilidade mínima de 99,5% em horário comercial (07h–20h, dias úteis), com janelas de manutenção programadas.",
+          "CriterioAceitacao": "SLA 99,5% mensurado mensalmente; RTO <= 4h; RPO <= 1h; plano de DR documentado e testado semestralmente.",
+          "ProjetoID":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Status":            "LEVANTADO",
+          "Agente":            "Rafael Requisito",
+          "DataCriacao":       "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_RNF002_Seguranca": ["Succeeded"] }
+    },
+
+    "Criar_Documento_Matriz_Requisitos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Requisitos')?['projetoId']}/04_Requisitos",
+          "Name": "Matriz_Requisitos.md",
+          "ContentBytes": "@{base64(concat('# MATRIZ DE REQUISITOS\n\n**Projeto:** ', outputs('Preparar_Dados_Requisitos')?['nomeProjeto'], '\n**Versão:** ', outputs('Preparar_Dados_Requisitos')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_Requisitos')?['dataGeracao'], '\n**Agente:** Rafael Requisito\n\n---\n\n## 1. RESUMO EXECUTIVO\n\n| Métrica | Valor |\n|---|---|\n| Total de Requisitos | 8 |\n| Requisitos Funcionais | 5 |\n| Requisitos Não Funcionais | 3 |\n| Must Have | 4 |\n| Should Have | 3 |\n| Could Have | 1 |\n| Won''t Have | 0 |\n\n---\n\n## 2. REQUISITOS FUNCIONAIS (RF)\n\n| ID | Título | Prioridade (MoSCoW) | Status | Critério de Aceitação |\n|---|---|---|---|---|\n| RF-001 | Autenticação de Usuários | **Must Have** | Levantado | Login SSO < 3s; sessão expira em 8h |\n| RF-002 | Dashboard de Acompanhamento | **Must Have** | Levantado | Atualização a cada 6h; KPIs visíveis |\n| RF-003 | Gestão de Documentos | **Must Have** | Levantado | Geração automática; versionamento |\n| RF-004 | Notificações e Alertas | **Should Have** | Levantado | Entrega em < 5min após evento |\n| RF-005 | Status Report Automático | **Should Have** | Levantado | Gerado semanalmente às segundas |\n\n---\n\n## 3. REQUISITOS NÃO FUNCIONAIS (RNF)\n\n| ID | Título | Prioridade (MoSCoW) | Categoria | Critério de Aceitação |\n|---|---|---|---|---|\n| RNF-001 | Performance e Tempo de Resposta | **Must Have** | Desempenho | p95 < 2s com 200 usuários |\n| RNF-002 | Segurança e Controle de Acesso | **Must Have** | Segurança | TLS 1.2+, RBAC, LGPD, sem vulns críticas |\n| RNF-003 | Disponibilidade e Continuidade | **Should Have** | Confiabilidade | SLA 99,5%, RTO 4h, RPO 1h |\n\n---\n\n## 4. PRIORIZAÇÃO MoSCoW\n\n### Must Have (Obrigatórios)\n- RF-001, RF-002, RF-003, RNF-001, RNF-002\n\n### Should Have (Importantes)\n- RF-004, RF-005, RNF-003\n\n### Could Have (Desejáveis)\n- A definir na próxima iteração\n\n### Won''t Have (Fora do Escopo)\n- A definir formalmente\n\n---\n\n## 5. RASTREABILIDADE\n\n| Requisito | Objetivo SMART | Gate de Validação | Agente Responsável |\n|---|---|---|---|\n| RF-001 a RF-003 | Entrega funcional principal | Gate Final | Rafael Requisito |\n| RF-004 a RF-005 | Melhoria de comunicação | Gate Qualificação | Rafael Requisito |\n| RNF-001 a RNF-003 | Qualidade não funcional | Gate Final | Rafael Requisito |\n\n---\n\n## 6. HISTÓRICO DE VERSÕES\n\n| Versão | Data | Autor | Descrição |\n|---|---|---|---|\n| 1.0 | ', outputs('Preparar_Dados_Requisitos')?['dataGeracao'], ' | Rafael Requisito | Criação inicial via VMO |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Rafael Requisito.*\n'))}"
+        }
+      },
+      "runAfter": { "Criar_RNF003_Disponibilidade": ["Succeeded"] }
+    },
+
+    "Registrar_Documento_Lista": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":       "Matriz de Requisitos — @{outputs('Preparar_Dados_Requisitos')?['nomeProjeto']}",
+          "Tipo":        "MATRIZ_REQUISITOS",
+          "ProjetoID":   "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "Versao":      "1.0",
+          "Status":      "RASCUNHO",
+          "Agente":      "Rafael Requisito",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":     "/VMO_Projetos/@{outputs('Preparar_Dados_Requisitos')?['projetoId']}/04_Requisitos/Matriz_Requisitos.md"
+        }
+      },
+      "runAfter": { "Criar_Documento_Matriz_Requisitos": ["Succeeded"] }
+    },
+
+    "Obter_Registro_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_Requisitos')?['projetoId']}'"
+        }
+      },
+      "runAfter": { "Registrar_Documento_Lista": ["Succeeded"] }
+    },
+
+    "Atualizar_Status_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{first(outputs('Obter_Registro_Projeto')?['body/value'])?['ID']}",
+        "body": {
+          "Status":                  "REQUISITOS_LEVANTADOS",
+          "AgenteAtual":             "Rafael Requisito",
+          "DataUltimaAtualizacao":   "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Obter_Registro_Projeto": ["Succeeded"] }
+    },
+
+    "Resposta_Sucesso": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status":            "ok",
+          "agente":            "Rafael Requisito",
+          "projetoId":         "@{outputs('Preparar_Dados_Requisitos')?['projetoId']}",
+          "mensagem":          "Requisitos levantados e Matriz de Requisitos criada com sucesso.",
+          "totalRequisitos":   8,
+          "totalRF":           5,
+          "totalRNF":          3,
+          "documentoId":       "@{outputs('Registrar_Documento_Lista')?['body/ID']}",
+          "statusProjeto":     "REQUISITOS_LEVANTADOS",
+          "proximoPasso":      "FABIO_GERAR_WORK_REQUEST"
+        }
+      },
+      "runAfter": { "Atualizar_Status_Projeto": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

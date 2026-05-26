@@ -1,0 +1,208 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Diana: Criar Documentos (TAP + PM Canvas)",
+    "description": "Agente Diana Documento. Gera o Termo de Abertura do Projeto (TAP) e o PM Canvas com base nos dados do projeto, salvando ambos na biblioteca de documentos e na lista VMO_Documentos.",
+    "agent": "Diana Documento",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":       { "type": "string" },
+            "nomeProjeto":     { "type": "string" },
+            "patrocinador":    { "type": "string" },
+            "gerenteProjeto":  { "type": "string" },
+            "objetivoSmart":   { "type": "string" },
+            "escopoIncluido":  { "type": "string" },
+            "escopoExcluido":  { "type": "string" },
+            "stakeholders":    { "type": "string" },
+            "premissas":       { "type": "string" },
+            "restricoes":      { "type": "string" },
+            "dataInicio":      { "type": "string" },
+            "dataFim":         { "type": "string" },
+            "orcamento":       { "type": "string" }
+          },
+          "required": ["projetoId", "nomeProjeto"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_Projeto": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":      "@{triggerBody()?['projetoId']}",
+        "nomeProjeto":    "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "patrocinador":   "@{if(empty(triggerBody()?['patrocinador']), 'A definir', triggerBody()?['patrocinador'])}",
+        "gerenteProjeto": "@{if(empty(triggerBody()?['gerenteProjeto']), 'A definir', triggerBody()?['gerenteProjeto'])}",
+        "objetivoSmart":  "@{if(empty(triggerBody()?['objetivoSmart']), 'Objetivo SMART a ser detalhado pelo Gerente de Projeto.', triggerBody()?['objetivoSmart'])}",
+        "escopoIncluido": "@{if(empty(triggerBody()?['escopoIncluido']), 'A detalhar', triggerBody()?['escopoIncluido'])}",
+        "escopoExcluido": "@{if(empty(triggerBody()?['escopoExcluido']), 'A detalhar', triggerBody()?['escopoExcluido'])}",
+        "stakeholders":   "@{if(empty(triggerBody()?['stakeholders']), 'A mapear', triggerBody()?['stakeholders'])}",
+        "premissas":      "@{if(empty(triggerBody()?['premissas']), 'A levantar', triggerBody()?['premissas'])}",
+        "restricoes":     "@{if(empty(triggerBody()?['restricoes']), 'A levantar', triggerBody()?['restricoes'])}",
+        "dataInicio":     "@{if(empty(triggerBody()?['dataInicio']), formatDateTime(utcNow(), 'dd/MM/yyyy'), triggerBody()?['dataInicio'])}",
+        "dataFim":        "@{if(empty(triggerBody()?['dataFim']), 'A definir', triggerBody()?['dataFim'])}",
+        "orcamento":      "@{if(empty(triggerBody()?['orcamento']), 'A definir', triggerBody()?['orcamento'])}",
+        "versao":         "1.0",
+        "dataGeracao":    "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}"
+      },
+      "runAfter": {}
+    },
+
+    "Criar_Documento_TAP": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Projeto')?['projetoId']}/03_Documentacao",
+          "Name": "TAP_Termo_Abertura_Projeto.md",
+          "ContentBytes": "@{base64(concat('# TERMO DE ABERTURA DO PROJETO — TAP\n\n**Versão:** ', outputs('Preparar_Dados_Projeto')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_Projeto')?['dataGeracao'], '\n**Agente:** Diana Documento\n\n---\n\n## 1. IDENTIFICAÇÃO DO PROJETO\n\n| Campo | Valor |\n|---|---|\n| **ID do Projeto** | ', outputs('Preparar_Dados_Projeto')?['projetoId'], ' |\n| **Nome do Projeto** | ', outputs('Preparar_Dados_Projeto')?['nomeProjeto'], ' |\n| **Patrocinador** | ', outputs('Preparar_Dados_Projeto')?['patrocinador'], ' |\n| **Gerente de Projeto** | ', outputs('Preparar_Dados_Projeto')?['gerenteProjeto'], ' |\n| **Data de Início** | ', outputs('Preparar_Dados_Projeto')?['dataInicio'], ' |\n| **Data de Conclusão Prevista** | ', outputs('Preparar_Dados_Projeto')?['dataFim'], ' |\n| **Orçamento** | ', outputs('Preparar_Dados_Projeto')?['orcamento'], ' |\n\n---\n\n## 2. OBJETIVO SMART\n\n', outputs('Preparar_Dados_Projeto')?['objetivoSmart'], '\n\n> **S** — Específico (Specific)\n> **M** — Mensurável (Measurable)\n> **A** — Alcançável (Achievable)\n> **R** — Relevante (Relevant)\n> **T** — Temporal (Time-bound)\n\n---\n\n## 3. ESCOPO DO PROJETO\n\n### 3.1 Escopo Incluído\n\n', outputs('Preparar_Dados_Projeto')?['escopoIncluido'], '\n\n### 3.2 Escopo Excluído\n\n', outputs('Preparar_Dados_Projeto')?['escopoExcluido'], '\n\n---\n\n## 4. STAKEHOLDERS\n\n', outputs('Preparar_Dados_Projeto')?['stakeholders'], '\n\n| Nome | Papel | Influência | Interesse | Estratégia de Engajamento |\n|---|---|---|---|---|\n| A preencher | A definir | Alto/Médio/Baixo | Alto/Médio/Baixo | Informar / Consultar / Engajar |\n\n---\n\n## 5. PREMISSAS\n\n', outputs('Preparar_Dados_Projeto')?['premissas'], '\n\n---\n\n## 6. RESTRIÇÕES\n\n', outputs('Preparar_Dados_Projeto')?['restricoes'], '\n\n---\n\n## 7. PATROCINADOR E AUTORIZAÇÃO\n\n**Patrocinador:** ', outputs('Preparar_Dados_Projeto')?['patrocinador'], '\n\nAo aprovar este documento, o patrocinador autoriza formalmente o início do projeto, a alocação de recursos e a execução das atividades conforme planejadas.\n\n**Assinatura:** ___________________________  **Data:** ___/___/______\n\n---\n\n## 8. HISTÓRICO DE VERSÕES\n\n| Versão | Data | Autor | Descrição |\n|---|---|---|---|\n| 1.0 | ', outputs('Preparar_Dados_Projeto')?['dataGeracao'], ' | Diana Documento | Criação inicial via VMO |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Diana Documento.*\n'))}"
+        }
+      },
+      "runAfter": { "Preparar_Dados_Projeto": ["Succeeded"] }
+    },
+
+    "Criar_Documento_PMCanvas": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Projeto')?['projetoId']}/03_Documentacao",
+          "Name": "PMCanvas_Modelo.md",
+          "ContentBytes": "@{base64(concat('# PM CANVAS — ', outputs('Preparar_Dados_Projeto')?['nomeProjeto'], '\n\n**Versão:** ', outputs('Preparar_Dados_Projeto')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_Projeto')?['dataGeracao'], '\n**Agente:** Diana Documento\n\n---\n\n## BLOCO 1 — JUSTIFICATIVA\n\n> Por que este projeto existe? Qual problema resolve?\n\n', outputs('Preparar_Dados_Projeto')?['objetivoSmart'], '\n\n---\n\n## BLOCO 2 — OBJETIVO SMART\n\n| Critério | Descrição |\n|---|---|\n| Específico | O que exatamente será entregue? |\n| Mensurável | Como saberemos que foi alcançado? |\n| Alcançável | Está dentro das capacidades da equipe? |\n| Relevante | Alinhado à estratégia organizacional? |\n| Temporal | Qual o prazo definido? ', outputs('Preparar_Dados_Projeto')?['dataFim'], ' |\n\n---\n\n## BLOCO 3 — BENEFÍCIOS\n\n| Tipo | Benefício | Indicador | Meta |\n|---|---|---|---|\n| Financeiro | Redução de custos operacionais | ROI | > 15% |\n| Operacional | Aumento de eficiência | % processos automatizados | > 30% |\n| Estratégico | Melhoria de experiência | NPS | > 50 |\n\n---\n\n## BLOCO 4 — PRODUTO (ESCOPO)\n\n### Incluído no Escopo\n\n', outputs('Preparar_Dados_Projeto')?['escopoIncluido'], '\n\n### Excluído do Escopo\n\n', outputs('Preparar_Dados_Projeto')?['escopoExcluido'], '\n\n---\n\n## BLOCO 5 — REQUISITOS\n\n| ID | Descrição | Prioridade | Tipo |\n|---|---|---|---|\n| RQ-001 | A preencher com Rafael | Must Have | RF |\n| RQ-002 | A preencher com Rafael | Should Have | RNF |\n\n*Detalhamento completo na Matriz de Requisitos (Rafael Requisito)*\n\n---\n\n## BLOCO 6 — STAKEHOLDERS\n\n', outputs('Preparar_Dados_Projeto')?['stakeholders'], '\n\n| Nome | Papel | Poder | Interesse |\n|---|---|---|---|\n| ', outputs('Preparar_Dados_Projeto')?['patrocinador'], ' | Patrocinador | Alto | Alto |\n| ', outputs('Preparar_Dados_Projeto')?['gerenteProjeto'], ' | GP | Alto | Alto |\n\n---\n\n## BLOCO 7 — EQUIPE\n\n| Nome | Papel | Dedicação | Responsabilidades |\n|---|---|---|---|\n| ', outputs('Preparar_Dados_Projeto')?['gerenteProjeto'], ' | Gerente de Projeto | 100% | Coordenação geral |\n| A definir | Tech Lead | 80% | Arquitetura e desenvolvimento |\n| A definir | Analista de Negócios | 60% | Requisitos e validação |\n\n---\n\n## BLOCO 8 — PREMISSAS E RESTRIÇÕES\n\n### Premissas\n\n', outputs('Preparar_Dados_Projeto')?['premissas'], '\n\n### Restrições\n\n', outputs('Preparar_Dados_Projeto')?['restricoes'], '\n\n---\n\n## BLOCO 9 — RISCOS E LINHA DO TEMPO\n\n### Riscos Iniciais Identificados\n\n| Risco | Probabilidade | Impacto | Estratégia |\n|---|---|---|---|\n| Falta de recursos | Médio | Alto | Mitigar |\n| Mudança de escopo | Alto | Médio | Evitar |\n| Dependência tecnológica | Baixo | Alto | Transferir |\n\n*Detalhamento completo no Registro de Riscos (Pedro Perigo)*\n\n### Linha do Tempo\n\n| Marco | Data Prevista | Status |\n|---|---|---|\n| Kickoff | ', outputs('Preparar_Dados_Projeto')?['dataInicio'], ' | Planejado |\n| Gate Qualificação | A definir | Planejado |\n| Entrega Final | ', outputs('Preparar_Dados_Projeto')?['dataFim'], ' | Planejado |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Diana Documento.*\n'))}"
+        }
+      },
+      "runAfter": { "Criar_Documento_TAP": ["Succeeded"] }
+    },
+
+    "Registrar_TAP_Lista_Documentos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":      "TAP — @{outputs('Preparar_Dados_Projeto')?['nomeProjeto']}",
+          "Tipo":       "TAP",
+          "ProjetoID":  "@{outputs('Preparar_Dados_Projeto')?['projetoId']}",
+          "Versao":     "1.0",
+          "Status":     "RASCUNHO",
+          "Agente":     "Diana Documento",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":    "/VMO_Projetos/@{outputs('Preparar_Dados_Projeto')?['projetoId']}/03_Documentacao/TAP_Termo_Abertura_Projeto.md"
+        }
+      },
+      "runAfter": { "Criar_Documento_PMCanvas": ["Succeeded"] }
+    },
+
+    "Registrar_PMCanvas_Lista_Documentos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":      "PM Canvas — @{outputs('Preparar_Dados_Projeto')?['nomeProjeto']}",
+          "Tipo":       "PM_CANVAS",
+          "ProjetoID":  "@{outputs('Preparar_Dados_Projeto')?['projetoId']}",
+          "Versao":     "1.0",
+          "Status":     "RASCUNHO",
+          "Agente":     "Diana Documento",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":    "/VMO_Projetos/@{outputs('Preparar_Dados_Projeto')?['projetoId']}/03_Documentacao/PMCanvas_Modelo.md"
+        }
+      },
+      "runAfter": { "Registrar_TAP_Lista_Documentos": ["Succeeded"] }
+    },
+
+    "Obter_Registro_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_Projeto')?['projetoId']}'"
+        }
+      },
+      "runAfter": { "Registrar_PMCanvas_Lista_Documentos": ["Succeeded"] }
+    },
+
+    "Atualizar_Status_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{first(outputs('Obter_Registro_Projeto')?['body/value'])?['ID']}",
+        "body": {
+          "Status":              "DOCUMENTOS_CRIADOS",
+          "AgenteAtual":         "Diana Documento",
+          "DataUltimaAtualizacao": "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Obter_Registro_Projeto": ["Succeeded"] }
+    },
+
+    "Resposta_Sucesso": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status":      "ok",
+          "agente":      "Diana Documento",
+          "projetoId":   "@{outputs('Preparar_Dados_Projeto')?['projetoId']}",
+          "mensagem":    "TAP e PM Canvas criados com sucesso.",
+          "documentIds": [
+            "@{outputs('Registrar_TAP_Lista_Documentos')?['body/ID']}",
+            "@{outputs('Registrar_PMCanvas_Lista_Documentos')?['body/ID']}"
+          ],
+          "documentos": [
+            "TAP_Termo_Abertura_Projeto.md",
+            "PMCanvas_Modelo.md"
+          ],
+          "pasta":         "03_Documentacao",
+          "statusProjeto": "DOCUMENTOS_CRIADOS",
+          "proximoPasso":  "RAFAEL_LEVANTAR_REQUISITOS"
+        }
+      },
+      "runAfter": { "Atualizar_Status_Projeto": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

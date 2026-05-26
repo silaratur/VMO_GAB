@@ -1,0 +1,150 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: nova_demanda
+displayName: "Nova Demanda / Abrir Projeto"
+description: "Iara Inbound — Captura e estrutura nova demanda de projeto"
+
+triggerIntents:
+  - "quero abrir um projeto"
+  - "nova demanda"
+  - "iniciar projeto"
+  - "tenho uma demanda"
+  - "preciso de um projeto"
+  - "abrir chamado de projeto"
+  - "solicitação de projeto"
+  - "novo projeto"
+  - "demanda de TI"
+  - "preciso de ajuda com um sistema"
+
+variables:
+  - name: NomeProjeto
+    type: String
+  - name: DescricaoDemanda
+    type: String
+  - name: Solicitante
+    type: String
+  - name: AreaSolicitante
+    type: String
+  - name: PrazoEsperado
+    type: String
+  - name: OrcamentoEstimado
+    type: String
+  - name: Canal
+    type: String
+    defaultValue: "Teams"
+  - name: DemandaId
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: SendMessage
+    id: msg_boas_vindas
+    message: |
+      👋 Olá! Sou a **Iara**, sua assistente de captura de demandas.
+
+      Vou estruturar sua demanda e encaminhar para o pipeline VMO. Precisarei de algumas informações.
+
+  - kind: Question
+    id: q_nome_projeto
+    prompt: "📋 Qual é o nome ou título do projeto/demanda?"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.NomeProjeto
+    repromptOnInvalidInput:
+      message: "Por favor, informe um nome para o projeto (ex: 'Sistema de Controle de Estoque')."
+
+  - kind: Question
+    id: q_descricao
+    prompt: |
+      📝 Descreva a demanda com detalhes:
+      - O que você precisa?
+      - Qual problema resolve?
+      - Quais são os benefícios esperados?
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.DescricaoDemanda
+
+  - kind: Question
+    id: q_solicitante
+    prompt: "👤 Qual é o seu nome completo e cargo?"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.Solicitante
+
+  - kind: Question
+    id: q_area
+    prompt: "🏢 Qual é a área/departamento solicitante?"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.AreaSolicitante
+
+  - kind: Question
+    id: q_prazo
+    prompt: "📅 Qual é o prazo esperado para entrega? (ex: 3 meses, até dezembro/2025)"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.PrazoEsperado
+
+  - kind: Question
+    id: q_orcamento
+    prompt: "💰 Existe orçamento estimado? (ex: R$ 50.000 ou 'A definir')"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.OrcamentoEstimado
+
+  - kind: SendMessage
+    id: msg_processando
+    message: |
+      ⏳ Perfeito! Estou estruturando sua demanda e iniciando o pipeline VMO...
+
+      **Projeto:** @{Topic.NomeProjeto}
+      **Solicitante:** @{Topic.Solicitante}
+      **Área:** @{Topic.AreaSolicitante}
+
+  - kind: InvokeFlowAction
+    id: invoke_iara_flow
+    flowId: "VMO_Iara_CapturarDemanda"
+    input:
+      binding:
+        demandaTexto: =Topic.DescricaoDemanda
+        solicitante: =Topic.Solicitante
+        titulo: =Topic.NomeProjeto
+        area: =Topic.AreaSolicitante
+        prazo: =Topic.PrazoEsperado
+        orcamento: =Topic.OrcamentoEstimado
+        canal: =Topic.Canal
+    output:
+      binding:
+        FlowResult: Topic.FlowResult
+
+  - kind: ConditionGroup
+    id: verificar_resultado
+    conditions:
+      - condition: =Topic.FlowResult.status = "ok"
+        actions:
+          - kind: SendMessage
+            id: msg_sucesso
+            message: |
+              ✅ **Demanda capturada com sucesso!**
+
+              **ID da Demanda:** @{Topic.FlowResult.demandaId}
+              **Projeto:** @{Topic.NomeProjeto}
+
+              **Próximo passo:** Gate 01 — Intake
+
+              O responsável VMO receberá uma solicitação de aprovação em breve. Você será notificado quando o projeto avançar para a fase de qualificação.
+
+              📋 Acompanhe no VMO Dashboard.
+
+      - condition: =true
+        actions:
+          - kind: SendMessage
+            id: msg_erro
+            message: |
+              ⚠️ Ocorreu um problema ao registrar sua demanda.
+
+              Por favor, tente novamente ou entre em contato com o VMO diretamente.
+
+              **Erro:** @{Topic.FlowResult.mensagem}

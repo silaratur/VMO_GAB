@@ -1,0 +1,371 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Pipeline Principal",
+    "description": "Orquestrador principal VMO-Autônomo. Executa ciclo completo de 16 etapas com 3 gates de governança.",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" },
+    "ApprovalEmail": { "defaultValue": "gestor@suaempresa.com.br", "type": "String" }
+  },
+  "triggers": {
+    "Quando_nova_demanda_e_criada": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Demandas'))}/onnewitems"
+      },
+      "recurrence": { "frequency": "Minute", "interval": 5 }
+    }
+  },
+  "actions": {
+
+    "Inicializar_ProjetoID": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [{
+          "name": "ProjetoID",
+          "type": "string",
+          "value": "@{triggerBody()?['ID']}"
+        }]
+      },
+      "runAfter": {}
+    },
+
+    "Inicializar_StatusGeral": {
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [{
+          "name": "StatusGeral",
+          "type": "string",
+          "value": "EM_ANDAMENTO"
+        }]
+      },
+      "runAfter": { "Inicializar_ProjetoID": ["Succeeded"] }
+    },
+
+    "Log_Inicio_Pipeline": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "body": {
+          "Title": "@triggerBody()?['Title']",
+          "Status": "INICIADO",
+          "Fase": "01_CAPTURA",
+          "DemandaID": "@variables('ProjetoID')",
+          "DataInicio": "@utcNow()",
+          "Descricao": "@triggerBody()?['Descricao']"
+        }
+      },
+      "runAfter": { "Inicializar_StatusGeral": ["Succeeded"] }
+    },
+
+    "ETAPA_01_Iara_CapturarDemanda": {
+      "type": "Http",
+      "inputs": {
+        "method": "POST",
+        "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Iara/triggers/manual/paths/invoke",
+        "body": {
+          "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']",
+          "demandaTexto": "@triggerBody()?['Descricao']",
+          "solicitante": "@triggerBody()?['Solicitante']",
+          "canal": "@triggerBody()?['Canal']"
+        }
+      },
+      "runAfter": { "Log_Inicio_Pipeline": ["Succeeded"] }
+    },
+
+    "GATE_01_Intake_Aprovacao": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['approvals']['connectionId']" }
+        },
+        "method": "post",
+        "path": "/approvalRequests/synchronous",
+        "body": {
+          "title": "🏛️ VMO Gate 01 — Intake: @{triggerBody()?['Title']}",
+          "assignedTo": "@parameters('ApprovalEmail')",
+          "details": "**Projeto:** @{triggerBody()?['Title']}\n\n**Solicitante:** @{triggerBody()?['Solicitante']}\n\n**Demanda:**\n@{triggerBody()?['Descricao']}\n\n**Iara coletou e estruturou a demanda.**\n\nAprove para prosseguir com qualificação.",
+          "itemLink": "@{parameters('SharePointSiteUrl')}/Lists/VMO_Demandas",
+          "itemLinkDescription": "Ver demanda no SharePoint"
+        }
+      },
+      "runAfter": { "ETAPA_01_Iara_CapturarDemanda": ["Succeeded"] }
+    },
+
+    "Verificar_Gate01": {
+      "type": "Condition",
+      "expression": {
+        "and": [{
+          "equals": ["@outputs('GATE_01_Intake_Aprovacao')?['body/outcome']", "Approve"]
+        }]
+      },
+      "actions": {
+
+        "Atualizar_Fase_Qualificacao": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+            "method": "patch",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{outputs('Log_Inicio_Pipeline')?['body/ID']}",
+            "body": { "Fase": "02_QUALIFICACAO", "Status": "EM_QUALIFICACAO" }
+          },
+          "runAfter": {}
+        },
+
+        "ETAPA_04_Felipe_QualificarDemanda": {
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Felipe/triggers/manual/paths/invoke",
+            "body": {
+              "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']",
+              "titulo": "@triggerBody()?['Title']",
+              "descricao": "@triggerBody()?['Descricao']"
+            }
+          },
+          "runAfter": { "Atualizar_Fase_Qualificacao": ["Succeeded"] }
+        },
+
+        "GATE_02_Qualificacao_Aprovacao": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": { "connection": { "name": "@parameters('$connections')['approvals']['connectionId']" } },
+            "method": "post",
+            "path": "/approvalRequests/synchronous",
+            "body": {
+              "title": "🔍 VMO Gate 02 — Qualificação: @{triggerBody()?['Title']}",
+              "assignedTo": "@parameters('ApprovalEmail')",
+              "details": "**Felipe analisou a demanda.**\n\nScore e classificação disponíveis no SharePoint.\n\nAprove para prosseguir com elaboração dos documentos.",
+              "itemLink": "@{parameters('SharePointSiteUrl')}/Lists/VMO_Projetos"
+            }
+          },
+          "runAfter": { "ETAPA_04_Felipe_QualificarDemanda": ["Succeeded"] }
+        },
+
+        "Verificar_Gate02": {
+          "type": "Condition",
+          "expression": {
+            "and": [{
+              "equals": ["@outputs('GATE_02_Qualificacao_Aprovacao')?['body/outcome']", "Approve"]
+            }]
+          },
+          "actions": {
+
+            "ETAPAS_07_08_09_Documentacao_Paralela": {
+              "type": "Scope",
+              "actions": {
+
+                "ETAPA_07_Diana_CriarDocumentos": {
+                  "type": "Http",
+                  "inputs": {
+                    "method": "POST",
+                    "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Diana/triggers/manual/paths/invoke",
+                    "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+                  },
+                  "runAfter": {}
+                },
+
+                "ETAPA_08_Rafael_LevantarRequisitos": {
+                  "type": "Http",
+                  "inputs": {
+                    "method": "POST",
+                    "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Rafael/triggers/manual/paths/invoke",
+                    "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+                  },
+                  "runAfter": {}
+                },
+
+                "ETAPA_09_Fabio_GerarWorkRequest": {
+                  "type": "Http",
+                  "inputs": {
+                    "method": "POST",
+                    "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Fabio/triggers/manual/paths/invoke",
+                    "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+                  },
+                  "runAfter": {}
+                }
+
+              },
+              "runAfter": {}
+            },
+
+            "ETAPA_10_Carlos_CriarCronograma": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Carlos/triggers/manual/paths/invoke",
+                "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+              },
+              "runAfter": { "ETAPAS_07_08_09_Documentacao_Paralela": ["Succeeded"] }
+            },
+
+            "ETAPA_11_Pedro_AnaliseRiscos": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Pedro/triggers/manual/paths/invoke",
+                "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+              },
+              "runAfter": { "ETAPAS_07_08_09_Documentacao_Paralela": ["Succeeded"] }
+            },
+
+            "ETAPA_12_Marcela_DefinirKPIs": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Marcela/triggers/manual/paths/invoke",
+                "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+              },
+              "runAfter": { "ETAPAS_07_08_09_Documentacao_Paralela": ["Succeeded"] }
+            },
+
+            "ETAPA_13_Sara_StatusReport": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Sara/triggers/manual/paths/invoke",
+                "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+              },
+              "runAfter": {
+                "ETAPA_10_Carlos_CriarCronograma": ["Succeeded"],
+                "ETAPA_11_Pedro_AnaliseRiscos": ["Succeeded"],
+                "ETAPA_12_Marcela_DefinirKPIs": ["Succeeded"]
+              }
+            },
+
+            "ETAPA_14_Vera_RevisaoQualidade": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Vera/triggers/manual/paths/invoke",
+                "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']" }
+              },
+              "runAfter": { "ETAPA_13_Sara_StatusReport": ["Succeeded"] }
+            },
+
+            "ETAPA_15_Gabriel_AuditoriaFinal": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "https://prod-XX.brazilsouth.logic.azure.com/workflows/VMO_Gabriel/triggers/manual/paths/invoke",
+                "body": { "projetoId": "@outputs('Log_Inicio_Pipeline')?['body/ID']", "tipoGate": "FINAL" }
+              },
+              "runAfter": { "ETAPA_14_Vera_RevisaoQualidade": ["Succeeded"] }
+            },
+
+            "GATE_03_Final_Aprovacao": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": { "connection": { "name": "@parameters('$connections')['approvals']['connectionId']" } },
+                "method": "post",
+                "path": "/approvalRequests/synchronous",
+                "body": {
+                  "title": "✅ VMO Gate 03 — Aprovação Final: @{triggerBody()?['Title']}",
+                  "assignedTo": "@parameters('ApprovalEmail')",
+                  "details": "**Todos os documentos foram gerados e auditados.**\n\nTAP, PM Canvas, ERF, Cronograma, Riscos, KPIs, Work Request e Status Report disponíveis no SharePoint.\n\nAprove para marcar projeto como APROVADO para execução.",
+                  "itemLink": "@{parameters('SharePointSiteUrl')}/sites/VMO_GAB"
+                }
+              },
+              "runAfter": { "ETAPA_15_Gabriel_AuditoriaFinal": ["Succeeded"] }
+            },
+
+            "Verificar_Gate03": {
+              "type": "Condition",
+              "expression": {
+                "and": [{
+                  "equals": ["@outputs('GATE_03_Final_Aprovacao')?['body/outcome']", "Approve"]
+                }]
+              },
+              "actions": {
+                "Marcar_Projeto_Aprovado": {
+                  "type": "ApiConnection",
+                  "inputs": {
+                    "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+                    "method": "patch",
+                    "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{outputs('Log_Inicio_Pipeline')?['body/ID']}",
+                    "body": { "Status": "APROVADO", "Fase": "PRONTO_EXECUCAO", "DataAprovacao": "@utcNow()" }
+                  },
+                  "runAfter": {}
+                },
+                "Notificar_Aprovacao_Teams": {
+                  "type": "ApiConnection",
+                  "inputs": {
+                    "host": { "connection": { "name": "@parameters('$connections')['teams']['connectionId']" } },
+                    "method": "post",
+                    "path": "/beta/teams/messages",
+                    "body": {
+                      "messageBody": "✅ **Projeto APROVADO:** @{triggerBody()?['Title']}\n\nTodos os documentos de iniciação foram gerados e aprovados pela governança VMO.\n\n📋 [Ver documentos](@{parameters('SharePointSiteUrl')}/sites/VMO_GAB)"
+                    }
+                  },
+                  "runAfter": { "Marcar_Projeto_Aprovado": ["Succeeded"] }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Marcar_Projeto_Reprovado_Gate3": {
+                    "type": "ApiConnection",
+                    "inputs": {
+                      "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+                      "method": "patch",
+                      "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{outputs('Log_Inicio_Pipeline')?['body/ID']}",
+                      "body": { "Status": "REPROVADO_GATE3", "Fase": "REVISAO_FINAL" }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              },
+              "runAfter": { "GATE_03_Final_Aprovacao": ["Succeeded"] }
+            }
+
+          },
+          "else": {
+            "actions": {
+              "Marcar_Reprovado_Gate2": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+                  "method": "patch",
+                  "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{outputs('Log_Inicio_Pipeline')?['body/ID']}",
+                  "body": { "Status": "REPROVADO_GATE2", "Fase": "QUALIFICACAO_REJEITADA" }
+                },
+                "runAfter": {}
+              }
+            }
+          },
+          "runAfter": { "GATE_02_Qualificacao_Aprovacao": ["Succeeded"] }
+        }
+
+      },
+      "else": {
+        "actions": {
+          "Marcar_Reprovado_Gate1": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+              "method": "patch",
+              "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{outputs('Log_Inicio_Pipeline')?['body/ID']}",
+              "body": { "Status": "REPROVADO_GATE1", "Fase": "INTAKE_REJEITADO" }
+            },
+            "runAfter": {}
+          }
+        }
+      },
+      "runAfter": { "GATE_01_Intake_Aprovacao": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

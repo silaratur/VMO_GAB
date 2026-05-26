@@ -1,0 +1,57 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: consultar_riscos
+displayName: "Consultar Riscos (Pedro Perigo)"
+description: "Pedro Perigo — Exibe matriz de riscos e riscos críticos de um projeto"
+
+triggerIntents:
+  - "consultar riscos"
+  - "ver riscos"
+  - "riscos do projeto"
+  - "matriz de riscos"
+  - "riscos críticos"
+  - "pedro riscos"
+  - "quais são os riscos"
+
+variables:
+  - name: NomeProjeto
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: Question
+    id: q_projeto
+    prompt: "⚠️ Para qual projeto deseja ver os riscos?"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.NomeProjeto
+
+  - kind: InvokeFlowAction
+    id: invoke_riscos
+    flowId: "VMO_Pedro_AnaliseRiscos"
+    input:
+      binding:
+        nomeProjeto: =Topic.NomeProjeto
+        acao: "CONSULTAR"
+    output:
+      binding:
+        FlowResult: Topic.FlowResult
+
+  - kind: SendMessage
+    id: msg_riscos
+    message: |
+      ⚠️ **Riscos — @{Topic.NomeProjeto}**
+
+      **Resumo:**
+      🔴 Críticos (Score ≥ 15): @{Topic.FlowResult.totalCriticos}
+      🟡 Altos (Score 9-14):    @{Topic.FlowResult.totalAltos}
+      🟢 Baixos (Score < 9):    @{Topic.FlowResult.totalBaixos}
+
+      **Top 3 Riscos Prioritários:**
+      @{Topic.FlowResult.topRiscos}
+
+      **Reserva de Contingência:** @{Topic.FlowResult.reservaTotal}
+
+      Para detalhes completos, consulte a Matriz de Riscos no VMO Dashboard.

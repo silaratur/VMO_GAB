@@ -1,0 +1,95 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: pipeline_completo
+displayName: "Executar Pipeline Completo VMO-Autônomo"
+description: "Inicia o pipeline completo de 16 etapas para um novo projeto"
+
+triggerIntents:
+  - "executar pipeline completo"
+  - "iniciar pipeline vmo"
+  - "pipeline autonomo"
+  - "processar projeto completo"
+  - "rodar o vmo autonomo"
+
+variables:
+  - name: Confirmacao
+    type: String
+  - name: NomeProjeto
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: SendMessage
+    id: msg_aviso
+    message: |
+      ⚡ Você está prestes a iniciar o **VMO-Autônomo** — Pipeline Completo de 16 etapas:
+
+      1. 📥 Iara — Capturar Demanda
+      2. 🏛️ **GATE 01** — Intake (aprovação humana)
+      3. 🔍 Felipe — Qualificar Demanda
+      4. 🏛️ **GATE 02** — Qualificação (aprovação humana)
+      5. 📋 Diana — TAP + PM Canvas (paralelo)
+      6. ⚙️ Rafael — Requisitos (paralelo)
+      7. 📤 Fábio — Work Request (paralelo)
+      8. 📅 Carlos — Cronograma
+      9. ⚠️ Pedro — Riscos
+      10. 📊 Marcela — KPIs
+      11. 📝 Sara — Status Report Inicial
+      12. ✅ Vera — Revisão de Qualidade
+      13. 🛡️ Gabriel — Auditoria Final
+      14. 🏛️ **GATE 03** — Aprovação Final (aprovação humana)
+
+      3 aprovações humanas serão solicitadas via Microsoft Teams/Outlook.
+
+  - kind: Question
+    id: q_confirmacao
+    prompt: "Confirma iniciar o pipeline para este projeto?"
+    choices:
+      - value: "Sim, iniciar"
+        synonyms: ["sim", "confirmar", "pode iniciar", "ok", "yes"]
+      - value: "Não, cancelar"
+        synonyms: ["não", "cancelar", "voltar", "no"]
+    variable: Topic.Confirmacao
+
+  - kind: ConditionGroup
+    id: verificar_confirmacao
+    conditions:
+      - condition: =Topic.Confirmacao = "Sim, iniciar"
+        actions:
+          - kind: Question
+            id: q_nome
+            prompt: "Nome do projeto para iniciar o pipeline:"
+            entityType:
+              kind: FreeTextEntityType
+            variable: Topic.NomeProjeto
+
+          - kind: InvokeFlowAction
+            id: invoke_pipeline
+            flowId: "VMO_Main_Pipeline"
+            input:
+              binding:
+                nomeProjeto: =Topic.NomeProjeto
+            output:
+              binding:
+                FlowResult: Topic.FlowResult
+
+          - kind: SendMessage
+            id: msg_iniciado
+            message: |
+              🚀 **Pipeline VMO-Autônomo iniciado!**
+
+              **Projeto:** @{Topic.NomeProjeto}
+              **ID:** @{Topic.FlowResult.pipelineId}
+
+              O responsável receberá a primeira solicitação de aprovação (Gate 01) em breve.
+
+              Acompanhe o progresso no VMO Dashboard.
+
+      - condition: =true
+        actions:
+          - kind: SendMessage
+            id: msg_cancelado
+            message: |
+              Pipeline cancelado. Quando quiser iniciar, é só chamar novamente!

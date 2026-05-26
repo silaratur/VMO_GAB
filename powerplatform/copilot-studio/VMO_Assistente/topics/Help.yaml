@@ -1,0 +1,54 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: help
+displayName: "Ajuda — Comandos VMO"
+description: "Lista todos os comandos e capacidades do VMO Assistente"
+
+triggerIntents:
+  - "ajuda"
+  - "help"
+  - "o que você faz"
+  - "comandos"
+  - "o que posso fazer"
+  - "como usar"
+  - "menu"
+
+actions:
+  - kind: SendMessage
+    id: msg_help
+    message: |
+      🏛️ **VMO Assistente — Guia de Uso**
+
+      ---
+
+      **📥 NOVA DEMANDA / PROJETO**
+      • "quero abrir um projeto"
+      • "nova demanda"
+      • "iniciar projeto"
+
+      **📊 CONSULTAS**
+      • "status do projeto [nome]"
+      • "ver KPIs"
+      • "consultar riscos"
+      • "andamento do projeto"
+
+      **📝 RELATÓRIOS**
+      • "gerar relatório"
+      • "status report semanal"
+      • "relatório executivo"
+
+      **🛡️ GOVERNANÇA**
+      • "auditoria de governança"
+      • "verificar gate"
+      • "change control"
+
+      **⚡ PIPELINE COMPLETO**
+      • "executar pipeline completo"
+      • "rodar o VMO autônomo"
+
+      ---
+
+      **Agentes disponíveis:**
+      📥 Iara | 🔍 Felipe | 📋 Diana | ⚙️ Rafael
+      📤 Fábio | 📅 Carlos | ⚠️ Pedro | 📊 Marcela
+      📝 Sara | ✅ Vera | 🛡️ Gabriel

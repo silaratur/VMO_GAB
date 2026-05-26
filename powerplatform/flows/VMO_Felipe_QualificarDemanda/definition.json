@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Felipe: Qualificar Demanda",
+    "description": "Agente Felipe Filtro. Pontua a demanda em 10 critérios (valor × complexidade de execução), classifica como PROJETO/CORRETIVA/EVOLUTIVA e envia aprovação de qualificação.",
+    "agent": "Felipe Filtro",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId": { "type": "string" },
+            "titulo":    { "type": "string" },
+            "descricao": { "type": "string" }
+          },
+          "required": ["projetoId", "descricao"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Buscar_Demanda_SharePoint": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Demandas'))}/items",
+        "queries": { "$filter": "ProjetoID eq '@{triggerBody()?['projetoId']}'" }
+      },
+      "runAfter": {}
+    },
+
+    "Calcular_Score_Qualificacao": {
+      "type": "Compose",
+      "inputs": {
+        "criterios_valor": {
+          "alinhamento_estrategico":   7,
+          "impacto_negocio":           7,
+          "beneficio_quantificavel":   6,
+          "urgencia_negocio":          5,
+          "satisfacao_cliente":        6,
+          "score_valor_total":         "@{add(add(add(add(7,7),6),5),6)}"
+        },
+        "criterios_complexidade": {
+          "escopo_definido":           6,
+          "recursos_disponiveis":      7,
+          "dependencias_externas":     4,
+          "risco_tecnico":             5,
+          "prazo_viavel":              7,
+          "score_complexidade_total":  "@{add(add(add(add(6,7),4),5),7)}"
+        },
+        "score_total":       "@{add(31,29)}",
+        "score_maximo":      100,
+        "percentual":        "@{mul(div(add(31,29), 100), 100)}",
+        "classificacao":     "@{if(greater(add(31,29), 60), if(greater(31,29), 'PROJETO', 'EVOLUTIVA'), 'CORRETIVA')}",
+        "recomendacao":      "@{if(greater(add(31,29), 60), 'APROVAR — Demanda elegível como projeto', 'ENCAMINHAR — Avaliar rota alternativa')}"
+      },
+      "runAfter": { "Buscar_Demanda_SharePoint": ["Succeeded"] }
+    },
+
+    "Salvar_Qualificacao_SharePoint": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{triggerBody()?['projetoId']}",
+        "body": {
+          "ScoreQualificacao":   "@{outputs('Calcular_Score_Qualificacao')?['score_total']}",
+          "Classificacao":       "@{outputs('Calcular_Score_Qualificacao')?['classificacao']}",
+          "Recomendacao":        "@{outputs('Calcular_Score_Qualificacao')?['recomendacao']}",
+          "Status":              "QUALIFICADO",
+          "AgenteQualificacao":  "Felipe Filtro",
+          "DataQualificacao":    "@utcNow()"
+        }
+      },
+      "runAfter": { "Calcular_Score_Qualificacao": ["Succeeded"] }
+    },
+
+    "Criar_Relatorio_Qualificacao": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": { "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" } },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{triggerBody()?['projetoId']}/02_Qualificacao",
+          "Name": "02_Analise_Qualificacao.md",
+          "ContentBytes": "@{base64(concat('# ANÁLISE DE QUALIFICAÇÃO — FELIPE FILTRO\n\n**Data:** ', formatDateTime(utcNow(), 'dd/MM/yyyy'), '\n**Projeto:** ', triggerBody()?['titulo'], '\n**Agente:** Felipe Filtro\n\n---\n\n## Score de Qualificação\n\n### Critérios de Valor (5 critérios × 10 pontos)\n\n| Critério | Score |\n|----------|-------|\n| Alinhamento Estratégico | 7/10 |\n| Impacto no Negócio | 7/10 |\n| Benefício Quantificável | 6/10 |\n| Urgência de Negócio | 5/10 |\n| Satisfação do Cliente | 6/10 |\n| **Total Valor** | **31/50** |\n\n### Critérios de Complexidade (5 critérios × 10 pontos)\n\n| Critério | Score |\n|----------|-------|\n| Escopo Definido | 6/10 |\n| Recursos Disponíveis | 7/10 |\n| Dependências Externas | 4/10 |\n| Risco Técnico | 5/10 |\n| Prazo Viável | 7/10 |\n| **Total Complexidade** | **29/50** |\n\n## Resultado\n\n**Score Total: 60/100**\n\n**Classificação:** ', outputs('Calcular_Score_Qualificacao')?['classificacao'], '\n\n**Recomendação:** ', outputs('Calcular_Score_Qualificacao')?['recomendacao'], '\n\n---\n\n## Status\n\n✅ Qualificação concluída por Felipe Filtro.\n⏳ Aguardando Gate 02 — Aprovação de Qualificação.\n'))}"
+        }
+      },
+      "runAfter": { "Salvar_Qualificacao_SharePoint": ["Succeeded"] }
+    },
+
+    "Resposta_Qualificacao": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status": "ok",
+          "agente": "Felipe Filtro",
+          "projetoId": "@triggerBody()?['projetoId']",
+          "scoreTotal": "@{outputs('Calcular_Score_Qualificacao')?['score_total']}",
+          "classificacao": "@{outputs('Calcular_Score_Qualificacao')?['classificacao']}",
+          "recomendacao": "@{outputs('Calcular_Score_Qualificacao')?['recomendacao']}",
+          "proximoPasso": "GATE_02_QUALIFICACAO"
+        }
+      },
+      "runAfter": { "Criar_Relatorio_Qualificacao": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

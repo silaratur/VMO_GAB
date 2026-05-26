@@ -1,0 +1,90 @@
+{
+  "connections": [
+    {
+      "id": "shared_sharepointonline",
+      "name": "SharePoint Online",
+      "connectorId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+      "environment": "Default",
+      "description": "Conectado às listas VMO no SharePoint. Configure com a URL do seu site SharePoint.",
+      "dataSources": [
+        {
+          "name": "VMO_Projetos",
+          "entityName": "VMO_Projetos",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_Demandas",
+          "entityName": "VMO_Demandas",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_KPIs",
+          "entityName": "VMO_KPIs",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_Riscos",
+          "entityName": "VMO_Riscos",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_Alertas",
+          "entityName": "VMO_Alertas",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_Cronograma",
+          "entityName": "VMO_Cronograma",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_StatusReports",
+          "entityName": "VMO_StatusReports",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        },
+        {
+          "name": "VMO_DashboardData",
+          "entityName": "VMO_DashboardData",
+          "type": "SharePointList",
+          "siteUrl": "https://SUAEMPRESA.sharepoint.com/sites/VMO"
+        }
+      ]
+    },
+    {
+      "id": "shared_office365users",
+      "name": "Office 365 Users",
+      "connectorId": "/providers/Microsoft.PowerApps/apis/shared_office365users",
+      "description": "Para exibir fotos e nomes dos responsáveis de projeto."
+    }
+  ],
+  "environmentVariables": [
+    {
+      "name": "vmo_SharePointSiteUrl",
+      "displayName": "URL do Site SharePoint VMO",
+      "type": "String",
+      "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO",
+      "description": "URL completa do site SharePoint onde estão as listas VMO. Altere para sua URL real."
+    },
+    {
+      "name": "vmo_ApprovalEmail",
+      "displayName": "Email do Aprovador VMO",
+      "type": "String",
+      "defaultValue": "gestor@suaempresa.com.br",
+      "description": "Email do responsável que receberá as aprovações dos gates VMO."
+    },
+    {
+      "name": "vmo_TeamsChannelId",
+      "displayName": "ID do Canal Teams VMO",
+      "type": "String",
+      "defaultValue": "",
+      "description": "ID do canal Microsoft Teams para notificações VMO."
+    }
+  ]
+}

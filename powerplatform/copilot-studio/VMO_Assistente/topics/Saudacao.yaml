@@ -1,0 +1,26 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: saudacao
+displayName: "Saudação / Boas-vindas"
+description: "Tópico de boas-vindas e menu principal do VMO Assistente"
+isSystemTopic: true
+systemTopicType: ConversationStart
+
+actions:
+  - kind: SendMessage
+    id: msg_welcome
+    message: |
+      🏛️ **Bem-vindo ao VMO Assistente!**
+
+      Sou o assistente digital do **VMO Consultoria** — Escritório de Projetos Autônomo.
+
+      Posso ajudar com:
+      • 📥 **Nova demanda** — "quero abrir um projeto"
+      • 📊 **Status** — "como está o projeto X"
+      • 📈 **KPIs** — "ver indicadores"
+      • ⚠️ **Riscos** — "consultar riscos"
+      • 📝 **Relatório** — "gerar status report"
+      • 🛡️ **Governança** — "verificar gate"
+      • ⚡ **Pipeline** — "executar pipeline completo"
+
+      Como posso ajudar hoje?

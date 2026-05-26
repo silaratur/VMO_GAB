@@ -1,0 +1,182 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Marcela: Definir KPIs",
+    "description": "Agente Marcela Métrica. Define a linha de base dos KPIs do projeto (CPI, SPI, IHP, IHG, IHC, ISC, HealthScore), registra na lista VMO_KPIs e cria o documento de KPIs na pasta 08_KPIs.",
+    "agent": "Marcela Métrica",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":    { "type": "string" },
+            "nomeProjeto":  { "type": "string" },
+            "orcamento":    { "type": "string" },
+            "dataInicio":   { "type": "string" }
+          },
+          "required": ["projetoId"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_KPIs": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":   "@{triggerBody()?['projetoId']}",
+        "nomeProjeto": "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "orcamento":   "@{if(empty(triggerBody()?['orcamento']), 'A definir', triggerBody()?['orcamento'])}",
+        "dataInicio":  "@{if(empty(triggerBody()?['dataInicio']), formatDateTime(utcNow(), 'dd/MM/yyyy'), triggerBody()?['dataInicio'])}",
+        "dataGeracao": "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}",
+        "semanaAtual": "@{formatDateTime(utcNow(), 'yyyy-WW')}",
+        "versao":      "1.0"
+      },
+      "runAfter": {}
+    },
+
+    "Criar_Baseline_KPIs": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_KPIs'))}/items",
+        "body": {
+          "Title":        "KPI Baseline — @{outputs('Preparar_Dados_KPIs')?['nomeProjeto']} — Semana 0",
+          "ProjetoID":    "@{outputs('Preparar_Dados_KPIs')?['projetoId']}",
+          "CPI":          1.0,
+          "SPI":          1.0,
+          "IHP":          100,
+          "IHG":          100,
+          "IHC":          100,
+          "ISC":          100,
+          "HealthScore":  100,
+          "Status":       "BASELINE",
+          "Data":         "@{utcNow()}",
+          "Semana":       "@{outputs('Preparar_Dados_KPIs')?['semanaAtual']}",
+          "Agente":       "Marcela Métrica",
+          "Observacao":   "Linha de base inicial definida no início do projeto. CPI=1 (custo na meta), SPI=1 (prazo na meta), todos os índices de saúde em 100.",
+          "DataCriacao":  "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Preparar_Dados_KPIs": ["Succeeded"] }
+    },
+
+    "Criar_Documento_KPIs": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_KPIs')?['projetoId']}/08_KPIs",
+          "Name": "Plano_KPIs_Metricas.md",
+          "ContentBytes": "@{base64(concat('# PLANO DE KPIs E MÉTRICAS\n\n**Projeto:** ', outputs('Preparar_Dados_KPIs')?['nomeProjeto'], '\n**Versão:** ', outputs('Preparar_Dados_KPIs')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_KPIs')?['dataGeracao'], '\n**Agente:** Marcela Métrica\n\n---\n\n## 1. LINHA DE BASE (BASELINE)\n\n| KPI | Valor Baseline | Limiar Alerta (Amarelo) | Limiar Crítico (Vermelho) | Descrição |\n|---|---|---|---|---|\n| **CPI** | 1,00 | < 0,90 | < 0,80 | Índice de Desempenho de Custo |\n| **SPI** | 1,00 | < 0,90 | < 0,80 | Índice de Desempenho de Prazo |\n| **IHP** | 100 | < 80 | < 60 | Índice de Saúde do Projeto |\n| **IHG** | 100 | < 80 | < 60 | Índice de Saúde de Governança |\n| **IHC** | 100 | < 80 | < 60 | Índice de Saúde de Conformidade |\n| **ISC** | 100 | < 80 | < 60 | Índice de Satisfação do Cliente |\n| **HealthScore** | 100 | < 75 | < 50 | Score Geral de Saúde do Projeto |\n\n---\n\n## 2. DEFINIÇÃO DOS INDICADORES\n\n### 2.1 CPI — Índice de Desempenho de Custo\n\n**Fórmula:** `CPI = EV / AC`\n\n- **EV** (Valor Agregado): Valor do trabalho efetivamente concluído\n- **AC** (Custo Real): Custo real incorrido até o momento\n\n| Faixa | Semáforo | Interpretação |\n|---|---|---|\n| CPI ≥ 1,00 | Verde | Abaixo do orçamento |\n| 0,90 ≤ CPI < 1,00 | Amarelo | Ligeiramente acima do orçamento |\n| CPI < 0,90 | Vermelho | Significativamente acima do orçamento |\n\n### 2.2 SPI — Índice de Desempenho de Prazo\n\n**Fórmula:** `SPI = EV / PV`\n\n- **PV** (Valor Planejado): Trabalho que deveria ter sido concluído até o momento\n\n| Faixa | Semáforo | Interpretação |\n|---|---|---|\n| SPI ≥ 1,00 | Verde | À frente do cronograma |\n| 0,90 ≤ SPI < 1,00 | Amarelo | Ligeiramente atrasado |\n| SPI < 0,90 | Vermelho | Significativamente atrasado |\n\n### 2.3 IHP — Índice de Saúde do Projeto\n\n**Fórmula:** `IHP = (CPI × 0,4 + SPI × 0,4 + (Escopo% / 100) × 0,2) × 100`\n\nMede a saúde geral considerando custo, prazo e escopo.\n\n### 2.4 IHG — Índice de Saúde de Governança\n\n**Fórmula:** `IHG = (Documentos entregues / Documentos obrigatórios) × 100`\n\nMede o compliance com os requisitos documentais do VMO.\n\n### 2.5 IHC — Índice de Saúde de Conformidade\n\n**Fórmula:** `IHC = (Requisitos conformes / Total de requisitos validados) × 100`\n\nMede o percentual de requisitos implementados e validados.\n\n### 2.6 ISC — Índice de Satisfação do Cliente\n\n**Fórmula:** Baseado em pesquisas periódicas com stakeholders (escala 0–100)\n\nColetado quinzenalmente via formulário Microsoft Forms.\n\n### 2.7 HealthScore — Score Geral de Saúde\n\n**Fórmula:** `HealthScore = (IHP × 0,30 + IHG × 0,25 + IHC × 0,25 + ISC × 0,20)`\n\nIndicador consolidado de saúde do projeto.\n\n---\n\n## 3. THRESHOLDS E ALERTAS AUTOMÁTICOS\n\n| Condição | Ação Automática | Urgência |\n|---|---|---|\n| CPI < 0,90 | Alerta amarelo no dashboard; e-mail para GP | Alta |\n| CPI < 0,80 | Alerta vermelho; e-mail para GP + Patrocinador | Crítica |\n| SPI < 0,90 | Alerta amarelo; revisão de cronograma | Alta |\n| SPI < 0,80 | Alerta vermelho; acionar Pedro Perigo | Crítica |\n| HealthScore < 75 | Notificação Teams para equipe | Alta |\n| HealthScore < 50 | Escalada para Patrocinador; reunião emergencial | Crítica |\n| ISC < 70 | Pesquisa de satisfação adicional; reunião stakeholders | Alta |\n\n---\n\n## 4. CALENDÁRIO DE MEDIÇÃO\n\n| KPI | Frequência | Responsável | Método |\n|---|---|---|---|\n| CPI, SPI | Semanal (sexta-feira) | Marcela Métrica / GP | Cálculo Valor Agregado |\n| IHP | Semanal | Marcela Métrica | Fórmula automática |\n| IHG | A cada gate | Gabriel Governança | Checklist de documentos |\n| IHC | Por sprint | Vera Veredito | Revisão de qualidade |\n| ISC | Quinzenal | GP | Microsoft Forms |\n| HealthScore | Semanal | Sara Status | Consolidação automática |\n\n---\n\n## 5. METAS DO PROJETO\n\n| KPI | Meta Final | Meta de Qualificação (Gate 1) | Meta Final (Gate 3) |\n|---|---|---|---|\n| CPI | ≥ 0,95 | ≥ 0,90 | ≥ 0,95 |\n| SPI | ≥ 0,95 | ≥ 0,85 | ≥ 0,95 |\n| HealthScore | ≥ 85 | ≥ 70 | ≥ 85 |\n| ISC | ≥ 80 | ≥ 70 | ≥ 80 |\n\n---\n\n## 6. HISTÓRICO DE VERSÕES\n\n| Versão | Data | Autor | Descrição |\n|---|---|---|---|\n| 1.0 | ', outputs('Preparar_Dados_KPIs')?['dataGeracao'], ' | Marcela Métrica | Criação do plano de KPIs e baseline inicial |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Marcela Métrica.*\n'))}"
+        }
+      },
+      "runAfter": { "Criar_Baseline_KPIs": ["Succeeded"] }
+    },
+
+    "Registrar_Documento_Lista": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":       "Plano de KPIs e Métricas — @{outputs('Preparar_Dados_KPIs')?['nomeProjeto']}",
+          "Tipo":        "PLANO_KPIS",
+          "ProjetoID":   "@{outputs('Preparar_Dados_KPIs')?['projetoId']}",
+          "Versao":      "1.0",
+          "Status":      "RASCUNHO",
+          "Agente":      "Marcela Métrica",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":     "/VMO_Projetos/@{outputs('Preparar_Dados_KPIs')?['projetoId']}/08_KPIs/Plano_KPIs_Metricas.md"
+        }
+      },
+      "runAfter": { "Criar_Documento_KPIs": ["Succeeded"] }
+    },
+
+    "Obter_Registro_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_KPIs')?['projetoId']}'"
+        }
+      },
+      "runAfter": { "Registrar_Documento_Lista": ["Succeeded"] }
+    },
+
+    "Atualizar_Status_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{first(outputs('Obter_Registro_Projeto')?['body/value'])?['ID']}",
+        "body": {
+          "Status":                  "KPIS_DEFINIDOS",
+          "AgenteAtual":             "Marcela Métrica",
+          "DataUltimaAtualizacao":   "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Obter_Registro_Projeto": ["Succeeded"] }
+    },
+
+    "Resposta_Sucesso": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status":        "ok",
+          "agente":        "Marcela Métrica",
+          "projetoId":     "@{outputs('Preparar_Dados_KPIs')?['projetoId']}",
+          "mensagem":      "KPIs definidos e linha de base registrada com sucesso.",
+          "baseline": {
+            "CPI":         1.0,
+            "SPI":         1.0,
+            "IHP":         100,
+            "IHG":         100,
+            "IHC":         100,
+            "ISC":         100,
+            "HealthScore": 100
+          },
+          "baselineId":    "@{outputs('Criar_Baseline_KPIs')?['body/ID']}",
+          "documentoId":   "@{outputs('Registrar_Documento_Lista')?['body/ID']}",
+          "statusProjeto": "KPIS_DEFINIDOS",
+          "proximoPasso":  "VERA_REVISAO_QUALIDADE"
+        }
+      },
+      "runAfter": { "Atualizar_Status_Projeto": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

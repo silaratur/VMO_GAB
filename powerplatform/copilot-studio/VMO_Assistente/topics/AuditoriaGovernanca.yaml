@@ -1,0 +1,99 @@
+kind: AdaptiveDialog
+schemaVersion: "1.0"
+id: auditoria_governanca
+displayName: "Auditoria de Governança (Gabriel)"
+description: "Gabriel Governança — Verifica gates, change control e saúde de governança"
+
+triggerIntents:
+  - "auditoria de governança"
+  - "verificar gate"
+  - "gate do projeto"
+  - "aprovação de governança"
+  - "change control"
+  - "mudança de escopo"
+  - "gabriel"
+  - "governança"
+  - "checklist de governança"
+  - "documentos obrigatórios"
+
+variables:
+  - name: NomeProjeto
+    type: String
+  - name: TipoAuditoria
+    type: String
+  - name: FlowResult
+    type: Object
+
+actions:
+
+  - kind: SendMessage
+    id: msg_intro
+    message: |
+      🛡️ Vou acionar o **Gabriel** para verificar a governança.
+
+  - kind: Question
+    id: q_tipo
+    prompt: "Que tipo de auditoria/verificação você precisa?"
+    choices:
+      - value: "Gate de Intake"
+        synonyms: ["gate 1", "intake", "primeiro gate"]
+      - value: "Gate de Qualificação"
+        synonyms: ["gate 2", "qualificação", "segundo gate"]
+      - value: "Gate Final"
+        synonyms: ["gate 3", "final", "aprovação final", "terceiro gate"]
+      - value: "Change Control"
+        synonyms: ["change", "mudança", "alteração de escopo", "change request"]
+      - value: "Saúde do Portfolio"
+        synonyms: ["saúde", "portfolio health", "status geral"]
+    variable: Topic.TipoAuditoria
+
+  - kind: Question
+    id: q_projeto
+    prompt: "Para qual projeto?"
+    entityType:
+      kind: FreeTextEntityType
+    variable: Topic.NomeProjeto
+
+  - kind: InvokeFlowAction
+    id: invoke_gabriel
+    flowId: "VMO_Gabriel_Governanca"
+    input:
+      binding:
+        nomeProjeto: =Topic.NomeProjeto
+        tipoGate: =Topic.TipoAuditoria
+    output:
+      binding:
+        FlowResult: Topic.FlowResult
+
+  - kind: ConditionGroup
+    id: verificar_resultado
+    conditions:
+      - condition: =Topic.FlowResult.veredicto = "APROVADO"
+        actions:
+          - kind: SendMessage
+            id: msg_aprovado
+            message: |
+              ✅ **APROVADO — @{Topic.TipoAuditoria}**
+
+              **Projeto:** @{Topic.NomeProjeto}
+              **Documentos verificados:** @{Topic.FlowResult.totalDocumentos}
+              **Score de Governança:** @{Topic.FlowResult.scoreGovernanca}/100
+
+              Projeto liberado para próxima fase.
+
+      - condition: =Topic.FlowResult.veredicto = "BLOQUEADO"
+        actions:
+          - kind: SendMessage
+            id: msg_bloqueado
+            message: |
+              🔴 **BLOQUEADO — @{Topic.TipoAuditoria}**
+
+              **Projeto:** @{Topic.NomeProjeto}
+
+              **Condições bloqueantes:**
+              @{Topic.FlowResult.condicoesBloqueantes}
+
+              **Documentos faltantes:**
+              @{Topic.FlowResult.documentosFaltantes}
+
+              Corrija as pendências e acione novamente a auditoria.

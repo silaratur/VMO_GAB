@@ -1,0 +1,229 @@
+Properties:
+  Name: Screen_Riscos
+  Fill: =RGBA(15, 23, 42, 1)
+
+Controls:
+
+  Riscos_Title:
+    Control: Label
+    Properties:
+      X: =216
+      Y: =84
+      Width: =400
+      Height: =40
+      Text: ="⚠️ Matriz de Riscos"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =24
+      FontWeight: =FontWeight.Bold
+
+  # Filtro por Projeto
+  Filtro_Label:
+    Control: Label
+    Properties:
+      X: =216
+      Y: =132
+      Width: =100
+      Height: =28
+      Text: ="Projeto:"
+      Color: =RGBA(148,163,184,1)
+      Size: =13
+
+  Filtro_Projeto:
+    Control: Dropdown
+    Properties:
+      X: =320
+      Y: =128
+      Width: =250
+      Height: =36
+      Items: =AddColumns(Projetos, "DisplayName", Title)
+      Value: ="Title"
+      Default: ="Todos"
+
+  # Resumo de Riscos
+  Card_Criticos:
+    Control: Rectangle
+    Properties:
+      X: =216
+      Y: =176
+      Width: =185
+      Height: =80
+      Fill: =RGBA(239,68,68,0.15)
+      BorderRadius: =10
+
+  Card_Criticos_Label:
+    Control: Label
+    Properties:
+      X: =228
+      Y: =188
+      Width: =165
+      Height: =20
+      Text: ="CRÍTICOS (≥15)"
+      Color: =RGBA(239,68,68,1)
+      Size: =11
+
+  Card_Criticos_Value:
+    Control: Label
+    Properties:
+      X: =228
+      Y: =206
+      Width: =165
+      Height: =36
+      Text: =Text(CountRows(Filter(Riscos, Score >= 15)))
+      Color: =RGBA(239,68,68,1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  Card_Altos:
+    Control: Rectangle
+    Properties:
+      X: =413
+      Y: =176
+      Width: =185
+      Height: =80
+      Fill: =RGBA(250,204,21,0.15)
+      BorderRadius: =10
+
+  Card_Altos_Label:
+    Control: Label
+    Properties:
+      X: =425
+      Y: =188
+      Width: =165
+      Height: =20
+      Text: ="ALTOS (9-14)"
+      Color: =RGBA(250,204,21,1)
+      Size: =11
+
+  Card_Altos_Value:
+    Control: Label
+    Properties:
+      X: =425
+      Y: =206
+      Width: =165
+      Height: =36
+      Text: =Text(CountRows(Filter(Riscos, Score >= 9 && Score < 15)))
+      Color: =RGBA(250,204,21,1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  Card_Baixos:
+    Control: Rectangle
+    Properties:
+      X: =610
+      Y: =176
+      Width: =185
+      Height: =80
+      Fill: =RGBA(34,197,94,0.15)
+      BorderRadius: =10
+
+  Card_Baixos_Label:
+    Control: Label
+    Properties:
+      X: =622
+      Y: =188
+      Width: =165
+      Height: =20
+      Text: ="BAIXOS (<9)"
+      Color: =RGBA(34,197,94,1)
+      Size: =11
+
+  Card_Baixos_Value:
+    Control: Label
+    Properties:
+      X: =622
+      Y: =206
+      Width: =165
+      Height: =36
+      Text: =Text(CountRows(Filter(Riscos, Score < 9)))
+      Color: =RGBA(34,197,94,1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  # Gallery de Riscos
+  Riscos_Gallery:
+    Control: Gallery
+    Properties:
+      X: =216
+      Y: =272
+      Width: =Parent.Width - 240
+      Height: =Parent.Height - 312
+      Items: =SortByColumns(Riscos, "Score", SortOrder.Descending)
+      TemplatePadding: =4
+      TemplateSize: =72
+
+    Controls:
+      Risco_BG:
+        Control: Rectangle
+        Properties:
+          Width: =Parent.TemplateWidth
+          Height: =Parent.TemplateHeight
+          Fill: =If(ThisItem.Score >= 15, RGBA(239,68,68,0.1), If(ThisItem.Score >= 9, RGBA(250,204,21,0.1), RGBA(34,197,94,0.1)))
+          BorderRadius: =8
+
+      Score_Badge:
+        Control: Rectangle
+        Properties:
+          X: =8
+          Y: =16
+          Width: =44
+          Height: =44
+          Fill: =CorRisco(ThisItem.Score)
+          BorderRadius: =8
+
+      Score_Value:
+        Control: Label
+        Properties:
+          X: =8
+          Y: =24
+          Width: =44
+          Height: =28
+          Text: =Text(ThisItem.Score)
+          Color: =RGBA(255,255,255,1)
+          Align: =Align.Center
+          Size: =18
+          FontWeight: =FontWeight.Bold
+
+      Risco_Titulo:
+        Control: Label
+        Properties:
+          X: =64
+          Y: =8
+          Width: =400
+          Height: =24
+          Text: =ThisItem.Title
+          Color: =RGBA(255,255,255,1)
+          Size: =14
+          FontWeight: =FontWeight.Semibold
+
+      Risco_Categoria:
+        Control: Label
+        Properties:
+          X: =64
+          Y: =30
+          Width: =200
+          Height: =20
+          Text: =ThisItem.Categoria
+          Color: =RGBA(148,163,184,1)
+          Size: =12
+
+      Risco_Estrategia:
+        Control: Label
+        Properties:
+          X: =64
+          Y: =50
+          Width: =200
+          Height: =20
+          Text: ="Estratégia: " & ThisItem.Estrategia
+          Color: =RGBA(165,180,252,1)
+          Size: =11
+
+      Risco_Prob_Impact:
+        Control: Label
+        Properties:
+          X: =280
+          Y: =30
+          Width: =200
+          Height: =40
+          Text: ="P: " & ThisItem.Probabilidade & "/5  ×  I: " & ThisItem.Impacto & "/5"
+          Color: =RGBA(226,232,240,1)
+          Size: =12

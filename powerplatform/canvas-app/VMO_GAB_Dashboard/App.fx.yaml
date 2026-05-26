@@ -1,0 +1,45 @@
+Properties:
+  StartScreen: =Screen_Dashboard
+
+Formulas:
+  # === CONEXÕES SharePoint ===
+  SPSite: ="https://SUAEMPRESA.sharepoint.com/sites/VMO"
+
+  # === FONTES DE DADOS ===
+  Projetos:       =SharePoint.GetItems(SPSite, "VMO_Projetos",     {$orderby: "DataInicio desc"}).value
+  KPIs:           =SharePoint.GetItems(SPSite, "VMO_KPIs",         {$orderby: "Data desc"}).value
+  Riscos:         =SharePoint.GetItems(SPSite, "VMO_Riscos",       {$filter: "Status ne 'FECHADO'"}).value
+  Alertas:        =SharePoint.GetItems(SPSite, "VMO_Alertas",      {$filter: "Resolvido eq false", $orderby: "DataAlerta desc"}).value
+  Cronograma:     =SharePoint.GetItems(SPSite, "VMO_Cronograma",   {$orderby: "DataInicio asc"}).value
+  StatusReports:  =SharePoint.GetItems(SPSite, "VMO_StatusReports",{$orderby: "Data desc"}).value
+  DashData:       =SharePoint.GetItems(SPSite, "VMO_DashboardData",{$top: 1}).value
+
+  # === MÉTRICAS CALCULADAS ===
+  TotalProjetos:     =CountRows(Projetos)
+  ProjetosAtivos:    =CountRows(Filter(Projetos, Status = "EM_ANDAMENTO" || Status = "APROVADO"))
+  HealthScoreGlobal: =If(IsEmpty(DashData), 0, First(DashData).HealthScore)
+  TotalAlertas:      =CountRows(Alertas)
+  AlertasCriticos:   =CountRows(Filter(Alertas, Severidade = "CRITICO"))
+  TotalRiscos:       =CountRows(Riscos)
+  RiscosAltos:       =CountRows(Filter(Riscos, Score >= 12))
+  UltimaAtualizacao: =If(IsEmpty(DashData), "—", Text(First(DashData).UltimaAtualizacao, "dd/mm/yyyy hh:mm"))
+
+  # === FUNÇÕES DE COR (Semáforo) ===
+  CorStatus(score):  =If(score >= 80, RGBA(34,197,94,1), If(score >= 60, RGBA(250,204,21,1), RGBA(239,68,68,1)))
+  CorTexto(score):   =If(score >= 80, "🟢 Saudável", If(score >= 60, "🟡 Atenção", "🔴 Crítico"))
+  CorRisco(score):   =If(score >= 15, RGBA(239,68,68,1), If(score >= 9, RGBA(250,204,21,1), RGBA(34,197,94,1)))
+
+  # === PROJETO SELECIONADO ===
+  ProjetoAtual: =If(IsBlank(gProjetoSelecionado), First(Projetos), gProjetoSelecionado)
+
+Variables:
+  - Name: gProjetoSelecionado
+    Type: Record
+  - Name: gTelaAtual
+    Type: Text
+    DefaultValue: "Dashboard"
+  - Name: gMensagem
+    Type: Text
+  - Name: gCarregando
+    Type: Boolean
+    DefaultValue: false

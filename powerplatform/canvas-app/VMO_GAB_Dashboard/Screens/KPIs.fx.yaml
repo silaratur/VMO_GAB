@@ -1,0 +1,291 @@
+Properties:
+  Name: Screen_KPIs
+  Fill: =RGBA(15, 23, 42, 1)
+
+Controls:
+
+  # Reutiliza o header e nav da tela Dashboard
+  # (Em produção, use componentes reutilizáveis)
+
+  KPIs_Title:
+    Control: Label
+    Properties:
+      X: =216
+      Y: =84
+      Width: =400
+      Height: =40
+      Text: ="📈 Dashboard de KPIs"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =24
+      FontWeight: =FontWeight.Bold
+
+  # Card CPI
+  Card_CPI:
+    Control: Rectangle
+    Properties:
+      X: =216
+      Y: =136
+      Width: =200
+      Height: =130
+      Fill: =RGBA(30, 41, 59, 1)
+      BorderRadius: =12
+
+  Card_CPI_Sigla:
+    Control: Label
+    Properties:
+      X: =228
+      Y: =148
+      Width: =180
+      Height: =40
+      Text: ="CPI"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  Card_CPI_Nome:
+    Control: Label
+    Properties:
+      X: =228
+      Y: =188
+      Width: =180
+      Height: =20
+      Text: ="Índice de Perf. de Custo"
+      Color: =RGBA(148, 163, 184, 1)
+      Size: =11
+
+  Card_CPI_Valor:
+    Control: Label
+    Properties:
+      X: =228
+      Y: =210
+      Width: =180
+      Height: =40
+      Text: =Text(If(IsEmpty(KPIs), 0, Average(KPIs, CPI)), "0.00")
+      Color: =If(Average(KPIs, CPI) >= 0.95, RGBA(34,197,94,1), If(Average(KPIs, CPI) >= 0.80, RGBA(250,204,21,1), RGBA(239,68,68,1)))
+      Size: =24
+      FontWeight: =FontWeight.Bold
+
+  # Card SPI
+  Card_SPI:
+    Control: Rectangle
+    Properties:
+      X: =430
+      Y: =136
+      Width: =200
+      Height: =130
+      Fill: =RGBA(30, 41, 59, 1)
+      BorderRadius: =12
+
+  Card_SPI_Sigla:
+    Control: Label
+    Properties:
+      X: =442
+      Y: =148
+      Width: =180
+      Height: =40
+      Text: ="SPI"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  Card_SPI_Nome:
+    Control: Label
+    Properties:
+      X: =442
+      Y: =188
+      Width: =180
+      Height: =20
+      Text: ="Índice de Perf. de Prazo"
+      Color: =RGBA(148, 163, 184, 1)
+      Size: =11
+
+  Card_SPI_Valor:
+    Control: Label
+    Properties:
+      X: =442
+      Y: =210
+      Width: =180
+      Height: =40
+      Text: =Text(If(IsEmpty(KPIs), 0, Average(KPIs, SPI)), "0.00")
+      Color: =If(Average(KPIs, SPI) >= 0.90, RGBA(34,197,94,1), If(Average(KPIs, SPI) >= 0.75, RGBA(250,204,21,1), RGBA(239,68,68,1)))
+      Size: =24
+      FontWeight: =FontWeight.Bold
+
+  # Card IHP
+  Card_IHP:
+    Control: Rectangle
+    Properties:
+      X: =644
+      Y: =136
+      Width: =200
+      Height: =130
+      Fill: =RGBA(30, 41, 59, 1)
+      BorderRadius: =12
+
+  Card_IHP_Sigla:
+    Control: Label
+    Properties:
+      X: =656
+      Y: =148
+      Width: =180
+      Height: =40
+      Text: ="IHP"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  Card_IHP_Nome:
+    Control: Label
+    Properties:
+      X: =656
+      Y: =188
+      Width: =180
+      Height: =20
+      Text: ="Saúde do Plano"
+      Color: =RGBA(148, 163, 184, 1)
+      Size: =11
+
+  Card_IHP_Valor:
+    Control: Label
+    Properties:
+      X: =656
+      Y: =210
+      Width: =180
+      Height: =40
+      Text: =Text(If(IsEmpty(KPIs), 0, Average(KPIs, IHP))) & "/100"
+      Color: =CorStatus(If(IsEmpty(KPIs), 0, Average(KPIs, IHP)))
+      Size: =24
+      FontWeight: =FontWeight.Bold
+
+  # Card IHG
+  Card_IHG:
+    Control: Rectangle
+    Properties:
+      X: =858
+      Y: =136
+      Width: =200
+      Height: =130
+      Fill: =RGBA(30, 41, 59, 1)
+      BorderRadius: =12
+
+  Card_IHG_Sigla:
+    Control: Label
+    Properties:
+      X: =870
+      Y: =148
+      Width: =180
+      Height: =40
+      Text: ="IHG"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =28
+      FontWeight: =FontWeight.Bold
+
+  Card_IHG_Nome:
+    Control: Label
+    Properties:
+      X: =870
+      Y: =188
+      Width: =180
+      Height: =20
+      Text: ="Saúde de Governança"
+      Color: =RGBA(148, 163, 184, 1)
+      Size: =11
+
+  Card_IHG_Valor:
+    Control: Label
+    Properties:
+      X: =870
+      Y: =210
+      Width: =180
+      Height: =40
+      Text: =Text(If(IsEmpty(KPIs), 0, Average(KPIs, IHG))) & "/100"
+      Color: =CorStatus(If(IsEmpty(KPIs), 0, Average(KPIs, IHG)))
+      Size: =24
+      FontWeight: =FontWeight.Bold
+
+  # Tabela KPIs por Projeto
+  KPIs_Table_Title:
+    Control: Label
+    Properties:
+      X: =216
+      Y: =284
+      Width: =400
+      Height: =32
+      Text: ="📊 KPIs por Projeto"
+      Color: =RGBA(255, 255, 255, 1)
+      Size: =18
+      FontWeight: =FontWeight.Bold
+
+  KPIs_Gallery:
+    Control: Gallery
+    Properties:
+      X: =216
+      Y: =320
+      Width: =Parent.Width - 240
+      Height: =Parent.Height - 360
+      Items: =KPIs
+      TemplatePadding: =4
+      TemplateSize: =52
+
+    Controls:
+      Row_BG:
+        Control: Rectangle
+        Properties:
+          Width: =Parent.TemplateWidth
+          Height: =Parent.TemplateHeight
+          Fill: =If(IsOdd(ThisItem.ID), RGBA(30,41,59,1), RGBA(51,65,85,0.4))
+          BorderRadius: =6
+
+      Projeto_Name:
+        Control: Label
+        Properties:
+          X: =12
+          Y: =14
+          Width: =200
+          Height: =24
+          Text: =ThisItem.Title
+          Color: =RGBA(255,255,255,1)
+          Size: =13
+
+      CPI_Val:
+        Control: Label
+        Properties:
+          X: =220
+          Y: =14
+          Width: =80
+          Height: =24
+          Text: =Text(ThisItem.CPI, "0.00")
+          Color: =If(ThisItem.CPI >= 0.95, RGBA(34,197,94,1), RGBA(239,68,68,1))
+          Size: =13
+
+      SPI_Val:
+        Control: Label
+        Properties:
+          X: =310
+          Y: =14
+          Width: =80
+          Height: =24
+          Text: =Text(ThisItem.SPI, "0.00")
+          Color: =If(ThisItem.SPI >= 0.90, RGBA(34,197,94,1), RGBA(239,68,68,1))
+          Size: =13
+
+      HealthScore_Val:
+        Control: Label
+        Properties:
+          X: =400
+          Y: =14
+          Width: =100
+          Height: =24
+          Text: =Text(ThisItem.HealthScore) & "/100"
+          Color: =CorStatus(ThisItem.HealthScore)
+          Size: =13
+
+      Status_Semaforo:
+        Control: Label
+        Properties:
+          X: =510
+          Y: =8
+          Width: =100
+          Height: =36
+          Text: =CorTexto(ThisItem.HealthScore)
+          Size: =12

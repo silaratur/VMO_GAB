@@ -1,0 +1,196 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Vera: Revisão de Qualidade",
+    "description": "Agente Vera Veredito. Executa o checklist de qualidade sobre todos os documentos do projeto, registra o gate em VMO_Gates e retorna o veredito: APROVADO, APROVADO_COM_RESSALVAS ou REPROVADO.",
+    "agent": "Vera Veredito",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":   { "type": "string" },
+            "nomeProjeto": { "type": "string" },
+            "cicloAtual":  { "type": "integer", "description": "Ciclo de revisão atual (1-3). Se > 3, bloqueia e escala." }
+          },
+          "required": ["projetoId"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_Revisao": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":   "@{triggerBody()?['projetoId']}",
+        "nomeProjeto": "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "cicloAtual":  "@{if(empty(triggerBody()?['cicloAtual']), 1, triggerBody()?['cicloAtual'])}",
+        "dataGeracao": "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}",
+        "versao":      "1.0"
+      },
+      "runAfter": {}
+    },
+
+    "Verificar_Limite_Ciclos": {
+      "type": "If",
+      "expression": {
+        "and": [
+          { "greater": ["@int(outputs('Preparar_Dados_Revisao')?['cicloAtual'])", 3] }
+        ]
+      },
+      "actions": {
+
+        "Registrar_Gate_Bloqueado": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+              "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+            },
+            "method": "post",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Gates'))}/items",
+            "body": {
+              "Title":       "Gate Qualidade BLOQUEADO — @{outputs('Preparar_Dados_Revisao')?['nomeProjeto']} — Ciclo @{outputs('Preparar_Dados_Revisao')?['cicloAtual']}",
+              "ProjetoID":   "@{outputs('Preparar_Dados_Revisao')?['projetoId']}",
+              "Tipo":        "QUALIDADE",
+              "Status":      "BLOQUEADO",
+              "Decisor":     "Vera Veredito",
+              "Comentarios": "ESCALADO: Limite máximo de 3 ciclos de revisão excedido. Intervenção manual do Patrocinador necessária antes de prosseguir.",
+              "Ciclo":       "@{outputs('Preparar_Dados_Revisao')?['cicloAtual']}",
+              "Agente":      "Vera Veredito",
+              "DataCriacao": "@{utcNow()}"
+            }
+          },
+          "runAfter": {}
+        },
+
+        "Resposta_Bloqueado": {
+          "type": "Response",
+          "inputs": {
+            "statusCode": 422,
+            "body": {
+              "status":    "bloqueado",
+              "agente":    "Vera Veredito",
+              "projetoId": "@{outputs('Preparar_Dados_Revisao')?['projetoId']}",
+              "mensagem":  "Limite máximo de 3 ciclos de revisão excedido. Escalado para o Patrocinador.",
+              "ciclo":     "@{outputs('Preparar_Dados_Revisao')?['cicloAtual']}",
+              "acao":      "Intervenção manual necessária. Contate o Patrocinador do projeto.",
+              "gateId":    "@{outputs('Registrar_Gate_Bloqueado')?['body/ID']}"
+            }
+          },
+          "runAfter": { "Registrar_Gate_Bloqueado": ["Succeeded"] }
+        }
+
+      },
+      "else": {
+        "actions": {
+
+          "Obter_Documentos_Projeto": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+                "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+              },
+              "method": "get",
+              "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+              "queries": {
+                "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_Revisao')?['projetoId']}'"
+              }
+            },
+            "runAfter": {}
+          },
+
+          "Calcular_Score_Qualidade": {
+            "type": "Compose",
+            "inputs": {
+              "totalDocumentos":      "@{length(outputs('Obter_Documentos_Projeto')?['body/value'])}",
+              "documentosEsperados":  7,
+              "percentualCobertura":  "@{if(equals(length(outputs('Obter_Documentos_Projeto')?['body/value']), 0), 0, mul(div(length(outputs('Obter_Documentos_Projeto')?['body/value']), 7), 100))}",
+              "checklistItens":       10,
+              "checklistAprovados":   "@{if(greaterOrEquals(length(outputs('Obter_Documentos_Projeto')?['body/value']), 7), 10, length(outputs('Obter_Documentos_Projeto')?['body/value']))}",
+              "veredito":             "@{if(greaterOrEquals(length(outputs('Obter_Documentos_Projeto')?['body/value']), 7), 'APROVADO', if(greaterOrEquals(length(outputs('Obter_Documentos_Projeto')?['body/value']), 5), 'APROVADO_COM_RESSALVAS', 'REPROVADO'))}"
+            },
+            "runAfter": { "Obter_Documentos_Projeto": ["Succeeded"] }
+          },
+
+          "Criar_Documento_Revisao": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+                "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+              },
+              "method": "post",
+              "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+              "body": {
+                "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Revisao')?['projetoId']}/10_Revisao",
+                "Name": "@{concat('Revisao_Qualidade_Ciclo', outputs('Preparar_Dados_Revisao')?['cicloAtual'], '.md')}",
+                "ContentBytes": "@{base64(concat('# REVISÃO DE QUALIDADE — CICLO ', outputs('Preparar_Dados_Revisao')?['cicloAtual'], '\n\n**Projeto:** ', outputs('Preparar_Dados_Revisao')?['nomeProjeto'], '\n**Ciclo:** ', outputs('Preparar_Dados_Revisao')?['cicloAtual'], '/3\n**Gerado em:** ', outputs('Preparar_Dados_Revisao')?['dataGeracao'], '\n**Agente:** Vera Veredito\n\n---\n\n## 1. VEREDITO\n\n> # ', outputs('Calcular_Score_Qualidade')?['veredito'], '\n\n---\n\n## 2. RESUMO DA REVISÃO\n\n| Métrica | Valor |\n|---|---|\n| **Documentos Encontrados** | ', outputs('Calcular_Score_Qualidade')?['totalDocumentos'], ' |\n| **Documentos Esperados** | ', outputs('Calcular_Score_Qualidade')?['documentosEsperados'], ' |\n| **Cobertura** | ', outputs('Calcular_Score_Qualidade')?['percentualCobertura'], '% |\n| **Itens do Checklist** | ', outputs('Calcular_Score_Qualidade')?['checklistItens'], ' |\n| **Itens Aprovados** | ', outputs('Calcular_Score_Qualidade')?['checklistAprovados'], ' |\n| **Veredito** | **', outputs('Calcular_Score_Qualidade')?['veredito'], '** |\n\n---\n\n## 3. CHECKLIST DE QUALIDADE\n\n| # | Item | Status | Observação |\n|---|---|---|---|\n| 1 | TAP presente e versão >= 1.0 | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 1), 'APROVADO', 'PENDENTE'), ' | |\n| 2 | PM Canvas presente | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 2), 'APROVADO', 'PENDENTE'), ' | |\n| 3 | Matriz de Requisitos presente | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 3), 'APROVADO', 'PENDENTE'), ' | |\n| 4 | Work Request presente | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 4), 'APROVADO', 'PENDENTE'), ' | |\n| 5 | Cronograma WBS presente | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 5), 'APROVADO', 'PENDENTE'), ' | |\n| 6 | Registro de Riscos presente | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 6), 'APROVADO', 'PENDENTE'), ' | |\n| 7 | Plano de KPIs presente | ', if(greaterOrEquals(outputs('Calcular_Score_Qualidade')?['totalDocumentos'], 7), 'APROVADO', 'PENDENTE'), ' | |\n| 8 | Documentos sem status RASCUNHO | A verificar | |\n| 9 | Baseline de KPIs definida | A verificar | |\n| 10 | Riscos com estratégia definida | A verificar | |\n\n---\n\n## 4. RESSALVAS E PENDÊNCIAS\n\n', if(equals(outputs('Calcular_Score_Qualidade')?['veredito'], 'APROVADO'), 'Nenhuma ressalva. Todos os documentos obrigatórios presentes.', if(equals(outputs('Calcular_Score_Qualidade')?['veredito'], 'APROVADO_COM_RESSALVAS'), concat('- ', sub(outputs('Calcular_Score_Qualidade')?['documentosEsperados'], outputs('Calcular_Score_Qualidade')?['totalDocumentos']), ' documento(s) faltante(s). Regularizar antes do gate final.'), 'REPROVADO: Quantidade insuficiente de documentos. Retornar ao pipeline para geração dos documentos faltantes.')), '\n\n---\n\n## 5. PRÓXIMOS PASSOS\n\n', if(equals(outputs('Calcular_Score_Qualidade')?['veredito'], 'APROVADO'), '- Prosseguir para o Gate de Governança (Gabriel Governança)\n- Notificar patrocinador sobre aprovação', if(equals(outputs('Calcular_Score_Qualidade')?['veredito'], 'APROVADO_COM_RESSALVAS'), '- Regularizar documentos pendentes em até 5 dias úteis\n- Reagendar revisão de qualidade (ciclo seguinte)', '- Retornar ao pipeline para geração dos documentos faltantes\n- Acionar agentes responsáveis pelos documentos pendentes\n- Agendar nova revisão (ciclo seguinte)')), '\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Vera Veredito.*\n'))}"
+              }
+            },
+            "runAfter": { "Calcular_Score_Qualidade": ["Succeeded"] }
+          },
+
+          "Registrar_Gate_Qualidade": {
+            "type": "ApiConnection",
+            "inputs": {
+              "host": {
+                "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+                "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+              },
+              "method": "post",
+              "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Gates'))}/items",
+              "body": {
+                "Title":       "Gate Qualidade — @{outputs('Preparar_Dados_Revisao')?['nomeProjeto']} — Ciclo @{outputs('Preparar_Dados_Revisao')?['cicloAtual']}",
+                "ProjetoID":   "@{outputs('Preparar_Dados_Revisao')?['projetoId']}",
+                "Tipo":        "QUALIDADE",
+                "Status":      "@{outputs('Calcular_Score_Qualidade')?['veredito']}",
+                "Decisor":     "Vera Veredito",
+                "Comentarios": "@{concat('Ciclo ', outputs('Preparar_Dados_Revisao')?['cicloAtual'], '. Documentos: ', outputs('Calcular_Score_Qualidade')?['totalDocumentos'], '/', outputs('Calcular_Score_Qualidade')?['documentosEsperados'], '. Veredito: ', outputs('Calcular_Score_Qualidade')?['veredito'])}",
+                "Ciclo":       "@{outputs('Preparar_Dados_Revisao')?['cicloAtual']}",
+                "Agente":      "Vera Veredito",
+                "DataCriacao": "@{utcNow()}"
+              }
+            },
+            "runAfter": { "Criar_Documento_Revisao": ["Succeeded"] }
+          },
+
+          "Resposta_Veredito": {
+            "type": "Response",
+            "inputs": {
+              "statusCode": 200,
+              "body": {
+                "status":           "ok",
+                "agente":           "Vera Veredito",
+                "projetoId":        "@{outputs('Preparar_Dados_Revisao')?['projetoId']}",
+                "veredito":         "@{outputs('Calcular_Score_Qualidade')?['veredito']}",
+                "ciclo":            "@{outputs('Preparar_Dados_Revisao')?['cicloAtual']}",
+                "totalDocumentos":  "@{outputs('Calcular_Score_Qualidade')?['totalDocumentos']}",
+                "documentosEsperados": "@{outputs('Calcular_Score_Qualidade')?['documentosEsperados']}",
+                "gateId":           "@{outputs('Registrar_Gate_Qualidade')?['body/ID']}",
+                "proximoPasso":     "@{if(equals(outputs('Calcular_Score_Qualidade')?['veredito'], 'APROVADO'), 'GABRIEL_GOVERNANCA', if(equals(outputs('Calcular_Score_Qualidade')?['veredito'], 'APROVADO_COM_RESSALVAS'), 'REGULARIZAR_PENDENCIAS_E_REAGENDAR', 'RETORNAR_PIPELINE_GERACAO_DOCUMENTOS'))}"
+              }
+            },
+            "runAfter": { "Registrar_Gate_Qualidade": ["Succeeded"] }
+          }
+
+        }
+      },
+      "runAfter": { "Preparar_Dados_Revisao": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

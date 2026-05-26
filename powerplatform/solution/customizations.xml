@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24.10069" SolutionPackageVersion="9.2" languagecode="1046">
+  <Workflows>
+
+    <!-- FLOW 01: PIPELINE PRINCIPAL -->
+    <Workflow WorkflowId="{a1b2c3d4-0001-0000-0000-000000000001}" Name="VMO_Main_Pipeline">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Pipeline Principal" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Orquestrador principal do VMO-Autônomo. Executa o ciclo completo: captura → qualificação → documentação → cronograma → riscos → KPIs → revisão → governança." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Main_Pipeline.json</JsonFileName>
+      <Type>1</Type>
+      <TriggerOnCreate>0</TriggerOnCreate>
+      <TriggerOnStatusUpdate>0</TriggerOnStatusUpdate>
+      <TriggerOnDelete>0</TriggerOnDelete>
+      <AsyncAutomatically>0</AsyncAutomatically>
+      <SyncWorkflowLogOnFailure>1</SyncWorkflowLogOnFailure>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <CreateStage>20</CreateStage>
+      <DeleteStage>20</DeleteStage>
+      <UpdateStage>20</UpdateStage>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 02: IARA — CAPTURAR DEMANDA -->
+    <Workflow WorkflowId="{a1b2c3d4-0002-0000-0000-000000000002}" Name="VMO_Iara_CapturarDemanda">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Iara: Capturar Demanda" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Iara Inbound. Recebe demanda não estruturada (texto livre, e-mail, formulário), estrutura e salva na lista VMO_Demandas do SharePoint." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Iara_CapturarDemanda.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 03: FELIPE — QUALIFICAR DEMANDA -->
+    <Workflow WorkflowId="{a1b2c3d4-0003-0000-0000-000000000003}" Name="VMO_Felipe_QualificarDemanda">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Felipe: Qualificar Demanda" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Felipe Filtro. Avalia demanda em 10 critérios (valor × complexidade), classifica como PROJETO/CORRETIVA/EVOLUTIVA e envia para gate de aprovação." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Felipe_QualificarDemanda.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 04: DIANA — CRIAR DOCUMENTOS -->
+    <Workflow WorkflowId="{a1b2c3d4-0004-0000-0000-000000000004}" Name="VMO_Diana_CriarDocumentos">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Diana: Criar Documentos (TAP + PM Canvas)" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Diana Documento. Gera TAP, PM Canvas e Plano Geral do Projeto em SharePoint Document Library." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Diana_CriarDocumentos.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 05: RAFAEL — LEVANTAR REQUISITOS -->
+    <Workflow WorkflowId="{a1b2c3d4-0005-0000-0000-000000000005}" Name="VMO_Rafael_LevantarRequisitos">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Rafael: Levantar Requisitos" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Rafael Requisito. Elicita RF/RNF com IDs únicos, critérios de aceitação MoSCoW e matriz de rastreabilidade. Salva em VMO_Requisitos." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Rafael_LevantarRequisitos.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 06: FABIO — GERAR WORK REQUEST -->
+    <Workflow WorkflowId="{a1b2c3d4-0006-0000-0000-000000000006}" Name="VMO_Fabio_GerarWorkRequest">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Fábio: Gerar Work Request" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Fábio Fornecedor. Transforma ERF em Work Request de mercado com checklist de 41 artefatos obrigatórios e matriz de avaliação de fornecedores." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Fabio_GerarWorkRequest.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 07: CARLOS — CRIAR CRONOGRAMA -->
+    <Workflow WorkflowId="{a1b2c3d4-0007-0000-0000-000000000007}" Name="VMO_Carlos_CriarCronograma">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Carlos: Criar Cronograma" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Carlos Cronograma. Constrói WBS 3 níveis, cronograma detalhado, caminho crítico e buffer 10-20%. Salva em VMO_Cronograma." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Carlos_CriarCronograma.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 08: PEDRO — ANALISE DE RISCOS -->
+    <Workflow WorkflowId="{a1b2c3d4-0008-0000-0000-000000000008}" Name="VMO_Pedro_AnaliseRiscos">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Pedro: Análise de Riscos" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Pedro Perigo. Identifica ≥5 riscos em ≥4 categorias, pontua probabilidade × impacto, define estratégias e reserva de contingência. Salva em VMO_Riscos." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Pedro_AnaliseRiscos.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 09: MARCELA — DEFINIR KPIs -->
+    <Workflow WorkflowId="{a1b2c3d4-0009-0000-0000-000000000009}" Name="VMO_Marcela_DefinirKPIs">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Marcela: Definir KPIs" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Marcela Métrica. Define framework KPI com CPI/SPI/EVM, detecta anomalias >25% e gera health score semanal com semáforo. Salva em VMO_KPIs." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Marcela_DefinirKPIs.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 10: SARA — STATUS REPORT -->
+    <Workflow WorkflowId="{a1b2c3d4-0010-0000-0000-000000000010}" Name="VMO_Sara_StatusReport">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Sara: Status Report Semanal" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Sara Status. Gera relatório semanal com resumo executivo, semáforos por dimensão, issues em aberto e próximas 3 ações. Salva em VMO_StatusReports." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Sara_StatusReport.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 11: VERA — REVISAO DE QUALIDADE -->
+    <Workflow WorkflowId="{a1b2c3d4-0011-0000-0000-000000000011}" Name="VMO_Vera_RevisaoQualidade">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Vera: Revisão de Qualidade" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Vera Veredito. Revisa todos os documentos contra critérios PMBOK+VMO. Emite APROVADO/APROVADO COM RESSALVAS/REPROVADO. Máx 3 ciclos de revisão." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Vera_RevisaoQualidade.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 12: GABRIEL — GOVERNANCA -->
+    <Workflow WorkflowId="{a1b2c3d4-0012-0000-0000-000000000012}" Name="VMO_Gabriel_Governanca">
+      <LocalizedNames>
+        <LocalizedName description="VMO — Gabriel: Auditoria de Governança" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Gabriel Governança. Executa 3 gates obrigatórios (intake, qualificação, final) + change control. Bloqueia projeto até resolver condições bloqueantes." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Gabriel_Governanca.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+    <!-- FLOW 13: PUBLISHER — ATUALIZAR DASHBOARD -->
+    <Workflow WorkflowId="{a1b2c3d4-0013-0000-0000-000000000013}" Name="VMO_Publisher_Dashboard">
+      <LocalizedNames>
+        <LocalizedName description="VMO Publisher — Atualizar Dashboard (Agendado)" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Agente Lucas Layout. Varre todos os projetos ativos, consolida KPIs/status/riscos e atualiza dados no SharePoint para o Canvas App. Executa a cada 6 horas." languagecode="1046" />
+      </Descriptions>
+      <JsonFileName>/Workflows/VMO_Publisher_Dashboard.json</JsonFileName>
+      <Type>1</Type>
+      <StateCode>1</StateCode>
+      <StatusCode>2</StatusCode>
+      <Mode>1</Mode>
+      <PrimaryEntity>none</PrimaryEntity>
+    </Workflow>
+
+  </Workflows>
+
+  <!-- CANVAS APP -->
+  <CanvasApps>
+    <CanvasApp UniqueName="vmo_VMO_GAB_Dashboard">
+      <LocalizedNames>
+        <LocalizedName description="VMO GAB — Dashboard" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Dashboard completo do VMO GAB com 6 telas: Mission Control, KPIs, Projetos, Riscos, Alertas e Timeline. Conectado às listas SharePoint." languagecode="1046" />
+      </Descriptions>
+    </CanvasApp>
+  </CanvasApps>
+
+  <!-- COPILOT STUDIO BOT -->
+  <BotComponents>
+    <BotComponent UniqueName="vmo_VMO_Assistente">
+      <LocalizedNames>
+        <LocalizedName description="VMO Assistente (Copilot Studio)" languagecode="1046" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Bot conversacional VMO com 11 agentes especializados: Iara (inbound), Felipe (filtro), Diana (documentos), Rafael (requisitos), Fábio (WR), Carlos (cronograma), Pedro (riscos), Marcela (KPIs), Sara (status), Vera (qualidade), Gabriel (governança)." languagecode="1046" />
+      </Descriptions>
+    </BotComponent>
+  </BotComponents>
+
+</ImportExportXml>

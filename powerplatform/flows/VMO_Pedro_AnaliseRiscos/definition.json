@@ -1,0 +1,311 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Pedro: Análise de Riscos",
+    "description": "Agente Pedro Perigo. Identifica e registra riscos em 4+ categorias na lista VMO_Riscos, com matriz de probabilidade × impacto, estratégias de resposta e reserva de contingência.",
+    "agent": "Pedro Perigo",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Quando_chamado_por_HTTP": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "projetoId":    { "type": "string" },
+            "nomeProjeto":  { "type": "string" },
+            "orcamento":    { "type": "string" }
+          },
+          "required": ["projetoId"]
+        }
+      }
+    }
+  },
+  "actions": {
+
+    "Preparar_Dados_Riscos": {
+      "type": "Compose",
+      "inputs": {
+        "projetoId":   "@{triggerBody()?['projetoId']}",
+        "nomeProjeto": "@{if(empty(triggerBody()?['nomeProjeto']), concat('Projeto ', triggerBody()?['projetoId']), triggerBody()?['nomeProjeto'])}",
+        "orcamento":   "@{if(empty(triggerBody()?['orcamento']), 'A definir', triggerBody()?['orcamento'])}",
+        "dataGeracao": "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}",
+        "versao":      "1.0"
+      },
+      "runAfter": {}
+    },
+
+    "Criar_Risco_R001_Escopo": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Riscos'))}/items",
+        "body": {
+          "Title":                "R-001 — Expansão Não Controlada de Escopo (Scope Creep)",
+          "Categoria":            "ESCOPO",
+          "Probabilidade":        4,
+          "Impacto":              4,
+          "Score":                16,
+          "Estrategia":           "Evitar",
+          "Gatilho":              "Solicitações de mudança frequentes sem processo formal de controle de mudanças.",
+          "Resposta":             "Implementar processo formal de controle de mudanças (CCB); todo pedido de escopo passa por análise de impacto e aprovação do patrocinador.",
+          "ReservaContingencia":  "5% do orçamento total reservado para absorver mudanças de escopo aprovadas.",
+          "ProjetoID":            "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Status":               "IDENTIFICADO",
+          "Agente":               "Pedro Perigo",
+          "DataCriacao":          "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Preparar_Dados_Riscos": ["Succeeded"] }
+    },
+
+    "Criar_Risco_R002_Recursos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Riscos'))}/items",
+        "body": {
+          "Title":                "R-002 — Indisponibilidade de Recursos-Chave",
+          "Categoria":            "RECURSOS",
+          "Probabilidade":        3,
+          "Impacto":              5,
+          "Score":                15,
+          "Estrategia":           "Mitigar",
+          "Gatilho":              "Saída ou afastamento de membro sênior da equipe (Tech Lead, Analista Principal).",
+          "Resposta":             "Manter documentação técnica atualizada e knowledge transfer contínuo; prever perfil de backup para cada papel crítico.",
+          "ReservaContingencia":  "Orçamento para contratação emergencial equivalente a 3 meses do profissional.",
+          "ProjetoID":            "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Status":               "IDENTIFICADO",
+          "Agente":               "Pedro Perigo",
+          "DataCriacao":          "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_Risco_R001_Escopo": ["Succeeded"] }
+    },
+
+    "Criar_Risco_R003_Tecnologia": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Riscos'))}/items",
+        "body": {
+          "Title":                "R-003 — Incompatibilidade ou Falha de Integração Tecnológica",
+          "Categoria":            "TECNOLOGIA",
+          "Probabilidade":        3,
+          "Impacto":              4,
+          "Score":                12,
+          "Estrategia":           "Mitigar",
+          "Gatilho":              "APIs de sistemas legados não atendem contratos definidos; versões incompatíveis de bibliotecas ou serviços de terceiros.",
+          "Resposta":             "Realizar spike técnico de integração nas primeiras 2 semanas; manter plano de integração alternativo documentado.",
+          "ReservaContingencia":  "2 semanas de buffer no cronograma para resolução de problemas de integração.",
+          "ProjetoID":            "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Status":               "IDENTIFICADO",
+          "Agente":               "Pedro Perigo",
+          "DataCriacao":          "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_Risco_R002_Recursos": ["Succeeded"] }
+    },
+
+    "Criar_Risco_R004_Prazo": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Riscos'))}/items",
+        "body": {
+          "Title":                "R-004 — Atraso no Cronograma por Dependências Externas",
+          "Categoria":            "PRAZO",
+          "Probabilidade":        4,
+          "Impacto":              3,
+          "Score":                12,
+          "Estrategia":           "Mitigar",
+          "Gatilho":              "Fornecedores ou equipes externas atrasam entregas que impactam o caminho crítico do projeto.",
+          "Resposta":             "Mapear todas as dependências externas no cronograma; comunicação proativa semanal com fornecedores; buffer de 10% no cronograma.",
+          "ReservaContingencia":  "10% de buffer no cronograma total; cláusula de SLA no contrato com fornecedores.",
+          "ProjetoID":            "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Status":               "IDENTIFICADO",
+          "Agente":               "Pedro Perigo",
+          "DataCriacao":          "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_Risco_R003_Tecnologia": ["Succeeded"] }
+    },
+
+    "Criar_Risco_R005_Seguranca": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Riscos'))}/items",
+        "body": {
+          "Title":                "R-005 — Vulnerabilidade de Segurança e Violação de Dados",
+          "Categoria":            "SEGURANCA",
+          "Probabilidade":        2,
+          "Impacto":              5,
+          "Score":                10,
+          "Estrategia":           "Transferir",
+          "Gatilho":              "Descoberta de vulnerabilidade crítica em auditoria de segurança ou incidente de vazamento de dados.",
+          "Resposta":             "Contratar seguro cibernético; implementar SAST/DAST no pipeline CI/CD; pentest obrigatório antes do go-live.",
+          "ReservaContingencia":  "Seguro cibernético contratado; plano de resposta a incidentes documentado.",
+          "ProjetoID":            "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Status":               "IDENTIFICADO",
+          "Agente":               "Pedro Perigo",
+          "DataCriacao":          "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_Risco_R004_Prazo": ["Succeeded"] }
+    },
+
+    "Criar_Risco_R006_Orcamento": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURICommand('VMO_Riscos'))}/items",
+        "body": {
+          "Title":                "R-006 — Estouro de Orçamento",
+          "Categoria":            "ORCAMENTO",
+          "Probabilidade":        3,
+          "Impacto":              4,
+          "Score":                12,
+          "Estrategia":           "Aceitar",
+          "Gatilho":              "CPI < 0,85 por 2 semanas consecutivas ou desvio orçamentário > 15%.",
+          "Resposta":             "Monitorar CPI semanalmente; acionar revisão de escopo ao atingir 80% do orçamento; solicitar aditivo se necessário.",
+          "ReservaContingencia":  "Reserva de gerenciamento de 10% do orçamento total aprovada pelo patrocinador.",
+          "ProjetoID":            "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Status":               "IDENTIFICADO",
+          "Agente":               "Pedro Perigo",
+          "DataCriacao":          "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Criar_Risco_R005_Seguranca": ["Succeeded"] }
+    },
+
+    "Criar_Documento_Riscos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Riscos')?['projetoId']}/07_Riscos",
+          "Name": "Registro_Riscos.md",
+          "ContentBytes": "@{base64(concat('# REGISTRO DE RISCOS\n\n**Projeto:** ', outputs('Preparar_Dados_Riscos')?['nomeProjeto'], '\n**Versão:** ', outputs('Preparar_Dados_Riscos')?['versao'], '\n**Gerado em:** ', outputs('Preparar_Dados_Riscos')?['dataGeracao'], '\n**Agente:** Pedro Perigo\n\n---\n\n## 1. RESUMO EXECUTIVO\n\n| Métrica | Valor |\n|---|---|\n| Total de Riscos Identificados | 6 |\n| Riscos Críticos (Score ≥ 15) | 2 |\n| Riscos Altos (Score 10–14) | 3 |\n| Riscos Médios (Score 5–9) | 1 |\n| Categorias Mapeadas | 5 (Escopo, Recursos, Tecnologia, Prazo, Segurança, Orçamento) |\n\n---\n\n## 2. MATRIZ DE PROBABILIDADE × IMPACTO\n\n```\nIMPACTO\n  5 │  5  10  [15]  20  [25]\n  4 │  4   8   12  [16]  20\n  3 │  3   6    9   12  [15]\n  2 │  2   4    6    8   10\n  1 │  1   2    3    4    5\n    └─────────────────────────\n       1    2    3    4    5   PROBABILIDADE\n\n[  ] = Zona Crítica (Score ≥ 15)\n```\n\n**Escala:**\n- 1–4: Baixo (Verde)\n- 5–9: Médio (Amarelo)\n- 10–14: Alto (Laranja)\n- 15–25: Crítico (Vermelho)\n\n---\n\n## 3. REGISTRO DETALHADO DE RISCOS\n\n### R-001 — Expansão Não Controlada de Escopo (Score: 16 — CRÍTICO)\n\n| Campo | Detalhe |\n|---|---|\n| **Categoria** | Escopo |\n| **Probabilidade** | 4/5 |\n| **Impacto** | 4/5 |\n| **Score** | 16 |\n| **Estratégia** | Evitar |\n| **Gatilho** | Solicitações de mudança frequentes sem CCB |\n| **Resposta** | Implementar CCB formal; análise de impacto obrigatória |\n| **Reserva** | 5% do orçamento para mudanças aprovadas |\n\n### R-002 — Indisponibilidade de Recursos-Chave (Score: 15 — CRÍTICO)\n\n| Campo | Detalhe |\n|---|---|\n| **Categoria** | Recursos |\n| **Probabilidade** | 3/5 |\n| **Impacto** | 5/5 |\n| **Score** | 15 |\n| **Estratégia** | Mitigar |\n| **Gatilho** | Saída de membro sênior da equipe |\n| **Resposta** | Documentação e knowledge transfer contínuos; backup definido |\n| **Reserva** | Budget para contratação emergencial (3 meses) |\n\n### R-003 — Incompatibilidade Tecnológica (Score: 12 — ALTO)\n\n| Campo | Detalhe |\n|---|---|\n| **Categoria** | Tecnologia |\n| **Probabilidade** | 3/5 |\n| **Impacto** | 4/5 |\n| **Score** | 12 |\n| **Estratégia** | Mitigar |\n| **Gatilho** | APIs legadas incompatíveis; versões conflitantes |\n| **Resposta** | Spike técnico nas semanas 1–2; plano de integração alternativo |\n| **Reserva** | 2 semanas de buffer no cronograma |\n\n### R-004 — Atraso por Dependências Externas (Score: 12 — ALTO)\n\n| Campo | Detalhe |\n|---|---|\n| **Categoria** | Prazo |\n| **Probabilidade** | 4/5 |\n| **Impacto** | 3/5 |\n| **Score** | 12 |\n| **Estratégia** | Mitigar |\n| **Gatilho** | Fornecedor externo atrasa entrega no caminho crítico |\n| **Resposta** | Comunicação semanal; buffer 10% no cronograma; SLA no contrato |\n| **Reserva** | 10% de buffer no cronograma total |\n\n### R-005 — Vulnerabilidade de Segurança (Score: 10 — ALTO)\n\n| Campo | Detalhe |\n|---|---|\n| **Categoria** | Segurança |\n| **Probabilidade** | 2/5 |\n| **Impacto** | 5/5 |\n| **Score** | 10 |\n| **Estratégia** | Transferir |\n| **Gatilho** | Vulnerabilidade crítica ou vazamento de dados |\n| **Resposta** | Seguro cibernético; SAST/DAST no CI/CD; pentest pré-go-live |\n| **Reserva** | Seguro cibernético + plano de resposta a incidentes |\n\n### R-006 — Estouro de Orçamento (Score: 12 — ALTO)\n\n| Campo | Detalhe |\n|---|---|\n| **Categoria** | Orçamento |\n| **Probabilidade** | 3/5 |\n| **Impacto** | 4/5 |\n| **Score** | 12 |\n| **Estratégia** | Aceitar |\n| **Gatilho** | CPI < 0,85 por 2 semanas; desvio > 15% |\n| **Resposta** | Monitorar CPI semanalmente; revisão de escopo ao atingir 80% do budget |\n| **Reserva** | 10% de reserva de gerenciamento aprovada pelo patrocinador |\n\n---\n\n## 4. PLANO DE MONITORAMENTO\n\n| Frequência | Atividade | Responsável |\n|---|---|---|\n| Semanal | Revisão do status de todos os riscos | Pedro Perigo / GP |\n| Semanal | Atualização do CPI e SPI | Sara Status |\n| Mensal | Identificação de novos riscos | Toda a equipe |\n| Por sprint | Revisão de riscos técnicos | Tech Lead |\n| A cada gate | Auditoria completa do registro | Gabriel Governança |\n\n---\n\n## 5. HISTÓRICO DE VERSÕES\n\n| Versão | Data | Autor | Descrição |\n|---|---|---|---|\n| 1.0 | ', outputs('Preparar_Dados_Riscos')?['dataGeracao'], ' | Pedro Perigo | Criação inicial via VMO |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Pedro Perigo.*\n'))}"
+        }
+      },
+      "runAfter": { "Criar_Risco_R006_Orcamento": ["Succeeded"] }
+    },
+
+    "Registrar_Documento_Lista": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Documentos'))}/items",
+        "body": {
+          "Title":       "Registro de Riscos — @{outputs('Preparar_Dados_Riscos')?['nomeProjeto']}",
+          "Tipo":        "REGISTRO_RISCOS",
+          "ProjetoID":   "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "Versao":      "1.0",
+          "Status":      "RASCUNHO",
+          "Agente":      "Pedro Perigo",
+          "DataCriacao": "@{utcNow()}",
+          "Caminho":     "/VMO_Projetos/@{outputs('Preparar_Dados_Riscos')?['projetoId']}/07_Riscos/Registro_Riscos.md"
+        }
+      },
+      "runAfter": { "Criar_Documento_Riscos": ["Succeeded"] }
+    },
+
+    "Obter_Registro_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "ProjetoID eq '@{outputs('Preparar_Dados_Riscos')?['projetoId']}'"
+        }
+      },
+      "runAfter": { "Registrar_Documento_Lista": ["Succeeded"] }
+    },
+
+    "Atualizar_Status_Projeto": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "patch",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items/@{first(outputs('Obter_Registro_Projeto')?['body/value'])?['ID']}",
+        "body": {
+          "Status":                  "RISCOS_MAPEADOS",
+          "AgenteAtual":             "Pedro Perigo",
+          "DataUltimaAtualizacao":   "@{utcNow()}"
+        }
+      },
+      "runAfter": { "Obter_Registro_Projeto": ["Succeeded"] }
+    },
+
+    "Resposta_Sucesso": {
+      "type": "Response",
+      "inputs": {
+        "statusCode": 200,
+        "body": {
+          "status":          "ok",
+          "agente":          "Pedro Perigo",
+          "projetoId":       "@{outputs('Preparar_Dados_Riscos')?['projetoId']}",
+          "mensagem":        "Análise de riscos concluída. 6 riscos identificados em 5 categorias.",
+          "totalRiscos":     6,
+          "riscosCriticos":  2,
+          "riscosAltos":     3,
+          "categorias":      ["ESCOPO", "RECURSOS", "TECNOLOGIA", "PRAZO", "SEGURANCA", "ORCAMENTO"],
+          "documentoId":     "@{outputs('Registrar_Documento_Lista')?['body/ID']}",
+          "statusProjeto":   "RISCOS_MAPEADOS",
+          "proximoPasso":    "MARCELA_DEFINIR_KPIS"
+        }
+      },
+      "runAfter": { "Atualizar_Status_Projeto": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}

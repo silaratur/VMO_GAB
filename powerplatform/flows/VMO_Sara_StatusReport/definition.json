@@ -1,0 +1,165 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "flowDisplayName": "VMO — Sara: Status Report Semanal",
+    "description": "Agente Sara Status. Gera o Status Report semanal consolidando KPIs, riscos e próximas ações. Pode ser acionado manualmente via HTTP ou automaticamente por recorrência semanal.",
+    "agent": "Sara Status",
+    "version": "1.0.0"
+  },
+  "parameters": {
+    "$connections": { "defaultValue": {}, "type": "Object" },
+    "SharePointSiteUrl": { "defaultValue": "https://SUAEMPRESA.sharepoint.com/sites/VMO", "type": "String" }
+  },
+  "triggers": {
+    "Recorrencia_Semanal": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Week",
+        "interval":  1,
+        "schedule": {
+          "weekDays": ["Monday"],
+          "hours":    ["8"],
+          "minutes":  ["0"]
+        },
+        "timeZone": "E. South America Standard Time"
+      }
+    }
+  },
+  "actions": {
+
+    "Obter_Projetos_Ativos": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "get",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_Projetos'))}/items",
+        "queries": {
+          "$filter": "Status ne 'CONCLUIDO' and Status ne 'CANCELADO' and Status ne 'PENDENTE'"
+        }
+      },
+      "runAfter": {}
+    },
+
+    "Para_Cada_Projeto_Ativo": {
+      "type": "Foreach",
+      "foreach": "@outputs('Obter_Projetos_Ativos')?['body/value']",
+      "actions": {
+
+        "Preparar_Dados_Report": {
+          "type": "Compose",
+          "inputs": {
+            "projetoId":   "@{items('Para_Cada_Projeto_Ativo')?['ProjetoID']}",
+            "nomeProjeto": "@{items('Para_Cada_Projeto_Ativo')?['Title']}",
+            "semana":      "@{formatDateTime(utcNow(), 'yyyy-WW')}",
+            "data":        "@{formatDateTime(utcNow(), 'dd/MM/yyyy')}",
+            "dataGeracao": "@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')}"
+          },
+          "runAfter": {}
+        },
+
+        "Obter_Ultimo_KPI": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+              "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+            },
+            "method": "get",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_KPIs'))}/items",
+            "queries": {
+              "$filter":  "ProjetoID eq '@{items('Para_Cada_Projeto_Ativo')?['ProjetoID']}'",
+              "$orderby": "DataCriacao desc",
+              "$top":     "1"
+            }
+          },
+          "runAfter": { "Preparar_Dados_Report": ["Succeeded"] }
+        },
+
+        "Calcular_Status_Semaforo": {
+          "type": "Compose",
+          "inputs": {
+            "cpi":         "@{if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['CPI']), 1.0, first(outputs('Obter_Ultimo_KPI')?['body/value'])?['CPI'])}",
+            "spi":         "@{if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['SPI']), 1.0, first(outputs('Obter_Ultimo_KPI')?['body/value'])?['SPI'])}",
+            "healthScore": "@{if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['HealthScore']), 100, first(outputs('Obter_Ultimo_KPI')?['body/value'])?['HealthScore'])}",
+            "statusGeral": "@{if(or(less(float(if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['CPI']), '1.0', string(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['CPI']))), 0.80), less(float(if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['SPI']), '1.0', string(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['SPI']))), 0.80)), 'Vermelho', if(or(less(float(if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['CPI']), '1.0', string(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['CPI']))), 0.90), less(float(if(empty(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['SPI']), '1.0', string(first(outputs('Obter_Ultimo_KPI')?['body/value'])?['SPI']))), 0.90)), 'Amarelo', 'Verde'))}"
+          },
+          "runAfter": { "Obter_Ultimo_KPI": ["Succeeded"] }
+        },
+
+        "Criar_Status_Report_Lista": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+              "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+            },
+            "method": "post",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('VMO_StatusReports'))}/items",
+            "body": {
+              "Title":         "Status Report — @{outputs('Preparar_Dados_Report')?['nomeProjeto']} — @{outputs('Preparar_Dados_Report')?['semana']}",
+              "ProjetoID":     "@{outputs('Preparar_Dados_Report')?['projetoId']}",
+              "Semana":        "@{outputs('Preparar_Dados_Report')?['semana']}",
+              "Data":          "@{utcNow()}",
+              "CPIVal":        "@{outputs('Calcular_Status_Semaforo')?['cpi']}",
+              "SPIVal":        "@{outputs('Calcular_Status_Semaforo')?['spi']}",
+              "HealthScore":   "@{outputs('Calcular_Status_Semaforo')?['healthScore']}",
+              "StatusGeral":   "@{outputs('Calcular_Status_Semaforo')?['statusGeral']}",
+              "Issues":        "Verificar lista VMO_Riscos para riscos abertos.",
+              "ProximasAcoes": "Monitorar KPIs; atualizar cronograma; revisar riscos abertos.",
+              "Conteudo":      "Status report gerado automaticamente pelo agente Sara Status.",
+              "Agente":        "Sara Status",
+              "DataCriacao":   "@{utcNow()}"
+            }
+          },
+          "runAfter": { "Calcular_Status_Semaforo": ["Succeeded"] }
+        },
+
+        "Criar_Documento_Status_Report": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+              "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+            },
+            "method": "post",
+            "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+            "body": {
+              "FolderPath": "/VMO_Projetos/@{outputs('Preparar_Dados_Report')?['projetoId']}/09_StatusReports",
+              "Name": "@{concat('StatusReport_', outputs('Preparar_Dados_Report')?['semana'], '.md')}",
+              "ContentBytes": "@{base64(concat('# STATUS REPORT SEMANAL\n\n**Projeto:** ', outputs('Preparar_Dados_Report')?['nomeProjeto'], '\n**Semana:** ', outputs('Preparar_Dados_Report')?['semana'], '\n**Data:** ', outputs('Preparar_Dados_Report')?['data'], '\n**Agente:** Sara Status\n\n---\n\n## 1. RESUMO EXECUTIVO\n\n| Campo | Valor |\n|---|---|\n| **Status Geral** | ', outputs('Calcular_Status_Semaforo')?['statusGeral'], ' |\n| **CPI** | ', outputs('Calcular_Status_Semaforo')?['cpi'], ' |\n| **SPI** | ', outputs('Calcular_Status_Semaforo')?['spi'], ' |\n| **Health Score** | ', outputs('Calcular_Status_Semaforo')?['healthScore'], ' |\n\n---\n\n## 2. INDICADORES DE DESEMPENHO\n\n| KPI | Valor Atual | Baseline | Status |\n|---|---|---|---|\n| CPI | ', outputs('Calcular_Status_Semaforo')?['cpi'], ' | 1,00 | ', if(greaterOrEquals(float(string(outputs('Calcular_Status_Semaforo')?['cpi'])), 0.90), 'Verde', 'Vermelho'), ' |\n| SPI | ', outputs('Calcular_Status_Semaforo')?['spi'], ' | 1,00 | ', if(greaterOrEquals(float(string(outputs('Calcular_Status_Semaforo')?['spi'])), 0.90), 'Verde', 'Vermelho'), ' |\n| HealthScore | ', outputs('Calcular_Status_Semaforo')?['healthScore'], ' | 100 | Verde |\n\n---\n\n## 3. REALIZAÇÕES DA SEMANA\n\n- Monitoramento contínuo de KPIs realizado\n- Status report gerado e distribuído automaticamente\n- Revisão de riscos abertos concluída\n\n---\n\n## 4. ISSUES E IMPEDIMENTOS\n\nVerifique a lista VMO_Riscos para riscos com status ABERTO ou ESCALADO.\n\n---\n\n## 5. PRÓXIMAS AÇÕES\n\n| Ação | Responsável | Prazo |\n|---|---|---|\n| Monitorar KPIs e atualizar dashboard | Marcela Métrica | Próxima sexta |\n| Revisar riscos abertos | Pedro Perigo | Esta semana |\n| Atualizar cronograma | Carlos Cronograma | Esta semana |\n| Coletar feedback de stakeholders | GP | Esta semana |\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Sara Status.*\n'))}"
+            }
+          },
+          "runAfter": { "Criar_Status_Report_Lista": ["Succeeded"] }
+        },
+
+        "Enviar_Email_Notificacao": {
+          "type": "ApiConnection",
+          "inputs": {
+            "host": {
+              "connection": { "name": "@parameters('$connections')['office365']['connectionId']" },
+              "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/office365" }
+            },
+            "method": "post",
+            "path": "/v2/Mail",
+            "body": {
+              "To":      "silaratur@gmail.com",
+              "Subject": "@{concat('[VMO] Status Report — ', outputs('Preparar_Dados_Report')?['nomeProjeto'], ' — ', outputs('Preparar_Dados_Report')?['semana'])}",
+              "Body":    "@{concat('<h2>Status Report Semanal — VMO</h2><p><strong>Projeto:</strong> ', outputs('Preparar_Dados_Report')?['nomeProjeto'], '</p><p><strong>Semana:</strong> ', outputs('Preparar_Dados_Report')?['semana'], '</p><p><strong>Data:</strong> ', outputs('Preparar_Dados_Report')?['data'], '</p><hr><table border=\"1\" cellpadding=\"5\"><tr><th>KPI</th><th>Valor</th></tr><tr><td>Status Geral</td><td><strong>', outputs('Calcular_Status_Semaforo')?['statusGeral'], '</strong></td></tr><tr><td>CPI</td><td>', outputs('Calcular_Status_Semaforo')?['cpi'], '</td></tr><tr><td>SPI</td><td>', outputs('Calcular_Status_Semaforo')?['spi'], '</td></tr><tr><td>Health Score</td><td>', outputs('Calcular_Status_Semaforo')?['healthScore'], '</td></tr></table><hr><p>Este e-mail foi gerado automaticamente pelo <strong>VMO — Agente Sara Status</strong>.</p>')}",
+              "IsHtml":  true,
+              "Importance": "Normal"
+            }
+          },
+          "runAfter": { "Criar_Documento_Status_Report": ["Succeeded"] }
+        }
+
+      },
+      "runAfter": { "Obter_Projetos_Ativos": ["Succeeded"] }
+    }
+
+  },
+  "outputs": {}
+}
