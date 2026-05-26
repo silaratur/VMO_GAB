@@ -194,6 +194,24 @@
       }
     },
 
+    "Criar_Documento_Governanca": {
+      "type": "ApiConnection",
+      "inputs": {
+        "host": {
+          "connection": { "name": "@parameters('$connections')['sharepointonline']['connectionId']" },
+          "api": { "runtimeUrl": "https://logic-apis-brazilsouth.azure-apim.net/apim/sharepointonline" }
+        },
+        "method": "post",
+        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(parameters('SharePointSiteUrl')))}/tables/@{encodeURIComponent(encodeURIComponent('Documentos Compartilhados'))}/files",
+        "body": {
+          "FolderPath": "/VMO_Projetos/@{triggerBody()?['projetoId']}/11_Governanca",
+          "Name": "@{concat('Auditoria_Governanca_', triggerBody()?['tipoGate'], '_', formatDateTime(utcNow(), 'yyyyMMdd'), '.md')}",
+          "ContentBytes": "@{base64(concat('# AUDITORIA DE GOVERNANÇA — GATE ', triggerBody()?['tipoGate'], '\n\n**Projeto:** ', body('Buscar_Dados_Projeto')?['Title'], '\n**Tipo de Gate:** ', triggerBody()?['tipoGate'], '\n**Gerado em:** ', formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm'), '\n**Agente:** Gabriel Governança\n\n---\n\n## 1. DECISÃO DO GATE\n\n> # ', coalesce(outputs('Checklist_Gate_Final')?['veredicto'], outputs('Checklist_Gate_Qualificacao')?['veredicto'], outputs('Checklist_Gate_Intake')?['veredicto'], 'PENDENTE'), '\n\n---\n\n## 2. RESUMO DA AUDITORIA\n\n| Campo | Valor |\n|---|---|\n| **Tipo de Gate** | ', triggerBody()?['tipoGate'], ' |\n| **Decisão** | **', coalesce(outputs('Checklist_Gate_Final')?['veredicto'], outputs('Checklist_Gate_Qualificacao')?['veredicto'], outputs('Checklist_Gate_Intake')?['veredicto'], 'PENDENTE'), '** |\n| **Score de Governança** | ', coalesce(outputs('Checklist_Gate_Final')?['score'], outputs('Checklist_Gate_Qualificacao')?['score'], outputs('Checklist_Gate_Intake')?['score'], 0), '/100 |\n| **Documentos Encontrados** | ', length(body('Buscar_Documentos')?['value']), ' |\n| **Auditor** | Gabriel Governança |\n\n---\n\n## 3. CHECKLIST DE DOCUMENTOS OBRIGATÓRIOS\n\n### Documentos para Gate INTAKE (mín. 1)\n\n| # | Documento | Status |\n|---|---|---|\n| 1 | Demanda Estruturada | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 1), 'PRESENTE', 'AUSENTE'), ' |\n\n### Documentos para Gate QUALIFICAÇÃO (mín. 2)\n\n| # | Documento | Status |\n|---|---|---|\n| 1 | TAP — Termo de Abertura | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 1), 'PRESENTE', 'AUSENTE'), ' |\n| 2 | PM Canvas | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 2), 'PRESENTE', 'AUSENTE'), ' |\n\n### Documentos para Gate FINAL (mín. 8)\n\n| # | Documento | Status |\n|---|---|---|\n| 1 | TAP | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 1), 'PRESENTE', 'AUSENTE'), ' |\n| 2 | PM Canvas | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 2), 'PRESENTE', 'AUSENTE'), ' |\n| 3 | Matriz de Requisitos | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 3), 'PRESENTE', 'AUSENTE'), ' |\n| 4 | Work Request | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 4), 'PRESENTE', 'AUSENTE'), ' |\n| 5 | Cronograma WBS | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 5), 'PRESENTE', 'AUSENTE'), ' |\n| 6 | Registro de Riscos | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 6), 'PRESENTE', 'AUSENTE'), ' |\n| 7 | Plano de KPIs | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 7), 'PRESENTE', 'AUSENTE'), ' |\n| 8 | Relatório de Qualidade | ', if(greaterOrEquals(length(body('Buscar_Documentos')?['value']), 8), 'PRESENTE', 'AUSENTE'), ' |\n\n---\n\n## 4. CONDIÇÕES BLOQUEANTES\n\n', coalesce(outputs('Checklist_Gate_Final')?['bloqueantes'], outputs('Checklist_Gate_Qualificacao')?['bloqueantes'], outputs('Checklist_Gate_Intake')?['bloqueantes'], 'Nenhuma condição bloqueante identificada.'), '\n\n---\n\n## 5. DOCUMENTOS FALTANTES\n\n', coalesce(outputs('Checklist_Gate_Intake')?['docs_faltantes'], 'Nenhum'), '\n\n---\n\n*Documento gerado automaticamente pelo VMO — Agente Gabriel Governança.*\n'))}"
+        }
+      },
+      "runAfter": { "Avaliar_Gate_por_Tipo": ["Succeeded"] }
+    },
+
     "Resposta_Gabriel": {
       "type": "Response",
       "inputs": {
@@ -207,10 +225,11 @@
           "scoreGovernanca": "@{coalesce(outputs('Checklist_Gate_Final')?['score'], outputs('Checklist_Gate_Qualificacao')?['score'], outputs('Checklist_Gate_Intake')?['score'], 0)}",
           "condicoesBloqueantes": "@{coalesce(outputs('Checklist_Gate_Final')?['bloqueantes'], outputs('Checklist_Gate_Qualificacao')?['bloqueantes'], outputs('Checklist_Gate_Intake')?['bloqueantes'], '')}",
           "documentosFaltantes": "@{coalesce(outputs('Checklist_Gate_Intake')?['docs_faltantes'], 'Nenhum')}",
-          "totalDocumentos": "@{length(body('Buscar_Documentos')?['value'])}"
+          "totalDocumentos": "@{length(body('Buscar_Documentos')?['value'])}",
+          "documentoGovernancaPath": "/VMO_Projetos/@{triggerBody()?['projetoId']}/11_Governanca"
         }
       },
-      "runAfter": { "Avaliar_Gate_por_Tipo": ["Succeeded"] }
+      "runAfter": { "Criar_Documento_Governanca": ["Succeeded"] }
     }
 
   },
