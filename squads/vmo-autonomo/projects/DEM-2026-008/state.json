@@ -1,0 +1,113 @@
+{
+  "project": "DEM-2026-008",
+  "name": "Integração SGMM03 — Campos Empresa e Contrato (InterCompany)",
+  "ticket": "#6800446",
+  "pipeline_version": "2.0.0",
+  "status": "AGUARDANDO_KICK_OFF",
+  "current_step": 16,
+  "last_updated": "2026-05-28",
+  "checkpoint_decisions": {
+    "step_3": {
+      "date": "2026-05-28",
+      "decision": "AUTO-APROVADO",
+      "note": "Intake validado. Iara PASS + Gabriel Gate Intake PASS."
+    },
+    "step_6": {
+      "date": "2026-05-28",
+      "decision": "AUTO-APROVADO",
+      "note": "Qualificação Felipe Filtro: 50/100 (50%). APROVADO COM CONDIÇÕES. Melhoria Evolutiva PM/FI. 3 CBs registradas."
+    },
+    "step_16": {
+      "date": "2026-05-28",
+      "decision": "AUTO-APROVADO",
+      "note": "Pacote de iniciação completo. Revisão Vera: 8,68/10 APROVADO. Auditoria Gabriel: APROVADO COM RESSALVAS (0 NC-CRÍTICAS, 2 NC-MODs). Pipeline concluído com sucesso."
+    }
+  },
+  "qualification": {
+    "score": 50,
+    "max_score": 100,
+    "percentage": 50,
+    "decision": "APROVADO_COM_CONDIÇÕES",
+    "classification": "MELHORIA_EVOLUTIVA",
+    "sustentacao_team": "PM/FI",
+    "analyst": "Felipe Filtro",
+    "gate_governance": "PASS"
+  },
+  "quality_review": {
+    "reviewer": "Vera Veredito",
+    "score": 8.68,
+    "max_score": 10,
+    "verdict": "APROVADO",
+    "date": "2026-05-28"
+  },
+  "governance_audit": {
+    "auditor": "Gabriel Governança",
+    "verdict": "APROVADO_COM_RESSALVAS",
+    "nc_criticas": 0,
+    "nc_moderadas": 2,
+    "date": "2026-05-28"
+  },
+  "open_conditions": [
+    {
+      "id": "CB-1",
+      "description": "Identificar e nomear sponsor com nível Diretor ou superior",
+      "owner": "PMO / Holding DTI",
+      "deadline": "2026-05-30",
+      "status": "ABERTA",
+      "priority": "CRÍTICA"
+    },
+    {
+      "id": "CB-2",
+      "description": "Formalizar orçamento aprovado após equalização das propostas (retorno consultoras: 29/05)",
+      "owner": "Sponsor designado + Mara Rubia Silva Rocha",
+      "deadline": "2026-06-02",
+      "status": "ABERTA",
+      "priority": "ALTA"
+    },
+    {
+      "id": "CB-3",
+      "description": "Confirmar escopo técnico formal dos campos Empresa e Contrato com consultora selecionada",
+      "owner": "DTI + Consultora",
+      "deadline": "Pré-kick-off",
+      "status": "ABERTA",
+      "priority": "MÉDIA"
+    }
+  ],
+  "project_parameters": {
+    "start_date": "2026-06-16",
+    "go_live_date": "2026-07-31",
+    "closure_date_with_buffer": "2026-08-08",
+    "budget_referential": 34800,
+    "budget_includes_contingency_20pct": true,
+    "scope": "Integração campos Empresa e Contrato na interface SGMM03 (SGM→SAP) para eventos de criação e alteração de OM InterCompany — VIX Matriz",
+    "execution_team": "Consultoria SAP PM/FI externa (entre LinkUP, Ocean, Seletor ou MW)"
+  },
+  "documents": {
+    "01-qualificacao": {
+      "demanda-coletada.md": "CONCLUÍDO",
+      "gate-intake.md": "CONCLUÍDO — PASS",
+      "qualificacao.md": "CONCLUÍDO — 50/100 APROVADO COM CONDIÇÕES",
+      "gate-qualificacao.md": "CONCLUÍDO — PASS",
+      "qualificacao-aprovada.md": "CONCLUÍDO — AUTO-APROVADO"
+    },
+    "02-iniciacao": {
+      "documentacao-base.md": "CONCLUÍDO — TAP + PM Canvas + Plano Geral",
+      "requisitos.md": "CONCLUÍDO — 12 RF + 6 RNF",
+      "work-request.md": "CONCLUÍDO — Mini-RFP 10 grupos/41 itens"
+    },
+    "03-planejamento": {
+      "cronograma.md": "CONCLUÍDO — WBS 3 níveis + cronograma + caminho crítico + buffer 15%",
+      "plano-riscos.md": "CONCLUÍDO — 8 riscos + VME R$ 9.725",
+      "kpis.md": "CONCLUÍDO — EVM + 6 KPIs resultado + semáforo 8 dimensões"
+    },
+    "04-monitoramento": {
+      "status-report-2026-05-28.md": "CONCLUÍDO — Report #001 + Pesquisa de Satisfação"
+    },
+    "05-encerramento": {
+      "revisao-final.md": "CONCLUÍDO — APROVADO 8,68/10",
+      "auditoria-governanca.md": "CONCLUÍDO — APROVADO COM RESSALVAS",
+      "aprovacao-final.md": "CONCLUÍDO — PACOTE APROVADO"
+    }
+  },
+  "next_action": "Resolver CB-1 (Sponsor) até 30/05 e CB-2 (Orçamento) até 02/06 para liberar kick-off em 16/06/2026"
+}
