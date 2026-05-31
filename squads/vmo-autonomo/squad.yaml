@@ -12,6 +12,8 @@ squad:
   company: VMO Consultoria
 
 agents:
+  - id: oscar-orquestrador
+    path: ./agents/oscar-orquestrador.agent.md
   - id: iara-inbound
     path: ./agents/iara-inbound.agent.md
   - id: felipe-filtro

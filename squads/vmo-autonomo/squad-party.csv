@@ -1,4 +1,5 @@
 id,name,title,icon,execution,path
+oscar-orquestrador,Oscar Orquestrador,Orquestrador Autônomo VMO,🎯,inline,./agents/oscar-orquestrador.agent.md
 iara-inbound,Iara Inbound,Coletora de Demandas,📥,subagent,./agents/iara-inbound.agent.md
 felipe-filtro,Felipe Filtro,Analista de Qualificação,🔍,inline,./agents/felipe-filtro.agent.md
 diana-documento,Diana Documento,Arquiteta de Projetos,📋,subagent,./agents/diana-documento.agent.md

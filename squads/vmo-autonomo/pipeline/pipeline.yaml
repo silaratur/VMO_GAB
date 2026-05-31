@@ -1,13 +1,12 @@
 pipeline:
   name: "VMO Autônomo — Iniciação de Projeto"
-  version: "2.0.0"
+  version: "3.0.0"
   squad: vmo-autonomo
   description: >
-    Pipeline de iniciação de projeto: da demanda recebida até o pacote completo
-    de documentação aprovado pelo VMO (TAP, PM Canvas, ERF, Cronograma, Riscos,
-    KPIs, Work Request, Status Report e Auditoria de Governança).
-    Canais de entrada suportados: ticket de service desk, e-mail, PDF, transcrição
-    de reunião, mensagem direta, formulário ou qualquer combinação.
+    Pipeline de iniciação de projeto com orquestração autônoma: da demanda recebida
+    até o pacote completo de documentação aprovado pelo VMO.
+    O Orquestrador Autônomo (Orq) avalia cada entrega antes de avançar para o próximo
+    agente, propondo redirecionamentos quando critérios VMO não são atendidos.
     Gates de governança executados em 3 momentos: após intake, após qualificação
     e antes da aprovação final.
 
@@ -20,107 +19,179 @@ steps:
     execution: subagent
 
   - step: 2
+    name: "[ORQ] Avaliar Demanda Coletada"
+    file: steps/step-orq-01-demanda.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 1
+
+  - step: 3
     name: "Gate de Governança — Intake"
     file: steps/step-02-gate-intake.md
     type: agent
     agent: gabriel-governanca
     execution: inline
 
-  - step: 3
+  - step: 4
     name: "Checkpoint: Validar Demanda"
     file: steps/step-02-checkpoint-validar-demanda.md
     type: checkpoint
 
-  - step: 4
+  - step: 5
     name: "Qualificar Demanda"
     file: steps/step-03-qualificar-demanda.md
     type: agent
     agent: felipe-filtro
     execution: inline
 
-  - step: 5
+  - step: 6
+    name: "[ORQ] Avaliar Qualificação"
+    file: steps/step-orq-02-qualificacao.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 5
+
+  - step: 7
     name: "Gate de Governança — Qualificação"
     file: steps/step-05-gate-qualificacao.md
     type: agent
     agent: gabriel-governanca
     execution: inline
 
-  - step: 6
+  - step: 8
     name: "Checkpoint: Aprovar Qualificação"
     file: steps/step-04-checkpoint-aprovar-qualificacao.md
     type: checkpoint
 
-  - step: 7
+  - step: 9
     name: "Criar Documentação Base"
     file: steps/step-05-criar-documentacao-base.md
     type: agent
     agent: diana-documento
     execution: subagent
 
-  - step: 8
+  - step: 10
+    name: "[ORQ] Avaliar Documentação Base"
+    file: steps/step-orq-03-documentacao.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 9
+
+  - step: 11
     name: "Especificar Requisitos"
     file: steps/step-06-especificar-requisitos.md
     type: agent
     agent: rafael-requisito
     execution: subagent
 
-  - step: 9
+  - step: 12
+    name: "[ORQ] Avaliar Requisitos"
+    file: steps/step-orq-04-requisitos.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 11
+
+  - step: 13
     name: "Criar Work Request (Mini-RFP)"
     file: steps/step-07-criar-work-request.md
     type: agent
     agent: fabio-fornecedor
     execution: subagent
 
-  - step: 10
+  - step: 14
+    name: "[ORQ] Avaliar Work Request"
+    file: steps/step-orq-05-work-request.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 13
+
+  - step: 15
     name: "Criar Cronograma"
     file: steps/step-08-criar-cronograma.md
     type: agent
     agent: carlos-cronograma
     execution: inline
 
-  - step: 11
+  - step: 16
+    name: "[ORQ] Avaliar Cronograma"
+    file: steps/step-orq-06-cronograma.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 15
+
+  - step: 17
     name: "Plano de Riscos"
     file: steps/step-09-plano-riscos.md
     type: agent
     agent: pedro-perigo
     execution: inline
 
-  - step: 12
+  - step: 18
+    name: "[ORQ] Avaliar Plano de Riscos"
+    file: steps/step-orq-07-riscos.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 17
+
+  - step: 19
     name: "Framework de KPIs"
     file: steps/step-10-framework-kpis.md
     type: agent
     agent: marcela-metrica
     execution: subagent
 
-  - step: 13
+  - step: 20
+    name: "[ORQ] Avaliar KPIs"
+    file: steps/step-orq-08-kpis.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 19
+
+  - step: 21
     name: "Status Report Inicial"
     file: steps/step-11-status-report-inicial.md
     type: agent
     agent: sara-status
     execution: inline
 
-  - step: 14
+  - step: 22
+    name: "[ORQ] Avaliar Status Report"
+    file: steps/step-orq-09-status-report.md
+    type: agent
+    agent: oscar-orquestrador
+    execution: inline
+    on_reject: 21
+
+  - step: 23
     name: "Revisão de Qualidade"
     file: steps/step-12-revisao-qualidade.md
     type: agent
     agent: vera-veredito
     execution: inline
-    on_reject: 7
+    on_reject: 9
 
-  - step: 15
+  - step: 24
     name: "Auditoria de Governança Final"
     file: steps/step-13-auditoria-governanca.md
     type: agent
     agent: gabriel-governanca
     execution: inline
-    on_reject: 7
+    on_reject: 9
 
-  - step: 16
+  - step: 25
     name: "Checkpoint: Aprovar Documentação Final"
     file: steps/step-14-checkpoint-aprovacao-final.md
     type: checkpoint
 
 checkpoints:
-  - step: 3
-  - step: 6
-  - step: 16
+  - step: 4
+  - step: 8
+  - step: 25
