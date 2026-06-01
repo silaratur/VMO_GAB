@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/work-request.md
-on_reject: 13
+on_reject: 14
 ---
 
 # [ORQ] Step 05-ORQ: Avaliar Work Request (Mini-RFP)
@@ -49,7 +49,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Fábio Fornecedor — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 13` (retorna ao Step 13 — Fábio).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 14` (retorna ao Step 13 — Fábio).
 
 ## Veto Conditions
 

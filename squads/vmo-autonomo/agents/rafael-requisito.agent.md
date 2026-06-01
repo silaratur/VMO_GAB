@@ -7,6 +7,7 @@ squad: "vmo-autonomo"
 execution: subagent
 skills: []
 tasks:
+  - tasks/sizing-inicial.md
   - tasks/levantar-requisitos.md
   - tasks/criar-erf.md
 ---
@@ -78,7 +79,14 @@ Rafael escreve requisitos com a precisão de quem sabe que eles vão virar crit�
 
 ## Integration
 
+### Fase 1 — Sizing Inicial (Step 5, inline — antes da qualificação)
+- **Reads from**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/demanda-validada.md`
+- **Writes to**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/sizing.md`
+- **Triggers**: Step 5 do pipeline (inline, antes do Felipe Filtro — Step 6)
+- **Depends on**: Demanda validada pelo usuário no Checkpoint Step 4
+
+### Fase 2 — Levantamento e ERF (Step 12, subagent — fase de iniciação)
 - **Reads from**: `squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao-aprovada.md`; `squads/vmo-autonomo/pipeline/data/domain-framework.md`
 - **Writes to**: `squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md`
-- **Triggers**: Step 6 do pipeline (subagent, paralelo com Diana Documento)
+- **Triggers**: Step 12 do pipeline (subagent, paralelo com Diana Documento)
 - **Depends on**: Qualificação aprovada com escopo preliminar e stakeholders identificados

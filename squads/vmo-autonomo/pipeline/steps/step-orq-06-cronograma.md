@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/cronograma.md
-on_reject: 15
+on_reject: 16
 ---
 
 # [ORQ] Step 06-ORQ: Avaliar Cronograma (WBS + Cronograma Detalhado)
@@ -48,7 +48,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Carlos Cronograma — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 15` (retorna ao Step 15 — Carlos).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 16` (retorna ao Step 15 — Carlos).
 
 ## Veto Conditions
 

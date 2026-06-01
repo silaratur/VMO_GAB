@@ -10,6 +10,12 @@
 
 ## Técnico (específico do squad)
 
+- **REGRAS METODOLÓGICAS DO FELIPE FILTRO — CRÍTICO (validadas 2026-05-31 no PROJ-2026-007):**
+  1. **Esforço (critério 7) exige Rafael Requisitos**: Felipe NÃO pode estimar esforço por benchmark. O dimensionamento de esforço só é válido após levantamento inicial de escopo por Rafael Requisitos. Sem esse dado, critério 7 = EM ESPERA.
+  2. **InterCompany mesma divisão = mesma área operacional**: Processos InterCompany de empresas da mesma divisão de negócio são operados pelo mesmo grupo de pessoas. Não conta como impacto multi-área sem confirmação de que equipes de diferentes gerências são afetadas.
+  3. **GMUD não diferencia projeto de melhoria**: Toda mudança SAP (inclusive simples) passa por GMUD (transport request, janela operacional). GMUD é critério de mudança SAP, não de complexidade de gestão. Felipe NÃO deve usar GMUD como indicador de governa formal (critério 9).
+  4. **Implicação de fluxo**: Considerar adicionar consulta leve a Rafael (scope sizing) como sub-etapa de Felipe, antes de finalizar o critério 7. Ou criar step opcional "Rafael Sizing" entre Checkpoint Validar Demanda e Felipe Qualificar.
+
 - **Nova estrutura de pastas validada (2026-05-16):** A migração de `output/{run_id}/v{N}/` para `projects/{PROJ-CODE}/{fase}/` funciona corretamente. Todos os 10 agentes escreveram nos caminhos corretos com placeholder `{project}` resolvido. Estrutura de fases: 01-qualificacao, 02-iniciacao, 03-planejamento, 04-monitoramento, 05-encerramento.
 - **Fábio Fornecedor validado (Step 10):** Primeiro run completo com o agente de Work Request. Score 8,5/10 na revisão da Vera. Artefato Obrigatório (10 grupos / 41 itens) transcrito corretamente. Inconsistência narrativa identificada: seção de contexto deve referenciar "plataforma SaaS terceira" (não "planilhas e e-mails") para projetos de substituição de sistema.
 - **Ressalva de sponsor registrada pelo GP:** Nivel mínimo de sponsor para aprovação de TAP é Diretor ou superior. Registrar como condição bloqueante CB-01 explícita no TAP, não apenas como lacuna genérica.

@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/documentacao-base.md
-on_reject: 9
+on_reject: 10
 ---
 
 # [ORQ] Step 03-ORQ: Avaliar Documentação Base (TAP + PM Canvas + Plano Geral)
@@ -57,7 +57,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Diana Documento — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 9` (retorna ao Step 9 — Diana).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 10` (retorna ao Step 9 — Diana).
 
 ## Veto Conditions
 

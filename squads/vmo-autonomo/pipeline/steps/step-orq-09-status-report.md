@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/04-monitoramento/status-report-{date}.md
-on_reject: 21
+on_reject: 22
 ---
 
 # [ORQ] Step 09-ORQ: Avaliar Status Report Inicial
@@ -50,7 +50,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Sara Status — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 21` (retorna ao Step 21 — Sara).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 22` (retorna ao Step 21 — Sara).
 
 ## Veto Conditions
 

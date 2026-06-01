@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/kpis.md
-on_reject: 19
+on_reject: 20
 ---
 
 # [ORQ] Step 08-ORQ: Avaliar Framework de KPIs
@@ -46,7 +46,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Marcela Métrica — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 19` (retorna ao Step 19 — Marcela).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 20` (retorna ao Step 19 — Marcela).
 
 ## Veto Conditions
 

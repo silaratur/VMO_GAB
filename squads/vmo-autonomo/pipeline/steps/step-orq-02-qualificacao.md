@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/01-qualificacao/qualificacao.md
-on_reject: 5
+on_reject: 6
 ---
 
 # [ORQ] Step 02-ORQ: Avaliar Qualificação da Demanda
@@ -48,7 +48,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Felipe Filtro — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 5` (retorna ao Step 5 — Felipe).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 6` (retorna ao Step 6 — Felipe).
 
 ## Veto Conditions
 

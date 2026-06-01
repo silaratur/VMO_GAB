@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/03-planejamento/plano-riscos.md
-on_reject: 17
+on_reject: 18
 ---
 
 # [ORQ] Step 07-ORQ: Avaliar Plano de Riscos
@@ -48,7 +48,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Pedro Perigo — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 17` (retorna ao Step 17 — Pedro).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 18` (retorna ao Step 17 — Pedro).
 
 ## Veto Conditions
 

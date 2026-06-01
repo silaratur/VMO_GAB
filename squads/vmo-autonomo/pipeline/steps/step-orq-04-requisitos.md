@@ -2,7 +2,7 @@
 execution: inline
 agent: oscar-orquestrador
 inputFile: squads/vmo-autonomo/projects/{project}/02-iniciacao/requisitos.md
-on_reject: 11
+on_reject: 12
 ---
 
 # [ORQ] Step 04-ORQ: Avaliar Especificação de Requisitos (ERF)
@@ -47,7 +47,7 @@ Apresentar via AskUserQuestion:
 - Opção 1: "Redirecionar para Rafael Requisito — [ação específica detectada]"
 - Opção 2: "Continuar mesmo assim — registrar ressalva e seguir"
 
-Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 11` (retorna ao Step 11 — Rafael).
+Se confirmado: emitir REPROVADO → Pipeline Runner aciona `on_reject: 12` (retorna ao Step 11 — Rafael).
 
 ## Veto Conditions
 
