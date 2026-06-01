@@ -82,7 +82,12 @@ Before starting execution:
      mkdir -p "squads/{name}/projects/{project_code}/03-planejamento"
      mkdir -p "squads/{name}/projects/{project_code}/04-monitoramento"
      mkdir -p "squads/{name}/projects/{project_code}/05-encerramento"
+     touch "squads/{name}/projects/{project_code}/02-iniciacao/.gitkeep"
+     touch "squads/{name}/projects/{project_code}/03-planejamento/.gitkeep"
+     touch "squads/{name}/projects/{project_code}/04-monitoramento/.gitkeep"
+     touch "squads/{name}/projects/{project_code}/05-encerramento/.gitkeep"
      ```
+   - **OBRIGATÓRIO**: O `.gitkeep` deve ser criado em TODAS as pastas de fase que ainda não possuem arquivos. Git não rastreia diretórios vazios — sem o `.gitkeep`, as pastas são invisíveis no repositório remoto. O `.gitkeep` é removido automaticamente quando o agente da fase escrever o primeiro arquivo real na pasta.
    - Add `"project": "{project_code}"` and `"demand": "{demand_code}"` fields to the state.json being initialized in step 6.
 6. **Initialize state.json**: Create `squads/{name}/state.json` from scratch (see below). State writes are always mandatory.
    - **IMPORTANT**: You MUST write to `squads/{name}/state.json` before every step and after every handoff. This is non-negotiable. Never skip these writes.
@@ -118,6 +123,14 @@ Before starting execution:
         }
         ```
         Include one entry per agent, in squad-party.csv order.
+   - After writing, push to the live dashboard via Bash (non-blocking — failure is silently ignored):
+     ```bash
+     curl -sf -X POST "https://silaratur.cloud/api/push-state/{name}" \
+       -H "Content-Type: application/json" \
+       -d @squads/{name}/state.json \
+       --max-time 3 --silent || true
+     ```
+     Replace `{name}` with the actual squad code.
 
 ## Execution Rules
 
@@ -218,7 +231,7 @@ Apply this resolution consistently to every `inputFile`, `outputFile`, and inlin
 
 ### For each pipeline step:
 
-0. **Update dashboard** — MANDATORY. Write `squads/{name}/state.json` using the Write tool. Always write — it is never wrong to update the dashboard. Use this content:
+0. **Update dashboard** — MANDATORY. Write `squads/{name}/state.json` using the Write tool, then push to the live dashboard via Bash (see push instructions at the end of the Initialization section). Always write — it is never wrong to update the dashboard. Use this content:
    ```json
    {
      "squad": "{squad code from squad.yaml}",
@@ -396,6 +409,13 @@ After a step completes output and there IS a next step (MANDATORY):
    - Next agent: `"status": "working"`
    - Keep the `"handoff"` object from step 1 unchanged
    - `"updatedAt"`: now
+   After writing, push to the live dashboard via Bash (non-blocking):
+   ```bash
+   curl -sf -X POST "https://silaratur.cloud/api/push-state/{name}" \
+     -H "Content-Type: application/json" \
+     -d @squads/{name}/state.json \
+     --max-time 3 --silent || true
+   ```
 
 ### Step Execution Order (Summary)
 

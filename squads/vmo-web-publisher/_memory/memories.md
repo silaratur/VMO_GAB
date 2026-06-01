@@ -7,11 +7,12 @@
 - PROJ-2026-005: Auditor Fiscal NBS — run 2026-05-22 — Divisão Comércio GAB — 🟡 Atenção (CB-01 25/05 URGENTE)
 - PROJ-2026-006: Plataforma Própria Gestão de Ideias e Inovação — run 2026-05-22 — GAB Área de Inovação — 🟡 Atenção
 - DEM-2026-007: Implantação DDA SAP VAB Matriz — run 2026-05-22 — VAB Matriz CP — 🔵 Em Instrução (NOVO)
+- PROJ-2026-007: INT015 — Integração GRLOG-SAP — run 2026-05-24 — VIX Matriz Diretoria de Logística Dedicada — 🟠 Aguardando Solicitante (step 6/16, 8 CBs abertas, BAC R$42–67K, CPC47/IFRS15)
 
 ## Última Execução
-- Run: 2026-05-22
-- Output: index.html + 6 páginas de projeto (PROJ-2026-001, 003, 004, 005, 006, DEM-2026-007)
-- DEM-2026-007 adicionado pela primeira vez (merge de branch claude/check-vmo-agents-update)
+- Run: 2026-05-24
+- Output: index.html + 7 páginas de projeto (PROJ-2026-001, 003, 004, 005, 006, DEM-2026-007, PROJ-2026-007)
+- PROJ-2026-007 adicionado — waiting_requester step 6/16, 8 Condições Bloqueantes em aberto
 
 ## Configurações
 - Cron: a cada 6 horas
