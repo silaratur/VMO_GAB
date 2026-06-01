@@ -1,69 +1,40 @@
 ﻿{
-    "current_step":  5,
-    "chamado":  "6800446",
-    "started_at":  "2026-05-31T00:00:00",
+    "resume_instructions":  "Quando usuario retornar com informacoes sobre C1-C2-C3, retomar em Step 9 (Checkpoint Aprovar Qualificacao)",
+    "pending_conditions":  [
+                               "C1: Designar sponsor executivo (Diretor+)",
+                               "C2: Confirmar times operacionais distintos (Criterio 8 — pode mudar classificacao para PROJETO)",
+                               "C3: Confirmar nivel de governanca exigido (Criterio 9)"
+                           ],
+    "current_checkpoint":  9,
+    "criterio8_pending":  "3/10 provisorio — aguardando confirmacao de times distintos",
+    "criterio9_pending":  "4/10 provisorio — aguardando confirmacao de nivel de governanca",
+    "artifacts":  {
+                      "01-qualificacao":  [
+                                              "demanda-coletada.md",
+                                              "demanda-validada.md",
+                                              "gate-intake.md",
+                                              "sizing.md",
+                                              "qualificacao.md v3.0",
+                                              "gate-qualificacao.md v2.0"
+                                          ]
+                  },
     "project":  "PROJ-2026-007",
+    "classification_provisional":  "MELHORIA EVOLUTIVA",
+    "started_at":  "2026-05-31T00:00:00",
+    "status":  "em_espera_checkpoint",
+    "chamado":  "6800446",
     "steps_completed":  [
                             1,
                             2,
                             3,
+                            4,
                             5,
                             6,
-                            7
+                            7,
+                            8
                         ],
-    "last_output":  "squads/vmo-autonomo/projects/PROJ-2026-007/01-qualificacao/qualificacao.md — EM ESPERA (aguardando Rafael Requisitos)",
-    "status":  "em_espera",
-    "run_id":  "PROJ-2026-007",
-    "demand":  "DEM-2026-007",
-    "squad":  "vmo-autonomo",
-    "agents":  {
-                   "sara-status":  {
-                                       "status":  "pending",
-                                       "step":  21
-                                   },
-                   "carlos-cronograma":  {
-                                             "status":  "pending",
-                                             "step":  15
-                                         },
-                   "iara-inbound":  {
-                                        "status":  "completed",
-                                        "step":  1
-                                    },
-                   "diana-documento":  {
-                                           "status":  "pending",
-                                           "step":  9
-                                       },
-                   "fabio-fornecedor":  {
-                                            "status":  "pending",
-                                            "step":  13
-                                        },
-                   "oscar-orquestrador":  {
-                                              "status":  "completed",
-                                              "step":  2
-                                          },
-                   "gabriel-governanca":  {
-                                              "status":  "completed",
-                                              "step":  3
-                                          },
-                   "rafael-requisitos":  {
-                                             "status":  "pending",
-                                             "step":  11
-                                         },
-                   "marcela-metrica":  {
-                                           "status":  "pending",
-                                           "step":  19
-                                       },
-                   "vera-valor":  {
-                                      "status":  "pending",
-                                      "step":  23
-                                  },
-                   "gabriel-governanca-encerramento":  {
-                                                           "status":  "pending",
-                                                           "step":  24
-                                                       },
-                   "pedro-perigo":  {
-                                        "status":  "pending",
-                                        "step":  17
-                                    }
-               }
+    "current_step":  9,
+    "criterio7_confirmed":  "7/10 — escopo ampliado (8+ campos) confirmado pelo usuario",
+    "checkpoint_reason":  "Aguardando resolucao das condicoes C1-C3 antes de classificar PROJETO vs MELHORIA EVOLUTIVA",
+    "score":  "50/100"
 }
