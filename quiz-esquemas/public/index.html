@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Questionário de Esquemas</title>
+<style>
+  :root {
+    --primary: #6C63FF;
+    --primary-dark: #5a52d5;
+    --accent: #FF6584;
+    --bg: #f7f6ff;
+    --card: #ffffff;
+    --text: #2d2d2d;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #a78bfa 100%);
+    color: white; padding: 40px 24px 60px; text-align: center;
+  }
+  .hero h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+  .hero p { opacity: 0.9; font-size: 0.95rem; max-width: 400px; margin: 0 auto; }
+
+  .container { max-width: 640px; margin: -32px auto 40px; padding: 0 16px; }
+
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 20px;
+  }
+
+  .card h2 { font-size: 1.1rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+  input[type=text], input[type=number] {
+    width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+    border-radius: 10px; font-size: 1rem; transition: border-color 0.2s;
+    background: #fafafa;
+  }
+  input:focus { outline: none; border-color: var(--primary); background: white; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-full { margin-bottom: 12px; }
+
+  .instrucoes {
+    background: #f0edff; border-left: 4px solid var(--primary);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6;
+  }
+
+  .escala-header {
+    display: grid; grid-template-columns: auto repeat(6,1fr);
+    gap: 4px; align-items: end; margin-bottom: 8px;
+    font-size: 0.65rem; color: var(--muted); text-align: center;
+  }
+  .escala-header span:first-child { text-align: left; }
+
+  .schema-group { margin-bottom: 28px; }
+  .schema-title {
+    font-size: 0.8rem; font-weight: 700; color: white;
+    background: var(--primary); border-radius: 20px;
+    padding: 4px 14px; display: inline-block; margin-bottom: 12px;
+  }
+
+  .pergunta {
+    display: grid; grid-template-columns: auto repeat(6,1fr);
+    gap: 4px; align-items: center; padding: 10px 0;
+    border-bottom: 1px solid var(--border); position: relative;
+  }
+  .pergunta:last-child { border-bottom: none; }
+  .pergunta-text {
+    font-size: 0.88rem; line-height: 1.4; padding-right: 8px;
+    color: var(--text);
+  }
+  .pergunta-num { font-weight: 700; color: var(--primary); font-size: 0.8rem; margin-right: 6px; }
+
+  .radio-btn { display: flex; justify-content: center; }
+  .radio-btn input { display: none; }
+  .radio-btn label {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--muted);
+    transition: all 0.15s; margin: 0;
+  }
+  .radio-btn input:checked + label {
+    background: var(--primary); border-color: var(--primary); color: white;
+  }
+  .radio-btn label:hover { border-color: var(--primary); color: var(--primary); }
+
+  .pergunta-final { margin-top: 8px; }
+  .pergunta-final textarea {
+    width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+    border-radius: 10px; font-size: 1rem; resize: none; height: 80px;
+    font-family: inherit; transition: border-color 0.2s; background: #fafafa;
+  }
+  .pergunta-final textarea:focus { outline: none; border-color: var(--primary); background: white; }
+
+  .progresso-wrap { position: sticky; top: 0; z-index: 10; background: white; padding: 10px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .progresso-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progresso-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px; transition: width 0.3s; }
+  .progresso-text { font-size: 0.78rem; color: var(--muted); text-align: right; margin-top: 4px; }
+
+  .btn-enviar {
+    width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; border: none; border-radius: 14px; font-size: 1.1rem;
+    font-weight: 700; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.4); margin-top: 8px;
+  }
+  .btn-enviar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,99,255,0.5); }
+  .btn-enviar:active { transform: translateY(0); }
+  .btn-enviar:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .erro-msg { color: #ef4444; font-size: 0.85rem; margin-top: 8px; display: none; }
+
+  /* Resultado */
+  #tela-resultado { display: none; }
+  .resultado-hero {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white; padding: 40px 24px; text-align: center; border-radius: var(--radius);
+    margin-bottom: 20px;
+  }
+  .resultado-hero h2 { font-size: 1.6rem; margin-bottom: 8px; }
+  .schema-resultado {
+    background: white; border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 16px; margin-bottom: 12px;
+  }
+  .schema-resultado .nome { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+  .schema-resultado .media { font-size: 1.4rem; font-weight: 700; }
+  .barra-wrap { height: 10px; background: var(--border); border-radius: 5px; margin-top: 8px; }
+  .barra-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #10b981, #6C63FF); }
+  .nivel-chip {
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 600; margin-top: 6px;
+  }
+  .nivel-baixo { background: #d1fae5; color: #065f46; }
+  .nivel-medio { background: #fef3c7; color: #92400e; }
+  .nivel-alto { background: #fee2e2; color: #991b1b; }
+
+  .link-resultado {
+    background: #f0edff; border-radius: 12px; padding: 14px; text-align: center;
+    margin-top: 16px; word-break: break-all; font-size: 0.85rem; color: var(--primary);
+  }
+  .btn-copiar {
+    margin-top: 10px; padding: 8px 20px; background: var(--primary); color: white;
+    border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; }
+    .radio-btn label { width: 28px; height: 28px; font-size: 0.75rem; }
+    .escala-header { font-size: 0.6rem; }
+    .pergunta-text { font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="tela-form">
+  <div class="hero">
+    <h1>📋 Questionário de Esquemas</h1>
+    <p>Responda com honestidade. Não existem respostas certas ou erradas.</p>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>👤 Identificação</h2>
+      <div class="form-full">
+        <label>Nome (ou apelido)</label>
+        <input type="text" id="nome" placeholder="Como prefere ser chamada?"/>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Idade</label>
+          <input type="number" id="idade" placeholder="Ex: 32" min="1" max="120"/>
+        </div>
+        <div>
+          <label>Profissão</label>
+          <input type="text" id="profissao" placeholder="Ex: Psicóloga"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="instrucoes">
+      <strong>Como responder:</strong> Leia cada afirmação e escolha o número de <strong>1 a 6</strong> que melhor descreve você.<br><br>
+      <strong>1</strong> = Inteiramente falsa &nbsp;|&nbsp;
+      <strong>2</strong> = Em grande parte falsa &nbsp;|&nbsp;
+      <strong>3</strong> = Levemente mais verdadeira &nbsp;|&nbsp;
+      <strong>4</strong> = Moderadamente verdadeira &nbsp;|&nbsp;
+      <strong>5</strong> = Em grande parte verdadeira &nbsp;|&nbsp;
+      <strong>6</strong> = Descreve perfeitamente
+    </div>
+
+    <div class="progresso-wrap">
+      <div class="progresso-bar"><div class="progresso-fill" id="progresso-fill" style="width:0%"></div></div>
+      <div class="progresso-text" id="progresso-text">0 de 75 respondidas</div>
+    </div>
+
+    <div id="perguntas-container"></div>
+
+    <div class="card">
+      <h2>💬 Reflexão Final</h2>
+      <div class="pergunta-final">
+        <label>Qual palavra ou frase mais te marcou durante esse questionário?</label>
+        <textarea id="palavra-marcante" placeholder="Escreva livremente o que vier à mente..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="erro-msg" id="erro-msg">⚠️ Por favor, preencha o nome e responda todas as perguntas antes de enviar.</p>
+      <button class="btn-enviar" id="btn-enviar" onclick="enviarForm()">Enviar Respostas ✨</button>
+    </div>
+  </div>
+</div>
+
+<div id="tela-resultado">
+  <div class="container" style="margin-top:20px;">
+    <div class="resultado-hero">
+      <div style="font-size:2.5rem;">🎉</div>
+      <h2>Obrigada pela participação!</h2>
+      <p id="resultado-nome" style="opacity:0.9;margin-top:4px;"></p>
+    </div>
+    <div class="card">
+      <h2>📊 Seu Perfil de Esquemas</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;">Pontuação média por área (1-6). Valores acima de 4 merecem atenção.</p>
+      <div id="resultado-schemas"></div>
+    </div>
+    <div class="card">
+      <h2>💡 Destaque Pessoal</h2>
+      <div id="resultado-destaque" style="font-size:0.9rem;line-height:1.7;"></div>
+    </div>
+    <div class="card">
+      <div class="link-resultado">
+        🔗 Guarde seu link de resultado:<br>
+        <strong id="link-resultado-texto"></strong>
+        <br><button class="btn-copiar" onclick="copiarLink()">Copiar link</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCHEMAS = [
+  {
+    nome: "Privação Emocional",
+    cor: "#6C63FF",
+    perguntas: [
+      "As pessoas não conseguiram satisfazer minhas necessidades emocionais.",
+      "Eu não recebi amor e atenção suficientes.",
+      "De um modo geral, não tenho ninguém para me dar conselhos e apoio emocional.",
+      "A maior parte do tempo, não tenho ninguém para me dar carinho, compartilhar comigo e se importar profundamente com o que me acontece.",
+      "Em geral, não tenho ninguém que realmente me escute, me compreenda ou esteja sintonizado com minhas verdadeiras necessidades e sentimentos.",
+      "Eu raramente tenho alguma pessoa forte para me dar bons conselhos ou orientação quando não tenho certeza do que fazer."
+    ]
+  },
+  {
+    nome: "Abandono/Instabilidade",
+    cor: "#FF6584",
+    perguntas: [
+      "Eu me preocupo com a possibilidade de as pessoas que eu amo morrerem, mesmo que haja poucas razões médicas para confirmar minhas preocupações.",
+      "Não espero que os relacionamentos importantes durem; acredito que eles vão terminar.",
+      "No final, acabarei sozinha.",
+      "Às vezes, tenho tanto medo de que as pessoas me deixem que acabo fazendo com que se afastem.",
+      "Tenho muito medo de que as pessoas que eu amo encontrem alguém que vão preferir e me deixem.",
+      "Preciso tanto das pessoas que tenho medo de perdê-las.",
+      "Eu me preocupo com a possibilidade das pessoas que gosto me deixarem ou me abandonarem.",
+      "Quando sinto que alguém com quem eu me importo está se afastando, fico desesperada.",
+      "Fico incomodada quando alguém me deixa sozinha, mesmo que por pouco tempo."
+    ]
+  },
+  {
+    nome: "Desconfiança/Abuso",
+    cor: "#F59E0B",
+    perguntas: [
+      "Sinto que não posso baixar a guarda na presença dos outros, pois eles me prejudicariam intencionalmente.",
+      "Se uma pessoa é legal comigo, fico imaginando que ela está querendo alguma coisa.",
+      "As pessoas têm de provar coisas para mim antes que eu confie nelas.",
+      "Por toda a minha vida, pessoas que me eram próximas tiraram vantagem de mim ou me usaram para seus propósitos.",
+      "Não devo ficar realmente íntima das pessoas, porque não posso ter certeza de que poderei contar sempre com elas.",
+      "Fico com raiva quando penso como fui maltratada pelas pessoas durante toda a minha vida.",
+      "Fui abusada fisicamente, emocionalmente ou sexualmente por pessoas importantes na minha vida."
+    ]
+  },
+  {
+    nome: "Isolamento Social",
+    cor: "#8B5CF6",
+    perguntas: [
+      "Eu me sinto isolada e sozinha.",
+      "Sempre me sinto excluída dos grupos.",
+      "Ninguém me entende realmente.",
+      "Às vezes, me sinto uma alienígena.",
+      "Eu não pertenço a ninguém; sou uma solitária.",
+      "Sinto-me alienada das outras pessoas."
+    ]
+  },
+  {
+    nome: "Defectividade/Vergonha",
+    cor: "#EF4444",
+    perguntas: [
+      "Sou inerentemente defeituosa e cheia de falhas.",
+      "Não sou digna do amor, da atenção e do respeito dos outros.",
+      "Sinto que não mereço ser amada.",
+      "Frequentemente, sou atraída por pessoas que são muito críticas ou me rejeitam.",
+      "Não posso ser eu mesma ou expressar o que realmente sinto, pois as pessoas me deixariam.",
+      "Se cometo um erro, mereço ser muito criticada."
+    ]
+  },
+  {
+    nome: "Fracasso",
+    cor: "#EC4899",
+    perguntas: [
+      "Sou chata e desinteressante em situações sociais.",
+      "Fico muito inibida perto das outras pessoas.",
+      "Sinto-me humilhada por meus fracassos e inadequações na esfera do trabalho.",
+      "Frequentemente me sinto embaraçada perto das pessoas porque não estou à altura delas em termos de realização.",
+      "Sou gorda demais.",
+      "Sou feia."
+    ]
+  },
+  {
+    nome: "Dependência/Incompetência",
+    cor: "#14B8A6",
+    perguntas: [
+      "Não me sinto capaz de me arranjar sozinha no dia-a-dia.",
+      "Acredito que as pessoas podem cuidar melhor de mim do que eu mesma.",
+      "Se eu confiar no meu próprio julgamento nas situações do dia-a-dia, tomarei a decisão errada.",
+      "Eu me sinto indefesa se não tiver pessoas para me proteger, às quais eu me preocupo muito em perdê-las.",
+      "Sinto-me mais como uma criança do que como uma pessoa adulta quando é preciso assumir responsabilidades do cotidiano."
+    ]
+  },
+  {
+    nome: "Vulnerabilidade ao Dano",
+    cor: "#F97316",
+    perguntas: [
+      "Tenho medo de me tornar uma 'sem-teto' ou uma abandonada à própria sorte.",
+      "Tenho medo de ser atacada.",
+      "Quando não consigo atingir algum objetivo, fico facilmente frustrada e desisto."
+    ]
+  },
+  {
+    nome: "Emaranhamento",
+    cor: "#A78BFA",
+    perguntas: [
+      "Não consegui me separar de meu pai/minha mãe, ou de ambos, assim como outras pessoas da minha idade parecem conseguir.",
+      "Meu pai/minha mãe, ou ambos, e eu, tendemos a nos envolver excessivamente com a vida e com os problemas uns dos outros.",
+      "É muito difícil para meu pai/minha mãe, ou ambos, e eu, escondermos detalhes íntimos uns dos outros sem nos sentirmos traídos ou culpados.",
+      "Meu pai/minha mãe, ou ambos, e eu, temos que nos falar quase todos os dias, ou um de nós se sente culpado, magoado, desapontado ou sozinho.",
+      "Muitas vezes me parece que meus pais estão vivendo por intermédio de mim - eu não tenho uma vida própria.",
+      "É muito difícil para eu manter alguma distância das pessoas de quem sou íntima; não é fácil para eu ter um senso separado de mim mesma.",
+      "Estou tão envolvida com meu/minha parceiro/a ou com meus pais que não sei realmente quem sou, ou o que quero.",
+      "Sinto que meus pais estão, ou ficaram, muito magoados por eu morar sozinha, longe deles."
+    ]
+  },
+  {
+    nome: "Subjugação",
+    cor: "#06B6D4",
+    perguntas: [
+      "Nos meus relacionamentos, deixo a outra pessoa ter o controle.",
+      "Tenho muita dificuldade em exigir que meus direitos sejam respeitados e que meus sentimentos sejam levados em conta.",
+      "Sinto que preciso controlar as minhas emoções e impulsos, ou algo de ruim pode acontecer.",
+      "Detesto ser obrigada a fazer alguma coisa, ou impedida de fazer o que quero.",
+      "Não tolero que as pessoas me digam o que fazer."
+    ]
+  },
+  {
+    nome: "Auto-sacrifício",
+    cor: "#10B981",
+    perguntas: [
+      "Coloco as necessidades dos outros antes das minhas, ou me sinto culpada.",
+      "Sou aquela que geralmente acaba cuidando das pessoas de quem sou próxima.",
+      "Sou uma boa pessoa, pois penso nos outros mais do que em mim mesma.",
+      "No trabalho, normalmente sou aquela que se apresenta como voluntária para fazer as tarefas extras, ou trabalhar mais tempo.",
+      "Por mais ocupada que esteja, eu sempre arranjo tempo para os outros.",
+      "Fico tão ocupada fazendo coisas para as pessoas que gosto que tenho pouco tempo para mim.",
+      "Sempre fui aquela que escuta os problemas de todo mundo.",
+      "É muito difícil para eu pedir aos outros que atendam às minhas necessidades.",
+      "Dou mais às pessoas do que recebo delas.",
+      "Eu me sinto feliz quando aqueles que me cercam estão felizes."
+    ]
+  },
+  {
+    nome: "Inibição Emocional",
+    cor: "#6366F1",
+    perguntas: [
+      "Dentro de mim há muita raiva e ressentimentos que não expresso.",
+      "Tenho muita vergonha de demonstrar sentimentos positivos em relação aos outros (por exemplo: afeição, sinais de cuidado).",
+      "Tenho dificuldade em ser carinhosa e espontânea.",
+      "As pessoas me veem como emocionalmente contida.",
+      "Eu me controlo tanto que as pessoas acham que eu não sou emotiva/afetiva."
+    ]
+  },
+  {
+    nome: "Padrões Inflexíveis",
+    cor: "#7C3AED",
+    perguntas: [
+      "Preciso ser a melhor em tudo que faço; não consigo aceitar vir em segundo lugar.",
+      "Tenho que ser sempre a 'Número 1' em termos de desempenho.",
+      "Tento manter tudo dentro da mais perfeita ordem."
+    ]
+  },
+  {
+    nome: "Arrogo/Grandiosidade",
+    cor: "#DC2626",
+    perguntas: [
+      "Acho que não deveria ter que obedecer às regras e convenções normais assim como os outros.",
+      "Muitas vezes sinto que estou tão envolvida com as minhas prioridades que não tenho tempo para os amigos ou a família.",
+      "As pessoas frequentemente me dizem que sou muito controladora em relação a como as coisas devem ser feitas.",
+      "Fico muito irritada quando as pessoas não fazem o que eu lhes peço."
+    ]
+  },
+  {
+    nome: "Autocontrole Insuficiente",
+    cor: "#B45309",
+    perguntas: [
+      "Tenho grande dificuldade para deixar de beber, fumar, comer demais e modificar outros comportamentos problemáticos.",
+      "Parece que não consigo me disciplinar e levar até o fim as tarefas rotineiras ou chatas.",
+      "Muitas vezes, me permito obedecer impulsos e expressar emoções que me trazem problemas ou machucam as pessoas.",
+      "Para mim, é muito difícil sacrificar uma gratificação imediata para atingir um objetivo a longo prazo.",
+      "Depois que começo a sentir raiva, é comum não conseguir controlá-la.",
+      "Tendendo a fazer muitas coisas em excesso, mesmo sabendo que isso não é bom para mim.",
+      "Eu me aborreço muito facilmente.",
+      "Quando as tarefas ficam difíceis, geralmente não consigo perseverar e concluí-las.",
+      "Não consigo me concentrar em nada por muito tempo.",
+      "Não consigo me obrigar a fazer coisas de que não gosto, mesmo sabendo que é para o meu próprio bem.",
+      "Perco a calma diante da ofensa mais insignificante.",
+      "Raramente consigo cumprir minhas resoluções.",
+      "Quase nunca deixo de mostrar às pessoas o que realmente sinto, seja qual for o custo disso.",
+      "Frequentemente faço, por impulso, coisas que mais tarde lamento."
+    ]
+  }
+];
+
+let totalPerguntas = SCHEMAS.reduce((s, g) => s + g.perguntas.length, 0);
+let respostas = {};
+let numGlobal = 0;
+
+function buildForm() {
+  const container = document.getElementById('perguntas-container');
+  numGlobal = 0;
+  SCHEMAS.forEach((schema, si) => {
+    const div = document.createElement('div');
+    div.className = 'card schema-group';
+
+    let headerEscala = `
+      <div class="escala-header">
+        <span>Afirmação</span>
+        <span>1<br/>Falsa</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+        <span>5</span>
+        <span>6<br/>Verdadeira</span>
+      </div>`;
+
+    let html = `<div class="schema-title" style="background:${schema.cor}">${schema.nome}</div>`;
+    html += headerEscala;
+
+    schema.perguntas.forEach((p, pi) => {
+      numGlobal++;
+      const key = `${si}_${pi}`;
+      html += `<div class="pergunta" id="p_${key}">
+        <div class="pergunta-text"><span class="pergunta-num">${numGlobal}.</span>${p}</div>`;
+      for (let v = 1; v <= 6; v++) {
+        html += `<div class="radio-btn">
+          <input type="radio" name="q_${key}" id="r_${key}_${v}" value="${v}" onchange="marcarResposta('${key}',${v})"/>
+          <label for="r_${key}_${v}">${v}</label>
+        </div>`;
+      }
+      html += `</div>`;
+    });
+
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+  document.getElementById('progresso-text').textContent = `0 de ${totalPerguntas} respondidas`;
+}
+
+function marcarResposta(key, val) {
+  respostas[key] = val;
+  const el = document.getElementById(`p_${key}`);
+  if (el) el.style.background = '#f0edff';
+  atualizarProgresso();
+}
+
+function atualizarProgresso() {
+  const n = Object.keys(respostas).length;
+  const pct = Math.round((n / totalPerguntas) * 100);
+  document.getElementById('progresso-fill').style.width = pct + '%';
+  document.getElementById('progresso-text').textContent = `${n} de ${totalPerguntas} respondidas`;
+}
+
+async function enviarForm() {
+  const nome = document.getElementById('nome').value.trim();
+  const idade = document.getElementById('idade').value.trim();
+  const profissao = document.getElementById('profissao').value.trim();
+  const palavraMarcante = document.getElementById('palavra-marcante').value.trim();
+  const erroEl = document.getElementById('erro-msg');
+
+  if (!nome || Object.keys(respostas).length < totalPerguntas) {
+    erroEl.style.display = 'block';
+    erroEl.textContent = '⚠️ Por favor, preencha o nome e responda todas as ' + totalPerguntas + ' perguntas antes de enviar.';
+    // Rolar até a primeira não respondida
+    for (let si = 0; si < SCHEMAS.length; si++) {
+      for (let pi = 0; pi < SCHEMAS[si].perguntas.length; pi++) {
+        const key = `${si}_${pi}`;
+        if (!respostas[key]) {
+          document.getElementById(`p_${key}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          document.getElementById(`p_${key}`).style.background = '#fff0f0';
+          return;
+        }
+      }
+    }
+    return;
+  }
+  erroEl.style.display = 'none';
+
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  const resp = await fetch('/api/resposta', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nome, idade, profissao, respostas, palavra_marcante: palavraMarcante })
+  });
+  const data = await resp.json();
+  mostrarResultado(data.id, nome);
+}
+
+function mostrarResultado(id, nome) {
+  document.getElementById('tela-form').style.display = 'none';
+  document.getElementById('tela-resultado').style.display = 'block';
+  document.getElementById('resultado-nome').textContent = `Obrigada, ${nome}!`;
+
+  const link = `${window.location.origin}/resultado.html?id=${id}`;
+  document.getElementById('link-resultado-texto').textContent = link;
+  window.resultadoLink = link;
+
+  const container = document.getElementById('resultado-schemas');
+  const destaque = document.getElementById('resultado-destaque');
+
+  let medias = [];
+  SCHEMAS.forEach((schema, si) => {
+    let soma = 0, count = 0;
+    schema.perguntas.forEach((_, pi) => {
+      const key = `${si}_${pi}`;
+      if (respostas[key]) { soma += respostas[key]; count++; }
+    });
+    const media = count > 0 ? (soma / count) : 0;
+    medias.push({ nome: schema.nome, media, cor: schema.cor });
+  });
+
+  medias.sort((a, b) => b.media - a.media);
+  const maiores = medias.slice(0, 3);
+
+  medias.forEach(({ nome: n, media, cor }) => {
+    const nivel = media >= 4 ? 'alto' : media >= 2.5 ? 'medio' : 'baixo';
+    const nivelTexto = media >= 4 ? 'Atenção' : media >= 2.5 ? 'Moderado' : 'Baixo';
+    const pct = Math.round((media / 6) * 100);
+    container.innerHTML += `
+      <div class="schema-resultado">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="nome" style="color:${cor}">${n}</div>
+          <div class="media" style="color:${cor}">${media.toFixed(1)}</div>
+        </div>
+        <div class="barra-wrap"><div class="barra-fill" style="width:${pct}%;background:${cor}"></div></div>
+        <span class="nivel-chip nivel-${nivel}">${nivelTexto}</span>
+      </div>`;
+  });
+
+  destaque.innerHTML = `<p>Seus <strong>3 esquemas mais ativos</strong> são:</p><br/>`;
+  maiores.forEach(({ nome: n, media, cor }) => {
+    destaque.innerHTML += `<p>🔹 <strong style="color:${cor}">${n}</strong> — média ${media.toFixed(1)}</p>`;
+  });
+
+  const palavraMarcante = document.getElementById('palavra-marcante').value.trim();
+  if (palavraMarcante) {
+    destaque.innerHTML += `<br/><p>💬 Palavra/frase que mais te marcou: <em>"${palavraMarcante}"</em></p>`;
+  }
+
+  window.scrollTo(0, 0);
+}
+
+function copiarLink() {
+  navigator.clipboard.writeText(window.resultadoLink || '');
+  event.target.textContent = '✅ Copiado!';
+  setTimeout(() => { event.target.textContent = 'Copiar link'; }, 2000);
+}
+
+buildForm();
+</script>
+</body>
+</html>

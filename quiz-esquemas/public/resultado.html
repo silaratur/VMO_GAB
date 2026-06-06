@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Meu Resultado — Questionário de Esquemas</title>
+<style>
+  :root { --primary:#6C63FF; --accent:#FF6584; --bg:#f7f6ff; --card:#fff; --text:#2d2d2d; --muted:#6b7280; --border:#e5e7eb; --radius:16px; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  .hero { background:linear-gradient(135deg,var(--primary) 0%,#a78bfa 100%); color:white; padding:40px 24px 60px; text-align:center; }
+  .hero h1 { font-size:1.6rem; font-weight:700; margin-bottom:4px; }
+  .hero p { opacity:0.9; font-size:0.9rem; }
+  .container { max-width:640px; margin:-32px auto 40px; padding:0 16px; }
+  .card { background:var(--card); border-radius:var(--radius); box-shadow:0 4px 24px rgba(0,0,0,0.08); padding:20px; margin-bottom:16px; }
+  .card h2 { font-size:1rem; color:var(--primary); margin-bottom:14px; }
+  .schema-item { margin-bottom:14px; }
+  .schema-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .schema-nome { font-weight:600; font-size:0.9rem; }
+  .schema-media { font-size:1.2rem; font-weight:700; }
+  .barra-wrap { height:10px; background:#e5e7eb; border-radius:5px; overflow:hidden; }
+  .barra-fill { height:100%; border-radius:5px; }
+  .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; margin-top:5px; }
+  .baixo { background:#d1fae5; color:#065f46; }
+  .medio { background:#fef3c7; color:#92400e; }
+  .alto { background:#fee2e2; color:#991b1b; }
+  .info-row { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:4px; }
+  .info-item { font-size:0.85rem; color:var(--muted); }
+  .info-item strong { color:var(--text); }
+  .destaque-box { background:#f0edff; border-radius:12px; padding:16px; font-size:0.9rem; line-height:1.7; }
+  .word-chip { display:inline-block; background:var(--primary); color:white; padding:6px 16px; border-radius:20px; font-size:0.95rem; font-weight:600; margin-top:8px; }
+  .loading { text-align:center; padding:60px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>📊 Meu Resultado</h1>
+  <p>Questionário de Esquemas — Resultado Individual</p>
+</div>
+<div class="container">
+  <div id="content" class="loading">Carregando...</div>
+</div>
+<script>
+const SCHEMAS_META = [
+  { nome:"Privação Emocional", cor:"#6C63FF", count:6 },
+  { nome:"Abandono/Instabilidade", cor:"#FF6584", count:9 },
+  { nome:"Desconfiança/Abuso", cor:"#F59E0B", count:7 },
+  { nome:"Isolamento Social", cor:"#8B5CF6", count:6 },
+  { nome:"Defectividade/Vergonha", cor:"#EF4444", count:6 },
+  { nome:"Fracasso", cor:"#EC4899", count:6 },
+  { nome:"Dependência/Incompetência", cor:"#14B8A6", count:5 },
+  { nome:"Vulnerabilidade ao Dano", cor:"#F97316", count:3 },
+  { nome:"Emaranhamento", cor:"#A78BFA", count:8 },
+  { nome:"Subjugação", cor:"#06B6D4", count:5 },
+  { nome:"Auto-sacrifício", cor:"#10B981", count:10 },
+  { nome:"Inibição Emocional", cor:"#6366F1", count:5 },
+  { nome:"Padrões Inflexíveis", cor:"#7C3AED", count:3 },
+  { nome:"Arrogo/Grandiosidade", cor:"#DC2626", count:4 },
+  { nome:"Autocontrole Insuficiente", cor:"#B45309", count:14 }
+];
+
+function calcMedias(respostas) {
+  let medias = [];
+  let offset = 0;
+  SCHEMAS_META.forEach((s, si) => {
+    let soma = 0, n = 0;
+    for (let pi = 0; pi < s.count; pi++) {
+      const key = `${si}_${pi}`;
+      if (respostas[key]) { soma += respostas[key]; n++; }
+    }
+    medias.push({ ...s, media: n > 0 ? soma/n : 0 });
+    offset += s.count;
+  });
+  return medias;
+}
+
+async function load() {
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) { document.getElementById('content').textContent = 'ID inválido.'; return; }
+  const r = await fetch(`/api/resposta/${id}`);
+  if (!r.ok) { document.getElementById('content').textContent = 'Resultado não encontrado.'; return; }
+  const data = await r.json();
+  const medias = calcMedias(data.respostas);
+  const sorted = [...medias].sort((a,b) => b.media - a.media);
+
+  const date = new Date(data.criado_em).toLocaleDateString('pt-BR');
+  let html = `
+    <div class="card">
+      <h2>👤 Participante</h2>
+      <div class="info-row">
+        <div class="info-item"><strong>${data.nome}</strong></div>
+        ${data.idade ? `<div class="info-item">Idade: <strong>${data.idade}</strong></div>` : ''}
+        ${data.profissao ? `<div class="info-item">Profissão: <strong>${data.profissao}</strong></div>` : ''}
+        <div class="info-item">Data: <strong>${date}</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>📊 Todos os Esquemas (do maior para o menor)</h2>`;
+
+  sorted.forEach(({ nome, media, cor }) => {
+    const nivel = media >= 4 ? 'alto' : media >= 2.5 ? 'medio' : 'baixo';
+    const nivelTxt = media >= 4 ? 'Atenção' : media >= 2.5 ? 'Moderado' : 'Baixo';
+    const pct = Math.round((media/6)*100);
+    html += `<div class="schema-item">
+      <div class="schema-header">
+        <div class="schema-nome" style="color:${cor}">${nome}</div>
+        <div class="schema-media" style="color:${cor}">${media.toFixed(1)}</div>
+      </div>
+      <div class="barra-wrap"><div class="barra-fill" style="width:${pct}%;background:${cor}"></div></div>
+      <span class="chip ${nivel}">${nivelTxt}</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  const top3 = sorted.slice(0,3);
+  html += `<div class="card">
+    <h2>💡 Destaques</h2>
+    <div class="destaque-box">
+      <p><strong>Esquemas mais ativos:</strong></p><br/>
+      ${top3.map(x => `<p>🔹 <strong style="color:${x.cor}">${x.nome}</strong> — ${x.media.toFixed(1)}</p>`).join('')}
+      ${data.palavra_marcante ? `<br/><p>💬 Palavra/frase que mais marcou:</p><div class="word-chip">${data.palavra_marcante}</div>` : ''}
+    </div>
+  </div>`;
+
+  document.getElementById('content').innerHTML = html;
+}
+load();
+</script>
+</body>
+</html>
