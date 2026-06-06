@@ -2,12 +2,19 @@ name: Deploy Quiz Esquemas → Railway
 
 on:
   workflow_dispatch:
+    inputs:
+      railway_token:
+        description: 'Railway API Token'
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: claude/modest-carson-mpWwN
 
       - uses: actions/setup-node@v4
         with:
@@ -17,47 +24,58 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy to Railway
-        id: deploy
         working-directory: quiz-esquemas
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ inputs.railway_token }}
         run: |
           echo "🚀 Iniciando deploy..."
-          railway up --detach --yes 2>&1 | tee /tmp/railway_up.log
-          cat /tmp/railway_up.log
+          railway up --detach --yes 2>&1 | tee /tmp/up.log
+          cat /tmp/up.log
+          sleep 15
 
       - name: Gerar domínio público
         id: domain
         working-directory: quiz-esquemas
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ inputs.railway_token }}
         run: |
-          sleep 10
-          DOMAIN=$(railway domain 2>&1 | grep -oP 'https?://[^\s]+' | head -1 || true)
+          OUT=$(railway domain 2>&1 || true)
+          echo "$OUT"
+          DOMAIN=$(echo "$OUT" | grep -oP 'https?://[^\s]+' | head -1 || true)
           if [ -z "$DOMAIN" ]; then
-            DOMAIN=$(railway status 2>&1 | grep -oP 'https?://[^\s]+' | head -1 || true)
+            OUT2=$(railway status 2>&1 || true)
+            echo "$OUT2"
+            DOMAIN=$(echo "$OUT2" | grep -oP 'https?://[^\s]+' | head -1 || true)
           fi
           echo "domain=$DOMAIN" >> $GITHUB_OUTPUT
           echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
+          echo "URL encontrada: $DOMAIN"
 
       - name: Configurar BASE_URL
         working-directory: quiz-esquemas
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ inputs.railway_token }}
         run: |
           if [ -n "$DOMAIN" ]; then
             railway variables set BASE_URL="$DOMAIN" 2>&1 || true
+            echo "BASE_URL configurada: $DOMAIN"
           fi
 
-      - name: ✅ URLs geradas
+      - name: ✅ URLs do App
         run: |
+          D="${{ steps.domain.outputs.domain }}"
           echo "## ✅ Deploy concluído!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -n "${{ steps.domain.outputs.domain }}" ]; then
+          if [ -n "$D" ]; then
             echo "| | URL |" >> $GITHUB_STEP_SUMMARY
             echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-            echo "| 📱 **Participantes** (QR Code) | ${{ steps.domain.outputs.domain }} |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🎙️ **Dashboard Palestrante** | ${{ steps.domain.outputs.domain }}/dashboard.html |" >> $GITHUB_STEP_SUMMARY
+            echo "| 📱 Participantes (escaneiam o QR) | **$D** |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎙️ Dashboard do Palestrante | **${D}/dashboard.html** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "---" >> $GITHUB_STEP_SUMMARY
+            echo "Participantes: $D" 
+            echo "Dashboard: ${D}/dashboard.html"
           else
-            echo "Deploy realizado! Acesse o Railway para ver a URL gerada." >> $GITHUB_STEP_SUMMARY
+            echo "Deploy feito! Verifique o Railway para a URL gerada."
+            echo "> Acesse: https://railway.app/dashboard" >> $GITHUB_STEP_SUMMARY
           fi
