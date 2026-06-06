@@ -1,0 +1,63 @@
+name: Deploy Quiz Esquemas → Railway
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        id: deploy
+        working-directory: quiz-esquemas
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          echo "🚀 Iniciando deploy..."
+          railway up --detach --yes 2>&1 | tee /tmp/railway_up.log
+          cat /tmp/railway_up.log
+
+      - name: Gerar domínio público
+        id: domain
+        working-directory: quiz-esquemas
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          sleep 10
+          DOMAIN=$(railway domain 2>&1 | grep -oP 'https?://[^\s]+' | head -1 || true)
+          if [ -z "$DOMAIN" ]; then
+            DOMAIN=$(railway status 2>&1 | grep -oP 'https?://[^\s]+' | head -1 || true)
+          fi
+          echo "domain=$DOMAIN" >> $GITHUB_OUTPUT
+          echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
+
+      - name: Configurar BASE_URL
+        working-directory: quiz-esquemas
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -n "$DOMAIN" ]; then
+            railway variables set BASE_URL="$DOMAIN" 2>&1 || true
+          fi
+
+      - name: ✅ URLs geradas
+        run: |
+          echo "## ✅ Deploy concluído!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.domain.outputs.domain }}" ]; then
+            echo "| | URL |" >> $GITHUB_STEP_SUMMARY
+            echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+            echo "| 📱 **Participantes** (QR Code) | ${{ steps.domain.outputs.domain }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎙️ **Dashboard Palestrante** | ${{ steps.domain.outputs.domain }}/dashboard.html |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Deploy realizado! Acesse o Railway para ver a URL gerada." >> $GITHUB_STEP_SUMMARY
+          fi
