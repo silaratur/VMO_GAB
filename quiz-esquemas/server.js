@@ -61,9 +61,16 @@ app.get('/api/respostas', (req, res) => {
 });
 
 // QR code da URL do formulário
+// Prioridade: BASE_URL env > URL do request (para tunnels/proxies) > IP local
 app.get('/api/qrcode', async (req, res) => {
-  const ip = getLocalIP();
-  const url = `http://${ip}:${PORT}`;
+  let url;
+  if (process.env.BASE_URL) {
+    url = process.env.BASE_URL.replace(/\/$/, '');
+  } else {
+    const proto = req.headers['x-forwarded-proto'] || 'http';
+    const host = req.headers['x-forwarded-host'] || req.headers.host;
+    url = `${proto}://${host}`;
+  }
   const qr = await QRCode.toDataURL(url, { width: 300, margin: 2 });
   res.json({ url, qr });
 });
