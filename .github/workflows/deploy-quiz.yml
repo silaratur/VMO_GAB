@@ -1,4 +1,4 @@
-name: Deploy Quiz Esquemas → Railway
+name: Deploy Quiz Esquemas Railway
 
 on:
   workflow_dispatch:
@@ -28,12 +28,12 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ inputs.railway_token }}
         run: |
-          echo "🚀 Iniciando deploy..."
+          echo "Iniciando deploy..."
           railway up --detach --yes 2>&1 | tee /tmp/up.log
           cat /tmp/up.log
           sleep 15
 
-      - name: Gerar domínio público
+      - name: Gerar dominio publico
         id: domain
         working-directory: quiz-esquemas
         env:
@@ -61,16 +61,16 @@ jobs:
             echo "BASE_URL configurada: $DOMAIN"
           fi
 
-      - name: ✅ URLs do App
+      - name: URLs do App
         run: |
           D="${{ steps.domain.outputs.domain }}"
-          echo "## ✅ Deploy concluído!" >> $GITHUB_STEP_SUMMARY
+          echo "## Deploy concluido!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -n "$D" ]; then
             echo "| | URL |" >> $GITHUB_STEP_SUMMARY
             echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-            echo "| 📱 Participantes (escaneiam o QR) | **$D** |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🎙️ Dashboard do Palestrante | **${D}/dashboard.html** |" >> $GITHUB_STEP_SUMMARY
+            echo "| Participantes (escaneiam o QR) | **$D** |" >> $GITHUB_STEP_SUMMARY
+            echo "| Dashboard do Palestrante | **${D}/dashboard.html** |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "---" >> $GITHUB_STEP_SUMMARY
             echo "Participantes: $D" 
