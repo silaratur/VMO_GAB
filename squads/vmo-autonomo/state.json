@@ -3,12 +3,12 @@
   "project": "PROJ-2026-008",
   "demand": "DEM-2026-008",
   "status": "running",
-  "step": { "current": 7, "total": 16, "label": "Criar Documentação Base" },
+  "step": { "current": 8, "total": 16, "label": "Especificar Requisitos" },
   "agents": [
     { "id": "iara-inbound",      "name": "Iara Inbound",      "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
     { "id": "felipe-filtro",     "name": "Felipe Filtro",     "icon": "🔍", "status": "done",    "desk": { "col": 2, "row": 1 } },
-    { "id": "diana-documento",   "name": "Diana Documento",   "icon": "📋", "status": "working", "desk": { "col": 3, "row": 1 } },
-    { "id": "rafael-requisito",  "name": "Rafael Requisito",  "icon": "⚙️", "status": "idle",    "desk": { "col": 1, "row": 2 } },
+    { "id": "diana-documento",   "name": "Diana Documento",   "icon": "📋", "status": "done",    "desk": { "col": 3, "row": 1 } },
+    { "id": "rafael-requisito",  "name": "Rafael Requisito",  "icon": "⚙️", "status": "working", "desk": { "col": 1, "row": 2 } },
     { "id": "carlos-cronograma", "name": "Carlos Cronograma", "icon": "📅", "status": "idle",    "desk": { "col": 2, "row": 2 } },
     { "id": "pedro-perigo",      "name": "Pedro Perigo",      "icon": "⚠️", "status": "idle",    "desk": { "col": 3, "row": 2 } },
     { "id": "marcela-metrica",   "name": "Marcela Métrica",   "icon": "📊", "status": "idle",    "desk": { "col": 1, "row": 3 } },
@@ -17,7 +17,7 @@
     { "id": "vera-veredito",     "name": "Vera Veredito",     "icon": "✅", "status": "idle",    "desk": { "col": 1, "row": 4 } },
     { "id": "gabriel-governanca","name": "Gabriel Governança", "icon": "🛡️", "status": "done",   "desk": { "col": 2, "row": 4 } }
   ],
-  "handoff": "Qualificação aprovada pelo usuário. Diana Documento criando TAP + PM Canvas + Plano Geral (Step 7).",
+  "handoff": "Documentação base (TAP/PM Canvas/Plano Geral) concluída. Rafael Requisito especificando ERF (Step 8).",
   "startedAt": "2026-06-10T12:00:00.000Z",
-  "updatedAt": "2026-06-10T12:35:00.000Z"
+  "updatedAt": "2026-06-10T12:40:00.000Z"
 }
