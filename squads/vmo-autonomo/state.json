@@ -2,7 +2,7 @@
   "squad": "vmo-autonomo",
   "project": "PROJ-2026-008",
   "demand": "DEM-2026-008",
-  "status": "running",
+  "status": "completed",
   "step": { "current": 16, "total": 16, "label": "Checkpoint: Aprovação Final" },
   "agents": [
     { "id": "iara-inbound",      "name": "Iara Inbound",      "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
@@ -17,7 +17,7 @@
     { "id": "vera-veredito",     "name": "Vera Veredito",     "icon": "✅", "status": "done",    "desk": { "col": 1, "row": 4 } },
     { "id": "gabriel-governanca","name": "Gabriel Governança", "icon": "🛡️", "status": "done",    "desk": { "col": 2, "row": 4 } }
   ],
-  "handoff": "Auditoria de Governança Final concluída — ❌ BLOQUEADO (1 NC-CRÍTICA: sponsor abaixo de Diretor+/CB-1 sem evidência; 3 NC-MOD: GP não designado, divergência de prazo TAP×Cronograma, CB-Orçamento). Bloqueio é de governança externa (CB-1/CB-2/GP), não de qualidade documental. Aguardando decisão do usuário no Checkpoint Final (Step 16).",
+  "handoff": "Pipeline concluído. Checkpoint Final: usuário (GP VMO) aprovou com waiver de governança — APROVADO COM RESSALVAS, kickoff agendado para 2026-06-25 (em duas semanas), sobrepondo a recomendação de Gabriel Governança (BLOQUEADO/reauditar 13/06). Todas as ressalvas (CB-1 a CB-6, GP a designar, divergência de prazo, CB-Orçamento) registradas em aprovacao-final.md para acompanhamento via Status Report #002.",
   "startedAt": "2026-06-10T12:00:00.000Z",
-  "updatedAt": "2026-06-10T14:00:00.000Z"
+  "updatedAt": "2026-06-10T14:10:00.000Z"
 }
