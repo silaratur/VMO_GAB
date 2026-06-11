@@ -3,7 +3,7 @@
   "project": "PROJ-2026-008",
   "demand": "DEM-2026-008",
   "status": "running",
-  "step": { "current": 14, "total": 16, "label": "Revisão de Qualidade" },
+  "step": { "current": 15, "total": 16, "label": "Auditoria de Governança Final" },
   "agents": [
     { "id": "iara-inbound",      "name": "Iara Inbound",      "icon": "📥", "status": "done",    "desk": { "col": 1, "row": 1 } },
     { "id": "felipe-filtro",     "name": "Felipe Filtro",     "icon": "🔍", "status": "done",    "desk": { "col": 2, "row": 1 } },
@@ -14,10 +14,10 @@
     { "id": "marcela-metrica",   "name": "Marcela Métrica",   "icon": "📊", "status": "done",    "desk": { "col": 1, "row": 3 } },
     { "id": "fabio-fornecedor",  "name": "Fábio Fornecedor",  "icon": "📤", "status": "done",    "desk": { "col": 2, "row": 3 } },
     { "id": "sara-status",       "name": "Sara Status",       "icon": "📝", "status": "done",    "desk": { "col": 3, "row": 3 } },
-    { "id": "vera-veredito",     "name": "Vera Veredito",     "icon": "✅", "status": "working", "desk": { "col": 1, "row": 4 } },
-    { "id": "gabriel-governanca","name": "Gabriel Governança", "icon": "🛡️", "status": "done",   "desk": { "col": 2, "row": 4 } }
+    { "id": "vera-veredito",     "name": "Vera Veredito",     "icon": "✅", "status": "done",    "desk": { "col": 1, "row": 4 } },
+    { "id": "gabriel-governanca","name": "Gabriel Governança", "icon": "🛡️", "status": "working", "desk": { "col": 2, "row": 4 } }
   ],
-  "handoff": "Status Report #001 e Pesquisa de Satisfação concluídos (status geral 🟡 ATENÇÃO — Cronograma e Riscos, 9 issues abertas/CBs mapeadas). Vera Veredito iniciando Revisão de Qualidade do pacote completo (Step 14).",
+  "handoff": "Revisão de Qualidade concluída — 🟡 APROVADO COM CONDIÇÕES (8,23/10), 4 condições requeridas (GP a designar, Sponsor/Diretoria CB-1/CB-2, desvio de prazo ~10 dias, gap de reserva de contingência R$20.800), nenhum BLOCKING crítico. Gabriel Governança iniciando Auditoria de Governança Final (Step 15).",
   "startedAt": "2026-06-10T12:00:00.000Z",
-  "updatedAt": "2026-06-10T13:40:00.000Z"
+  "updatedAt": "2026-06-10T13:50:00.000Z"
 }
