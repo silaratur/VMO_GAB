@@ -28,6 +28,26 @@
 
 ## Run History
 
+### Run 2026-07-01 — DEM-2026-008 (Step 1 — Iara Inbound)
+
+**Demanda:** Automação de gestão de fluxo de caixa da Divisão de Passageiros via SAP,
+replicando solução já em produção na Divisão Logística (Grupo Águia Branca). Solicitante:
+Marcelo Silveira. Orçamento: R$ 30 mil (citado como aprovado pela CEO — sem evidência
+documental). Prazo: 4-5 semanas conforme proposta de fornecedor já aceita.
+
+**Canal:** Fireflies — transcrição de entrevista de discovery estruturada (voice agent),
+reunião "MARCELO SILVEIRA <> Discovery Demandas - Hugo (1)", ID 01KWEZHCJPT0ES84Y19KV21SNB,
+01/07/2026. Fonte única, mas roteiro estruturado resultou em coleta consistente.
+
+**Aprendizado:** Regra GP de 2026-05-24 (citação de alta patente sem evidência documental)
+aplicada pela primeira vez em produção — a aprovação de orçamento atribuída à CEO foi
+sinalizada como `⚠️ CLAIM SEM EVIDÊNCIA` e registrada como lacuna de alto impacto (L10),
+não devendo sustentar nota de urgência elevada nem dispensar condições no Gate de
+Governança até ser comprovada.
+
+**Status:** Apenas Step 1 (Coletar Demanda) executado a pedido do usuário — pipeline não
+avançou para qualificação. Output: `projects/DEM-2026-008/01-qualificacao/demanda-coletada.md` (+ PDF).
+
 ### Re-execução 2026-05-18 — Pipeline v2 (4 projetos simultâneos)
 
 **Objetivo:** Aplicar os 2 novos steps do pipeline v2 (Step 7 — Fábio Fornecedor / Work Request; Step 13 — Gabriel Governança / Auditoria de Governança) em todos os projetos sem esse tratamento.
