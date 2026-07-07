@@ -1,0 +1,40 @@
+﻿{
+    "resume_instructions":  "Quando usuario retornar com informacoes sobre C1-C2-C3, retomar em Step 9 (Checkpoint Aprovar Qualificacao)",
+    "pending_conditions":  [
+                               "C1: Designar sponsor executivo (Diretor+)",
+                               "C2: Confirmar times operacionais distintos (Criterio 8 — pode mudar classificacao para PROJETO)",
+                               "C3: Confirmar nivel de governanca exigido (Criterio 9)"
+                           ],
+    "current_checkpoint":  9,
+    "criterio8_pending":  "3/10 provisorio — aguardando confirmacao de times distintos",
+    "criterio9_pending":  "4/10 provisorio — aguardando confirmacao de nivel de governanca",
+    "artifacts":  {
+                      "01-qualificacao":  [
+                                              "demanda-coletada.md",
+                                              "demanda-validada.md",
+                                              "gate-intake.md",
+                                              "sizing.md",
+                                              "qualificacao.md v3.0",
+                                              "gate-qualificacao.md v2.0"
+                                          ]
+                  },
+    "project":  "PROJ-2026-007",
+    "classification_provisional":  "MELHORIA EVOLUTIVA",
+    "started_at":  "2026-05-31T00:00:00",
+    "status":  "em_espera_checkpoint",
+    "chamado":  "6800446",
+    "steps_completed":  [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
+                        ],
+    "current_step":  9,
+    "criterio7_confirmed":  "7/10 — escopo ampliado (8+ campos) confirmado pelo usuario",
+    "checkpoint_reason":  "Aguardando resolucao das condicoes C1-C3 antes de classificar PROJETO vs MELHORIA EVOLUTIVA",
+    "score":  "50/100"
+}
