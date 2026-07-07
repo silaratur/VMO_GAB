@@ -58,24 +58,37 @@ OBJETIVO DO PROJETO (SMART)
   Métrica de sucesso: as 3 frentes operando no TVM em produção, com
   eliminação da consolidação manual em Excel como fonte primária de
   informação para diretoria.
-  Prazo: DATA-ALVO PROVISÓRIA = T + 7 SEMANAS ÚTEIS, sendo T a
-    designação formal do GP e a resolução de CB-4 (sessão com
-    Alessandra) e CB-5 (viabilidade técnica dos 5 itens incertos).
-    Cálculo (estimativa, não compromisso): piso do sizing (206h) ÷
-    ~30h úteis/semana de dedicação parcial da equipe (referência
-    razoável para um time que também tem outras responsabilidades)
-    ≈ 7 semanas úteis. Esta é uma data-alvo PROVISÓRIA — não uma
-    data de calendário fixa — sujeita a confirmação e ajuste (para
-    cima ou para baixo) no cronograma detalhado (Carlos Cronograma,
-    Step 16), especialmente após a resolução de CB-4 e CB-5.
-    Os "30 dias" citados nas atas (Thamyris, Wellington) continuam
-    sendo tratados como o prazo de URGÊNCIA sinalizado pelas áreas
-    solicitantes, não como esta data-alvo — o próprio sizing
-    (206–334h de esforço) é incompatível com uma entrega total em
+  Prazo: DATA-ALVO = T0 + ~13,4 SEMANAS ÚTEIS (~67 dias úteis) até o
+    Go-live (M4), e T0 + ~90 DIAS ÚTEIS até o Encerramento formal
+    (M6, inclui 1 ciclo de acompanhamento pós-go-live), sendo T0 o
+    kick-off do projeto (designação formal do GP + resolução de CB-4
+    e CB-5). Fonte: cronograma detalhado (`cronograma.md`, Carlos
+    Cronograma, Step 17), que aplica a mesma premissa de capacidade
+    (~30h úteis/semana) usada anteriormente neste TAP, mas agora
+    incluindo (a) buffer de gestão de 15% e (b) o ciclo de
+    acompanhamento pós-go-live de 1 mês exigido pelo próprio Critério
+    de Sucesso #2 abaixo — ambos ausentes do cálculo simplificado
+    anterior ("T + 7 semanas úteis", que cobria apenas o piso do
+    sizing sem buffer nem pós-go-live). Este valor substitui a
+    estimativa anterior. Detalhe:
+      Baseline sem buffer até M4 (Go-live): T0 + ~58 dias úteis (~11,6 sem.)
+      + Buffer de gestão (15%):             + ~9 dias úteis (~1,7 sem.)
+      = Data-alvo Go-live (M4) com buffer:   T0 + ~67 dias úteis (~13,4 sem.)
+      + Acompanhamento pós-go-live (M5) e Encerramento (M6): + ~30 dias corridos
+      = Data-alvo Encerramento (M6):         T0 + ~90 dias úteis
+    Ainda é uma data-alvo relativa a T0 (não uma data de calendário
+    fixa) — a data de calendário real depende da confirmação de T0
+    (kick-off), que por sua vez depende da resolução de CB-1/CB-2 e
+    da designação do GP. Os "30 dias" citados nas atas (Thamyris,
+    Wellington) continuam sendo tratados como o prazo de URGÊNCIA
+    sinalizado pelas áreas solicitantes, não como esta data-alvo — o
+    próprio sizing (206–334h de esforço) é incompatível com uma
+    entrega total em
     30 dias corridos. Este TAP NÃO adota "30 dias" como prazo de
-    entrega do projeto; adota T + 7 semanas úteis como data-alvo
-    provisória, com "urgência declarada: 30 dias" mantida como
-    insumo de priorização, não como compromisso de prazo.
+    entrega do projeto; adota T0 + ~13,4 semanas úteis (Go-live) e
+    T0 + ~90 dias úteis (Encerramento) como data-alvo, com "urgência
+    declarada: 30 dias" mantida como insumo de priorização, não como
+    compromisso de prazo.
 
 JUSTIFICATIVA
   O Grupo Águia Branca opera hoje o controle de fluxo de caixa e
