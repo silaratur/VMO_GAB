@@ -6,13 +6,21 @@ Rastreabilidade de Riscos (Grupo Águia Branca)
 Demanda de origem: DEM-2026-008
 Autor: Rafael Requisito (Engenheiro de Requisitos, VMO Autônomo)
 Data: 2026-07-07
-Versão: 1.0
+Versão: 1.1
 Status: **RASCUNHO** — elaborado com as 6 Condições Bloqueantes (CB-1 a CB-6) do
 TAP ainda em aberto. Em particular: **CB-4** (levantamento da frente Financeiro
 com Alessandra ainda incompleto) e **CB-5** (viabilidade técnica de 5 dos 14
 componentes de escopo do sizing ainda não confirmada pela equipe técnica TVM)
 afetam diretamente esta ERF e estão tratadas explicitamente abaixo — nenhum dos
 dois foi tratado como resolvido.
+
+**Nota de revisão (v1.1):** correção de cross-check apontada por Oscar
+Orquestrador — RF-FIN-03 e RF-SUP-04 são itens listados no TAP como "dentro do
+escopo" **sem** ressalva de incerteza, mas a v1.0 os havia rebaixado para
+Should Have. Ambos foram desdobrados em 2 níveis (Must Have parcial viável +
+Could Have condicionado), no mesmo padrão já usado para RF-RIS-02/RF-RIS-03,
+para eliminar a divergência silenciosa entre a promessa do TAP e a garantia da
+ERF. Ver Seção 2.1, 2.2 e 4.
 
 Fontes utilizadas: `qualificacao-aprovada.md`, `documentacao-base.md` (TAP/PM
 Canvas/Plano Geral), `sizing.md`, `demanda-validada.md`.
@@ -46,7 +54,8 @@ disponível (07/07) sustenta; ver Seção 5 (Perguntas Abertas) para o que falta
 |----|-----------|--------|------------|
 | RF-FIN-01 | O sistema deve permitir o registro e a consulta de ingressos e egressos de caixa no TVM, substituindo a planilha Excel hoje usada como fonte primária. | TAP §Escopo/Financeiro; sizing item 1 | **M** |
 | RF-FIN-02 | O sistema deve calcular e apresentar o LAIR (Lucro Antes do Imposto de Renda) a partir dos lançamentos de ingressos/egressos e despesas categorizadas registrados no TVM. | TAP §Escopo/Financeiro; sizing item 1 | **M** |
-| RF-FIN-03 | O sistema deve permitir a segregação de receitas por tipo de negócio (ex.: "Squad", bandeira de cartão). | TAP §Escopo/Financeiro; sizing item 2 | **S** — dependência: mapeamento SAP→TVM para este nível de segregação ainda não existe hoje (sizing: "claro no requisito, incerto no como"); rebaixado de Must para Should até definição técnica do mapeamento (ver Pergunta Aberta PA-05) |
+| RF-FIN-03 | O sistema deve permitir que o usuário Financeiro classifique manualmente cada lançamento de receita por tipo de negócio (ex.: "Squad", bandeira de cartão) no momento do registro no TVM, gerando relatório de receitas segregado por essa classificação — independentemente de o SAP fornecer essa segregação automaticamente. | TAP §Escopo/Financeiro (item listado sem ressalva de incerteza); sizing item 2 | **M** — versão viável hoje com confiança razoável: classificação manual-assistida no ato do lançamento, sem depender de extração automática do SAP |
+| RF-FIN-03-C | O sistema deve segregar receitas por tipo de negócio **automaticamente**, a partir de extração/integração direta com o SAP, sem exigir classificação manual do usuário. | sizing item 2 (parte incerta: "claro no requisito, incerto no como") | **C** — **condicionado à confirmação técnica** de que o SAP fornece (ou pode ser configurado para fornecer) o dado de tipo de negócio nesse nível de granularidade (ver PA-05); critério de aceite não pode ser fechado até a confirmação, mesmo padrão de RF-RIS-03 |
 | RF-FIN-04 | O sistema deve permitir o agrupamento de despesas por categoria (manutenção, combustível, TI) até a composição do LAIR. | TAP §Escopo/Financeiro; sizing item 3 | **M** |
 | RF-FIN-05 | O sistema deve gerar automaticamente a apresentação/relatório consolidado de fluxo de caixa para a diretoria, eliminando a consolidação manual semanal hoje feita em Excel. | TAP §Escopo/Financeiro; sizing item 4; TAP §Critérios de Sucesso #1 | **M** |
 | RF-FIN-06 | [Reservado] Requisitos adicionais da frente Financeiro a definir após sessão de continuação com Alessandra. | CB-4 | *Não especificável agora — ver PA-02* |
@@ -54,6 +63,7 @@ disponível (07/07) sustenta; ver Seção 5 (Perguntas Abertas) para o que falta
 **Critérios de Aceitação (Must Have):**
 - **RF-FIN-01**: Dado um lançamento de ingresso ou egresso inserido no TVM, o valor deve aparecer no extrato de caixa do TVM em até 1 minuto, sem necessidade de reinserção em planilha externa. Teste: inserir 10 lançamentos de teste e confirmar 100% de correspondência entre o lançamento e o extrato.
 - **RF-FIN-02**: Dado um conjunto de lançamentos de um mês fechado, o TVM deve apresentar o valor de LAIR calculado, auditável linha a linha até os lançamentos de origem, com diferença de R$ 0,00 frente ao cálculo manual de referência do mesmo período (validação cruzada em 1 ciclo de UAT).
+- **RF-FIN-03**: Dado um lançamento de receita, o usuário deve conseguir selecionar o tipo de negócio em um campo/lista do TVM no ato do lançamento; o relatório de receitas segregado por tipo de negócio deve refletir 100% de correspondência com a classificação manual inserida. Teste: 10 lançamentos cobrindo ao menos 3 tipos de negócio distintos, validando 100% de correspondência entre classificação e relatório.
 - **RF-FIN-04**: Dado um lançamento de despesa, o usuário deve conseguir classificá-lo em uma das categorias definidas (manutenção, combustível, TI ou outra a mapear) em uma única operação de lançamento, com o valor refletido no LAIR do período.
 - **RF-FIN-05**: O relatório consolidado para diretoria deve ser gerado sem edição manual em planilha, contendo no mínimo: ingressos, egressos, despesas por categoria e LAIR do período, disponível em até 1 dia útil após o fechamento do período de referência.
 
@@ -66,12 +76,14 @@ disponível (07/07) sustenta; ver Seção 5 (Perguntas Abertas) para o que falta
 | RF-SUP-01 | O sistema deve exibir um painel de baseline orçamentário que se atualiza automaticamente a cada novo lançamento de compra/despesa. | TAP §Escopo/Suprimentos; sizing item 11 | **M** |
 | RF-SUP-02 | O sistema deve projetar pagamentos parcelados em janelas de 30, 60 e 90 dias a partir da data de referência. | TAP §Escopo/Suprimentos; sizing item 12 | **M** |
 | RF-SUP-03 | O sistema deve emitir alertas automáticos quando o consumo do orçamento atingir as faixas de 70% e 85% do valor orçado, por categoria/centro de custo. | TAP §Escopo/Suprimentos; sizing item 13 | **M** |
-| RF-SUP-04 | O sistema deve disponibilizar relatório de visibilidade financeira das compras (histórico de consumo por fornecedor/categoria) para apoiar negociação com fornecedores. | TAP §Escopo/Suprimentos; sizing item 8 | **S** — funcionalidade de apoio, não bloqueia os critérios de sucesso do TAP (que citam baseline e alertas, não negociação em si) |
+| RF-SUP-04 | O sistema deve gerar um relatório básico de consumo por fornecedor e por categoria, derivado diretamente dos dados já capturados no baseline orçamentário (RF-SUP-01), em formato tabular, para apoiar negociação com fornecedores. | TAP §Escopo/Suprimentos (item listado sem ressalva de incerteza); sizing item 8 | **M** — versão viável hoje com confiança razoável: relatório tabular derivado de dado já Must Have (RF-SUP-01), sem necessidade de nova integração |
+| RF-SUP-04-C | O sistema deve oferecer visão analítica avançada de visibilidade financeira das compras (comparativos históricos multiperíodo, tendências gráficas por fornecedor) para negociação estratégica. | Ata Wellington (visão ampliada mencionada); TAP §Escopo/Suprimentos não detalha profundidade | **C** — **condicionado à mesma confirmação técnica de capacidade de dashboards/BI de RF-TRA-02 (CB-5)**; não pode ser Must Have sem essa confirmação. Sobrepõe-se parcialmente a RF-TRA-02 (Won't Have nesta fase) — se a capacidade de BI for confirmada e priorizada, esta funcionalidade deve ser tratada como parte da mesma iniciativa de dashboards/BI, não como item separado |
 
 **Critérios de Aceitação (Must Have):**
 - **RF-SUP-01**: Após um lançamento de compra/despesa, o painel de baseline deve refletir o novo valor de consumo em até 15 minutos (ver RNF-PERF-02), sem necessidade de atualização manual/refresh de planilha.
 - **RF-SUP-02**: Dado um lançamento parcelado, o sistema deve exibir corretamente o valor projetado a pagar nos períodos de 30, 60 e 90 dias, validado contra 1 caso de teste com parcelamento real de Suprimentos.
 - **RF-SUP-03**: Ao atingir 70% do orçado em uma categoria, o sistema deve notificar o gestor responsável (e-mail ou notificação no TVM) em até 1 dia útil da transação que cruzou o limiar; o mesmo se aplica ao limiar de 85%. Teste: simular lançamento que cruze cada limiar e confirmar recebimento do alerta.
+- **RF-SUP-04**: Dado o baseline orçamentário populado com lançamentos de ao menos 3 fornecedores e 2 categorias, o sistema deve exibir relatório com total consumido por fornecedor e por categoria no período selecionado, sem necessidade de exportação/manipulação manual em planilha.
 
 ---
 
@@ -168,13 +180,13 @@ Segurança/Auditoria, Usabilidade.
 
 ## 4. Tabela-Resumo MoSCoW
 
-| Prioridade | RF | RNF | Total | % do total (28) |
+| Prioridade | RF | RNF | Total | % do total (30) |
 |------------|----|----|-------|------------------|
-| **Must Have (M)** | 11 | 9 | 20 | 71% |
-| **Should Have (S)** | 2 | 1 | 3 | 11% |
-| **Could Have (C)** | 1 | 0 | 1 | 4% |
-| **Won't Have nesta fase (W)** | 4 | 0 | 4 | 14% |
-| **Total** | 18 | 10 | 28 | 100% |
+| **Must Have (M)** | 13 | 9 | 22 | 73,3% |
+| **Should Have (S)** | 0 | 1 | 1 | 3,3% |
+| **Could Have (C)** | 3 | 0 | 3 | 10,0% |
+| **Won't Have nesta fase (W)** | 4 | 0 | 4 | 13,3% |
+| **Total** | 20 | 10 | 30 | 100% |
 
 Notas de leitura:
 - Os 4 itens "Won't Have nesta fase" são exatamente os 4 dos 5 itens de CB-5
@@ -186,6 +198,20 @@ Notas de leitura:
   (RF-RIS-02) — apenas o aprofundamento até a NF individual é incerto.
 - Nenhum item de CB-5 foi tratado como Must Have, em conformidade com a
   condição de veto #5 desta especificação.
+- **Correção v1.1 (cross-check TAP vs. ERF, Oscar Orquestrador)**: RF-FIN-03 e
+  RF-SUP-04 são itens que o TAP lista como "dentro do escopo" **sem** ressalva
+  de incerteza. Diferente dos 5 itens formais de CB-5, a incerteza aqui é
+  apenas sobre o **mecanismo**, não sobre o **requisito em si**. Por isso
+  ambos foram desdobrados no mesmo padrão de RF-RIS-02/RF-RIS-03: a versão
+  viável hoje com confiança razoável virou **Must Have** (RF-FIN-03 —
+  classificação manual-assistida; RF-SUP-04 — relatório básico derivado do
+  baseline), e a versão automática/avançada virou **Could Have condicionado**
+  (RF-FIN-03-C, RF-SUP-04-C), à parte da lista formal de 5 itens de CB-5.
+  Resultado: todo item "dentro do escopo" do TAP agora tem cobertura de pelo
+  menos 1 Must Have — nenhuma divergência silenciosa entre TAP e ERF
+  permanece; não foi necessário registrar divergência formal de escopo
+  porque, após análise, a versão parcial se mostrou viável com confiança
+  razoável para ambos os itens.
 
 ---
 
@@ -197,9 +223,9 @@ Notas de leitura:
 | PA-02 | Quais são os requisitos completos da frente Financeiro além dos já levantados na ata parcial? | Sessão de continuação com Alessandra ainda não realizada (CB-4) | RF-FIN-06 e possível ajuste de RF-FIN-01 a 05 |
 | PA-03 | Qual o formato técnico exato da integração com o sistema Atenas (API, arquivo, frequência, autenticação) e quais das 2 empresas fora do SAP realmente precisam dela? | "A ser avaliada tecnicamente" nas próprias atas; nenhuma fonte definiu o mecanismo (CB-5) | RF-TRA-03 |
 | PA-04 | A apresentação "automática"/"tempo real" à diretoria (RF-FIN-05) será batch ou tempo real de fato? Qual a periodicidade tecnicamente viável? | sizing: "claro no objetivo, incerto no mecanismo" | RF-FIN-05, RNF-PERF-02 |
-| PA-05 | Qual o mapeamento técnico exato para segregar receitas por tipo de negócio (Squad, bandeira de cartão) se o SAP hoje não segrega neste nível? | sizing item 2: "claro no requisito, incerto no como" | RF-FIN-03 |
+| PA-05 | Qual o mapeamento técnico exato para segregar receitas por tipo de negócio (Squad, bandeira de cartão) automaticamente, se o SAP hoje não segrega neste nível? (A versão manual-assistida, RF-FIN-03, já não depende desta resposta.) | sizing item 2: "claro no requisito, incerto no como" | RF-FIN-03-C |
 | PA-06 | A rastreabilidade a nível de nota fiscal é viável apenas configurando o TVM, ou exige mudança na estrutura de lançamento do SAP (fora do escopo atual)? | Viabilidade técnica não confirmada (CB-5); SAP hoje só desce a lote/grupo de conta | RF-RIS-03 |
-| PA-07 | Dashboards gráficos/BI são escopo obrigatório desta fase ou item de fase futura? | Tratado como "plus" nas atas, capacidade técnica não confirmada (CB-5) | RF-TRA-02 |
+| PA-07 | Dashboards gráficos/BI são escopo obrigatório desta fase ou item de fase futura? | Tratado como "plus" nas atas, capacidade técnica não confirmada (CB-5) | RF-TRA-02, RF-SUP-04-C (visão analítica avançada de compras depende da mesma capacidade de BI) |
 | PA-08 | A equipe técnica TVM tem disponibilidade confirmada para dimensionar e executar o projeto? | TAP Premissa 5: "não confirmada por nenhuma fonte até o momento" | Cronograma (Carlos Cronograma), viabilidade geral de todos os RFs |
 | PA-09 | O TVM suporta autenticação via SSO/Active Directory corporativo do Grupo Águia Branca? | Não mencionado em nenhuma ata nem no sizing | RNF-SEG-04 |
 | PA-10 | Qual o volume de horas/mês hoje gasto na consolidação manual (para servir de baseline de comparação pós-implantação)? | CB-6 — nenhuma fonte quantificou até o momento | Medição de benefício (fora do escopo desta ERF, mas necessário para ROI) |
@@ -238,8 +264,14 @@ funcional, o escopo já delimitado no TAP (`documentacao-base.md`) e no sizing
 registradas na Qualificação — em particular, permanece dependente de:
 - **CB-4**: conclusão da sessão com Alessandra (pode adicionar/alterar RFs da
   Área Financeiro, especialmente RF-FIN-06);
-- **CB-5**: confirmação técnica da equipe TVM sobre os 5 itens de viabilidade
-  incerta (RF-TRA-01 a 04, RF-RIS-03).
+- **CB-5**: confirmação técnica da equipe TVM sobre os 5 itens formais de
+  viabilidade incerta (RF-TRA-01 a 04, RF-RIS-03), e também sobre os 2 itens
+  adicionais de incerteza de mecanismo identificados na correção v1.1
+  (RF-FIN-03-C — segregação automática de receitas; RF-SUP-04-C — visão
+  analítica avançada de compras, que depende da mesma capacidade técnica de
+  RF-TRA-02). Estes 2 últimos não fazem parte da lista formal dos 5 itens de
+  CB-5, mas seguem o mesmo princípio: nunca tratados como Must Have sem
+  confirmação técnica.
 
 Esta ERF é insumo direto para:
 - **Carlos Cronograma** (WBS e cronograma detalhado, Step seguinte) — usar a
