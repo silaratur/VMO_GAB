@@ -58,15 +58,24 @@ OBJETIVO DO PROJETO (SMART)
   Métrica de sucesso: as 3 frentes operando no TVM em produção, com
   eliminação da consolidação manual em Excel como fonte primária de
   informação para diretoria.
-  Prazo: A VALIDAR NO CRONOGRAMA DETALHADO (Carlos Cronograma, Step 16).
-    Os "30 dias" citados nas atas (Thamyris, Wellington) são o prazo
-    de URGÊNCIA sinalizado pelas áreas solicitantes, não uma duração
-    de projeto validada — o próprio sizing (206–334h de esforço) é
-    incompatível com uma entrega total em 30 dias corridos. Este TAP
-    NÃO adota "30 dias" como prazo de entrega do projeto; a data-alvo
-    real será estabelecida no cronograma detalhado, com o campo
-    "urgência declarada: 30 dias" mantido como insumo de priorização,
-    não como compromisso de prazo.
+  Prazo: DATA-ALVO PROVISÓRIA = T + 7 SEMANAS ÚTEIS, sendo T a
+    designação formal do GP e a resolução de CB-4 (sessão com
+    Alessandra) e CB-5 (viabilidade técnica dos 5 itens incertos).
+    Cálculo (estimativa, não compromisso): piso do sizing (206h) ÷
+    ~30h úteis/semana de dedicação parcial da equipe (referência
+    razoável para um time que também tem outras responsabilidades)
+    ≈ 7 semanas úteis. Esta é uma data-alvo PROVISÓRIA — não uma
+    data de calendário fixa — sujeita a confirmação e ajuste (para
+    cima ou para baixo) no cronograma detalhado (Carlos Cronograma,
+    Step 16), especialmente após a resolução de CB-4 e CB-5.
+    Os "30 dias" citados nas atas (Thamyris, Wellington) continuam
+    sendo tratados como o prazo de URGÊNCIA sinalizado pelas áreas
+    solicitantes, não como esta data-alvo — o próprio sizing
+    (206–334h de esforço) é incompatível com uma entrega total em
+    30 dias corridos. Este TAP NÃO adota "30 dias" como prazo de
+    entrega do projeto; adota T + 7 semanas úteis como data-alvo
+    provisória, com "urgência declarada: 30 dias" mantida como
+    insumo de priorização, não como compromisso de prazo.
 
 JUSTIFICATIVA
   O Grupo Águia Branca opera hoje o controle de fluxo de caixa e
@@ -258,12 +267,18 @@ CRONOGRAMA SUMARIZADO
     Fase 3 — Testes e homologação (UAT 3 frentes):     32 – 48h
     Fase 4 — Go-live e suporte inicial (3 frentes):     24 – 40h
     TOTAL:                                              206 – 334h
-  Data de início e data-alvo de entrega: A CONFIRMAR — dependem da
-  resolução de CB-4 (sessão com Alessandra) e CB-5 (viabilidade
-  técnica dos 5 itens incertos), que afetam diretamente o
-  dimensionamento real do cronograma. Os "30 dias" citados nas atas
-  são tratados como sinalização de urgência do solicitante, não como
-  prazo de entrega do projeto.
+  Data-alvo PROVISÓRIA de entrega: T + 7 SEMANAS ÚTEIS, onde T =
+  designação formal do GP + resolução de CB-4/CB-5 (cálculo: piso
+  do sizing de 206h ÷ ~30h úteis/semana de dedicação parcial da
+  equipe ≈ 7 semanas úteis). Não é uma data de calendário fixa —
+  é um marcador temporal mensurável que será confirmado (e ajustado
+  conforme necessário) no cronograma detalhado. Data de início real:
+  A CONFIRMAR — depende da resolução de CB-4 (sessão com Alessandra)
+  e CB-5 (viabilidade técnica dos 5 itens incertos), que afetam
+  diretamente o dimensionamento real do cronograma. Os "30 dias"
+  citados nas atas são tratados como sinalização de urgência do
+  solicitante, não como esta data-alvo nem como prazo de entrega do
+  projeto.
 
 APROVAÇÃO
   Sponsor: _____________________ Data: _______
@@ -310,9 +325,12 @@ Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
 │ orçamentário com alertas 70%/85%) e Riscos/Desempenho        │
 │ (previsão de caixa a 90 dias) — com as 3 frentes em produção │
 │ e Excel deixando de ser fonte primária para a diretoria.     │
-│ Prazo de entrega: a validar no cronograma detalhado (Carlos  │
-│ Cronograma, Step 16) — "30 dias" das atas é urgência         │
-│ declarada, não prazo de entrega confirmado.                  │
+│ Prazo (data-alvo PROVISÓRIA): T + 7 semanas úteis, sendo T a │
+│ designação do GP e a resolução de CB-4/CB-5 (piso do sizing  │
+│ de 206h ÷ ~30h úteis/semana ≈ 7 semanas). Sujeito a           │
+│ confirmação no cronograma detalhado (Carlos Cronograma, Step │
+│ 16) — "30 dias" das atas é urgência declarada, não esta       │
+│ data-alvo nem prazo de entrega confirmado.                    │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -384,8 +402,10 @@ Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
 │ Fase 2 — Desenvolvimento/Configuração:            110–190h    │
 │ Fase 3 — Testes e homologação (UAT 3 frentes):    32–48h      │
 │ Fase 4 — Go-live e suporte inicial (3 frentes):    24–40h      │
-│ TOTAL: 206–334h | Datas de início/fim: A CONFIRMAR no         │
-│ cronograma detalhado (Step 16, Carlos Cronograma)             │
+│ TOTAL: 206–334h | Data-alvo PROVISÓRIA: T + 7 semanas úteis   │
+│ (T = designação do GP + resolução CB-4/CB-5). Datas de        │
+│ calendário: A CONFIRMAR no cronograma detalhado (Step 16,     │
+│ Carlos Cronograma)                                             │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -424,7 +444,8 @@ Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
 PLANO GERAL DO PROJETO — PROJ-2026-008
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
-Consistência: mesmo prazo (a validar no cronograma detalhado), mesmo
+Consistência: mesmo prazo (data-alvo provisória T + 7 semanas úteis,
+a confirmar em data de calendário no cronograma detalhado), mesmo
 orçamento (faixa R$30-32k aprovada / R$43-70k estimada, reconciliação
 pendente CB-3) e mesmo escopo (3 frentes) do TAP e do PM Canvas.
 
@@ -440,10 +461,16 @@ pendente CB-3) e mesmo escopo (3 frentes) do TAP e do PM Canvas.
 2. PLANO DE GERENCIAMENTO DO CRONOGRAMA
    Cronograma detalhado a ser construído por Carlos Cronograma
    (Step 16) com base na WBS, a partir das 4 fases do sizing (206–
-   334h). Prazo real de entrega ainda não definido — "30 dias"
-   das atas tratado como urgência declarada, não como data-alvo.
-   Marcos mínimos: fim do levantamento, fim do desenvolvimento,
-   fim dos testes/UAT (3 frentes), go-live por frente.
+   334h). Data-alvo PROVISÓRIA de entrega: T + 7 semanas úteis,
+   onde T = designação formal do GP + resolução de CB-4 (sessão com
+   Alessandra) e CB-5 (viabilidade técnica dos 5 itens incertos).
+   Cálculo: piso do sizing (206h) ÷ ~30h úteis/semana de dedicação
+   parcial da equipe ≈ 7 semanas úteis — estimativa provisória, não
+   data de calendário fixa, sujeita a confirmação/ajuste no
+   cronograma detalhado. "30 dias" das atas tratado como urgência
+   declarada, não como esta data-alvo. Marcos mínimos: fim do
+   levantamento, fim do desenvolvimento, fim dos testes/UAT (3
+   frentes), go-live por frente.
 
 3. PLANO DE GERENCIAMENTO DE CUSTOS
    Orçamento sinalizado como aprovado: R$30.000–32.000. Estimativa
@@ -523,10 +550,10 @@ pendente CB-3) e mesmo escopo (3 frentes) do TAP e do PM Canvas.
 
 | Dimensão | TAP | PM Canvas | Plano Geral | Consistente? |
 |----------|-----|-----------|--------------|--------------|
-| Prazo | A validar no cronograma detalhado (Step 16); "30 dias" = urgência declarada, não prazo de entrega | Idêntico | Idêntico | ✅ |
+| Prazo | Data-alvo PROVISÓRIA = T + 7 semanas úteis (T = designação do GP + resolução CB-4/CB-5; cálculo: 206h ÷ ~30h úteis/semana ≈ 7 semanas), a confirmar em data de calendário no cronograma detalhado (Step 16); "30 dias" das atas = urgência declarada, não esta data-alvo | Idêntico | Idêntico | ✅ |
 | Orçamento | R$30-32k aprovado / R$43-70k estimado (reconciliação pendente, CB-3) | Idêntico | Idêntico | ✅ |
 | Escopo | 3 frentes unificadas (Financeiro, Suprimentos, Riscos/Desempenho), 9 itens claros dentro + 5 itens incertos fora até confirmação técnica | Idêntico | Idêntico | ✅ |
 | Sponsor | Paula Barcelos (CEO) — identidade confirmada verbalmente, evidência documental pendente (CB-1) | Idêntico | Idêntico | ✅ |
 | CBs pendentes (6) | Todas as 6 registradas explicitamente (Premissas/Restrições/Riscos) | Todas as 6 registradas (blocos 1, 3, 4, 6, 8, 9) | Todas as 6 registradas (planos 3, 5, 7, 8, 9, 10) | ✅ |
 
-Nenhum bloco do PM Canvas ficou vazio; todos os 10 planos subsidiários foram endereçados; objetivo SMART tem métrica (3 frentes em produção, Excel deixando de ser fonte primária) e tratamento explícito de prazo (a validar no cronograma). Documentos aprovados para prosseguir ao Step seguinte (Rafael Requisito — ERF completa), mantendo as 6 CBs como pendências ativas de acompanhamento pelo PMO.
+Nenhum bloco do PM Canvas ficou vazio; todos os 10 planos subsidiários foram endereçados; objetivo SMART tem métrica (3 frentes em produção, Excel deixando de ser fonte primária) e agora também o componente Temporal (T + 7 semanas úteis como data-alvo provisória, mensurável, sem fingir uma data de calendário que ainda não existe). Documentos aprovados para prosseguir ao Step seguinte (Rafael Requisito — ERF completa), mantendo as 6 CBs como pendências ativas de acompanhamento pelo PMO.
