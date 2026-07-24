@@ -273,25 +273,39 @@ ORÇAMENTO RESUMIDO
   do início do desenvolvimento.
 
 CRONOGRAMA SUMARIZADO
-  Status: A DETALHAR no Step 16 (Carlos Cronograma), com base na WBS
-  e nas 4 fases já dimensionadas no sizing:
-    Fase 1 — Levantamento de requisitos detalhado:     40 – 56h
-    Fase 2 — Desenvolvimento/Configuração:             110 – 190h
-    Fase 3 — Testes e homologação (UAT 3 frentes):     32 – 48h
-    Fase 4 — Go-live e suporte inicial (3 frentes):     24 – 40h
+  Status: DETALHADO no Step 17 (Carlos Cronograma) — ver
+  `cronograma.md`, com WBS completa, 6 marcos (M0–M6) e caminho
+  crítico identificado (folga total 0 dias, dominado pela frente
+  Financeiro por depender do fechamento de CB-4 antes do início da
+  validação de requisitos). Esforço por fase (herdado do sizing,
+  piso da faixa, premissa ~30h úteis/semana):
+    Fase 1 — Levantamento de requisitos detalhado:     40 – 56h  (T0 a T0+10d)
+    Fase 2 — Desenvolvimento/Configuração:             110 – 190h (T0+10d a T0+38d)
+    Fase 3 — Testes e homologação (UAT 3 frentes):     32 – 48h  (T0+38d a T0+50d)
+    Fase 4 — Go-live e suporte inicial (3 frentes):     24 – 40h  (T0+50d a T0+58d)
     TOTAL:                                              206 – 334h
-  Data-alvo PROVISÓRIA de entrega: T + 7 SEMANAS ÚTEIS, onde T =
-  designação formal do GP + resolução de CB-4/CB-5 (cálculo: piso
-  do sizing de 206h ÷ ~30h úteis/semana de dedicação parcial da
-  equipe ≈ 7 semanas úteis). Não é uma data de calendário fixa —
-  é um marcador temporal mensurável que será confirmado (e ajustado
-  conforme necessário) no cronograma detalhado. Data de início real:
-  A CONFIRMAR — depende da resolução de CB-4 (sessão com Alessandra)
-  e CB-5 (viabilidade técnica dos 5 itens incertos), que afetam
-  diretamente o dimensionamento real do cronograma. Os "30 dias"
-  citados nas atas são tratados como sinalização de urgência do
-  solicitante, não como esta data-alvo nem como prazo de entrega do
-  projeto.
+  Marcos principais (relativos a T0 = kick-off):
+    M1 — ERF v2.0 fechada:        T0 + 10 dias úteis
+    M2 — Desenvolvimento completo: T0 + 38 dias úteis
+    M3 — UAT aprovado:             T0 + 50 dias úteis
+    M4 — GO-LIVE:                  T0 + 58 dias úteis sem buffer /
+                                    T0 + ~67 dias úteis (~13,4 semanas)
+                                    COM buffer de gestão de 15%
+    M5 — Aceite pós-go-live:       T0 + ~88 dias úteis (1 ciclo
+                                    mensal completo de previsão de
+                                    90 dias — Critério de Sucesso #2)
+    M6 — ENCERRAMENTO:             T0 + ~90 dias úteis
+  Data-alvo: Go-live em T0 + ~13,4 semanas úteis (com buffer de 15%)
+  e Encerramento formal em T0 + ~90 dias úteis, conforme
+  `cronograma.md` (Carlos Cronograma). Este valor substitui o cálculo
+  simplificado anterior ("T + 7 semanas úteis"), que cobria apenas o
+  piso do sizing (206h ÷ 30h/semana) sem buffer de gestão nem o ciclo
+  de acompanhamento pós-go-live — ambos agora incorporados. Ainda é
+  relativo a T0 (kick-off), não uma data de calendário fixa — T0
+  depende da resolução de CB-1/CB-2 (governança) e da designação do
+  GP. Os "30 dias" citados nas atas são tratados como sinalização de
+  urgência do solicitante, não como esta data-alvo nem como prazo de
+  entrega do projeto.
 
 APROVAÇÃO
   Sponsor: _____________________ Data: _______
@@ -338,12 +352,14 @@ Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
 │ orçamentário com alertas 70%/85%) e Riscos/Desempenho        │
 │ (previsão de caixa a 90 dias) — com as 3 frentes em produção │
 │ e Excel deixando de ser fonte primária para a diretoria.     │
-│ Prazo (data-alvo PROVISÓRIA): T + 7 semanas úteis, sendo T a │
-│ designação do GP e a resolução de CB-4/CB-5 (piso do sizing  │
-│ de 206h ÷ ~30h úteis/semana ≈ 7 semanas). Sujeito a           │
-│ confirmação no cronograma detalhado (Carlos Cronograma, Step │
-│ 16) — "30 dias" das atas é urgência declarada, não esta       │
-│ data-alvo nem prazo de entrega confirmado.                    │
+│ Prazo: Go-live em T0 + ~13,4 semanas úteis (~67 dias úteis,   │
+│ com buffer de gestão de 15%) e Encerramento formal em T0 +    │
+│ ~90 dias úteis (inclui 1 ciclo pós-go-live), sendo T0 o       │
+│ kick-off. Fonte: cronograma detalhado (`cronograma.md`,       │
+│ Carlos Cronograma, Step 17) — substitui a estimativa          │
+│ simplificada anterior ("T + 7 semanas", sem buffer nem        │
+│ pós-go-live). "30 dias" das atas é urgência declarada, não    │
+│ esta data-alvo nem prazo de entrega confirmado.               │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -411,14 +427,17 @@ Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
 ┌─────────────────────────────────────────────────────────────┐
 │ 7. GRUPOS DE ENTREGA / LINHA DO TEMPO                        │
 ├─────────────────────────────────────────────────────────────┤
-│ Fase 1 — Levantamento de requisitos detalhado:    40–56h      │
-│ Fase 2 — Desenvolvimento/Configuração:            110–190h    │
-│ Fase 3 — Testes e homologação (UAT 3 frentes):    32–48h      │
-│ Fase 4 — Go-live e suporte inicial (3 frentes):    24–40h      │
-│ TOTAL: 206–334h | Data-alvo PROVISÓRIA: T + 7 semanas úteis   │
-│ (T = designação do GP + resolução CB-4/CB-5). Datas de        │
-│ calendário: A CONFIRMAR no cronograma detalhado (Step 16,     │
-│ Carlos Cronograma)                                             │
+│ Fase 1 — Levantamento de requisitos detalhado:  40–56h (T0–T0+10d) │
+│ Fase 2 — Desenvolvimento/Configuração: 110–190h (T0+10d–T0+38d)    │
+│ Fase 3 — Testes e homologação (UAT 3 frentes): 32–48h (T0+38d–T0+50d) │
+│ Fase 4 — Go-live e suporte inicial: 24–40h (T0+50d–T0+58d)    │
+│ TOTAL: 206–334h                                                │
+│ M4 GO-LIVE: T0+58d sem buffer / T0+~67d (~13,4 sem.) COM       │
+│ buffer de gestão de 15%. M6 ENCERRAMENTO: T0+~90 dias úteis    │
+│ (inclui 1 ciclo pós-go-live, Critério de Sucesso #2). Fonte:   │
+│ `cronograma.md` (Carlos Cronograma, Step 17) — substitui a     │
+│ estimativa simplificada anterior ("T+7 semanas"). Datas de     │
+│ calendário: A CONFIRMAR (dependem de T0 = kick-off)            │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -457,10 +476,12 @@ Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
 PLANO GERAL DO PROJETO — PROJ-2026-008
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Data: 2026-07-07 | Versão: 1.0 | Status: RASCUNHO (CBs em aberto)
-Consistência: mesmo prazo (data-alvo provisória T + 7 semanas úteis,
-a confirmar em data de calendário no cronograma detalhado), mesmo
-orçamento (faixa R$30-32k aprovada / R$43-70k estimada, reconciliação
-pendente CB-3) e mesmo escopo (3 frentes) do TAP e do PM Canvas.
+Consistência: mesmo prazo (Go-live em T0 + ~13,4 semanas úteis com
+buffer de 15%, Encerramento formal em T0 + ~90 dias úteis, conforme
+`cronograma.md` de Carlos Cronograma; data de calendário a confirmar
+quando T0/kick-off for definido), mesmo orçamento (faixa R$30-32k
+aprovada / R$43-70k estimada, reconciliação pendente CB-3) e mesmo
+escopo (3 frentes) do TAP e do PM Canvas.
 
 1. PLANO DE GERENCIAMENTO DO ESCOPO
    Escopo definido pelas 3 frentes (Financeiro, Suprimentos,
@@ -472,18 +493,24 @@ pendente CB-3) e mesmo escopo (3 frentes) do TAP e do PM Canvas.
    (Rafael Requisito, próxima fase).
 
 2. PLANO DE GERENCIAMENTO DO CRONOGRAMA
-   Cronograma detalhado a ser construído por Carlos Cronograma
-   (Step 16) com base na WBS, a partir das 4 fases do sizing (206–
-   334h). Data-alvo PROVISÓRIA de entrega: T + 7 semanas úteis,
-   onde T = designação formal do GP + resolução de CB-4 (sessão com
-   Alessandra) e CB-5 (viabilidade técnica dos 5 itens incertos).
-   Cálculo: piso do sizing (206h) ÷ ~30h úteis/semana de dedicação
-   parcial da equipe ≈ 7 semanas úteis — estimativa provisória, não
-   data de calendário fixa, sujeita a confirmação/ajuste no
-   cronograma detalhado. "30 dias" das atas tratado como urgência
-   declarada, não como esta data-alvo. Marcos mínimos: fim do
-   levantamento, fim do desenvolvimento, fim dos testes/UAT (3
-   frentes), go-live por frente.
+   Cronograma detalhado CONCLUÍDO por Carlos Cronograma (Step 17) —
+   ver `cronograma.md`: WBS completa, 6 marcos (M0–M6) e caminho
+   crítico (folga 0 dias, dominado pela frente Financeiro por
+   depender do fechamento de CB-4). Data-alvo: Go-live (M4) em T0 +
+   ~13,4 semanas úteis (~67 dias úteis, já incluindo buffer de
+   gestão de 15%) e Encerramento formal (M6) em T0 + ~90 dias úteis
+   (inclui 1 ciclo de acompanhamento pós-go-live exigido pelo
+   Critério de Sucesso #2 do TAP), onde T0 = kick-off (designação
+   formal do GP + resolução de CB-4 e CB-5). Este valor substitui a
+   estimativa simplificada anterior ("T + 7 semanas úteis", que
+   cobria apenas o piso do sizing de 206h ÷ 30h/semana sem buffer
+   nem pós-go-live). Ainda relativo a T0 — não é data de calendário
+   fixa, que depende da resolução de CB-1/CB-2 e da designação do
+   GP. "30 dias" das atas tratado como urgência declarada, não como
+   esta data-alvo. Marcos principais: M1 ERF v2.0 fechada (T0+10d),
+   M2 desenvolvimento completo (T0+38d), M3 UAT aprovado (T0+50d),
+   M4 Go-live (T0+~67d com buffer), M5 aceite pós-go-live (T0+~88d),
+   M6 encerramento (T0+~90d).
 
 3. PLANO DE GERENCIAMENTO DE CUSTOS
    Orçamento sinalizado como aprovado: R$30.000–32.000. Estimativa
@@ -563,10 +590,10 @@ pendente CB-3) e mesmo escopo (3 frentes) do TAP e do PM Canvas.
 
 | Dimensão | TAP | PM Canvas | Plano Geral | Consistente? |
 |----------|-----|-----------|--------------|--------------|
-| Prazo | Data-alvo PROVISÓRIA = T + 7 semanas úteis (T = designação do GP + resolução CB-4/CB-5; cálculo: 206h ÷ ~30h úteis/semana ≈ 7 semanas), a confirmar em data de calendário no cronograma detalhado (Step 16); "30 dias" das atas = urgência declarada, não esta data-alvo | Idêntico | Idêntico | ✅ |
+| Prazo | Go-live (M4) em T0 + ~13,4 semanas úteis (~67 dias úteis, com buffer de gestão de 15%); Encerramento (M6) em T0 + ~90 dias úteis (inclui 1 ciclo pós-go-live) — fonte: `cronograma.md` (Carlos Cronograma, Step 17), substitui a estimativa simplificada anterior ("T+7 semanas"); T0 = kick-off, data de calendário a confirmar; "30 dias" das atas = urgência declarada, não esta data-alvo | Idêntico | Idêntico | ✅ |
 | Orçamento | R$30-32k aprovado / R$43-70k estimado (reconciliação pendente, CB-3) | Idêntico | Idêntico | ✅ |
 | Escopo | 3 frentes unificadas (Financeiro, Suprimentos, Riscos/Desempenho), 9 itens claros dentro + 5 itens incertos fora até confirmação técnica | Idêntico | Idêntico | ✅ |
 | Sponsor | Paula Barcelos (CEO) — identidade confirmada verbalmente, evidência documental pendente (CB-1) | Idêntico | Idêntico | ✅ |
 | CBs pendentes (6) | Todas as 6 registradas explicitamente (Premissas/Restrições/Riscos) | Todas as 6 registradas (blocos 1, 3, 4, 6, 8, 9) | Todas as 6 registradas (planos 3, 5, 7, 8, 9, 10) | ✅ |
 
-Nenhum bloco do PM Canvas ficou vazio; todos os 10 planos subsidiários foram endereçados; objetivo SMART tem métrica (3 frentes em produção, Excel deixando de ser fonte primária) e agora também o componente Temporal (T + 7 semanas úteis como data-alvo provisória, mensurável, sem fingir uma data de calendário que ainda não existe). Documentos aprovados para prosseguir ao Step seguinte (Rafael Requisito — ERF completa), mantendo as 6 CBs como pendências ativas de acompanhamento pelo PMO.
+Nenhum bloco do PM Canvas ficou vazio; todos os 10 planos subsidiários foram endereçados; objetivo SMART tem métrica (3 frentes em produção, Excel deixando de ser fonte primária) e o componente Temporal atualizado com base no cronograma detalhado do Carlos Cronograma (Go-live em T0 + ~13,4 semanas úteis com buffer de 15%; Encerramento em T0 + ~90 dias úteis), substituindo a estimativa simplificada anterior sem fingir uma data de calendário que ainda não existe (T0/kick-off segue dependente de CB-1/CB-2 e da designação do GP). Documentos atualizados para refletir o Step 17 (Avaliação de Cronograma), mantendo as 6 CBs como pendências ativas de acompanhamento pelo PMO.
