@@ -7,6 +7,15 @@ TVM para Fluxo de Caixa, Controle Orçamentário e Rastreabilidade de Riscos
 
 ## VEREDICTO: ⚠️ APROVADO COM RESSALVAS
 
+**Atualização pós-auditoria (2026-07-07):** NC-003 foi corrigida por Fábio
+Fornecedor imediatamente após esta auditoria (Work Request atualizado para
+T0+~13,4 semanas, consistente com os demais documentos) — verificado por
+grep, sem menções ativas ao prazo antigo. **NC-001 e NC-002 permanecem
+abertas** (dependem de ação administrativa externa ao pipeline — evidência
+documental de sponsor e de aprovação de Diretoria/Gerente de TI). Status
+atual: 0 NC-CRÍTICA, 2 NC-MODERADA aberta (NC-001, NC-002), 1 NC-MODERADA
+resolvida (NC-003).
+
 Zero não-conformidades CRÍTICAS. 3 não-conformidades MODERADAS identificadas
 — dentro do limiar que permite avanço ao checkpoint final com plano de
 correção formal, não um bloqueio de processo. O projeto pode prosseguir ao
