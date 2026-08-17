@@ -1,193 +1,179 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJ-2026-004 — Plataforma Interna de Gestão de Ideias</title>
+<title>PROJ-2026-004 &mdash; Plataforma Interna de Gestao de Ideias de Inovacao</title>
 <style>
-:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--orange:#f97316;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.back:hover{text-decoration:underline;}
 .header-right{font-size:.65rem;color:var(--text2);}
 .main{max-width:1100px;margin:0 auto;padding:28px 20px;}
 .proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
-.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--yellow);}
 .proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
 .proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 .proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
 .badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
+.badge-verde{background:#22c55e22;color:var(--green);border:1px solid #22c55e55;}
 .badge-atencao{background:#eab30822;color:var(--yellow);border:1px solid #eab30855;}
-.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
-@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.badge-critico{background:#ef444422;color:var(--red);border:1px solid #ef444455;}
+.badge-espera{background:#64748b22;color:var(--gray);border:1px solid #64748b55;}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:4px;}
+.hero-bar-green{background:var(--green);}
+.hero-bar-yellow{background:var(--yellow);}
+.hero-bar-red{background:var(--red);}
+.hero-bar-gray{background:var(--gray);}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:18px;}
 .meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
 .meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
-.meta-box.alert{border-color:#ef444488;}
-.meta-box.alert .meta-box-value{color:var(--red);}
 .section-title{font-size:.65rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
 @media(max-width:768px){.grid2{grid-template-columns:1fr;}}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
-.card.alert-card{border-color:#ef444444;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
 .sem-table{width:100%;border-collapse:collapse;}
 .sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
 .sem-table tr:last-child td{border-bottom:none;}
 .sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
-.dot-g{background:var(--green);}
-.dot-y{background:var(--yellow);}
-.dot-r{background:var(--red);}
+.dot-g{background:var(--green);}.dot-y{background:var(--yellow);}.dot-r{background:var(--red);}.dot-gr{background:var(--gray);}
 .progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
 .progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
 .progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
 .fill{height:100%;border-radius:4px;}
-.fill-green{background:var(--green);}
-.fill-yellow{background:var(--yellow);}
+.fill-green{background:var(--green);}.fill-yellow{background:var(--yellow);}.fill-blue{background:var(--blue);}
 .risk-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .risk-row:last-child{border-bottom:none;}
 .risk-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;}
-.r-critico{background:#ef444433;color:var(--red);}
-.r-alto{background:#ef444422;color:var(--red);}
-.r-medio{background:#eab30822;color:var(--yellow);}
+.r-alto{background:#ef444422;color:var(--red);}.r-medio{background:#eab30822;color:var(--yellow);}.r-baixo{background:#22c55e22;color:var(--green);}
 .milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .milestone-row:last-child{border-bottom:none;}
-.ms-date{color:var(--blue);font-weight:700;min-width:90px;}
+.ms-du{color:var(--blue);font-weight:700;min-width:54px;}
 .ms-label{color:var(--text);flex:1;}
-.ms-check{font-size:.7rem;white-space:nowrap;}
-.ms-block{color:var(--red);font-weight:700;}
-.ms-pend{color:var(--text2);}
+.ms-check{color:var(--text2);font-size:.7rem;white-space:nowrap;}
 .qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .qa-row:last-child{border-bottom:none;}
-.score-ok{font-weight:700;color:var(--green);}
-.score-cond{font-weight:700;color:var(--yellow);}
-.score-fail{font-weight:700;color:var(--red);}
-.bloqueante-box{background:#ef444411;border:1px solid #ef444433;border-radius:10px;padding:16px;margin-bottom:16px;}
-.bloqueante-title{font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
-.bloqueante-item{font-size:.8rem;color:var(--text);margin-bottom:6px;}
-.bloqueante-item span{color:var(--text2);font-size:.72rem;}
-.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
-@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
-.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
-.doc-link:hover{border-color:var(--blue);background:var(--bg2);}
-.doc-icon{font-size:1rem;flex-shrink:0;}
-.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
-.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.doc-phase{font-size:.62rem;}
-.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
-.ph-q{background:#3b82f622;color:var(--blue);}
-.ph-i{background:#22c55e22;color:var(--green);}
-.ph-p{background:#eab30822;color:var(--yellow);}
-.ph-m{background:#06b6d422;color:#06b6d4;}
-.ph-e{background:#a855f722;color:#a855f7;}
+.score-ok{font-weight:700;color:var(--green);}.score-cond{font-weight:700;color:var(--yellow);}.score-fail{font-weight:700;color:var(--red);}
+.kpi-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+.kpi-table th{text-align:left;padding:6px 10px;border-bottom:2px solid var(--border);color:var(--text2);font-size:.65rem;text-transform:uppercase;letter-spacing:1px;}
+.kpi-table td{padding:6px 10px;border-bottom:1px solid var(--border);}
+.kpi-table tr:last-child td{border-bottom:none;}
+.step-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem;}
+.step-row:last-child{border-bottom:none;}
+.step-icon{flex-shrink:0;width:20px;text-align:center;}
+.muted{color:var(--text2);font-style:italic;font-size:.82rem;}
+.docs-link{display:inline-block;margin-top:16px;font-size:.8rem;color:var(--blue);text-decoration:none;}
+.docs-link:hover{text-decoration:underline;}
+.overflow-x{overflow-x:auto;}
 footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
 </style>
 </head>
 <body>
 <header class="header">
-  <a href="../index.html" class="back">← Dashboard</a>
-  <div class="header-right">Atualizado em: 22/05/2026</div>
+  <a href="../index.html" class="back">&larr; Dashboard</a>
+  <div class="header-right">Atualizado em: 17/08/2026</div>
 </header>
 <main class="main">
 
   <div class="proj-hero">
+    <div class="hero-bar hero-bar-yellow"></div>
     <div class="proj-hero-top">
       <div>
         <div class="proj-id-label">PROJ-2026-004</div>
-        <div class="proj-title">Plataforma Interna de Gestão de Ideias de Inovação</div>
+        <div class="proj-title">Plataforma Interna de Gestao de Ideias de Inovacao</div>
       </div>
-      <span class="badge badge-atencao">🟡 Atenção</span>
+      <span class="badge badge-atencao">Atencao</span>
     </div>
     <div class="meta-grid">
-      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">Grupo Águia Branca</div></div>
-      <div class="meta-box alert"><div class="meta-box-label">Sponsor</div><div class="meta-box-value">⚠️ A designar</div></div>
+      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">Area de Inovacao</div></div>
+      <div class="meta-box"><div class="meta-box-label">Sponsor</div><div class="meta-box-value">A identificar (BLOQUEANTE)</div></div>
       <div class="meta-box"><div class="meta-box-label">BAC</div><div class="meta-box-value">R$ 90.000</div></div>
-      <div class="meta-box"><div class="meta-box-label">Go-live</div><div class="meta-box-value">30/11/2026</div></div>
-      <div class="meta-box"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">21/30 (70%) ✅</div></div>
-      <div class="meta-box"><div class="meta-box-label">Vera Veredito</div><div class="meta-box-value">10,0/10 ⭐</div></div>
-      <div class="meta-box"><div class="meta-box-label">Aprovação Final</div><div class="meta-box-value">✅ (ciência NC)</div></div>
-      <div class="meta-box alert"><div class="meta-box-label">CB-01 Prazo</div><div class="meta-box-value">13/06/2026</div></div>
+      <div class="meta-box"><div class="meta-box-label">Prazo</div><div class="meta-box-value">Go-live: 30/11/2026</div></div>
+      <div class="meta-box"><div class="meta-box-label">Fase</div><div class="meta-box-value">Instrucao concluida</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualificacao</div><div class="meta-box-value">21/30 (70%)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualidade</div><div class="meta-box-value">100/100</div></div>
+      <div class="meta-box"><div class="meta-box-label">Governanca</div><div class="meta-box-value">Reprovado (sponsor)</div></div>
     </div>
-  </div>
-
-  <div class="bloqueante-box">
-    <div class="bloqueante-title">⛔ Condição Bloqueante Ativa — CB-01</div>
-    <div class="bloqueante-item"><strong>Sponsor executivo não identificado.</strong> A execução do projeto NÃO pode iniciar sem a designação formal de um Diretor ou superior como sponsor.<br><span>Responsável: Jadson | Prazo: 13/06/2026 | Risco: RSK-01 (CRÍTICO)</span></div>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="section-title">Semáforo de Dimensões</div>
+      <div class="section-title">Semaforo de Dimensoes</div>
       <table class="sem-table">
-        <tr><td class="dim">Prazo</td><td><span class="dot dot-y"></span>ATENÇÃO — Execução depende de sponsor até 13/06</td></tr>
-        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>NORMAL — Sem gastos; instrução absorvida pelo VMO</td></tr>
-        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>NORMAL — 37 RFs + 10 RNFs documentados</td></tr>
-        <tr><td class="dim">Riscos</td><td><span class="dot dot-r"></span>ALERTA — 3 riscos CRÍTICOS (RSK-01, 02, 03)</td></tr>
-        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>NORMAL — Documentação completa e revisada</td></tr>
+        <tr><td class="dim">Cronograma</td><td><span class="dot dot-y"></span>ATENCAO &mdash; Depende de sponsor ate 13/06/2026</td></tr>
+        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>VERDE &mdash; Orcamento nao comprometido</td></tr>
+        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>VERDE &mdash; 6 modulos definidos</td></tr>
+        <tr><td class="dim">Riscos</td><td><span class="dot dot-r"></span>CRITICO &mdash; Sponsor ausente (NC-CRITICA)</td></tr>
+        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>VERDE &mdash; Score 100/100 Vera Veredito</td></tr>
       </table>
     </div>
     <div class="card">
-      <div class="section-title">Revisão de Qualidade</div>
-      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">10,0 / 10 — EXCELÊNCIA ⭐</span></div>
-      <div class="qa-row"><span>Gabriel Governança</span><span class="score-fail">❌ NC-CRÍTICA — Sponsor ausente</span></div>
-      <div class="qa-row"><span>Aprovação Marcelo</span><span class="score-cond">✅ Aprovado com ciência da NC</span></div>
+      <div class="section-title">Revisao de Qualidade</div>
+      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">100/100 &mdash; APROVADO</span></div>
+      <div class="qa-row"><span>Gabriel Governanca</span><span class="score-fail">REPROVADO &mdash; 1 NC-CRITICA</span></div>
+      <div class="qa-row"><span>NC-CRIT</span><span style="font-size:.7rem;color:var(--red)">Sponsor executivo (nivel Diretor+) nao identificado</span></div>
       <br>
       <div class="section-title">Progresso</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução VMO (100%)</span><span>100%</span></div>
-        <div class="progress-bar"><div class="fill fill-yellow" style="width:100%"></div></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Execução — BLOQUEADA</span><span>0%</span></div>
-        <div class="progress-bar"><div class="fill fill-yellow" style="width:0%"></div></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-label"><span>Instrucao VMO</span><span>100%</span></div><div class="progress-bar"><div class="fill fill-green" style="width:100%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Execucao</span><span>0% (bloqueado)</span></div><div class="progress-bar"><div class="fill fill-yellow" style="width:0%"></div></div></div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Escopo</div>
+    <p style="font-size:.85rem;margin-bottom:10px">Desenvolvimento de plataforma web propria para substituir ferramenta SaaS terceira de gestao de ideias de inovacao corporativa (custo atual: R$ 80-90 mil/ano). Solicitado por <strong>Jadson</strong> (Gestor de Inovacao). <strong>6 modulos:</strong> Cadastro de Ideias, Campanhas/Desafios, Fluxo de Aprovacao, Mini Gestao de Projetos, Mensuracao de Ganhos, Dashboard.</p>
+    <p style="font-size:.8rem;color:var(--text2)"><strong>Marco vinculado:</strong> Premio Inovacao (lancamento jan/2027 &mdash; go-live obrigatorio ate 30/11/2026).<br><strong>ROI:</strong> Eliminacao de ~R$ 85k/ano em licencas SaaS.</p>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="section-title">Marcos Críticos</div>
-      <div class="milestone-row"><div class="ms-date">13/06/2026</div><div class="ms-label"><strong>Sponsor confirmado + orçamento aprovado</strong></div><div class="ms-check ms-block">⚠️ BLOQUEANTE</div></div>
-      <div class="milestone-row"><div class="ms-date">16/06/2026</div><div class="ms-label">Kick-off oficial</div><div class="ms-check ms-pend">🔲 Aguarda CB</div></div>
-      <div class="milestone-row"><div class="ms-date">30/06/2026</div><div class="ms-label">Planejamento detalhado + backlog</div><div class="ms-check ms-pend">🔲</div></div>
-      <div class="milestone-row"><div class="ms-date">11/08/2026</div><div class="ms-label">MVP (M1 + M2) em homologação</div><div class="ms-check ms-pend">🔲</div></div>
-      <div class="milestone-row"><div class="ms-date">30/11/2026</div><div class="ms-label"><strong>Go-live em produção — CRÍTICO</strong></div><div class="ms-check ms-block">🎯 Meta</div></div>
+      <div class="section-title">Riscos</div>
+      <div class="risk-row"><span class="risk-badge r-alto">CRITICO</span><span>RSK-01 &mdash; Sponsor executivo nao identificado (BLOQUEANTE)</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">CRITICO</span><span>RSK-02 &mdash; Orcamento formal nao aprovado</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>RSK-03 &mdash; Prazo depende de kick-off ate 16/06</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>RSK-04 &mdash; Integracao com sistemas legados</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>RSK-05 &mdash; Escopo de 6 modulos pode expandir</span></div>
+      
     </div>
     <div class="card">
-      <div class="section-title">Riscos Críticos</div>
-      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-01 — Sponsor não identificado (score 20) — BLOQUEANTE</span></div>
-      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-02 — Atraso no início da execução (score 15)</span></div>
-      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>RSK-03 — Scope creep durante execução (score 16)</span></div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>RSK-11 — Volume de defeitos no UAT (score 12)</span></div>
-      <br>
-      <div class="section-title">Próximos Passos</div>
-      <div class="risk-row">🔴 <strong>Jadson: identificar e confirmar sponsor (Diretor+) até 13/06</strong></div>
-      <div class="risk-row">🔴 Sponsor: aprovar orçamento de R$ 90.000 até 13/06</div>
-      <div class="risk-row">📌 Jadson + TI: definir modelo de execução (interno/externo/misto)</div>
+      <div class="section-title">Cronograma / Marcos</div>
+      <div class="milestone-row"><div class="ms-du">Jun/2026</div><div class="ms-label">Kick-off (se sponsor confirmado ate 13/06)</div><div class="ms-check">Bloqueado</div></div>
+      <div class="milestone-row"><div class="ms-du">Jul-Ago</div><div class="ms-label">Desenvolvimento Modulos 1-3</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Set-Out</div><div class="ms-label">Desenvolvimento Modulos 4-6 + Testes</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Nov/2026</div><div class="ms-label">UAT + Go-Live (30/11/2026)</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Jan/2027</div><div class="ms-label">Premio Inovacao (marco vinculado)</div><div class="ms-check">Pendente</div></div>
+      
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:24px;">
-    <div class="section-title">Documentos do Projeto</div>
-    <div class="docs-grid">
-      <a class="doc-link" href="docs/PROJ-2026-004/01-qualificacao.md"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/02-demanda-coletada.md"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/03-tap-canvas-plano-geral.md"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">TAP + PM Canvas + Plano Geral</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/04-erf-requisitos.md"><div class="doc-icon">📝</div><div class="doc-info"><div class="doc-name">ERF — Especificação de Requisitos</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/05-cronograma.md"><div class="doc-icon">📅</div><div class="doc-info"><div class="doc-name">Cronograma</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/06-plano-riscos.md"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">Plano de Riscos</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/07-kpis.md"><div class="doc-icon">📊</div><div class="doc-info"><div class="doc-name">Framework de KPIs</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/08-status-report.md"><div class="doc-icon">📈</div><div class="doc-info"><div class="doc-name">Status Report</div><div class="doc-phase"><span class="phase-tag ph-m">04 · Monitoramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/09-revisao-final.md"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Revisão de Qualidade (Vera)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/10-aprovacao-final.md"><div class="doc-icon">🏁</div><div class="doc-info"><div class="doc-name">Aprovação Final</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-004/11-auditoria-governanca.md"><div class="doc-icon">🔍</div><div class="doc-info"><div class="doc-name">Auditoria de Governança (Gabriel)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-    </div>
+  <div class="card">
+    <div class="section-title">KPIs / Metricas</div>
+    <div class="overflow-x"><table class="kpi-table"><thead><tr><th>KPI</th><th>Meta</th><th>Alerta</th><th>Critico</th></tr></thead><tbody>        <tr><td>CPI</td><td>&ge; 1,00</td><td>0,85 &ndash; 0,95</td><td>&lt; 0,85</td></tr>
+        <tr><td>SPI</td><td>&ge; 1,00</td><td>0,85 &ndash; 0,95</td><td>&lt; 0,85</td></tr>
+        <tr><td>KR: Cadastro de Ideias</td><td>Modulo funcional</td><td>Parcial</td><td>Nao entregue</td></tr>
+        <tr><td>KR: Fluxo Aprovacao</td><td>Workflow completo</td><td>Parcial</td><td>Nao entregue</td></tr>
+        <tr><td>KR: Dashboard Monitoramento</td><td>Operacional</td><td>Parcial</td><td>Nao entregue</td></tr>
+</tbody></table></div>
   </div>
+
+  <div class="card">
+    <div class="section-title">Proximos Passos</div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div><strong>URGENTE:</strong> Identificar sponsor executivo (nivel Diretor ou superior)</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Obter aprovacao formal do orcamento de R$ 90.000</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Se sponsor confirmado ate 13/06: agendar kick-off para 16/06</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Definir modelo de desenvolvimento (interno vs terceirizado)</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Resolver lacunas L01-L06 da qualificacao</div></div>
+    
+  </div>
+
+  <a href="docs/" class="docs-link">Documentos fonte &rarr;</a>
 
 </main>
-<footer>VMO Autônomo — Lucas Layout | PROJ-2026-004 | Run 2026-05-22</footer>
+<footer>VMO Autonomo &mdash; Grupo Aguia Branca &mdash; Gerado em 17/08/2026</footer>
 </body>
 </html>

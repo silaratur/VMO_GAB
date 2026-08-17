@@ -1,26 +1,33 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJ-2026-003 — Caminhos Estratégicos ERP GAB</title>
+<title>PROJ-2026-003 &mdash; Caminhos Estrategicos do ERP GAB</title>
 <style>
 :root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.back:hover{text-decoration:underline;}
 .header-right{font-size:.65rem;color:var(--text2);}
 .main{max-width:1100px;margin:0 auto;padding:28px 20px;}
 .proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
-.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);}
 .proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
 .proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 .proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
 .badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
 .badge-verde{background:#22c55e22;color:var(--green);border:1px solid #22c55e55;}
-.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
-@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.badge-atencao{background:#eab30822;color:var(--yellow);border:1px solid #eab30855;}
+.badge-critico{background:#ef444422;color:var(--red);border:1px solid #ef444455;}
+.badge-espera{background:#64748b22;color:var(--gray);border:1px solid #64748b55;}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:4px;}
+.hero-bar-green{background:var(--green);}
+.hero-bar-yellow{background:var(--yellow);}
+.hero-bar-red{background:var(--red);}
+.hero-bar-gray{background:var(--gray);}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:18px;}
 .meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
 .meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
@@ -28,154 +35,144 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
 @media(max-width:768px){.grid2{grid-template-columns:1fr;}}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
 .sem-table{width:100%;border-collapse:collapse;}
 .sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
 .sem-table tr:last-child td{border-bottom:none;}
 .sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
-.dot-g{background:var(--green);}
-.dot-y{background:var(--yellow);}
-.dot-r{background:var(--red);}
+.dot-g{background:var(--green);}.dot-y{background:var(--yellow);}.dot-r{background:var(--red);}.dot-gr{background:var(--gray);}
 .progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
 .progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
 .progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
 .fill{height:100%;border-radius:4px;}
-.fill-green{background:var(--green);}
-.fill-yellow{background:var(--yellow);}
+.fill-green{background:var(--green);}.fill-yellow{background:var(--yellow);}.fill-blue{background:var(--blue);}
 .risk-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .risk-row:last-child{border-bottom:none;}
 .risk-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;}
-.r-critico{background:#ef444433;color:var(--red);}
-.r-alto{background:#ef444422;color:var(--red);}
-.r-medio{background:#eab30822;color:var(--yellow);}
+.r-alto{background:#ef444422;color:var(--red);}.r-medio{background:#eab30822;color:var(--yellow);}.r-baixo{background:#22c55e22;color:var(--green);}
 .milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .milestone-row:last-child{border-bottom:none;}
-.ms-date{color:var(--blue);font-weight:700;min-width:90px;}
+.ms-du{color:var(--blue);font-weight:700;min-width:54px;}
 .ms-label{color:var(--text);flex:1;}
 .ms-check{color:var(--text2);font-size:.7rem;white-space:nowrap;}
-.ms-done{color:var(--green);}
-.ms-warn{color:var(--yellow);}
 .qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .qa-row:last-child{border-bottom:none;}
-.score-ok{font-weight:700;color:var(--green);}
-.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
-@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
-.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
-.doc-link:hover{border-color:var(--blue);background:var(--bg2);}
-.doc-icon{font-size:1rem;flex-shrink:0;}
-.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
-.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.doc-phase{font-size:.62rem;color:var(--text2);}
-.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
-.ph-q{background:#3b82f622;color:var(--blue);}
-.ph-i{background:#22c55e22;color:var(--green);}
-.ph-p{background:#eab30822;color:var(--yellow);}
-.ph-m{background:#06b6d422;color:#06b6d4;}
-.ph-e{background:#a855f722;color:#a855f7;}
+.score-ok{font-weight:700;color:var(--green);}.score-cond{font-weight:700;color:var(--yellow);}.score-fail{font-weight:700;color:var(--red);}
+.kpi-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+.kpi-table th{text-align:left;padding:6px 10px;border-bottom:2px solid var(--border);color:var(--text2);font-size:.65rem;text-transform:uppercase;letter-spacing:1px;}
+.kpi-table td{padding:6px 10px;border-bottom:1px solid var(--border);}
+.kpi-table tr:last-child td{border-bottom:none;}
+.step-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem;}
+.step-row:last-child{border-bottom:none;}
+.step-icon{flex-shrink:0;width:20px;text-align:center;}
+.muted{color:var(--text2);font-style:italic;font-size:.82rem;}
+.docs-link{display:inline-block;margin-top:16px;font-size:.8rem;color:var(--blue);text-decoration:none;}
+.docs-link:hover{text-decoration:underline;}
+.overflow-x{overflow-x:auto;}
 footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
 </style>
 </head>
 <body>
 <header class="header">
-  <a href="../index.html" class="back">← Dashboard</a>
-  <div class="header-right">Atualizado em: 22/05/2026</div>
+  <a href="../index.html" class="back">&larr; Dashboard</a>
+  <div class="header-right">Atualizado em: 17/08/2026</div>
 </header>
 <main class="main">
 
   <div class="proj-hero">
+    <div class="hero-bar hero-bar-green"></div>
     <div class="proj-hero-top">
       <div>
         <div class="proj-id-label">PROJ-2026-003</div>
-        <div class="proj-title">Caminhos Estratégicos do ERP GAB — Assessment de Plataforma</div>
+        <div class="proj-title">Caminhos Estrategicos do ERP GAB</div>
       </div>
-      <span class="badge badge-verde">🟢 Verde</span>
+      <span class="badge badge-verde">Verde</span>
     </div>
     <div class="meta-grid">
-      <div class="meta-box"><div class="meta-box-label">Clientes</div><div class="meta-box-value">Holding GAB · VixPar · VAB</div></div>
-      <div class="meta-box"><div class="meta-box-label">Sponsor Principal</div><div class="meta-box-value">Décio Chieppe</div></div>
-      <div class="meta-box"><div class="meta-box-label">Executora</div><div class="meta-box-value">KPMG (Fase 1)</div></div>
-      <div class="meta-box"><div class="meta-box-label">Prazo Fase 1</div><div class="meta-box-value">08/05/2026</div></div>
-      <div class="meta-box"><div class="meta-box-label">Fase Atual</div><div class="meta-box-value">Execução — S5</div></div>
-      <div class="meta-box"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">Aprovado ✅</div></div>
-      <div class="meta-box"><div class="meta-box-label">Aprovação Final</div><div class="meta-box-value">✅ 2026-05-18</div></div>
-      <div class="meta-box"><div class="meta-box-label">Progresso</div><div class="meta-box-value">~80% (M1–M4 ✅)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">Holding GAB / VixPar / VAB</div></div>
+      <div class="meta-box"><div class="meta-box-label">Sponsor</div><div class="meta-box-value">VP (nivel acima Diretor)</div></div>
+      <div class="meta-box"><div class="meta-box-label">BAC</div><div class="meta-box-value">R$ 1.010.000</div></div>
+      <div class="meta-box"><div class="meta-box-label">Prazo</div><div class="meta-box-value">Fase 1: 08/05/2026</div></div>
+      <div class="meta-box"><div class="meta-box-label">Fase</div><div class="meta-box-value">Execucao (KPMG S5)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualificacao</div><div class="meta-box-value">27/30 (90%)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualidade</div><div class="meta-box-value">9.0/10</div></div>
+      <div class="meta-box"><div class="meta-box-label">Governanca</div><div class="meta-box-value">Aprovado</div></div>
     </div>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="section-title">Semáforo de Dimensões</div>
+      <div class="section-title">Semaforo de Dimensoes</div>
       <table class="sem-table">
-        <tr><td class="dim">Cronograma</td><td><span class="dot dot-g"></span>VERDE — M1–M4 realizados conforme plano</td></tr>
-        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>VERDE — Contrato KPMG em vigor; sem desvio</td></tr>
-        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>VERDE — Sem mudanças aprovadas</td></tr>
-        <tr><td class="dim">Riscos</td><td><span class="dot dot-y"></span>ATENÇÃO — R-001 CRÍTICO ativo; R-007 ALTO sem resolução</td></tr>
-        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>VERDE — 100% entregáveis de iniciação VMO produzidos</td></tr>
+        <tr><td class="dim">Cronograma</td><td><span class="dot dot-g"></span>VERDE &mdash; Marcos M1-M4 conforme planejado</td></tr>
+        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>VERDE &mdash; Dentro do BAC R$ 1.010.000</td></tr>
+        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>VERDE &mdash; 3 entidades, 3 plataformas candidatas</td></tr>
+        <tr><td class="dim">Riscos</td><td><span class="dot dot-g"></span>VERDE &mdash; 10 riscos identificados, R$ 100K reserva</td></tr>
+        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>VERDE &mdash; Score 9.0/10 Vera Veredito</td></tr>
       </table>
     </div>
     <div class="card">
-      <div class="section-title">Revisão de Qualidade</div>
-      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">9,0 / 10 — APROVADO</span></div>
-      <div class="qa-row"><span>Gabriel Governança</span><span class="score-ok">✅ APROVADO — 3 riscos preventivos</span></div>
+      <div class="section-title">Revisao de Qualidade</div>
+      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">9,0/10 &mdash; APROVADO</span></div>
+      <div class="qa-row"><span>Gabriel Governanca</span><span class="score-ok">APROVADO &mdash; 0 NC</span></div>
       <br>
-      <div class="section-title">Progresso da Execução KPMG</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Fase 1 — Assessment</span><span>~80%</span></div>
-        <div class="progress-bar"><div class="fill fill-green" style="width:80%"></div></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução VMO</span><span>100%</span></div>
-        <div class="progress-bar"><div class="fill fill-green" style="width:100%"></div></div>
-      </div>
+      <div class="section-title">Progresso</div>
+      <div class="progress-wrap"><div class="progress-label"><span>Instrucao VMO</span><span>100%</span></div><div class="progress-bar"><div class="fill fill-green" style="width:100%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Execucao KPMG (Fase 1)</span><span>~60%</span></div><div class="progress-bar"><div class="fill fill-blue" style="width:60%"></div></div></div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Escopo</div>
+    <p style="font-size:.85rem;margin-bottom:10px">Assessment estrategico para selecao da plataforma ERP do Grupo Aguia Branca. Avaliacao de <strong>3 plataformas candidatas</strong> (SAP S/4HANA Rise, Oracle ERP Cloud, TOTVS Protheus) para <strong>3 entidades</strong> (Holding GAB, VixPar, VAB) usando metodologia KPMG <strong>Score Model + Powered Enterprise</strong> com 6 pilares de avaliacao.</p>
+    <p style="font-size:.8rem;color:var(--text2)"><strong>Dentro:</strong> Assessment Fase 1 (workshops, Score Model, recomendacao). Equipe KPMG: 22 especialistas.<br><strong>Fora:</strong> Implementacao do ERP selecionado (Fase 2 futura).</p>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="section-title">Marcos da Execução KPMG</div>
-      <div class="milestone-row"><div class="ms-date">17/03/2026</div><div class="ms-label">M0 — Contrato KPMG assinado</div><div class="ms-check ms-done">✅</div></div>
-      <div class="milestone-row"><div class="ms-date">02/04/2026</div><div class="ms-label">M1 — Kick Off Operacional</div><div class="ms-check ms-done">✅</div></div>
-      <div class="milestone-row"><div class="ms-date">Abril/2026</div><div class="ms-label">M2 — Kick Off Executivo</div><div class="ms-check ms-warn">⚠️ Sem data</div></div>
-      <div class="milestone-row"><div class="ms-date">10/04/2026</div><div class="ms-label">M3 — Entendimento Ciclo 1 (S1)</div><div class="ms-check ms-done">✅</div></div>
-      <div class="milestone-row"><div class="ms-date">17/04/2026</div><div class="ms-label">M4 — Entendimento Ciclo 2 (S2)</div><div class="ms-check ms-done">✅</div></div>
-      <div class="milestone-row"><div class="ms-date">01/05/2026</div><div class="ms-label">M5 — Score Model consolidado</div><div class="ms-check">⏳ Em execução</div></div>
-      <div class="milestone-row"><div class="ms-date">08/05/2026</div><div class="ms-label">M6/M7 — Aprovação + Encerramento Fase 1</div><div class="ms-check">⏳ Pendente</div></div>
+      <div class="section-title">Riscos</div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R01 &mdash; Disponibilidade areas de negocio para workshops (KPMG)</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R02 &mdash; Inconsistencia pilares KPMG (5 vs 6)</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R03 &mdash; Kick Off Executivo sem data confirmada</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R04 &mdash; Qualidade dos dados de assessment</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R05 &mdash; Atraso entrega Score Model KPMG</span></div>
+      
     </div>
     <div class="card">
-      <div class="section-title">Issues Abertas</div>
-      <div class="risk-row"><span class="risk-badge r-critico">CRÍTICO</span><span>R-001 — Baixo engajamento das áreas de negócio</span></div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R-007 — Inconsistência 5 vs. 6 pilares KPMG (I-002)</span></div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R-003 — Score Model &lt; 70% objetivo</span></div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R-008 — Sponsor ausente na apresentação final</span></div>
-      <br>
-      <div class="section-title">Próximos Passos</div>
-      <div class="risk-row">📌 Confirmar data do Kick Off Executivo com 3 sponsors</div>
-      <div class="risk-row">📌 Resolver inconsistência pilares KPMG (Wallacy Lima)</div>
-      <div class="risk-row">📌 Agendar apresentação final 07–08/05 com sponsors</div>
-      <div class="risk-row">📌 Definir escopo e orçamento da Fase 2 (RFP)</div>
+      <div class="section-title">Cronograma / Marcos</div>
+      <div class="milestone-row"><div class="ms-du">S1-S2</div><div class="ms-label">M1-M2 &mdash; Kick Offs e Workshops Iniciais</div><div class="ms-check">Concluido</div></div>
+      <div class="milestone-row"><div class="ms-du">S3-S4</div><div class="ms-label">M3-M4 &mdash; Semanas 3-4 Workshops</div><div class="ms-check">Concluido</div></div>
+      <div class="milestone-row"><div class="ms-du">S5</div><div class="ms-label">M5 &mdash; Consolidacao Assessment</div><div class="ms-check">Em andamento</div></div>
+      <div class="milestone-row"><div class="ms-du">S6</div><div class="ms-label">M6 &mdash; Score Model + Recomendacao</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">S7</div><div class="ms-label">M7 &mdash; Encerramento Fase 1 (08/05)</div><div class="ms-check">Pendente</div></div>
+      
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:24px;">
-    <div class="section-title">Documentos do Projeto</div>
-    <div class="docs-grid">
-      <a class="doc-link" href="docs/PROJ-2026-003/01-qualificacao.md"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/02-demanda-coletada.md"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/03-tap-canvas-plano-geral.md"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">TAP + PM Canvas + Plano Geral</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/04-erf-requisitos.md"><div class="doc-icon">📝</div><div class="doc-info"><div class="doc-name">ERF — Especificação de Requisitos</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/05-cronograma.md"><div class="doc-icon">📅</div><div class="doc-info"><div class="doc-name">Cronograma</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/06-plano-riscos.md"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">Plano de Riscos</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/07-kpis.md"><div class="doc-icon">📊</div><div class="doc-info"><div class="doc-name">Framework de KPIs</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/08-status-report.md"><div class="doc-icon">📈</div><div class="doc-info"><div class="doc-name">Status Report</div><div class="doc-phase"><span class="phase-tag ph-m">04 · Monitoramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/09-revisao-final.md"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Revisão de Qualidade (Vera)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/10-aprovacao-final.md"><div class="doc-icon">🏁</div><div class="doc-info"><div class="doc-name">Aprovação Final</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-003/11-auditoria-governanca.md"><div class="doc-icon">🔍</div><div class="doc-info"><div class="doc-name">Auditoria de Governança (Gabriel)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-    </div>
+  <div class="card">
+    <div class="section-title">KPIs / Metricas</div>
+    <div class="overflow-x"><table class="kpi-table"><thead><tr><th>KPI</th><th>Meta</th><th>Alerta</th><th>Critico</th></tr></thead><tbody>        <tr><td>CPI</td><td>&ge; 1,00</td><td>0,85 &ndash; 0,95</td><td>&lt; 0,85</td></tr>
+        <tr><td>SPI</td><td>&ge; 1,00</td><td>0,85 &ndash; 0,95</td><td>&lt; 0,85</td></tr>
+        <tr><td>EV (Earned Value)</td><td>R$ 1.010.000 ao M7</td><td>EV &lt; PV em &gt;10%</td><td>EV &lt; PV em &gt;25%</td></tr>
+        <tr><td>KR: Entrega Score Model</td><td>Ate 08/05/2026</td><td>Atraso &lt; 5du</td><td>Atraso &ge; 5du</td></tr>
+        <tr><td>KR: Cobertura Assessment</td><td>3 entidades / 3 plataformas</td><td>&lt; 100% cobertura</td><td>Entidade omitida</td></tr>
+</tbody></table></div>
   </div>
+
+  <div class="card">
+    <div class="section-title">Proximos Passos</div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Confirmar data do Kick Off Executivo com lideranca</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Resolver inconsistencia pilares KPMG (5 vs 6)</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Acompanhar entregas Semana 5 (consolidacao assessment)</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Preparar apresentacao Score Model para Comite Executivo</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Garantir cobertura das 3 entidades no assessment</div></div>
+    
+  </div>
+
+  <a href="docs/" class="docs-link">Documentos fonte &rarr;</a>
 
 </main>
-<footer>VMO Autônomo — Lucas Layout | PROJ-2026-003 | Run 2026-05-22</footer>
+<footer>VMO Autonomo &mdash; Grupo Aguia Branca &mdash; Gerado em 17/08/2026</footer>
 </body>
 </html>

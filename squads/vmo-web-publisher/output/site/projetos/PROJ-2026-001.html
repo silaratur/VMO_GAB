@@ -1,27 +1,33 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROJ-2026-001 — Inclusão Aprovador SAP FI</title>
+<title>PROJ-2026-001 &mdash; Inclusao de Aprovador SAP FI &mdash; Lancamentos Pre-Editados</title>
 <style>
 :root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--blue:#3b82f6;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--gray:#64748b;--text:#f1f5f9;--text2:#94a3b8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.header{padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .back{font-size:.8rem;color:var(--blue);text-decoration:none;font-weight:600;}
+.back:hover{text-decoration:underline;}
 .header-right{font-size:.65rem;color:var(--text2);}
 .main{max-width:1100px;margin:0 auto;padding:28px 20px;}
 .proj-hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;}
-.proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--green);}
 .proj-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
 .proj-id-label{font-size:.65rem;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 .proj-title{font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.3;}
 .badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
 .badge-verde{background:#22c55e22;color:var(--green);border:1px solid #22c55e55;}
 .badge-atencao{background:#eab30822;color:var(--yellow);border:1px solid #eab30855;}
-.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
-@media(max-width:640px){.meta-grid{grid-template-columns:repeat(2,1fr);}}
+.badge-critico{background:#ef444422;color:var(--red);border:1px solid #ef444455;}
+.badge-espera{background:#64748b22;color:var(--gray);border:1px solid #64748b55;}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:4px;}
+.hero-bar-green{background:var(--green);}
+.hero-bar-yellow{background:var(--yellow);}
+.hero-bar-red{background:var(--red);}
+.hero-bar-gray{background:var(--gray);}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:18px;}
 .meta-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
 .meta-box-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .meta-box-value{font-size:.9rem;font-weight:700;color:var(--text);}
@@ -29,161 +35,151 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
 @media(max-width:768px){.grid2{grid-template-columns:1fr;}}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
 .sem-table{width:100%;border-collapse:collapse;}
 .sem-table td{padding:8px 12px;font-size:.8rem;border-bottom:1px solid var(--border);}
 .sem-table tr:last-child td{border-bottom:none;}
 .sem-table .dim{color:var(--text2);font-weight:600;white-space:nowrap;}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
-.dot-g{background:var(--green);}
-.dot-y{background:var(--yellow);}
-.dot-r{background:var(--red);}
+.dot-g{background:var(--green);}.dot-y{background:var(--yellow);}.dot-r{background:var(--red);}.dot-gr{background:var(--gray);}
 .progress-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
 .progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);}
 .progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
 .fill{height:100%;border-radius:4px;}
-.fill-green{background:var(--green);}
-.fill-yellow{background:var(--yellow);}
-.fill-blue{background:var(--blue);}
+.fill-green{background:var(--green);}.fill-yellow{background:var(--yellow);}.fill-blue{background:var(--blue);}
 .risk-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .risk-row:last-child{border-bottom:none;}
 .risk-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;white-space:nowrap;}
-.r-alto{background:#ef444422;color:var(--red);}
-.r-medio{background:#eab30822;color:var(--yellow);}
-.r-baixo{background:#22c55e22;color:var(--green);}
+.r-alto{background:#ef444422;color:var(--red);}.r-medio{background:#eab30822;color:var(--yellow);}.r-baixo{background:#22c55e22;color:var(--green);}
 .milestone-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .milestone-row:last-child{border-bottom:none;}
-.ms-du{color:var(--blue);font-weight:700;min-width:44px;}
+.ms-du{color:var(--blue);font-weight:700;min-width:54px;}
 .ms-label{color:var(--text);flex:1;}
 .ms-check{color:var(--text2);font-size:.7rem;white-space:nowrap;}
 .qa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;}
 .qa-row:last-child{border-bottom:none;}
-.score-ok{font-weight:700;color:var(--green);}
-.score-cond{font-weight:700;color:var(--yellow);}
-.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
-@media(max-width:768px){.docs-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:480px){.docs-grid{grid-template-columns:1fr;}}
-.doc-link{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;}
-.doc-link:hover{border-color:var(--blue);background:var(--bg2);}
-.doc-icon{font-size:1rem;flex-shrink:0;}
-.doc-info{display:flex;flex-direction:column;gap:2px;min-width:0;}
-.doc-name{font-size:.75rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.doc-phase{font-size:.62rem;color:var(--text2);}
-.phase-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.6rem;font-weight:700;text-transform:uppercase;}
-.ph-q{background:#3b82f622;color:var(--blue);}
-.ph-i{background:#22c55e22;color:var(--green);}
-.ph-p{background:#eab30822;color:var(--yellow);}
-.ph-m{background:#06b6d422;color:#06b6d4;}
-.ph-e{background:#a855f722;color:#a855f7;}
+.score-ok{font-weight:700;color:var(--green);}.score-cond{font-weight:700;color:var(--yellow);}.score-fail{font-weight:700;color:var(--red);}
+.kpi-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+.kpi-table th{text-align:left;padding:6px 10px;border-bottom:2px solid var(--border);color:var(--text2);font-size:.65rem;text-transform:uppercase;letter-spacing:1px;}
+.kpi-table td{padding:6px 10px;border-bottom:1px solid var(--border);}
+.kpi-table tr:last-child td{border-bottom:none;}
+.step-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.8rem;}
+.step-row:last-child{border-bottom:none;}
+.step-icon{flex-shrink:0;width:20px;text-align:center;}
+.muted{color:var(--text2);font-style:italic;font-size:.82rem;}
+.docs-link{display:inline-block;margin-top:16px;font-size:.8rem;color:var(--blue);text-decoration:none;}
+.docs-link:hover{text-decoration:underline;}
+.overflow-x{overflow-x:auto;}
 footer{text-align:center;padding:24px;font-size:.62rem;color:var(--text2);border-top:1px solid var(--border);margin-top:16px;}
 </style>
 </head>
 <body>
 <header class="header">
-  <a href="../index.html" class="back">← Dashboard</a>
-  <div class="header-right">Atualizado em: 22/05/2026</div>
+  <a href="../index.html" class="back">&larr; Dashboard</a>
+  <div class="header-right">Atualizado em: 17/08/2026</div>
 </header>
 <main class="main">
 
   <div class="proj-hero">
+    <div class="hero-bar hero-bar-green"></div>
     <div class="proj-hero-top">
       <div>
         <div class="proj-id-label">PROJ-2026-001</div>
-        <div class="proj-title">Inclusão de Aprovador SAP FI — Lançamentos Pré-Editados</div>
+        <div class="proj-title">Inclusao de Aprovador SAP FI &mdash; Lancamentos Pre-Editados</div>
       </div>
-      <span class="badge badge-verde">🟢 Verde</span>
+      <span class="badge badge-verde">Verde</span>
     </div>
     <div class="meta-grid">
-      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">VIX Manutenção</div></div>
+      <div class="meta-box"><div class="meta-box-label">Cliente</div><div class="meta-box-value">VIX Manutencao</div></div>
       <div class="meta-box"><div class="meta-box-label">Sponsor</div><div class="meta-box-value">Andre Chieppe</div></div>
       <div class="meta-box"><div class="meta-box-label">BAC</div><div class="meta-box-value">R$ 8.640</div></div>
-      <div class="meta-box"><div class="meta-box-label">Prazo</div><div class="meta-box-value">Du 60 pós-TAP</div></div>
-      <div class="meta-box"><div class="meta-box-label">Fase Atual</div><div class="meta-box-value">Pré-execução</div></div>
-      <div class="meta-box"><div class="meta-box-label">Qualificação</div><div class="meta-box-value">22/30 (73%) ✅</div></div>
-      <div class="meta-box"><div class="meta-box-label">Aprovação Final</div><div class="meta-box-value">✅ 2026-05-18</div></div>
-      <div class="meta-box"><div class="meta-box-label">Progresso Exec.</div><div class="meta-box-value">0% (pré-início)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Prazo</div><div class="meta-box-value">Du 60 pos-TAP</div></div>
+      <div class="meta-box"><div class="meta-box-label">Fase</div><div class="meta-box-value">Pre-execucao</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualificacao</div><div class="meta-box-value">22/30 (73%)</div></div>
+      <div class="meta-box"><div class="meta-box-label">Qualidade</div><div class="meta-box-value">8.7/10</div></div>
+      <div class="meta-box"><div class="meta-box-label">Governanca</div><div class="meta-box-value">Aprovado c/ Ressalvas</div></div>
     </div>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="section-title">Semáforo de Dimensões</div>
+      <div class="section-title">Semaforo de Dimensoes</div>
       <table class="sem-table">
-        <tr><td class="dim">Cronograma</td><td><span class="dot dot-g"></span>VERDE — Iniciação concluída; TAP aguarda assinatura</td></tr>
-        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>VERDE — Dentro do teto de R$ 8.640</td></tr>
-        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>VERDE — Sem mudanças de escopo</td></tr>
-        <tr><td class="dim">Riscos</td><td><span class="dot dot-y"></span>ATENÇÃO — 3 riscos ALTO (não materializados)</td></tr>
-        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>VERDE — Documentação validada pelo VMO</td></tr>
+        <tr><td class="dim">Cronograma</td><td><span class="dot dot-g"></span>VERDE &mdash; TAP aguarda assinatura</td></tr>
+        <tr><td class="dim">Custo</td><td><span class="dot dot-g"></span>VERDE &mdash; Dentro do teto R$ 8.640</td></tr>
+        <tr><td class="dim">Escopo</td><td><span class="dot dot-g"></span>VERDE &mdash; Sem mudancas</td></tr>
+        <tr><td class="dim">Riscos</td><td><span class="dot dot-y"></span>ATENCAO &mdash; 3 riscos ALTO (nao materializados)</td></tr>
+        <tr><td class="dim">Qualidade</td><td><span class="dot dot-g"></span>VERDE &mdash; Documentacao validada pelo VMO</td></tr>
       </table>
     </div>
     <div class="card">
-      <div class="section-title">Revisão de Qualidade</div>
-      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">8,7 / 10 — APROVADO</span></div>
-      <div class="qa-row"><span>Gabriel Governança</span><span class="score-cond">✅ APROVADO — 1 NC-MENOR</span></div>
+      <div class="section-title">Revisao de Qualidade</div>
+      <div class="qa-row"><span>Vera Veredito</span><span class="score-ok">8,7/10 &mdash; APROVADO</span></div>
+      <div class="qa-row"><span>Gabriel Governanca</span><span class="score-cond">Aprovado &mdash; 1 NC-MENOR</span></div>
       <div class="qa-row"><span>NC-001</span><span style="font-size:.7rem;color:var(--yellow)">TAP sem assinatura formal do Sponsor</span></div>
       <br>
       <div class="section-title">Progresso</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução VMO</span><span>100%</span></div>
-        <div class="progress-bar"><div class="fill fill-green" style="width:100%"></div></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Execução Formal</span><span>0%</span></div>
-        <div class="progress-bar"><div class="fill fill-blue" style="width:0%"></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid2">
-    <div class="card">
-      <div class="section-title">Marcos (Du = dias úteis após TAP)</div>
-      <div class="milestone-row"><div class="ms-du">Du 2</div><div class="ms-label">M0 — TAP Assinado</div><div class="ms-check">⏳ Pendente</div></div>
-      <div class="milestone-row"><div class="ms-du">Du 5</div><div class="ms-label">M1 — Kick-off com DTI</div><div class="ms-check">⏳ Pendente</div></div>
-      <div class="milestone-row"><div class="ms-du">Du 10</div><div class="ms-label">M2 — Viabilidade Técnica ZFI0057</div><div class="ms-check">⏳ Pendente</div></div>
-      <div class="milestone-row"><div class="ms-du">Du 28</div><div class="ms-label">M3 — Parametrização DEV concluída</div><div class="ms-check">⏳ Pendente</div></div>
-      <div class="milestone-row"><div class="ms-du">Du 40</div><div class="ms-label">M4 — UAT aprovado em QAS</div><div class="ms-check">⏳ Pendente</div></div>
-      <div class="milestone-row"><div class="ms-du">Du 46</div><div class="ms-label">M5 — Go-Live PRD</div><div class="ms-check">⏳ Pendente</div></div>
-      <div class="milestone-row"><div class="ms-du">Du 52</div><div class="ms-label">M6 — Encerramento Formal</div><div class="ms-check">⏳ Pendente</div></div>
-    </div>
-    <div class="card">
-      <div class="section-title">Riscos Ativos</div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R01 — Limitação técnica ZFI0057 (pode exigir ABAP)</span></div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R02 — Indisponibilidade do ambiente QAS</span></div>
-      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R03 — Indisponibilidade do Diretor Financeiro</span></div>
-      <div class="risk-row"><span class="risk-badge r-medio">MÉDIO</span><span>R04 — Janelas de transporte PRD incompatíveis</span></div>
-      <div class="risk-row"><span class="risk-badge r-medio">MÉDIO</span><span>R05 — Outros aprovadores impactados no fluxo</span></div>
-      <div class="risk-row"><span class="risk-badge r-medio">MÉDIO</span><span>R06 — Custo supera teto (contingência 20%)</span></div>
-      <div class="risk-row"><span class="risk-badge r-baixo">BAIXO</span><span>R07 — Resistência de usuários do fluxo</span></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Instrucao VMO</span><span>100%</span></div><div class="progress-bar"><div class="fill fill-green" style="width:100%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Execucao Formal</span><span>0%</span></div><div class="progress-bar"><div class="fill fill-blue" style="width:0%"></div></div></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="section-title">Próximos Passos</div>
-    <div class="risk-row">⏳ <strong>Obter assinatura formal do TAP</strong> — Andre Chieppe (Diretor Financeiro, VIX Manutenção)</div>
-    <div class="risk-row">⏳ Designar Gerente de Projeto pelo PMO VMO Consultoria</div>
-    <div class="risk-row">⏳ Realizar kickoff com equipe DTI/Basis (Du 3–5 após TAP)</div>
-    <div class="risk-row">⏳ Confirmar ID de usuário SAP do Diretor Financeiro (PA001) com DTI</div>
-    <div class="risk-row">⏳ Reservar janela de transporte SAP (Basis) antes da parametrização em QAS</div>
+    <div class="section-title">Escopo</div>
+    <p style="font-size:.85rem;margin-bottom:10px">Inclusao do <strong>Diretor Financeiro (Andre Chieppe)</strong> como aprovador obrigatorio no fluxo de lancamentos pre-editados do SAP FI, via parametrizacao das transacoes <strong>ZFI0057</strong> e <strong>SBWP</strong>. Objetivo: elevar governanca financeira e reduzir risco de fraude.</p>
+    <p style="font-size:.8rem;color:var(--text2)"><strong>Dentro:</strong> Parametrizacao DEV/QAS/PRD, testes, treinamento, go-live, monitoramento 10du.<br><strong>Fora:</strong> Desenvolvimento ABAP, alteracao de outros fluxos.</p>
   </div>
 
-  <div class="card" style="margin-bottom:24px;">
-    <div class="section-title">Documentos do Projeto</div>
-    <div class="docs-grid">
-      <a class="doc-link" href="docs/PROJ-2026-001/01-qualificacao.md"><div class="doc-icon">📋</div><div class="doc-info"><div class="doc-name">Qualificação</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/02-demanda-coletada.md"><div class="doc-icon">📥</div><div class="doc-info"><div class="doc-name">Demanda Coletada</div><div class="doc-phase"><span class="phase-tag ph-q">01 · Qualificação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/03-tap-canvas-plano-geral.md"><div class="doc-icon">📄</div><div class="doc-info"><div class="doc-name">TAP + PM Canvas + Plano Geral</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/04-erf-requisitos.md"><div class="doc-icon">📝</div><div class="doc-info"><div class="doc-name">ERF — Especificação de Requisitos</div><div class="doc-phase"><span class="phase-tag ph-i">02 · Iniciação</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/05-cronograma.md"><div class="doc-icon">📅</div><div class="doc-info"><div class="doc-name">Cronograma</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/06-plano-riscos.md"><div class="doc-icon">⚠️</div><div class="doc-info"><div class="doc-name">Plano de Riscos</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/07-kpis.md"><div class="doc-icon">📊</div><div class="doc-info"><div class="doc-name">Framework de KPIs</div><div class="doc-phase"><span class="phase-tag ph-p">03 · Planejamento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/08-status-report.md"><div class="doc-icon">📈</div><div class="doc-info"><div class="doc-name">Status Report</div><div class="doc-phase"><span class="phase-tag ph-m">04 · Monitoramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/09-revisao-final.md"><div class="doc-icon">✅</div><div class="doc-info"><div class="doc-name">Revisão de Qualidade (Vera)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/10-aprovacao-final.md"><div class="doc-icon">🏁</div><div class="doc-info"><div class="doc-name">Aprovação Final</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
-      <a class="doc-link" href="docs/PROJ-2026-001/11-auditoria-governanca.md"><div class="doc-icon">🔍</div><div class="doc-info"><div class="doc-name">Auditoria de Governança (Gabriel)</div><div class="doc-phase"><span class="phase-tag ph-e">05 · Encerramento</span></div></div></a>
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Riscos</div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R01 &mdash; Limitacao tecnica ZFI0057 (pode exigir ABAP)</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R02 &mdash; Indisponibilidade do ambiente QAS</span></div>
+      <div class="risk-row"><span class="risk-badge r-alto">ALTO</span><span>R03 &mdash; Indisponibilidade do Diretor Financeiro</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R04 &mdash; Janelas de transporte PRD incompativeis</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R05 &mdash; Outros aprovadores impactados no fluxo</span></div>
+      <div class="risk-row"><span class="risk-badge r-medio">MEDIO</span><span>R06 &mdash; Custo supera teto (contingencia 20%)</span></div>
+      <div class="risk-row"><span class="risk-badge r-baixo">BAIXO</span><span>R07 &mdash; Resistencia de usuarios do fluxo</span></div>
+      
+    </div>
+    <div class="card">
+      <div class="section-title">Cronograma / Marcos</div>
+      <div class="milestone-row"><div class="ms-du">Du 2</div><div class="ms-label">M0 &mdash; TAP Assinado</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Du 5</div><div class="ms-label">M1 &mdash; Kick-off com DTI</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Du 10</div><div class="ms-label">M2 &mdash; Viabilidade Tecnica</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Du 28</div><div class="ms-label">M3 &mdash; Parametrizacao DEV</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Du 40</div><div class="ms-label">M4 &mdash; UAT Aprovado QAS</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Du 46</div><div class="ms-label">M5 &mdash; Go-Live PRD</div><div class="ms-check">Pendente</div></div>
+      <div class="milestone-row"><div class="ms-du">Du 52</div><div class="ms-label">M6 &mdash; Encerramento Formal</div><div class="ms-check">Pendente</div></div>
+      
     </div>
   </div>
 
+  <div class="card">
+    <div class="section-title">KPIs / Metricas</div>
+    <div class="overflow-x"><table class="kpi-table"><thead><tr><th>KPI</th><th>Meta</th><th>Alerta</th><th>Critico</th></tr></thead><tbody>        <tr><td>CPI</td><td>&ge; 1,00</td><td>0,85 &ndash; 0,95</td><td>&lt; 0,85</td></tr>
+        <tr><td>SPI</td><td>&ge; 1,00</td><td>0,85 &ndash; 0,95</td><td>&lt; 0,85</td></tr>
+        <tr><td>KR-1: Cobertura Aprovacao</td><td>100%</td><td>90&ndash;100%</td><td>&lt; 90%</td></tr>
+        <tr><td>KR-2: Bypass Zero (30d)</td><td>0 bypass</td><td>1 bypass</td><td>&ge; 2</td></tr>
+        <tr><td>KR-3: Prazo Go-Live</td><td>Ate Du 60</td><td>Du 55&ndash;60</td><td>Apos Du 60</td></tr>
+        <tr><td>KR-4: Aderencia Custo</td><td>&le; R$ 8.640</td><td>R$ 8.000&ndash;8.640</td><td>&gt; R$ 8.640</td></tr>
+        <tr><td>KR-5: Treinamento Aprovador</td><td>Ate Du 52</td><td>Du 46&ndash;52</td><td>Nao confirmado</td></tr>
+</tbody></table></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Proximos Passos</div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Obter assinatura formal do TAP &mdash; Andre Chieppe (Diretor Financeiro)</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Designar Gerente de Projeto pelo PMO VMO Consultoria</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Realizar kickoff com equipe DTI e solicitante (Du 3&ndash;5)</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Reservar janela de QAS para testes integrados</div></div>
+      <div class="step-row"><div class="step-icon">&#9654;</div><div>Regularizar NC-MENOR: assinatura do TAP antes do inicio formal</div></div>
+    
+  </div>
+
+  <a href="docs/" class="docs-link">Documentos fonte &rarr;</a>
+
 </main>
-<footer>VMO Autônomo — Lucas Layout | PROJ-2026-001 | Run 2026-05-22</footer>
+<footer>VMO Autonomo &mdash; Grupo Aguia Branca &mdash; Gerado em 17/08/2026</footer>
 </body>
 </html>
