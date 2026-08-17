@@ -3,396 +3,306 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VMO Autônomo — Dashboard de Projetos</title>
+<title>VMO Dashboard — Portfólio de Projetos</title>
 <style>
 :root {
   --bg: #0f172a;
-  --bg2: #1e293b;
+  --card: #1e293b;
   --border: #334155;
-  --blue: #3b82f6;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --accent: #3b82f6;
   --green: #22c55e;
   --yellow: #eab308;
   --red: #ef4444;
   --orange: #f97316;
-  --cyan: #06b6d4;
-  --gray: #64748b;
-  --text: #f1f5f9;
-  --text2: #94a3b8;
+  --purple: #a855f7;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
 
-.header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 28px; background: var(--bg2); border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
+.container { max-width:1280px; margin:0 auto; padding:24px 16px; }
+
+header { border-bottom:1px solid var(--border); padding-bottom:24px; margin-bottom:32px; }
+header h1 { font-size:1.75rem; font-weight:700; }
+header p { color:var(--text-muted); font-size:0.875rem; margin-top:4px; }
+
+.alert-banner { background:#7f1d1d; border:1px solid var(--red); border-radius:8px; padding:16px 20px; margin-bottom:24px; }
+.alert-banner h3 { color:var(--red); font-size:0.875rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
+.alert-banner ul { list-style:none; padding:0; }
+.alert-banner li { color:#fca5a5; font-size:0.875rem; padding:2px 0; }
+.alert-banner li::before { content:"⚠ "; }
+
+.metrics-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin-bottom:32px; }
+.metric-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:20px; text-align:center; }
+.metric-card .value { font-size:2rem; font-weight:700; }
+.metric-card .label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-top:4px; }
+
+.section-title { font-size:1.125rem; font-weight:600; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+
+.projects-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(360px,1fr)); gap:16px; margin-bottom:40px; }
+.project-card { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color 0.2s; display:block; }
+.project-card:hover { border-color:var(--accent); text-decoration:none; }
+.project-card .card-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.project-card .card-header h3 { font-size:0.9375rem; font-weight:600; }
+.project-card .card-body { padding:16px 20px; }
+.project-card .card-body .desc { font-size:0.8125rem; color:var(--text-muted); margin-bottom:12px; }
+.project-card .card-footer { padding:12px 20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; }
+
+.badge { display:inline-block; padding:2px 10px; border-radius:9999px; font-size:0.6875rem; font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+.badge-green { background:rgba(34,197,94,0.15); color:var(--green); }
+.badge-yellow { background:rgba(234,179,8,0.15); color:var(--yellow); }
+.badge-red { background:rgba(239,68,68,0.15); color:var(--red); }
+.badge-blue { background:rgba(59,130,246,0.15); color:var(--accent); }
+.badge-purple { background:rgba(168,85,247,0.15); color:var(--purple); }
+.badge-gray { background:rgba(148,163,184,0.15); color:var(--text-muted); }
+
+.tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+
+.stat-row { display:flex; justify-content:space-between; padding:6px 0; font-size:0.8125rem; border-bottom:1px solid rgba(51,65,85,0.5); }
+.stat-row:last-child { border-bottom:none; }
+.stat-row .stat-label { color:var(--text-muted); }
+.stat-row .stat-value { font-weight:600; }
+
+footer { text-align:center; padding:32px 0 16px; border-top:1px solid var(--border); color:var(--text-muted); font-size:0.75rem; }
+
+@media(max-width:640px) {
+  .projects-grid { grid-template-columns:1fr; }
+  .metrics-grid { grid-template-columns:repeat(2,1fr); }
 }
-.brand-logo { font-size: 1.15rem; font-weight: 700; color: var(--blue); letter-spacing: 1px; }
-.brand-logo span { color: var(--green); }
-.brand-sub { font-size: 0.65rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
-.header-right { display: flex; align-items: center; gap: 20px; }
-.live-badge { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--green); font-weight: 600; }
-.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
-.updated-at { font-size: 0.65rem; color: var(--text2); }
-
-.main { max-width: 1280px; margin: 0 auto; padding: 28px 20px; }
-
-.section-title {
-  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text2);
-  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-}
-.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 36px; }
-@media(max-width:768px) { .metrics-row { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:480px) { .metrics-row { grid-template-columns: 1fr; } }
-
-.metric-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
-  padding: 22px 16px; text-align: center; position: relative; overflow: hidden;
-  transition: transform .2s, border-color .2s;
-}
-.metric-card:hover { transform: translateY(-2px); border-color: var(--blue); }
-.metric-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.metric-card.blue::before { background: var(--blue); }
-.metric-card.green::before { background: var(--green); }
-.metric-card.yellow::before { background: var(--yellow); }
-.metric-card.cyan::before { background: var(--cyan); }
-.metric-number { font-size: 2.4rem; font-weight: 800; line-height: 1; margin-bottom: 6px; }
-.metric-card.blue .metric-number { color: var(--blue); }
-.metric-card.green .metric-number { color: var(--green); }
-.metric-card.yellow .metric-number { color: var(--yellow); }
-.metric-card.cyan .metric-number { color: var(--cyan); }
-.metric-label { font-size: 0.72rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
-
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
-@media(max-width:1024px) { .grid { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:640px) { .grid { grid-template-columns: 1fr; } }
-
-.proj-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
-  padding: 22px; display: flex; flex-direction: column; gap: 14px;
-  text-decoration: none; color: inherit;
-  transition: transform .2s, border-color .2s, box-shadow .2s;
-}
-.proj-card:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: 0 0 20px #3b82f622; }
-
-.proj-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.proj-id { font-size: 0.65rem; font-weight: 700; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; }
-.status-badge {
-  padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
-}
-.badge-verde { background: #22c55e22; color: var(--green); border: 1px solid #22c55e44; }
-.badge-atencao { background: #eab30822; color: var(--yellow); border: 1px solid #eab30844; }
-.badge-critico { background: #ef444422; color: var(--red); border: 1px solid #ef444444; }
-.badge-novo { background: #06b6d422; color: var(--cyan); border: 1px solid #06b6d444; }
-.badge-bloqueado { background: #f9731622; color: var(--orange); border: 1px solid #f9731644; }
-
-.proj-name { font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.35; }
-.proj-client { font-size: 0.75rem; color: var(--text2); }
-
-.semaphore-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.sem-pill {
-  display: flex; align-items: center; gap: 4px; padding: 3px 8px;
-  border-radius: 6px; font-size: 0.68rem; font-weight: 600; background: var(--bg);
-}
-.sem-dot { width: 7px; height: 7px; border-radius: 50%; }
-.dot-green { background: var(--green); }
-.dot-yellow { background: var(--yellow); }
-.dot-red { background: var(--red); }
-.dot-gray { background: var(--gray); }
-.dot-cyan { background: var(--cyan); }
-
-.proj-meta { display: flex; gap: 16px; flex-wrap: wrap; }
-.meta-item { font-size: 0.72rem; color: var(--text2); }
-.meta-item strong { color: var(--text); font-weight: 600; }
-
-.progress-wrap { display: flex; flex-direction: column; gap: 5px; }
-.progress-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text2); }
-.progress-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 3px; transition: width .5s; }
-.fill-green { background: var(--green); }
-.fill-yellow { background: var(--yellow); }
-.fill-blue { background: var(--blue); }
-.fill-cyan { background: var(--cyan); }
-
-.proj-card-footer { display: flex; justify-content: flex-end; }
-.detail-link { font-size: 0.68rem; color: var(--blue); font-weight: 600; letter-spacing: .3px; }
-
-.alert-banner {
-  background: #ef444411; border: 1px solid #ef444433; border-radius: 10px;
-  padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;
-}
-.alert-icon { font-size: 1.2rem; }
-.alert-text { font-size: 0.8rem; color: var(--text); }
-.alert-text strong { color: var(--red); }
-
-footer { text-align: center; padding: 32px 20px; font-size: 0.65rem; color: var(--text2); border-top: 1px solid var(--border); margin-top: 20px; }
 </style>
 </head>
 <body>
-
-<header class="header">
-  <div>
-    <div class="brand-logo">VMO <span>Autônomo</span></div>
-    <div class="brand-sub">Dashboard de Projetos</div>
-  </div>
-  <div class="header-right">
-    <div class="live-badge"><div class="pulse"></div> Ao Vivo</div>
-    <div class="updated-at">Atualizado em: 24/05/2026 — Run 2026-05-24</div>
-  </div>
-</header>
-
-<main class="main">
-
-  <div class="section-title">Métricas do Portfólio</div>
-  <div class="metrics-row">
-    <div class="metric-card blue">
-      <div class="metric-number">7</div>
-      <div class="metric-label">Projetos no Portfólio</div>
-    </div>
-    <div class="metric-card green">
-      <div class="metric-number">2</div>
-      <div class="metric-label">🟢 Status Verde</div>
-    </div>
-    <div class="metric-card yellow">
-      <div class="metric-number">3</div>
-      <div class="metric-label">🟡 Em Atenção</div>
-    </div>
-    <div class="metric-card cyan">
-      <div class="metric-number">2</div>
-      <div class="metric-label">🔵 Em Instrução / 🟠 Aguardando</div>
-    </div>
-  </div>
+<div class="container">
+  <header>
+    <h1>📊 VMO Dashboard — Portfólio de Projetos</h1>
+    <p>Gerado em 17/08/2026 · VMO Autônomo · Grupo Águia Branca</p>
+  </header>
 
   <div class="alert-banner">
-    <div class="alert-icon">⚠️</div>
-    <div class="alert-text">
-      <strong>3 projetos com condição bloqueante de sponsor:</strong>
-      PROJ-2026-004 (prazo 13/06), PROJ-2026-005 (prazo 25/05 — urgente!), PROJ-2026-006 (prazo 13/06).
-      Ação requerida pela liderança do Grupo Águia Branca e Divisão Comércio.
-      <strong style="color:var(--orange)"> · PROJ-2026-007</strong> aguardando retorno de Jairo De Melo Ferreira Mendes (8 CBs abertas — pipeline pausado no passo 6/16).
+    <h3>🚨 Alertas Críticos do Portfólio</h3>
+    <ul>
+      <li>3 projetos com sponsor ausente (PROJ-004, PROJ-005, PROJ-006) — governança REPROVADA</li>
+      <li>PROJ-2026-008 com prazo final amanhã (18/08/2026) — risco crítico RSK-001</li>
+      <li>DEM-2026-007 em espera — qualificação 49/100, abaixo do limiar</li>
+    </ul>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="value">8</div>
+      <div class="label">Projetos Ativos</div>
+    </div>
+    <div class="metric-card">
+      <div class="value" style="color:var(--green)">2</div>
+      <div class="label">🟢 Verde</div>
+    </div>
+    <div class="metric-card">
+      <div class="value" style="color:var(--yellow)">3</div>
+      <div class="label">🟡 Amarelo</div>
+    </div>
+    <div class="metric-card">
+      <div class="value" style="color:var(--red)">3</div>
+      <div class="label">🔴 Sem Status / Bloqueado</div>
+    </div>
+    <div class="metric-card">
+      <div class="value" style="color:var(--accent)">R$ 1,33M</div>
+      <div class="label">Orçamento Total</div>
+    </div>
+    <div class="metric-card">
+      <div class="value" style="color:var(--red)">3</div>
+      <div class="label">Governança Reprovada</div>
     </div>
   </div>
 
-  <div class="section-title">Projetos Ativos</div>
-  <div class="grid">
+  <h2 class="section-title">Projetos do Portfólio</h2>
+  <div class="projects-grid">
 
-    <!-- PROJ-2026-001 -->
-    <a class="proj-card" href="projetos/PROJ-2026-001.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">PROJ-2026-001</div>
+    <a href="projetos/PROJ-2026-001.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-001</h3>
+        <span class="badge badge-green">🟢 Verde</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Inclusão de Aprovador SAP FI — Lançamentos Pré-Editados</p>
+        <div class="tag-row">
+          <span class="badge badge-green">Gov: Aprovado</span>
+          <span class="badge badge-blue">Qualif: 47%</span>
         </div>
-        <span class="status-badge badge-verde">🟢 Verde</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">R$ 8.640</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">60 dias úteis</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">7 (3 HIGH)</span></div>
+        <div class="stat-row"><span class="stat-label">Vera Score</span><span class="stat-value">8.7/10</span></div>
       </div>
-      <div class="proj-name">Inclusão de Aprovador SAP FI — Lançamentos Pré-Editados</div>
-      <div class="proj-client">VIX Manutenção — Sponsor: Andre Chieppe</div>
-      <div class="semaphore-row">
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Cronograma</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Custo</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Escopo</div>
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>Riscos</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Qualidade</div>
+      <div class="card-footer">
+        <span>Fase: Encerramento</span>
+        <span style="color:var(--green)">● Ativo</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">BAC <strong>R$ 8.640</strong></div>
-        <div class="meta-item">Prazo <strong>Du 60 pós-TAP</strong></div>
-        <div class="meta-item">Vera <strong>8,7/10</strong></div>
-        <div class="meta-item">Gabriel <strong>✅ Aprovado</strong></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução concluída · 0% execução</span><span>0%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:0%"></div></div>
-      </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
     </a>
 
-    <!-- PROJ-2026-003 -->
-    <a class="proj-card" href="projetos/PROJ-2026-003.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">PROJ-2026-003</div>
+    <a href="projetos/PROJ-2026-003.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-003</h3>
+        <span class="badge badge-green">🟢 Verde</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Caminhos Estratégicos do ERP GAB — Assessment KPMG</p>
+        <div class="tag-row">
+          <span class="badge badge-green">Gov: Aprovado</span>
+          <span class="badge badge-green">Qualif: 90%</span>
         </div>
-        <span class="status-badge badge-verde">🟢 Verde</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">R$ 1.100.000</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">Fase 1: 08/05/2026</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">10 (1 CRITICAL, 5 HIGH)</span></div>
+        <div class="stat-row"><span class="stat-label">Vera Score</span><span class="stat-value">9.0/10</span></div>
       </div>
-      <div class="proj-name">Caminhos Estratégicos do ERP GAB — Assessment de Plataforma</div>
-      <div class="proj-client">Holding GAB + VixPar + VAB — Sponsor: Décio Chieppe</div>
-      <div class="semaphore-row">
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Cronograma</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Custo</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Escopo</div>
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>Riscos</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Qualidade</div>
+      <div class="card-footer">
+        <span>Fase: Execução S5</span>
+        <span style="color:var(--green)">● Ativo</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">Fase <strong>Execução KPMG (S5)</strong></div>
-        <div class="meta-item">Encerramento <strong>08/05/2026</strong></div>
-        <div class="meta-item">Vera <strong>9,0/10</strong></div>
-        <div class="meta-item">Gabriel <strong>✅ Aprovado</strong></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>M1–M4 realizados · M5–M7 pendentes</span><span>~80%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-green" style="width:80%"></div></div>
-      </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
     </a>
 
-    <!-- PROJ-2026-004 -->
-    <a class="proj-card" href="projetos/PROJ-2026-004.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">PROJ-2026-004</div>
+    <a href="projetos/PROJ-2026-004.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-004</h3>
+        <span class="badge badge-yellow">🟡 Atenção</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Plataforma de Gestão de Ideias de Inovação</p>
+        <div class="tag-row">
+          <span class="badge badge-red">Gov: Reprovado</span>
+          <span class="badge badge-yellow">Qualif: 70%</span>
         </div>
-        <span class="status-badge badge-atencao">🟡 Atenção</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">R$ 90.000</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">Go-live 30/11/2026</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">12 (3 CRITICAL)</span></div>
+        <div class="stat-row"><span class="stat-label">Bloqueio</span><span class="stat-value" style="color:var(--red)">Sponsor ausente</span></div>
       </div>
-      <div class="proj-name">Plataforma Interna de Gestão de Ideias de Inovação</div>
-      <div class="proj-client">Grupo Águia Branca — Sponsor: a designar</div>
-      <div class="semaphore-row">
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>Cronograma</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Custo</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Escopo</div>
-        <div class="sem-pill"><div class="sem-dot dot-red"></div>Riscos</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Qualidade</div>
+      <div class="card-footer">
+        <span>Fase: Bloqueado</span>
+        <span style="color:var(--yellow)">● Bloqueado</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">BAC <strong>R$ 90.000</strong></div>
-        <div class="meta-item">Go-live <strong>30/11/2026</strong></div>
-        <div class="meta-item">Vera <strong>10,0/10 ⭐</strong></div>
-        <div class="meta-item">Gabriel <strong>⚠️ NC-CRÍTICA</strong></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução 100% · Execução bloqueada (CB-01)</span><span>100% instrução</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-yellow" style="width:100%"></div></div>
-      </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
     </a>
 
-    <!-- PROJ-2026-005 -->
-    <a class="proj-card" href="projetos/PROJ-2026-005.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">PROJ-2026-005</div>
+    <a href="projetos/PROJ-2026-005.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-005</h3>
+        <span class="badge badge-yellow">🟡 Amarelo</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Auditor Fiscal — Módulo NBS substituindo Fiscal Defender</p>
+        <div class="tag-row">
+          <span class="badge badge-red">Gov: Reprovado</span>
+          <span class="badge badge-yellow">Qualif: 60%</span>
         </div>
-        <span class="status-badge badge-atencao">🟡 Atenção</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">R$ 35.000</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">Go-live 30/10/2026</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">4+ CRITICAL</span></div>
+        <div class="stat-row"><span class="stat-label">Bloqueio</span><span class="stat-value" style="color:var(--red)">Sponsor ausente</span></div>
       </div>
-      <div class="proj-name">Auditor Fiscal — Módulo Nativo NBS em Substituição ao Fiscal Defender</div>
-      <div class="proj-client">Divisão Comércio GAB — Solicitante: Sandro Siqueira</div>
-      <div class="semaphore-row">
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>Cronograma</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Custo</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Escopo</div>
-        <div class="sem-pill"><div class="sem-dot dot-red"></div>Riscos</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Qualidade</div>
+      <div class="card-footer">
+        <span>Fase: Sanação CBs</span>
+        <span style="color:var(--yellow)">● Bloqueado</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">BAC <strong>R$ 35.000</strong></div>
-        <div class="meta-item">Saving <strong>R$ 78k/ano</strong></div>
-        <div class="meta-item">Vera <strong>9,1/10</strong></div>
-        <div class="meta-item">CB-01 <strong>⚠️ 25/05/2026</strong></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução 100% · Execução bloqueada (CB-01)</span><span>100% instrução</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-yellow" style="width:100%"></div></div>
-      </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
     </a>
 
-    <!-- PROJ-2026-006 -->
-    <a class="proj-card" href="projetos/PROJ-2026-006.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">PROJ-2026-006</div>
+    <a href="projetos/PROJ-2026-006.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-006</h3>
+        <span class="badge badge-red">🔴 Sem Status</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Plataforma Própria de Gestão de Ideias e Inovação (v2)</p>
+        <div class="tag-row">
+          <span class="badge badge-red">Gov: Reprovado</span>
+          <span class="badge badge-yellow">Qualif: 67%</span>
         </div>
-        <span class="status-badge badge-atencao">🟡 Atenção</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">R$ 100.000</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">31/12/2026</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">12 (4 CRITICAL, 5 HIGH)</span></div>
+        <div class="stat-row"><span class="stat-label">Bloqueio</span><span class="stat-value" style="color:var(--red)">Sponsor ausente</span></div>
       </div>
-      <div class="proj-name">Plataforma Própria de Gestão de Ideias e Inovação</div>
-      <div class="proj-client">GAB Área de Inovação — Sponsor: a designar (Jadson)</div>
-      <div class="semaphore-row">
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>Cronograma</div>
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>Custo</div>
-        <div class="sem-pill"><div class="sem-dot dot-green"></div>Escopo</div>
-        <div class="sem-pill"><div class="sem-dot dot-red"></div>Riscos</div>
-        <div class="sem-pill"><div class="sem-dot dot-gray"></div>Satisfação N/A</div>
+      <div class="card-footer">
+        <span>Fase: Bloqueado</span>
+        <span style="color:var(--red)">● Bloqueado</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">BAC <strong>R$ 100.000</strong></div>
-        <div class="meta-item">Go-live <strong>07/12/2026</strong></div>
-        <div class="meta-item">Qualidade <strong>92,25/100</strong></div>
-        <div class="meta-item">CB-01 <strong>até 13/06/2026</strong></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução 100% · Kick-off aguarda CBs</span><span>100% instrução</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-yellow" style="width:100%"></div></div>
-      </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
     </a>
 
-    <!-- PROJ-2026-007 -->
-    <a class="proj-card" href="projetos/PROJ-2026-007.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">PROJ-2026-007 · INT015</div>
+    <a href="projetos/PROJ-2026-007.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-007</h3>
+        <span class="badge badge-gray">⚪ Pré-qualificação</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Integração SAP/SGMM03 — Empresa a Contrato InterCompany</p>
+        <div class="tag-row">
+          <span class="badge badge-gray">Gov: Pendente</span>
+          <span class="badge badge-yellow">Qualif: 50%</span>
         </div>
-        <span class="status-badge badge-bloqueado">🟠 Aguardando</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">Não definido</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">Não definido</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">Não elaborado</span></div>
+        <div class="stat-row"><span class="stat-label">Classificação</span><span class="stat-value">Melhoria Evolutiva</span></div>
       </div>
-      <div class="proj-name">INT015 — Integração GRLOG-SAP</div>
-      <div class="proj-client">VIX Matriz — Diretoria de Logística Dedicada · Jairo De Melo Ferreira Mendes</div>
-      <div class="semaphore-row">
-        <div class="sem-pill" style="color:var(--orange);border:1px solid #f9731644;">🟠 Aguardando Solicitante</div>
-        <div class="sem-pill" style="color:var(--cyan);border:1px solid #06b6d444;">8 CBs Abertas</div>
-        <div class="sem-pill" style="color:var(--yellow);border:1px solid #eab30844;">CPC47/IFRS15</div>
+      <div class="card-footer">
+        <span>Fase: Qualificação</span>
+        <span style="color:var(--text-muted)">● Inicial</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">BAC <strong>R$ 42–67K</strong></div>
-        <div class="meta-item">Qualif. <strong>62/100</strong></div>
-        <div class="meta-item">CBs <strong>8 abertas</strong></div>
-        <div class="meta-item">Passo <strong>6/16</strong></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Pipeline 6/16 — Aguardando Solicitante</span><span>37%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:37%;background:var(--orange);"></div></div>
-      </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
     </a>
 
-    <!-- DEM-2026-007 -->
-    <a class="proj-card" href="projetos/DEM-2026-007.html">
-      <div class="proj-card-header">
-        <div>
-          <div class="proj-id">DEM-2026-007 · NOVO</div>
+    <a href="projetos/PROJ-2026-008-voice-mode.html" class="project-card">
+      <div class="card-header">
+        <h3>PROJ-2026-008</h3>
+        <span class="badge badge-yellow">🟡 Amarelo</span>
+      </div>
+      <div class="card-body">
+        <p class="desc">Estudo de Viabilidade — Voice Mode Multiagente</p>
+        <div class="tag-row">
+          <span class="badge badge-green">Gov: Autorizado</span>
+          <span class="badge badge-yellow">Qualif: 67%</span>
         </div>
-        <span class="status-badge badge-novo">🔵 Em Instrução</span>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">Não alocado (estudo)</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value" style="color:var(--red)">18/08/2026 ⚠</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">6 (1 CRITICAL)</span></div>
+        <div class="stat-row"><span class="stat-label">Vera Score</span><span class="stat-value">7.85/10</span></div>
       </div>
-      <div class="proj-name">Implantação DDA (Débito Direto Autorizado) no SAP — VAB Matriz</div>
-      <div class="proj-client">VAB Matriz — Contas a Pagar · Noemia Tambara / Lucas Medeiros</div>
-      <div class="semaphore-row">
-        <div class="sem-pill"><div class="sem-dot dot-cyan"></div>Melhoria Evolutiva</div>
-        <div class="sem-pill"><div class="sem-dot dot-cyan"></div>DTI FI</div>
-        <div class="sem-pill"><div class="sem-dot dot-yellow"></div>CB-Sponsor</div>
+      <div class="card-footer">
+        <span>Fase: Encerramento</span>
+        <span style="color:var(--yellow)">● Ativo</span>
       </div>
-      <div class="proj-meta">
-        <div class="meta-item">BAC <strong>R$ 0–2.000</strong></div>
-        <div class="meta-item">Go-live <strong>30/09/2026</strong></div>
-        <div class="meta-item">Vera <strong>8,30/10</strong></div>
-        <div class="meta-item">Gabriel <strong>✅ Aprovado c/ Ressalvas</strong></div>
+    </a>
+
+    <a href="projetos/DEM-2026-007.html" class="project-card">
+      <div class="card-header">
+        <h3>DEM-2026-007</h3>
+        <span class="badge badge-red">🔴 Em Espera</span>
       </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Instrução concluída · Aguarda aprovação final</span><span>~95%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-cyan" style="width:95%"></div></div>
+      <div class="card-body">
+        <p class="desc">Implantação DDA SAP — VAB Matriz</p>
+        <div class="tag-row">
+          <span class="badge badge-yellow">Gov: Ressalvas</span>
+          <span class="badge badge-red">Qualif: 49%</span>
+        </div>
+        <div class="stat-row"><span class="stat-label">Orçamento</span><span class="stat-value">Custo zero (pendente)</span></div>
+        <div class="stat-row"><span class="stat-label">Prazo</span><span class="stat-value">Go-live 30/09/2026</span></div>
+        <div class="stat-row"><span class="stat-label">Riscos</span><span class="stat-value">10 (1 CRITICAL, 4 HIGH)</span></div>
+        <div class="stat-row"><span class="stat-label">Status</span><span class="stat-value" style="color:var(--yellow)">Abaixo do limiar</span></div>
       </div>
-      <div class="proj-card-footer"><span class="detail-link">Ver detalhes →</span></div>
+      <div class="card-footer">
+        <span>Fase: Em Espera</span>
+        <span style="color:var(--red)">● Bloqueado</span>
+      </div>
     </a>
 
   </div>
 
-</main>
-
-<footer>
-  VMO Autônomo — Lucas Layout | Run 2026-05-24 | 7 projetos | Grupo Águia Branca
-</footer>
-
+  <footer>
+    <p>VMO Autônomo · Opensquad Pipeline · Grupo Águia Branca · Gerado automaticamente em 17/08/2026</p>
+  </footer>
+</div>
 </body>
 </html>
