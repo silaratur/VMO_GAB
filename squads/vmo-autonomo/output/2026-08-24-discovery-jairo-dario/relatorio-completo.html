@@ -1,0 +1,599 @@
+<title>Discovery Jairo & Dario</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --surface-alt: #F3F2EE;
+  --text: #1A1A1A;
+  --text-secondary: #5C5A54;
+  --text-tertiary: #8A877F;
+  --border: #E5E3DD;
+  --accent: #2D5A3D;
+  --accent-light: #E8F0EB;
+  --accent-dark: #1E3D29;
+  --tag-bg: #EDE9E0;
+  --tag-text: #6B6560;
+  --warning: #B8860B;
+  --warning-bg: #FFF8E7;
+  --info: #2B6CB0;
+  --info-bg: #EBF4FF;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141412;
+    --surface: #1E1E1B;
+    --surface-alt: #252522;
+    --text: #EDEDEB;
+    --text-secondary: #A8A69F;
+    --text-tertiary: #706E68;
+    --border: #333330;
+    --accent: #5CA87A;
+    --accent-light: #1C2E22;
+    --accent-dark: #8CCAA3;
+    --tag-bg: #2A2926;
+    --tag-text: #9B9790;
+    --warning: #D4A843;
+    --warning-bg: #2A2416;
+    --info: #5B9BD5;
+    --info-bg: #1A2636;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141412;
+  --surface: #1E1E1B;
+  --surface-alt: #252522;
+  --text: #EDEDEB;
+  --text-secondary: #A8A69F;
+  --text-tertiary: #706E68;
+  --border: #333330;
+  --accent: #5CA87A;
+  --accent-light: #1C2E22;
+  --accent-dark: #8CCAA3;
+  --tag-bg: #2A2926;
+  --tag-text: #9B9790;
+  --warning: #D4A843;
+  --warning-bg: #2A2416;
+  --info: #5B9BD5;
+  --info-bg: #1A2636;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* Header */
+.header {
+  margin-bottom: 48px;
+}
+.header-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.header h1 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text);
+  text-wrap: balance;
+  margin-bottom: 16px;
+}
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.header-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.header-meta-item svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+/* Summary card */
+.summary-card {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+}
+.summary-card p {
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.tag {
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 40px;
+}
+.section-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+@media (max-width: 540px) {
+  .info-grid { grid-template-columns: 1fr; }
+}
+.info-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.info-cell-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+.info-cell-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+.info-cell-value.accent { color: var(--accent); }
+
+/* Bullet list */
+.bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.bullet-list li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  font-size: 14.5px;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Action items */
+.action-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.action-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.action-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.action-content {
+  flex: 1;
+  min-width: 0;
+}
+.action-owner {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 3px;
+}
+.action-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.55;
+}
+.action-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+/* Impact cards */
+.impact-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 40px;
+}
+@media (max-width: 540px) {
+  .impact-cards { grid-template-columns: 1fr; }
+}
+.impact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 18px;
+  text-align: center;
+}
+.impact-number {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 36px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.impact-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Callout */
+.callout {
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.callout.warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+.callout.info {
+  background: var(--info-bg);
+  color: var(--info);
+}
+.callout svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Transcript */
+.transcript {
+  background: var(--surface-alt);
+  border-radius: 10px;
+  padding: 24px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.transcript-line {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.transcript-time {
+  flex-shrink: 0;
+  width: 72px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  padding-top: 2px;
+}
+.transcript-speaker {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 50px;
+}
+.transcript-speaker.agent { color: var(--accent); }
+.transcript-speaker.jairo { color: var(--info); }
+.transcript-text {
+  color: var(--text-secondary);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Footer */
+.footer {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+</style>
+
+<div class="page">
+
+  <header class="header">
+    <div class="header-eyebrow">Relatório de Discovery &mdash; VMO</div>
+    <h1>Integração SAP &times; JOR: Automação de Cadastro de Receita</h1>
+    <div class="header-meta">
+      <span class="header-meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        24 de agosto de 2026
+      </span>
+      <span class="header-meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        11 min de duração
+      </span>
+      <span class="header-meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Jairo de Melo Ferreira Mendes
+      </span>
+      <span class="header-meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chamado #7122686
+      </span>
+    </div>
+  </header>
+
+  <div class="summary-card">
+    <p>A reunião focou na automação da integração entre os sistemas <strong>SAP</strong> e <strong>JOR (GRLOG)</strong>, visando o cadastro automático de centros de custo, centros de lucro e clientes. Atualmente, cinco colaboradores realizam o cadastro manualmente, o que gera erros e atrasos que impactam a visualização da receita no BI da Gerlog, acompanhado pela CEO. O prazo desejado é <strong>outubro de 2026</strong>, com orçamento dependente de estudo técnico da DTI.</p>
+  </div>
+
+  <div class="tags">
+    <span class="tag">Integração</span>
+    <span class="tag">SAP</span>
+    <span class="tag">Cadastro Automático</span>
+    <span class="tag">GRLOG</span>
+    <span class="tag">BI da Receita</span>
+    <span class="tag">Automação</span>
+  </div>
+
+  <div class="impact-cards">
+    <div class="impact-card">
+      <div class="impact-number">5</div>
+      <div class="impact-label">Pessoas no cadastro manual diário</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-number">200+</div>
+      <div class="impact-label">Usuários impactados no JOR</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-number">Out/26</div>
+      <div class="impact-label">Prazo desejado de entrega</div>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="info-cell-label">Solicitante</div>
+      <div class="info-cell-value">Jairo de Melo Ferreira Mendes</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">Aprovadora (custos)</div>
+      <div class="info-cell-value">Ana Sílvia Kallegard</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">Tipo de demanda</div>
+      <div class="info-cell-value accent">Melhoria de processo</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">Sistemas envolvidos</div>
+      <div class="info-cell-value">SAP &harr; JOR</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">Orçamento</div>
+      <div class="info-cell-value">Pendente estudo DTI</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">Requisitos legais</div>
+      <div class="info-cell-value">Nenhum identificado</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Contexto e Problema</h2>
+    <ul class="bullet-list">
+      <li>O sistema JOR (GRLOG) é a referência oficial para dados de receita da companhia, alimentando o BI acompanhado pela CEO e diretoria.</li>
+      <li>Atualmente, cinco colaboradores fazem diariamente o cadastro manual de centros de custo, centros de lucro e clientes, copiando dados do SAP para a tela de cadastro do JOR.</li>
+      <li>Esse processo manual gera erros, atrasos e dados incompletos &mdash; quando um cadastro não é feito, o BI exibe &ldquo;não informado&rdquo; no lugar do cliente ou centro de lucro, prejudicando a visão da receita.</li>
+      <li>A CEO acompanha diretamente o BI da Gerlog, e informações incorretas comprometem decisões estratégicas da diretoria.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Solução Proposta</h2>
+    <ul class="bullet-list">
+      <li>Criar uma integração automática entre SAP e JOR que sincronize diariamente os cadastros de centros de custo, centros de lucro e clientes.</li>
+      <li>A integração deve eliminar completamente o cadastro manual, garantindo dados 100% atualizados e confiáveis no sistema.</li>
+      <li>Escopo técnico limitado a dois sistemas (SAP e JOR), sem necessidade de conexão com outros bancos ou soluções.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Benefícios Esperados</h2>
+    <ul class="bullet-list">
+      <li><strong>Confiabilidade dos dados:</strong> dados 100% cadastrados automaticamente, eliminando registros como &ldquo;não informado&rdquo; no BI da Gerlog.</li>
+      <li><strong>Redução de trabalho manual:</strong> liberação do tempo de 5 colaboradores que hoje fazem cadastro repetitivo diário.</li>
+      <li><strong>Governança financeira:</strong> fortalecimento do JOR como sistema de referência para receita, com informações precisas para decisões da diretoria.</li>
+      <li><strong>Eliminação de erros:</strong> sem intervenção manual, sem risco de cadastro incorreto ou desatualizado.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Áreas Impactadas</h2>
+    <ul class="bullet-list">
+      <li><strong>Gestão da Receita</strong> &mdash; área principal beneficiada pela automação do cadastro.</li>
+      <li><strong>Diretoria</strong> &mdash; visibilidade correta e confiável da receita no BI.</li>
+      <li><strong>Controladoria</strong> &mdash; governança financeira e aprovação de investimentos (Ana Sílvia Kallegard).</li>
+      <li><strong>DTI</strong> &mdash; responsável pelo estudo de viabilidade técnica e implementação.</li>
+    </ul>
+  </section>
+
+  <div class="callout warning">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span><strong>Orçamento não definido.</strong> A DTI precisa realizar estudo de viabilidade técnica para definir custos antes da aprovação pela controladoria.</span>
+  </div>
+
+  <div class="callout info">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <span><strong>Critério de sucesso:</strong> cadastro automático operando diariamente no JOR, sem necessidade de intervenção manual.</span>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Ações Pendentes</h2>
+    <div class="action-items">
+      <div class="action-item">
+        <div class="action-check"></div>
+        <div class="action-content">
+          <div class="action-owner">Jairo de Melo Ferreira Mendes</div>
+          <div class="action-text">Solicitar à DTI o estudo de viabilidade para avaliação do orçamento e implementação da integração SAP com JOR</div>
+          <div class="action-time">Ref. 09:14</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-check"></div>
+        <div class="action-content">
+          <div class="action-owner">Jairo de Melo Ferreira Mendes</div>
+          <div class="action-text">Enviar formalmente a solicitação para aprovação da gerência executiva de controladoria (Ana Sílvia Kallegard)</div>
+          <div class="action-time">Ref. 07:39</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-check"></div>
+        <div class="action-content">
+          <div class="action-owner">DTI</div>
+          <div class="action-text">Realizar estudo detalhado para viabilidade técnica e custos da integração proposta entre SAP e JOR</div>
+          <div class="action-time">Ref. 09:14</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Transcrição Completa</h2>
+    <div class="transcript">
+      <div class="transcript-line"><span class="transcript-time">00:00</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Jairo de Melo Ferreira Mendes, obrigado por participar. Como você está hoje?</span></div>
+      <div class="transcript-line"><span class="transcript-time">00:05</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Tô bem.</span></div>
+      <div class="transcript-line"><span class="transcript-time">00:09</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Ótimo. Então vamos começar. Conte com suas palavras qual é a necessidade ou oportunidade que motivou esta solicitação.</span></div>
+      <div class="transcript-line"><span class="transcript-time">00:19</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Só um minuto que eu tô pegando a chamada.</span></div>
+      <div class="transcript-line"><span class="transcript-time">00:25</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Sem problema. Pode ficar à vontade. Eu espero.</span></div>
+      <div class="transcript-line"><span class="transcript-time">00:56</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">É o chamado 7122686, referente a uma solicitação de projetos.</span></div>
+      <div class="transcript-line"><span class="transcript-time">01:08</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Oi. Oi, tudo bem? Você consegue me ouvir?</span></div>
+      <div class="transcript-line"><span class="transcript-time">01:15</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Te ouço.</span></div>
+      <div class="transcript-line"><span class="transcript-time">01:17</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Ótimo. Então, qual é a necessidade ou oportunidade que motivou esta solicitação?</span></div>
+      <div class="transcript-line"><span class="transcript-time">01:25</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">É o chamado 7122686.</span></div>
+      <div class="transcript-line"><span class="transcript-time">01:29</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Certo, anotei o número do chamado 7122686. Agora me conta, qual é a necessidade ou oportunidade que motivou você a abrir essa solicitação?</span></div>
+      <div class="transcript-line"><span class="transcript-time">01:40</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">É uma integração do SAP com o sistema de RLOG, trazendo o cadastro de centro de custo, de centro de lucro, de clientes do SAP, para cadastrar automaticamente dentro do GR log através dessa integração para evitar cadastro manual, erros de cadastro, falta de cadastro para deixar o sistema atualizado com todos os dados da receita.</span></div>
+      <div class="transcript-line"><span class="transcript-time">02:11</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Entendi. Então você quer trazer dados de centro de custo, centro de lucro e clientes do SAP para o JOR de forma automática, eliminando o cadastro manual. Como é que funciona hoje esse processo de cadastro no JOR? Vocês fazem manualmente agora?</span></div>
+      <div class="transcript-line"><span class="transcript-time">02:25</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">A gente abre o SAP, visualiza o novo centro de custo por exemplo, que foi cadastrado. A gente visualiza o cadastro, pega os dados dele, copia e cola na parte de cadastro do sistema. Tem uma tela com os mesmos campos que tem no SAP, e aí a gente cadastra com as mesmas informações que está no SAP.</span></div>
+      <div class="transcript-line"><span class="transcript-time">02:46</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Então vocês abrem o SAP, veem um novo cadastro, copiam os dados manualmente e colam na tela de cadastro do JOR, basicamente replicando o que já está no SAP. Quantas pessoas fazem isso hoje e com que frequência vocês precisam fazer esse cadastro manual?</span></div>
+      <div class="transcript-line"><span class="transcript-time">03:02</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">São cinco pessoas e é sempre que nasce um novo centro de custo ou centro de lucro ou cliente, que no caso seria diariamente.</span></div>
+      <div class="transcript-line"><span class="transcript-time">03:12</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Diariamente. Então são cinco pessoas fazendo isso todos os dias. Isso é bastante tempo gasto com uma atividade repetitiva. Quando um cadastro não é feito ou é feito com erro, qual é o impacto? O que acontece no dia a dia da operação?</span></div>
+      <div class="transcript-line"><span class="transcript-time">03:25</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Impacta na visualização dos dados da receita dentro do sistema e automaticamente a companhia enxerga os dados incorretos. Porque o mandante é o SAP, porém o GRLOG é o sistema que contém as informações de receita. Então com base nisso, se tiver um cadastro incorreto, tem esse impacto na visualização da companhia.</span></div>
+      <div class="transcript-line"><span class="transcript-time">03:49</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Entendi. Então o JOR é o sistema de referência para a receita e se os dados estão incorretos ou desatualizados, a companhia enxerga informações erradas sobre a receita. Isso afeta as decisões baseadas nesses dados. E hoje, com esse cadastro manual, vocês conseguem manter tudo atualizado ou tem atraso?</span></div>
+      <div class="transcript-line"><span class="transcript-time">04:11</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Existe, tem um BI do Gerlog que é acompanhado pela CEO da companhia e devido a ter um cadastro pendente ou que está desatualizado, a informação da receita fica sem dizer qual que é o cliente ou o centro de lucro, fica somente com a informação "não informada" e o valor da receita do lado.</span></div>
+      <div class="transcript-line"><span class="transcript-time">04:34</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Então quando há um atraso no cadastro, o BI da Gerlog mostra "não informado" em vez do cliente ou centro de lucro correto e a CEO está acompanhando isso. Isso afeta a visibilidade sobre a receita real da companhia. Então essa integração que você está propondo resolveria isso. Após implementar essa integração, como você espera que esse processo funcione?</span></div>
+      <div class="transcript-line"><span class="transcript-time">04:59</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Espero que ele ocorra diariamente, já cadastrando tudo que teve de centro de lucro, centro de custo e clientes novos. E com isso, automatize o nosso processo para que a gente não precise se preocupar de ter um dado que não está informado dentro do BI.</span></div>
+      <div class="transcript-line"><span class="transcript-time">05:16</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Perfeito. Essa integração seria um novo projeto, uma melhoria de um processo existente, ou vocês precisam primeiro de um estudo de viabilidade?</span></div>
+      <div class="transcript-line"><span class="transcript-time">05:35</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Ele é uma melhoria de um processo já existente.</span></div>
+      <div class="transcript-line"><span class="transcript-time">05:39</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">É uma melhoria então. Por que essa demanda é importante neste momento? O que acontece se vocês não fizerem essa integração agora?</span></div>
+      <div class="transcript-line"><span class="transcript-time">05:58</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Visualização incorreta das informações no BI é o principal impacto. Quais benefícios vocês esperam para o negócio com essa integração?</span></div>
+      <div class="transcript-line"><span class="transcript-time">06:09</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Ter os dados 100% cadastrados ali no sistema e não ter a preocupação de ter que cadastrar manualmente ou se preocupar se ficou um cadastro errado.</span></div>
+      <div class="transcript-line"><span class="transcript-time">06:20</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Ter os dados 100% cadastrados automaticamente, sem risco de erro manual. Além disso, vocês vão ganhar tempo que 5 pessoas estão gastando hoje. Esse tempo poderia ser usado em outra coisa? Ou o benefício principal é mesmo a confiabilidade dos dados no BI?</span></div>
+      <div class="transcript-line"><span class="transcript-time">06:41</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Principalmente a confiabilidade nos dados, mas também a redução do trabalho das 5 pessoas.</span></div>
+      <div class="transcript-line"><span class="transcript-time">06:50</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Então são dois benefícios. Esse tempo que seria liberado poderia ser usado em outras atividades. Quais áreas ou empresas do grupo serão impactadas por essa integração?</span></div>
+      <div class="transcript-line"><span class="transcript-time">07:02</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Seria a gestão da receita e toda a diretoria.</span></div>
+      <div class="transcript-line"><span class="transcript-time">07:06</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Em termos de pessoas, quantos usuários do JOR usam esses dados no dia a dia?</span></div>
+      <div class="transcript-line"><span class="transcript-time">07:17</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Tem mais de 200 usuários no sistema.</span></div>
+      <div class="transcript-line"><span class="transcript-time">07:21</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">200 Usuários, é uma base bem grande. Quem é o solicitante formal dessa demanda? É você mesmo? E existe alguém que também precisa aprovar ou patrocinar essa iniciativa?</span></div>
+      <div class="transcript-line"><span class="transcript-time">07:39</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Eu mesmo que solicitei a demanda e se tiver algum custo nessa demanda, ele vai ser passado para a gerência executiva de controladoria, que é a Ana Sílvia Kallegard.</span></div>
+      <div class="transcript-line"><span class="transcript-time">07:50</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Perfeito. Você é o solicitante formal e a Ana Sílvia Kallegard seria a responsável por aprovar qualquer custo. Quais sistemas ou integrações estarão envolvidos além do SAP e do JOR?</span></div>
+      <div class="transcript-line"><span class="transcript-time">08:10</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Não. Somente esses dois sistemas.</span></div>
+      <div class="transcript-line"><span class="transcript-time">08:14</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Só SAP e JOR. Existem requisitos legais, regulatórios ou contratuais que vocês precisam considerar?</span></div>
+      <div class="transcript-line"><span class="transcript-time">08:29</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Não.</span></div>
+      <div class="transcript-line"><span class="transcript-time">08:32</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">E quanto ao prazo? Existe uma data desejada para ter essa integração implementada?</span></div>
+      <div class="transcript-line"><span class="transcript-time">08:40</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Seria em outubro o prazo para a gente já ter essa integração. A ideia é que isso seja entregue quanto antes para facilitar o cadastro que é realizado manualmente e também para já ter em outubro os dados de forma confiável.</span></div>
+      <div class="transcript-line"><span class="transcript-time">09:00</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Outubro é o prazo. E quanto ao orçamento, existe um orçamento aprovado ou uma expectativa de investimento?</span></div>
+      <div class="transcript-line"><span class="transcript-time">09:14</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Ainda não. Precisa realizar o estudo por parte da DTI para a gente visualizar essas informações.</span></div>
+      <div class="transcript-line"><span class="transcript-time">09:22</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">O orçamento ainda não está definido, vai depender do estudo da DTI. Como vocês vão considerar que essa integração foi um sucesso?</span></div>
+      <div class="transcript-line"><span class="transcript-time">09:35</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Seria o cadastro automático no sistema, ocorrendo ali diariamente. E não precisa mais realizar isso manualmente.</span></div>
+      <div class="transcript-line"><span class="transcript-time">09:46</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Não precisa mais fazer manualmente. Deixa eu fazer um resumo rápido do que a gente conversou para confirmar se está tudo certo.</span></div>
+      <div class="transcript-line"><span class="transcript-time">09:54</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Você quer integrar o SAP com o JOR para sincronizar automaticamente todos os dias os cadastros de Centro de Custo, Centro de Lucro e Cliente. Isso vai eliminar o trabalho manual de 5 pessoas e garantir que os dados no BI da Gerlog fiquem sempre corretos. O prazo é outubro e a DTI ainda precisa fazer um estudo de viabilidade. A Ana Silvia Kallegard vai aprovar qualquer custo envolvido. Esse resumo representa corretamente sua necessidade?</span></div>
+      <div class="transcript-line"><span class="transcript-time">10:29</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Representa corretamente.</span></div>
+      <div class="transcript-line"><span class="transcript-time">10:43</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Ótimo, está tudo alinhado. Tem mais alguma coisa que você gostaria de adicionar?</span></div>
+      <div class="transcript-line"><span class="transcript-time">10:50</span><span class="transcript-speaker jairo">Jairo</span><span class="transcript-text">Não.</span></div>
+      <div class="transcript-line"><span class="transcript-time">10:52</span><span class="transcript-speaker agent">Dario</span><span class="transcript-text">Perfeito. Obrigado por ter compartilhado todos esses detalhes, Jairo. A gente tem tudo que precisa para passar isso adiante ao Comitê de VMO. Até logo.</span></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Gerado automaticamente via Fireflies.ai &bull; VMO Discovery</span>
+    <a href="https://app.fireflies.ai/view/01M0TKBYCN3C53JWQZQ04Y71H1">Ver no Fireflies</a>
+  </footer>
+
+</div>
